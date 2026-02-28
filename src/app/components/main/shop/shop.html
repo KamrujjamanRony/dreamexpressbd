@@ -5,173 +5,323 @@
 
   <!-- shop wrapper -->
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
-    <!-- sidebar -->
-    @if (dataService.isPermitted("Shop Sidebar")) {
-    <div class="bg-white px-4 pb-6 shadow rounded overflow-hidden min-w-64">
-      <div class="divide-y divide-gray-200 space-y-5">
-        <!-- category filter -->
-        @if (categories?.length > 0) {
-        <div>
-          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
-            Categories
-          </h3>
-          <div class="space-y-2">
-            <!-- single category -->
-            @for(data of categories; track data.title){
-            <div class="flex items-center">
+    <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
+    <div class="hidden md:block bg-white px-4 pb-6 shadow rounded overflow-hidden min-w-64">
+      <div class="divide-y divide-gray-300">
+        <!-- Header -->
+        <div class="flex items-center py-4">
+          <h3 class="text-slate-900 text-lg font-semibold">Filter</h3>
+          <button
+            type="button"
+            (click)="onClearFilter()"
+            class="text-sm text-red-500 font-semibold ml-auto cursor-pointer"
+          >
+            Clear all
+          </button>
+        </div>
+
+        <!-- Categories Section -->
+        @if (categories().length > 0) {
+          <div class="py-6">
+            <h6 class="text-slate-900 text-sm font-semibold">Categories</h6>
+            <div
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
+            >
               <input
-                type="checkbox"
-                [id]="data.title"
-                class="text-primary focus:ring-0 cursor-pointer rounded-sm"
-                [checked]="categoryNames.includes(data.title)"
-                (change)="toggleCategoryName(data.title, $event)"
+                type="text"
+                [ngModel]="categorySearch()"
+                (ngModelChange)="categorySearch.set($event)"
+                placeholder="Search category"
+                class="w-full bg-transparent outline-none text-gray-900 text-sm"
               />
-              <label
-                [for]="data.title"
-                class="text-gray-800 ml-3 cursor-pointer"
-                >{{ data?.title }}</label
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 192.904 192.904"
+                class="w-3 fill-gray-600"
               >
-              <div class="ml-auto text-gray-800 text-sm">
-                ({{ data?.quantity }})
-              </div>
+                <path
+                  d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                ></path>
+              </svg>
             </div>
-            }
-            <!-- single category end -->
+            <ul class="mt-6 space-y-4 max-h-60 overflow-y-auto">
+              @for (data of filteredCategories(); track data.title) {
+                <li class="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    [id]="'desk-cat-' + data.title"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                    [checked]="categoryNames().includes(data.title)"
+                    (change)="toggleCategoryName(data.title, $event)"
+                  />
+                  <label
+                    [for]="'desk-cat-' + data.title"
+                    class="text-slate-600 font-medium text-sm cursor-pointer flex-1"
+                  >
+                    {{ data.title }}
+                  </label>
+                  <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                </li>
+              }
+            </ul>
           </div>
-        </div>
         }
-        <!-- category filter end -->
-        <!-- brand filter -->
-        @if (brands?.length > 0) {
-        <div class="pt-4">
-          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
-            Brands
-          </h3>
-          <div class="space-y-2">
-            <!-- single brand -->
-            @for(data of brands; track data.title){
-            <div class="flex items-center">
+
+        <!-- Brands Section -->
+        @if (brands().length > 0) {
+          <div class="py-6">
+            <h6 class="text-slate-900 text-sm font-semibold">Brand</h6>
+            <div
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
+            >
               <input
-                type="checkbox"
-                [id]="data.title"
-                class="text-primary focus:ring-0 cursor-pointer rounded-sm"
-                [checked]="brandNames.includes(data.title)"
-                (change)="toggleBrandName(data.title, $event)"
+                type="text"
+                [ngModel]="brandSearch()"
+                (ngModelChange)="brandSearch.set($event)"
+                placeholder="Search brand"
+                class="w-full bg-transparent outline-none text-gray-900 text-sm"
               />
-              <label
-                [for]="data.title"
-                class="text-gray-800 ml-3 cursor-pointer"
-                >{{ data?.title }}</label
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 192.904 192.904"
+                class="w-3 fill-gray-600"
               >
-              <div class="ml-auto text-gray-800 text-sm">
-                ({{ data?.quantity }})
-              </div>
+                <path
+                  d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                ></path>
+              </svg>
             </div>
-            }
-            <!-- single brand end -->
+            <ul class="mt-6 space-y-4 max-h-60 overflow-y-auto">
+              @for (data of filteredBrands(); track data.title) {
+                <li class="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    [id]="'desk-brand-' + data.title"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                    [checked]="brandNames().includes(data.title)"
+                    (change)="toggleBrandName(data.title, $event)"
+                  />
+                  <label
+                    [for]="'desk-brand-' + data.title"
+                    class="text-slate-600 font-medium text-sm cursor-pointer flex-1"
+                  >
+                    {{ data.title }}
+                  </label>
+                  <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                </li>
+              }
+            </ul>
           </div>
-        </div>
         }
-        <!-- brand filter end -->
-        <!-- price filter -->
-        <div class="pt-4">
-          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
-            Price
-          </h3>
-          <div class="mt-4 flex items-center">
+
+        <!-- Price Section -->
+        <div class="py-6">
+          <h6 class="text-slate-900 text-sm font-semibold">Price</h6>
+          <div class="relative mt-4">
+            <div class="h-1.5 bg-gray-300 relative rounded-md">
+              <div
+                class="absolute h-1.5 bg-pink-500 rounded-full"
+                [style.width]="activeTrackWidth()"
+                [style.left]="activeTrackLeft()"
+              ></div>
+            </div>
+
             <input
-              type="number"
-              [(ngModel)]="minPrice"
-              class="w-full min-w-24 border-gray-300 focus:border-primary focus:ring-0 px-3 py-1 text-gray-800 text-sm shadow-sm rounded"
-              placeholder="min"
-              min="0"
+              type="range"
+              [min]="priceMin()"
+              [max]="priceMax()"
+              [value]="minRangeValue()"
+              (input)="onMinRangeChange($event)"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-pink-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
-            <span class="px-3 text-gray-800">-</span>
+
             <input
-              type="number"
-              [(ngModel)]="maxPrice"
-              class="w-full min-w-24 border-gray-300 focus:border-primary focus:ring-0 px-3 py-1 text-gray-800 text-sm shadow-sm rounded"
-              placeholder="max"
-              min="0"
+              type="range"
+              [min]="priceMin()"
+              [max]="priceMax()"
+              [value]="maxRangeValue()"
+              (input)="onMaxRangeChange($event)"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-pink-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
+
+            <div class="flex justify-between text-slate-600 font-medium text-sm mt-4">
+              <span>${{ minRangeValue() }}</span>
+              <span>${{ maxRangeValue() }}</span>
+            </div>
           </div>
         </div>
-        <!-- price filter end -->
-        <!-- size filter -->
-        @if (sizes?.length > 0) {
-        <div class="pt-4">
-          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Size</h3>
-          <div class="flex items-center gap-2">
-            <!-- single size -->
-            @for(data of sizes; track data.title){
-            <div class="size-selector">
+
+        <!-- Color Section -->
+        @if (colors().length > 0) {
+          <div class="py-6">
+            <h6 class="text-slate-900 text-sm font-semibold">Color</h6>
+            <div
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
+            >
+              <input
+                type="text"
+                [ngModel]="colorSearch()"
+                (ngModelChange)="colorSearch.set($event)"
+                placeholder="Search color"
+                class="w-full bg-transparent outline-none text-gray-900 text-sm"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 192.904 192.904"
+                class="w-3 fill-gray-600"
+              >
+                <path
+                  d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                ></path>
+              </svg>
+            </div>
+            <ul class="mt-6 space-y-4 max-h-60 overflow-y-auto">
+              @for (data of filteredColors(); track data.title) {
+                <li class="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    [id]="'desk-color-' + data.title"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                    [checked]="colorName() === data.title"
+                    (change)="toggleColorName(data.title, $event)"
+                  />
+                  <label
+                    [for]="'desk-color-' + data.title"
+                    class="flex items-center gap-2 text-slate-600 font-medium text-sm cursor-pointer"
+                  >
+                    <span
+                      class="block rounded-full w-4 h-4"
+                      [style.backgroundColor]="data.title.toLowerCase()"
+                    ></span>
+                    {{ data.title }}
+                  </label>
+                  <span class="text-gray-500 text-xs ml-auto">({{ data.quantity }})</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        <!-- Size Section -->
+        @if (sizes().length > 0) {
+          <div class="py-6">
+            <h6 class="text-slate-900 text-sm font-semibold">Size</h6>
+            <div class="flex flex-wrap gap-2 mt-4">
+              @for (data of sizes(); track data.title) {
+                <div class="size-selector">
+                  <input
+                    type="checkbox"
+                    class="hidden"
+                    [id]="'desk-size-' + data.title"
+                    [checked]="sizeName() === data.title"
+                    (change)="toggleSizeName(data.title, $event)"
+                  />
+                  <label
+                    [for]="'desk-size-' + data.title"
+                    class="text-xs border border-gray-200 rounded-sm h-8 w-8 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 hover:border-pink-500 transition-colors"
+                    [class.bg-pink-500]="sizeName() === data.title"
+                    [class.text-white]="sizeName() === data.title"
+                    [class.border-pink-500]="sizeName() === data.title"
+                  >
+                    {{ data.title }}
+                  </label>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Discount Section -->
+        <div class="py-6">
+          <h6 class="text-slate-900 text-sm font-semibold">Discount</h6>
+          <ul class="space-y-4 mt-4">
+            <li class="flex items-center gap-3">
               <input
                 type="radio"
-                class="hidden"
-                name="size"
-                [id]="data.title"
-                [checked]="sizeName === data.title"
-                (click)="toggleSizeName(data.title)"
+                id="desk-discount-10"
+                name="discount"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                [checked]="discountValues().includes('10')"
+                (change)="toggleDiscount('10', $event)"
               />
               <label
-                [for]="data.title"
-                class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-800"
-                >{{ data.title }}</label
+                for="desk-discount-10"
+                class="text-slate-600 font-medium text-sm cursor-pointer"
+                >10% and above</label
               >
-            </div>
-            }
-            <!-- single size end -->
-          </div>
-        </div>
-        }
-        <!-- size filter end -->
-        <!-- color filter -->
-        @if (colors?.length > 0) {
-        <div class="pt-4">
-          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
-            Color
-          </h3>
-          <div class="flex items-center gap-2">
-            <!-- single color -->
-            @for(data of colors; track data.title){
-            <div class="color-selector">
+            </li>
+            <li class="flex items-center gap-3">
               <input
                 type="radio"
-                name="color"
-                class="hidden"
-                [id]="data.title"
-                [checked]="colorName === data.title"
-                (click)="toggleColorName(data.title)"
+                id="desk-discount-20"
+                name="discount"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                [checked]="discountValues().includes('20')"
+                (change)="toggleDiscount('20', $event)"
               />
               <label
-                [for]="data.title"
-                class="border border-gray-200 rounded-sm h-5 w-5 cursor-pointer shadow-sm block"
-                [ngStyle]="{ 'background-color': data.title }"
-              ></label>
-            </div>
-            }
-            <!-- single color end -->
-          </div>
+                for="desk-discount-20"
+                class="text-slate-600 font-medium text-sm cursor-pointer"
+                >20% and above</label
+              >
+            </li>
+            <li class="flex items-center gap-3">
+              <input
+                type="radio"
+                id="desk-discount-30"
+                name="discount"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                [checked]="discountValues().includes('30')"
+                (change)="toggleDiscount('30', $event)"
+              />
+              <label
+                for="desk-discount-30"
+                class="text-slate-600 font-medium text-sm cursor-pointer"
+                >30% and above</label
+              >
+            </li>
+            <li class="flex items-center gap-3">
+              <input
+                type="radio"
+                id="desk-discount-40"
+                name="discount"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                [checked]="discountValues().includes('40')"
+                (change)="toggleDiscount('40', $event)"
+              />
+              <label
+                for="desk-discount-40"
+                class="text-slate-600 font-medium text-sm cursor-pointer"
+                >40% and above</label
+              >
+            </li>
+            <li class="flex items-center gap-3">
+              <input
+                type="radio"
+                id="desk-discount-50"
+                name="discount"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                [checked]="discountValues().includes('50')"
+                (change)="toggleDiscount('50', $event)"
+              />
+              <label
+                for="desk-discount-50"
+                class="text-slate-600 font-medium text-sm cursor-pointer"
+                >50% and above</label
+              >
+            </li>
+          </ul>
         </div>
-        }
-        <!-- color filter end -->
-        <button
-          (click)="onClearFilter()"
-          class="bg-primary text-gray-50 w-full text-center py-2 hover:bg-rose-500"
-        >
-          Clear Filters
-        </button>
       </div>
     </div>
-    }
-    <!-- sidebar end -->
 
-    <!-- product -->
-    <div class="">
-      <!-- sorting -->
-      <div class="flex items-center mb-4">
+    <!-- product area with filter button -->
+    <div class="w-full">
+      <!-- sorting and filter button -->
+      <div class="flex items-center mb-4 gap-3">
         <select
-          [(ngModel)]="sortValue"
+          [ngModel]="sortValue()"
+          (ngModelChange)="sortValue.set($event)"
           class="w-44 text-sm text-gray-800 px-4 py-3 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary"
         >
           <option value="">Default sorting</option>
@@ -179,31 +329,403 @@
           <option value="high-low">Price high-low</option>
           <option value="latest">Latest product</option>
         </select>
+
+        <!-- Filter toggle button for mobile/tablet -->
+        <button
+          type="button"
+          (click)="openDrawer()"
+          class="md:hidden px-4 py-2 rounded-md text-white text-sm font-medium bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+            />
+          </svg>
+          Filters
+        </button>
       </div>
-      <!-- sorting end -->
+
+      <!-- Mobile Filter Drawer -->
+      @if (isDrawerOpen()) {
+        <div id="drawerWrapper" class="fixed inset-0 z-1000 md:hidden" (click)="closeDrawer()">
+          <!-- Backdrop -->
+          <div
+            class="absolute inset-0 bg-[rgba(0,0,0,0.5)] transition-opacity duration-300 ease-in-out"
+            [class.opacity-100]="isDrawerOpen()"
+            [class.opacity-0]="!isDrawerOpen()"
+          ></div>
+
+          <!-- Drawer -->
+          <div
+            class="absolute right-0 top-0 h-full w-full max-w-87.5 bg-white shadow-lg transform transition-transform duration-300 ease-in-out overflow-hidden flex flex-col"
+            [class.translate-x-0]="isDrawerOpen()"
+            [class.translate-x-full]="!isDrawerOpen()"
+            (click)="$event.stopPropagation()"
+          >
+            <!-- Fixed Header -->
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+              <h3 class="text-slate-900 text-lg font-semibold">Filter</h3>
+              <button
+                type="button"
+                (click)="onClearFilter()"
+                class="text-sm text-red-500 font-semibold hover:text-red-600 transition-colors"
+              >
+                Clear all
+              </button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto">
+              <div class="divide-y divide-gray-200">
+                <!-- Categories Section -->
+                @if (categories().length > 0) {
+                  <div class="p-6">
+                    <h6 class="text-slate-900 text-sm font-semibold mb-3">Categories</h6>
+                    <div
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
+                    >
+                      <input
+                        type="text"
+                        [ngModel]="categorySearch()"
+                        (ngModelChange)="categorySearch.set($event)"
+                        placeholder="Search category"
+                        class="w-full bg-transparent outline-none text-gray-900 text-sm"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 192.904 192.904"
+                        class="w-3 fill-gray-600"
+                      >
+                        <path
+                          d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <ul class="space-y-3 max-h-48 overflow-y-auto pr-2">
+                      @for (data of filteredCategories(); track data.title) {
+                        <li class="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            [id]="'mobile-cat-' + data.title"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                            [checked]="categoryNames().includes(data.title)"
+                            (change)="toggleCategoryName(data.title, $event)"
+                          />
+                          <label
+                            [for]="'mobile-cat-' + data.title"
+                            class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                          >
+                            {{ data.title }}
+                          </label>
+                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                <!-- Brands Section -->
+                @if (brands().length > 0) {
+                  <div class="p-6">
+                    <h6 class="text-slate-900 text-sm font-semibold mb-3">Brands</h6>
+                    <div
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
+                    >
+                      <input
+                        type="text"
+                        [ngModel]="brandSearch()"
+                        (ngModelChange)="brandSearch.set($event)"
+                        placeholder="Search brand"
+                        class="w-full bg-transparent outline-none text-gray-900 text-sm"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 192.904 192.904"
+                        class="w-3 fill-gray-600"
+                      >
+                        <path
+                          d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <ul class="space-y-3 max-h-48 overflow-y-auto pr-2">
+                      @for (data of filteredBrands(); track data.title) {
+                        <li class="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            [id]="'mobile-brand-' + data.title"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                            [checked]="brandNames().includes(data.title)"
+                            (change)="toggleBrandName(data.title, $event)"
+                          />
+                          <label
+                            [for]="'mobile-brand-' + data.title"
+                            class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                          >
+                            {{ data.title }}
+                          </label>
+                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                <!-- Price Section -->
+                <div class="p-6">
+                  <h6 class="text-slate-900 text-sm font-semibold mb-4">Price</h6>
+                  <div class="relative">
+                    <div class="h-1.5 bg-gray-200 relative rounded-full">
+                      <div
+                        class="absolute h-1.5 bg-primary rounded-full"
+                        [style.width]="activeTrackWidth()"
+                        [style.left]="activeTrackLeft()"
+                      ></div>
+                    </div>
+
+                    <input
+                      type="range"
+                      [min]="priceMin()"
+                      [max]="priceMax()"
+                      [value]="minRangeValue()"
+                      (input)="onMinRangeChange($event)"
+                      class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:hover:bg-primary-dark [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+                    />
+
+                    <input
+                      type="range"
+                      [min]="priceMin()"
+                      [max]="priceMax()"
+                      [value]="maxRangeValue()"
+                      (input)="onMaxRangeChange($event)"
+                      class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:hover:bg-primary-dark [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+                    />
+
+                    <div class="flex justify-between text-slate-600 font-medium text-sm mt-6">
+                      <span class="bg-gray-100 px-3 py-1 rounded-md">${{ minRangeValue() }}</span>
+                      <span class="bg-gray-100 px-3 py-1 rounded-md">${{ maxRangeValue() }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Color Section -->
+                @if (colors().length > 0) {
+                  <div class="p-6">
+                    <h6 class="text-slate-900 text-sm font-semibold mb-3">Colors</h6>
+                    <div
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
+                    >
+                      <input
+                        type="text"
+                        [ngModel]="colorSearch()"
+                        (ngModelChange)="colorSearch.set($event)"
+                        placeholder="Search color"
+                        class="w-full bg-transparent outline-none text-gray-900 text-sm"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 192.904 192.904"
+                        class="w-3 fill-gray-600"
+                      >
+                        <path
+                          d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <ul class="space-y-3 max-h-48 overflow-y-auto pr-2">
+                      @for (data of filteredColors(); track data.title) {
+                        <li class="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            [id]="'mobile-color-' + data.title"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded"
+                            [checked]="colorName() === data.title"
+                            (change)="toggleColorName(data.title, $event)"
+                          />
+                          <label
+                            [for]="'mobile-color-' + data.title"
+                            class="flex items-center gap-2 text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                          >
+                            <span
+                              class="block rounded-full w-4 h-4 border border-gray-300"
+                              [style.backgroundColor]="data.title.toLowerCase()"
+                            ></span>
+                            {{ data.title }}
+                          </label>
+                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                <!-- Size Section -->
+                @if (sizes().length > 0) {
+                  <div class="p-6">
+                    <h6 class="text-slate-900 text-sm font-semibold mb-3">Sizes</h6>
+                    <div class="flex flex-wrap gap-2">
+                      @for (data of sizes(); track data.title) {
+                        <div class="size-selector">
+                          <input
+                            type="checkbox"
+                            class="hidden"
+                            [id]="'mobile-size-' + data.title"
+                            [checked]="sizeName() === data.title"
+                            (change)="toggleSizeName(data.title, $event)"
+                          />
+                          <label
+                            [for]="'mobile-size-' + data.title"
+                            class="text-xs border border-gray-300 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer shadow-sm text-gray-700 hover:border-primary hover:text-primary transition-all"
+                            [class.bg-primary]="sizeName() === data.title"
+                            [class.text-white]="sizeName() === data.title"
+                            [class.border-primary]="sizeName() === data.title"
+                            [class.hover:bg-primary]="sizeName() === data.title"
+                            [class.hover:text-white]="sizeName() === data.title"
+                          >
+                            {{ data.title }}
+                          </label>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- Discount Section -->
+                <div class="p-6">
+                  <h6 class="text-slate-900 text-sm font-semibold mb-3">Discount</h6>
+                  <ul class="space-y-3">
+                    <li class="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        id="mobile-discount-10"
+                        name="mobile-discount"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                        [checked]="discountValues().includes('10')"
+                        (change)="toggleDiscount('10', $event)"
+                      />
+                      <label
+                        for="mobile-discount-10"
+                        class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                      >
+                        10% and above
+                      </label>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        id="mobile-discount-20"
+                        name="mobile-discount"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                        [checked]="discountValues().includes('20')"
+                        (change)="toggleDiscount('20', $event)"
+                      />
+                      <label
+                        for="mobile-discount-20"
+                        class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                      >
+                        20% and above
+                      </label>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        id="mobile-discount-30"
+                        name="mobile-discount"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                        [checked]="discountValues().includes('30')"
+                        (change)="toggleDiscount('30', $event)"
+                      />
+                      <label
+                        for="mobile-discount-30"
+                        class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                      >
+                        30% and above
+                      </label>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        id="mobile-discount-40"
+                        name="mobile-discount"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                        [checked]="discountValues().includes('40')"
+                        (change)="toggleDiscount('40', $event)"
+                      />
+                      <label
+                        for="mobile-discount-40"
+                        class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                      >
+                        40% and above
+                      </label>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        id="mobile-discount-50"
+                        name="mobile-discount"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary"
+                        [checked]="discountValues().includes('50')"
+                        (change)="toggleDiscount('50', $event)"
+                      />
+                      <label
+                        for="mobile-discount-50"
+                        class="text-slate-600 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900"
+                      >
+                        50% and above
+                      </label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fixed Footer Buttons -->
+            <div class="border-t border-gray-200 px-4 py-2 space-y-2">
+              <button
+                type="button"
+                (click)="applyFilters()"
+                class="px-4 py-3 rounded-md text-white text-sm w-full font-medium bg-blue-600 hover:bg-blue-700-dark transition-colors cursor-pointer"
+              >
+                Apply Filters
+              </button>
+              <button
+                type="button"
+                (click)="closeDrawer()"
+                class="px-4 py-3 rounded-md text-slate-700 text-sm w-full font-medium bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- product grid -->
-      @if (!products) {
-      <div
-        class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
-      >
-        @for (_ of [1,2,3,4,5,6,7,8]; track _) {
-        <app-product-skeleton></app-product-skeleton>
-        }
-      </div>
+      @if (!products()) {
+        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
+          @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+            <app-product-skeleton></app-product-skeleton>
+          }
+        </div>
       } @else {
-      <div
-        class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 items-stretch"
-      >
-        <!-- single product -->
-        @for (product of
-        byPrice(byCategory(byBrand(bySize(byColor(bySorting(products))))));
-        track product.id) {
-        <app-product-card [product]="product"></app-product-card>
-        } @empty {
-        <div class="text-center text-gray-800 text-xl">No products found.</div>
-        }
-        <!-- single product end -->
-      </div>
+        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 items-stretch">
+          <!-- single product -->
+          @for (product of filteredProducts(); track product.id) {
+            <app-product-card [product]="product"></app-product-card>
+          } @empty {
+            <div class="text-center text-gray-800 text-xl col-span-full">No products found.</div>
+          }
+          <!-- single product end -->
+        </div>
       }
       <!-- product grid end -->
     </div>

@@ -56,13 +56,13 @@ export const routes: Routes = [
         title: 'Order Confirmation'
       },
       {
-        path: 'account/register',
+        path: 'register',
         loadComponent: () => import('./components/main/customer-register/customer-register').then(m => m.CustomerRegister),
         data: { reuse: true },
         title: 'Customer Register'
       },
       {
-        path: 'account/login',
+        path: 'login',
         loadComponent: () => import('./components/main/customer-login/customer-login').then(m => m.CustomerLogin),
         data: { reuse: true },
         title: 'Customer login'
