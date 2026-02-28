@@ -1,0 +1,197 @@
+<h2 class="text-xl font-bold text-teal-500 mb-4">Edit Company Settings</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="grid grid-cols-1 md:grid-cols-2 gap-6"
+>
+  <!-- Company Information -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-semibold text-teal-600 mb-2">
+      Company Information
+    </h3>
+
+    <Field label="Company Name">
+      <input
+        type="text"
+        formControlName="companyName"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="isFieldInvalid('companyName')"
+        required
+      />
+    </Field>
+
+    <Field label="Contact Phone">
+      <input
+        type="text"
+        formControlName="contactPhone"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="isFieldInvalid('contactPhone')"
+        required
+      />
+    </Field>
+
+    <Field label="Address Line 1">
+      <textarea
+        formControlName="address1"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="isFieldInvalid('address1')"
+        rows="2"
+        placeholder=""
+      ></textarea>
+    </Field>
+
+    <Field label="Address Line 2">
+      <textarea
+        formControlName="address2"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="isFieldInvalid('address2')"
+        rows="2"
+        placeholder=""
+      ></textarea>
+    </Field>
+  </div>
+
+  <!-- Social Links Section -->
+  <div formGroupName="socialLinks" class="space-y-4">
+    <h3 class="text-lg font-semibold text-teal-600 mb-2">Social Links</h3>
+
+    <Field label="Facebook URL">
+      <input
+        type="url"
+        formControlName="facebook"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="
+          socialLinksGroup.get('facebook')?.invalid &&
+          (socialLinksGroup.get('facebook')?.touched || isSubmitted)
+        "
+        placeholder="https://www.facebook.com/yourpage"
+      />
+    </Field>
+
+    <Field label="Twitter URL">
+      <input
+        type="url"
+        formControlName="twitter"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="
+          socialLinksGroup.get('twitter')?.invalid &&
+          (socialLinksGroup.get('twitter')?.touched || isSubmitted)
+        "
+        placeholder="https://www.twitter.com/yourpage"
+      />
+    </Field>
+
+    <Field label="Instagram URL">
+      <input
+        type="url"
+        formControlName="instagram"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="
+          socialLinksGroup.get('instagram')?.invalid &&
+          (socialLinksGroup.get('instagram')?.touched || isSubmitted)
+        "
+        placeholder="https://www.instagram.com/yourpage"
+      />
+    </Field>
+
+    <Field label="LinkedIn URL">
+      <input
+        type="url"
+        formControlName="linkedin"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.border-red-500]="
+          socialLinksGroup.get('linkedin')?.invalid &&
+          (socialLinksGroup.get('linkedin')?.touched || isSubmitted)
+        "
+        placeholder="https://www.linkedin.com/company/yourpage"
+      />
+    </Field>
+  </div>
+
+  <!-- Delivery Charges -->
+  <div class="space-y-4 md:col-span-2">
+    <h3 class="text-lg font-semibold text-teal-600">Delivery Charges</h3>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left text-gray-900">
+        <thead class="text-sm text-gray-50 uppercase bg-gray-800">
+          <tr>
+            <th scope="col" class="px-6 py-3">Name</th>
+            <th scope="col" class="px-6 py-3">Amount</th>
+            <th scope="col" class="px-6 py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container formArrayName="deliveryCharges">
+            @for (charge of deliveryCharges.controls; track $index; let i =
+            $index) {
+            <tr class="bg-white border-b hover:bg-gray-50" [formGroupName]="i">
+              <td class="px-6 py-4">
+                <input
+                  type="text"
+                  formControlName="name"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5"
+                  [class.border-red-500]="
+                    isDeliveryChargeFieldInvalid(i, 'name')
+                  "
+                  required
+                />
+              </td>
+              <td class="px-6 py-4">
+                <input
+                  type="number"
+                  formControlName="amount"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5"
+                  [class.border-red-500]="
+                    isDeliveryChargeFieldInvalid(i, 'amount')
+                  "
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </td>
+              <td class="px-6 py-4">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [formControl]="getDeliveryChargeControl(i, 'isActive')"
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"
+                  ></div>
+                  <span class="ml-3 text-sm font-medium text-gray-900">
+                    {{
+                      getDeliveryChargeControl(i, "isActive").value
+                        ? "Active"
+                        : "Inactive"
+                    }}
+                  </span>
+                </label>
+              </td>
+            </tr>
+            }
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex gap-2 justify-end md:col-span-2">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Update Settings
+    </button>
+  </div>
+</form>

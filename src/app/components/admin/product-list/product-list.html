@@ -1,0 +1,174 @@
+@if (isView()) {
+  <div class="w-full px-3 max-h-[98vh] overflow-scroll">
+    <h1 class="text-xl md:text-3xl font-bold text-teal-500 underline text-center">
+      Product List
+    </h1>
+
+    <div class="flex justify-between items-center mb-4">
+      @if (isInsert()) {
+        <button
+          (click)="openAddModal()"
+          class="text-gray-50 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+          >
+          Add Product
+        </button>
+      }
+
+      <div class="w-full max-w-lg">
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="relative mt-1">
+          <div
+            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+            <fa-icon [icon]="faSearch"></fa-icon>
+          </div>
+          <input
+            #searchInput
+            type="text"
+            id="table-search"
+            autocomplete="off"
+            class="block ps-10 text-xs text-gray-950 border border-gray-300 rounded bg-teal-100 focus:ring-teal-500 focus:border-teal-500 w-full"
+            placeholder="Search products..."
+            (input)="onSearchProduct($event)"
+            />
+          </div>
+        </div>
+      </div>
+
+      @if (isLoading$ | async) {
+        <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
+      } @else if (hasError$ | async) {
+        <p class="text-3xl font-bold text-center p-10 text-red-600">
+          There was an error loading data.
+        </p>
+      } @else if (filteredProductList().length === 0) {
+        <p class="text-3xl font-bold text-center p-10 text-orange-600">
+          No products found.
+        </p>
+      } @else {
+        <table class="w-full text-sm text-left rtl:text-right text-gray-950 mt-2">
+          <thead class="text-sm text-gray-50 uppercase bg-gray-800">
+            <tr>
+              <th scope="col" class="p-1">Image</th>
+              <th scope="col" class="p-1">Name</th>
+              <th scope="col" class="p-1">SKU</th>
+              <th scope="col" class="p-1">Category</th>
+              <th scope="col" class="p-1">Brand</th>
+              <th scope="col" class="p-1">Price</th>
+              <th scope="col" class="p-1">Status</th>
+              @if (isEdit() || isDelete()) {
+                <th scope="col" class="px-1">Action</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of filteredProductList().slice(0,20); track product?.id ||
+              $index) {
+              <tr
+                id="row-{{ $index }}"
+                class="bg-teal-50 border-b hover:bg-teal-600 hover:text-gray-50 cursor-pointer"
+                [class.bg-teal-200]="highlightedTr === $index"
+                >
+                <td class="p-1">
+                  <img
+                    [src]="product.image"
+                    alt="Product image"
+                    class="w-10 h-10 object-cover rounded"
+                    />
+                  </td>
+                  <td scope="row" class="p-1">
+                    {{ product.name }}
+                  </td>
+                  <td class="p-1">
+                    {{ product.sku }}
+                  </td>
+                  <td class="p-1">
+                    {{ product.category }}
+                  </td>
+                  <td class="p-1">
+                    {{ product.brand }}
+                  </td>
+                  <td class="p-1">
+                    <div class="flex flex-col">
+                      @if (product.offerPrice) {
+                        <span
+                          class="line-through text-gray-500 text-xs"
+                          [innerHTML]="product.regularPrice | bdt"
+                          >
+                        </span>
+                      }
+                      <span
+                        [class]="product.offerPrice ? 'text-red-600 font-semibold' : ''"
+                        [innerHTML]="product.offerPrice || product.regularPrice | bdt"
+                        >
+                      </span>
+                    </div>
+                  </td>
+                  <td class="p-1">
+                    <span
+            [class]="{
+              'bg-green-100 text-green-800': product.isActive,
+              'bg-red-100 text-red-800': !product.isActive
+            }"
+                      class="text-xs font-medium px-2.5 py-0.5 rounded"
+                      >
+                      {{ product.isActive ? "Active" : "Inactive" }}
+                    </span>
+                    @if (product.isFeatured) {
+                      <span
+                        class="ml-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
+                        >
+                        Featured
+                      </span>
+                    }
+                  </td>
+                  <td class="flex gap-1">
+                    @if (isEdit()) {
+                      <button
+                        class="text-orange-50 bg-orange-400 hover:bg-orange-500 p-1 rounded"
+                        (click)="openEditModal(product)"
+                        >
+                        <fa-icon [icon]="faPencil"></fa-icon>
+                      </button>
+                      } @if (isDelete()) {
+                      <button
+                        class="text-teal-50 bg-teal-600 hover:bg-teal-700 px-2 py-[1px] rounded"
+                        (click)="onDelete(product?.id)"
+                        >
+                        <fa-icon [icon]="faRemove"></fa-icon>
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+      <!-- Modal -->
+      @if (showModal) {
+        <div
+          class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+          (click)="closeModal()"
+          >
+          <div
+            class="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()"
+            >
+            <app-product-form
+              [product]="selectedProduct"
+              [allProducts]="filteredProductList()"
+              [modalTitle]="modalTitle"
+              [categories]="categories()"
+              [brands]="brands()"
+              (submitForm)="handleFormSubmit($event)"
+              (cancel)="closeModal()"
+            ></app-product-form>
+          </div>
+        </div>
+        } } @else {
+        <p class="text-3xl font-bold text-center p-10 text-red-600">
+          You don't have permission to view this page.
+        </p>
+      }

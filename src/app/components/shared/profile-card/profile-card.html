@@ -1,0 +1,52 @@
+<!-- single card -->
+<div class="shadow rounded bg-white px-4 pt-6 pb-8">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="font-medium text-gray-800 text-lg">{{ data?.type }}</h3>
+    <div class="flex items-center gap-2">
+      @if (data?.isDefault) {
+      <span
+        class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
+      >
+        Default
+      </span>
+      } @else {
+      <button
+        (click)="onSetDefault()"
+        class="text-gray-400 hover:text-yellow-500 transition-colors"
+        title="Set as default"
+      >
+        <fa-icon [icon]="faStar"></fa-icon>
+      </button>
+      }
+
+      <div class="flex gap-2">
+        <button
+          (click)="onEdit()"
+          class="text-orange-600 hover:text-orange-800 transition-colors"
+          title="Edit"
+        >
+          <fa-icon [icon]="faPencil"></fa-icon>
+        </button>
+        <!-- Prevent deleting the default address -->
+        @if (!data?.isDefault) {
+        <button
+          (click)="onDelete()"
+          class="text-red-600 hover:text-red-800 transition-colors"
+          title="Delete"
+        >
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-1">
+    <h4 class="text-gray-800 font-bold">{{ data?.city }}</h4>
+    <p class="text-gray-800">{{ data?.street }}</p>
+    <p class="text-gray-800">{{ data?.district }}, {{ data?.division }}</p>
+    <p class="text-gray-800">{{ data?.contact }}</p>
+    <p class="text-gray-800">{{ data?.email }}</p>
+  </div>
+</div>
+<!-- single card end -->

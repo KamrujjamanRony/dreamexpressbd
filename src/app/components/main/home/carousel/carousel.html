@@ -1,0 +1,37 @@
+<swiper-container
+    mousewheel-force-to-axis="true"
+    slides-per-view="1"
+    loop="true"
+    navigation="true"
+    autoplay-delay="2500"
+    [spaceBetween]="25"
+  >
+    <!-- @for(product of products(); track product.id){ -->
+    <swiper-slide
+      >
+      <div class="w-full h-full mx-auto bg-cover bg-center relative rounded-lg" style="background-image: url('images/banner-bg.jpg');">
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-14 h-full min-h-96 px-8 md:px-16 py-12 overflow-hidden rounded-lg">
+        <div class="md:max-w-md flex flex-col justify-center">
+          <h2 class="text-3xl font-semibold text-purple-700 leading-tight">Elevate Your Experience with Modern Elegance</h2>
+          <p class="text-base text-purple-500 leading-relaxed mt-4">Laboris qui Lorem ad tempor ut reprehenderit. Nostrud anim nulla officia ea sit deserunt.</p>
+          <button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg text-sm cursor-pointer w-max mt-6">
+            Get started
+          </button>
+        </div>
+      </div>
+    </div>
+  </swiper-slide>
+    <swiper-slide
+      ><div class="w-full h-full mx-auto bg-cover bg-center relative rounded-lg" style="background-image: url('images/banner-bg.jpg');">
+      <div class="grid md:grid-cols-2 gap-x-8 gap-y-14 h-full min-h-96 px-8 md:px-16 py-12 overflow-hidden rounded-lg">
+        <div class="md:max-w-md flex flex-col justify-center">
+          <h2 class="text-3xl font-semibold text-purple-700 leading-tight">Elevate Your Experience with Modern Elegance</h2>
+          <p class="text-base text-purple-500 leading-relaxed mt-4">Laboris qui Lorem ad tempor ut reprehenderit. Nostrud anim nulla officia ea sit deserunt.</p>
+          <button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg text-sm cursor-pointer w-max mt-6">
+            Get started
+          </button>
+        </div>
+      </div>
+    </div></swiper-slide>
+    <!-- } -->
+  </swiper-container>

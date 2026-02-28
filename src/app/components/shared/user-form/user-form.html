@@ -1,0 +1,90 @@
+<h2 class="text-xl font-bold text-teal-500 mb-4">
+  {{ modalTitle }}
+</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit($event)"
+  class="min-w-100 mx-auto px-2"
+>
+  <!-- userName -->
+  <Field label="userName">
+    <input
+      #inputRef
+      type="text"
+      [formControl]="getControl('userName')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        (getControl('userName').invalid && getControl('userName').touched) ||
+        isSubmitted
+      "
+      placeholder=""
+      required
+    />
+  </Field>
+
+  <!-- password -->
+  <Field label="password">
+    <input
+      #inputRef
+      type="text"
+      [formControl]="getControl('password')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        (getControl('password').invalid && getControl('password').touched) ||
+        isSubmitted
+      "
+      placeholder=""
+      required
+    />
+  </Field>
+
+  <!-- isActive -->
+  <div class="flex flex-wrap mb-5">
+    <div class="flex items-center me-4">
+      <input
+        id="active-radio"
+        type="radio"
+        [formControl]="getControl('isActive')"
+        [value]="true"
+        name="isActive"
+        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 focus:ring-2"
+      />
+      <label for="active-radio" class="ms-2 text-sm font-medium text-gray-950"
+        >Activate</label
+      >
+    </div>
+    <div class="flex items-center me-4">
+      <input
+        id="deactivate-radio"
+        type="radio"
+        [formControl]="getControl('isActive')"
+        [value]="false"
+        name="isActive"
+        class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+      />
+      <label
+        for="deactivate-radio"
+        class="ms-2 text-sm font-medium text-gray-950"
+        >Deactivate</label
+      >
+    </div>
+  </div>
+
+  <div class="flex gap-2 justify-end">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      {{ selectedUser ? "Update" : "Save" }}
+    </button>
+  </div>
+</form>

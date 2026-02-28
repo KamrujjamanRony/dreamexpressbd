@@ -1,0 +1,36 @@
+<!-- sidebar.component.html -->
+<div
+  class="fixed flex flex-col left-0 w-14 hover:w-64 md:w-48 bg-rose-600 h-full text-white transition-all duration-300 border-none z-10 sidebar"
+>
+  <div
+    class="overflow-y-auto overflow-x-hidden flex flex-col justify-between grow"
+  >
+    <ul class="flex flex-col py-4 space-y-1">
+      <li class="px-5 hidden md:block">
+        <div class="flex flex-row items-center h-8">
+          <div class="text-sm font-bold tracking-wide text-gray-50 uppercase">
+            Admin dashboard
+          </div>
+        </div>
+      </li>
+      @for (item of menu; track $index) {
+      <li>
+        <a
+          [routerLink]="item?.link"
+          class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-rose-500 text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-rose-400 pr-6"
+        >
+          <span class="inline-flex justify-center items-center ml-4">
+            <fa-icon [icon]="item?.icon"></fa-icon>
+          </span>
+          <span class="ml-2 text-sm tracking-wide truncate">{{
+            item?.title
+          }}</span>
+        </a>
+      </li>
+      }
+    </ul>
+    <p class="mb-14 px-5 py-3 hidden md:block text-center text-xs">
+      Made by SuperSoft
+    </p>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="container pb-16 mt-4">
+  <div class="w-full pt-6">
+    <!-- table -->
+    @if (product?.specifications?.length > 0) {
+    <div>
+      <h3
+        class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium mt-5"
+      >
+        Specifications
+      </h3>
+      <table
+        class="table-auto border-collapse w-full text-left text-gray-800 text-sm mt-6"
+      >
+        @for(specification of product?.specifications; track specification){
+        <thead class="bg-gray-200 text-md lg:text-lg font-bold">
+          <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
+            {{ specification?.title }}
+          </th>
+          <td class="py-2 px-4 border border-gray-300"></td>
+        </thead>
+        <!-- <tr
+        class="bg-rose-400 text-white text-xl w-full font-medium !border-none"
+      >
+        <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
+          {{ specification?.title }}
+        </th>
+        <td class="py-2 px-4 border border-gray-300"></td>
+      </tr> -->
+        @for (specificationContent of specification.content; track $index) {
+        <tr>
+          <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
+            {{ specificationContent?.item }}
+          </th>
+          <td class="py-2 px-4 border border-gray-300">
+            {{ specificationContent?.value }}
+          </td>
+        </tr>
+        } }
+      </table>
+    </div>
+    }
+    <!-- table end -->
+    <!-- product details -->
+    @if (product?.productDetails) {
+    <div class="mt-8">
+      <h3
+        class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium"
+      >
+        Product details
+      </h3>
+      <div class="text-gray-800 space-y-3 whitespace-pre-line">
+        {{ product?.productDetails }}
+      </div>
+    </div>
+    }
+    <!-- product details end -->
+
+    <!-- ratting & reviews -->
+    <!-- <app-ratting-reviews [product]="product"></app-ratting-reviews> -->
+  </div>
+</div>

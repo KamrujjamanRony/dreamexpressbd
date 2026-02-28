@@ -1,0 +1,31 @@
+<!-- Related Products -->
+@if(relatedProducts.length > 0) {
+<div class="container pb-1 lg:pb-16">
+  <h2
+    class="text-lg lg:text-3xl font-medium text-secondary uppercase mb-1 lg:mb-6"
+  >
+    Related Products
+  </h2>
+  <!-- product grid -->
+  <swiper-container
+    slides-per-view="4"
+    mousewheel-force-to-axis="true"
+    loop="true"
+    navigation="true"
+    autoplay-delay="2500"
+    [spaceBetween]="25"
+    [breakpoints]="breakpoints"
+  >
+    <!-- single product -->
+    @for(product of relatedProducts; track product.id){
+    <swiper-slide
+      ><div class="h-full">
+        <app-product-card [product]="product"></app-product-card></div
+    ></swiper-slide>
+    }
+    <!-- single product end -->
+  </swiper-container>
+  <!-- product grid end -->
+</div>
+}
+<!-- Related Products end -->

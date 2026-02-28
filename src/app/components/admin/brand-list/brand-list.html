@@ -1,0 +1,113 @@
+@if (isView()) {
+<div class="w-full border mb-10 px-3 max-h-[98vh] overflow-scroll">
+  <h1 class="text-xl md:text-3xl font-bold text-teal-500 underline text-center">
+    Brand List
+  </h1>
+
+  <div class="flex justify-between items-center mb-4">
+    @if (isInsert()) {
+    <button
+      (click)="openAddModal()"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Add New Brand
+    </button>
+    }
+
+    <div class="w-full max-w-lg">
+      <label for="table-search" class="sr-only">Search</label>
+      <div class="relative mt-1">
+        <div
+          class="absolute inset-y-0 rtl:inset-r-0 inset-s-0 flex items-center ps-3 pointer-events-none"
+        >
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </div>
+        <input
+          #searchInput
+          type="text"
+          id="table-search"
+          autocomplete="off"
+          class="block ps-10 text-xs text-gray-950 border border-gray-300 rounded bg-teal-100 focus:ring-teal-500 focus:border-teal-500 w-full"
+          placeholder="Search"
+          (input)="onSearchBrand($event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading$ | async) {
+  <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
+  } @else if (hasError$ | async) {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    There was an error loading data.
+  </p>
+  } @else if (filteredBrandList().length === 0) {
+  <p class="text-3xl font-bold text-center p-10 text-orange-600">
+    Data is Empty.
+  </p>
+  } @else {
+  <table class="w-full text-sm text-left rtl:text-right text-gray-950 mt-2">
+    <thead class="text-sm text-gray-50 uppercase bg-gray-800">
+      <tr>
+        <th scope="col" class="p-1">Brand Name</th>
+        @if (isEdit() || isDelete()) {
+        <th scope="col" class="px-1 py-3">Actions</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of filteredBrandList().slice(0,20); track item?.id || $index) {
+      <tr
+        id="row-{{ $index }}"
+        class="bg-teal-50 border-b hover:bg-teal-600 hover:text-gray-50 cursor-pointer"
+      >
+        <td scope="row" class="p-1">
+          {{ item?.name }}
+        </td>
+        <td class="flex gap-1">
+          @if (isEdit()) {
+          <button
+            class="text-orange-50 bg-orange-400 hover:bg-orange-500 p-1 rounded"
+            (click)="openEditModal(item)"
+          >
+            <fa-icon [icon]="faPencil"></fa-icon>
+          </button>
+          } @if (isDelete()) {
+          <button
+            class="text-teal-50 bg-teal-600 hover:bg-teal-700 px-2 py-px rounded"
+            (click)="onDelete(item?.id)"
+          >
+            <fa-icon [icon]="faRemove"></fa-icon>
+          </button>
+          }
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>
+
+<!-- Modal -->
+@if (showModal) {
+<div
+  class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <app-brand-form
+      [selectedBrand]="selectedBrand"
+      [modalTitle]="modalTitle"
+      (submitForm)="handleFormSubmit($event)"
+      (cancel)="closeModal()"
+    ></app-brand-form>
+  </div>
+</div>
+} } @else {
+<p class="text-3xl font-bold text-center p-10 text-red-600">
+  You don't have permission to view this page.
+</p>
+}

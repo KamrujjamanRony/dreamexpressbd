@@ -1,0 +1,41 @@
+<section class="max-w-7xl mx-auto w-full p-4">
+  @if (isBannerPermitted()) {
+    <app-carousel />
+  }
+  
+  @if (isFeaturedPermitted()) {
+    <app-feature-product />
+  }
+  
+  @if (isCategoriesPermitted()) {
+    <app-categories [categories]="categories()" />
+  }
+  
+  @if (isProductsPermitted()) {
+    @if (loading()) {
+      @for (_ of [1,2,3,4]; track _) {
+        <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <app-product-skeleton></app-product-skeleton>
+        </div>
+      }
+    } @else {
+      <app-product-wrapper [products]="products()" />
+    }
+  }
+  
+  @if (isAddSectionPermitted()) {
+    <app-add-section />
+  }
+  
+  @if (isRecommendPermitted()) {
+    @if (loading()) {
+      @for (_ of [1,2,3,4]; track _) {
+        <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <app-product-skeleton></app-product-skeleton>
+        </div>
+      }
+    } @else {
+      <app-recommend-product [products]="products()" />
+    }
+  }
+</section>

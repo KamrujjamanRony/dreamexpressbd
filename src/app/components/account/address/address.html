@@ -1,0 +1,39 @@
+<!-- user address -->
+<div class="col-span-9">
+  @if (loading()) {
+  <div class="flex justify-center items-center h-64">
+    <span class="loading loading-spinner loading-lg"></span>
+  </div>
+  } @else {
+  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+    @for (item of address(); track item.id) {
+    <app-profile-card
+      [data]="item"
+      (edit)="openEditModal(item)"
+      (delete)="deleteAddress(item.id)"
+      (setDefault)="setDefaultAddress(item.id)"
+    />
+    }
+    <div
+      class="shadow rounded bg-white px-4 pt-6 pb-8 cursor-pointer hover:bg-gray-50 transition-colors"
+      (click)="openAddModal()"
+    >
+      <div class="flex justify-center items-center mb-4 h-full">
+        <button class="font-bold text-gray-800 text-lg lg:text-2xl">
+          + Add New Address
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+@if (showModal()) {
+<app-modal-address
+  [address]="selectedAddress()"
+  [isEditMode]="isEditMode()"
+  (submit)="handleModalSubmit($event)"
+  (close)="closeModal()"
+></app-modal-address>
+}
+<!-- user address end -->

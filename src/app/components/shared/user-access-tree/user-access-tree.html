@@ -1,0 +1,73 @@
+<section>
+  <ul class="ml-4 space-y-2">
+    @for (node of nodes(); track $index) {
+    <li>
+      <div class="flex items-center space-x-2 font-bold">
+        <!-- Collapse Button -->
+        @if (node.children?.length) {
+        <button
+          class="text-gray-950 hover:text-gray-950 focus:outline-none"
+          (click)="toggleCollapse(node)"
+        >
+          {{ node.collapsed ? "▶" : "▼" }}
+        </button>
+        } @else {
+        <p class="w-5"></p>
+        }
+
+        <!-- Checkbox for Menu -->
+        <input
+          type="checkbox"
+          class="form-checkbox h-5 w-5 text-teal-500 focus:ring-teal-500"
+          [(ngModel)]="node.isSelected"
+          (change)="onCheck(node, $event)"
+        />
+
+        <!-- Node menuName -->
+        <span class="text-gray-950">{{ node.menuName }}</span>
+      </div>
+
+      <!-- Permissions -->
+      @if (node.permissionsKey?.length) {
+      <div class="ml-8 space-y-1">
+        @for (permission of node.permissionsKey; track $index) {
+        <label class="flex items-center space-x-2 text-sm">
+          <input
+            type="checkbox"
+            class="form-checkbox h-4 w-4 text-teal-500 focus:ring-teal-500"
+            [(ngModel)]="permission.isSelected"
+            (change)="onPermissionCheck(node)"
+          />
+          <span class="text-gray-950">{{ permission.permission }}</span>
+        </label>
+        }
+      </div>
+      }
+
+      <!-- Children List (Collapsible) -->
+      @if (!node.collapsed && node.children?.length) {
+      <app-user-access-tree
+        [nodes]="node.children || []"
+      ></app-user-access-tree>
+      }
+    </li>
+    }
+  </ul>
+
+  @if(nodes()[0]?.id == 1){
+  <div class="flex space-x-2 my-2">
+    <button
+      class="px-3 py-1 bg-teal-500 text-gray-50 rounded"
+      (click)="selectAll()"
+    >
+      Select All
+    </button>
+    <button
+      class="px-3 py-1 bg-red-500 text-gray-50 rounded"
+      (click)="deselectAll()"
+    >
+      Deselect All
+    </button>
+  </div>
+  }
+</section>

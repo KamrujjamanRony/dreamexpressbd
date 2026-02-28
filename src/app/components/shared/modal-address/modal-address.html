@@ -1,0 +1,164 @@
+<!-- address modal start -->
+@if (isLoading) {
+  <div class="loading-overlay">
+    <span class="loading-spinner"></span>
+  </div>
+}
+@if (showModal) {
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+    >
+    <!-- Modal Container -->
+    <div
+      class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+      >
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b p-4">
+        <h3 class="text-xl font-bold text-gray-800">
+          {{ isEditMode ? "Edit Address" : "Add New Address" }}
+        </h3>
+        <button
+          (click)="onClose()"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          aria-label="Close"
+          >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700"
+            >Address Type</label
+            >
+            <select
+              [(ngModel)]="formData.type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+              >
+              @for (type of addressTypes; track type) {
+                <option [value]="type.value">
+                  {{ type.label }}
+                </option>
+              }
+            </select>
+          </div>
+          <!-- Region (Division) Selection -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Division*</label>
+            <select
+              [(ngModel)]="formData.region"
+              (change)="onRegionChange(formData.region)"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+              required
+              >
+              <option value="">Select Division</option>
+              @for (region of regions; track region) {
+                <option [value]="region.name">
+                  {{ region.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <!-- City (District) Selection -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">District*</label>
+            <select
+              [(ngModel)]="formData.city"
+              (change)="onCityChange(formData.city)"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+              [disabled]="!formData.region"
+              required
+              >
+              <option value="">Select District</option>
+              @for (city of cities; track city) {
+                <option [value]="city.name">
+                  {{ city.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <!-- Area Selection -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Area</label>
+            <select
+              [(ngModel)]="formData.area"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+              [disabled]="!formData.city"
+              >
+              <option value="">Select Area (Optional)</option>
+              @for (area of areas; track area) {
+                <option [value]="area.name">
+                  {{ area.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700"
+              >Street Address*</label
+              >
+              <input
+                type="text"
+                [(ngModel)]="formData.street"
+                placeholder="Enter street address"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+                required
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Contact Number*</label
+                  >
+                  <input
+                    type="tel"
+                    [(ngModel)]="formData.contact"
+                    placeholder="Enter contact number"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
+                    required
+                    />
+                  </div>
+                  <div class="flex items-center">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="formData.isDefault"
+                      id="defaultAddress"
+                      class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                      />
+                      <label for="defaultAddress" class="ml-2 block text-sm text-gray-700">
+                        Set as default address
+                      </label>
+                    </div>
+                  </div>
+                  <!-- Modal Footer -->
+                  <div class="flex justify-end gap-2 border-t p-4">
+                    <button
+                      type="button"
+                      (click)="onClose()"
+                      class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                      >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      (click)="onSubmit()"
+                      class="px-4 py-2 text-sm font-medium text-white bg-rose-600 border border-transparent rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                      >
+                      {{ isEditMode ? "Update" : "Add" }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+            <!-- address modal end -->

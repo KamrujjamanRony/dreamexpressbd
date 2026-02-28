@@ -1,0 +1,151 @@
+<div class="container mx-auto p-4 max-w-6xl">
+  <h1 class="text-2xl font-bold mb-6">Checkout</h1>
+
+  @if (error) {
+  <div
+    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+  >
+    {{ error }}
+  </div>
+  }
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <!-- Delivery Address -->
+    <div class="md:col-span-2 space-y-6">
+      <div class="bg-white p-6 rounded shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Delivery Address</h2>
+          <button
+            (click)="openAddressModal()"
+            class="text-sm bg-rose-500 text-white px-3 py-1 rounded hover:bg-rose-600 transition"
+          >
+            + Add Address
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          @if (userAddresses() && userAddresses().length > 0) { @for (address of
+          userAddresses(); track address.id) {
+          <div
+            class="border p-4 rounded cursor-pointer group relative"
+            [class.border-rose-500]="deliveryAddress()?.id === address.id"
+            (click)="selectAddress(address.id)"
+          >
+            <div class="flex justify-between">
+              <h3 class="font-medium">{{ address.type }}</h3>
+              @if (address.isDefault) {
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded">Default</span>
+              }
+            </div>
+            <p class="text-gray-600">{{ address.street }}</p>
+            <p class="text-gray-600">
+              {{ address.city }}, {{ address.district }}
+            </p>
+            <p class="text-gray-600">Phone: {{ address.contact }}</p>
+
+            <!-- Edit button -->
+            <button
+              (click)="
+                $event.stopPropagation(); openAddressModal(true, address)
+              "
+              class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-rose-500 hover:text-rose-700 transition-opacity"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          } } @else {
+          <div class="text-center py-4 text-gray-500">
+            No addresses found. Please add an address to continue.
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Payment Method</h2>
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 p-3 border rounded">
+            <input
+              type="radio"
+              id="cod"
+              name="payment"
+              [(ngModel)]="paymentMethod"
+              value="Cash on Delivery"
+              checked
+            />
+            <label for="cod" class="w-full">
+              <div class="flex justify-between items-center">
+                <span>Cash on Delivery</span>
+                <span class="text-sm text-gray-500"
+                  >Pay when you receive the order</span
+                >
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div>
+      <div class="bg-white p-6 rounded shadow sticky top-4">
+        <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between">
+            <span>Subtotal ({{ orderData?.quantity }} items)</span>
+            <span [innerHTML]="orderData?.subtotal | bdt"></span>
+          </div>
+          <div class="flex justify-between">
+            <span>Delivery Charge</span>
+            <span [innerHTML]="deliveryCharge() | bdt"></span>
+          </div>
+        </div>
+
+        <div class="border-t pt-4 mb-4">
+          <div class="flex justify-between font-bold text-lg">
+            <span>Total</span>
+            <span
+              [innerHTML]="orderData?.subtotal + deliveryCharge() | bdt"
+            ></span>
+          </div>
+        </div>
+
+        <button
+          (click)="placeOrder()"
+          [disabled]="loading || !deliveryAddress()"
+          class="w-full mt-6 bg-rose-500 text-white py-2 rounded hover:bg-rose-600 transition disabled:bg-rose-300"
+        >
+          @if (loading) {
+          <span>Processing...</span>
+          } @else {
+          <span>Place Order</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Modal -->
+@if (showAddressModal) {
+<app-address-modal
+  [address]="selectedAddressForEdit"
+  [isEditMode]="addressModalEditMode"
+  (submit)="handleAddressModalSubmit($event)"
+  (close)="showAddressModal = false"
+></app-address-modal>
+}

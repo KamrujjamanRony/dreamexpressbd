@@ -1,0 +1,165 @@
+<!-- order-details.component.html -->
+<div class="space-y-6">
+  <!-- Order Header -->
+  <div class="border-b pb-4">
+    <h2 class="text-xl font-bold text-gray-900">Order #{{ order?.id }}</h2>
+    <div class="flex justify-between items-center mt-2">
+      <span class="text-sm text-gray-500">
+        Date: {{ order?.orderDate | date : "medium" }}
+      </span>
+      <span
+        class="font-semibold inline-flex leading-5 px-2 rounded-full text-xs {{
+          order?.orderStatus
+        }}"
+      >
+        {{ order?.orderStatus }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Customer Information -->
+  <div class="border-b pb-4">
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Customer Information</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <p class="text-sm font-medium text-gray-500">Name</p>
+        <p class="text-sm text-gray-900">{{ order?.userName }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Email</p>
+        <p class="text-sm text-gray-900">{{ order?.userEmail }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Phone</p>
+        <p class="text-sm text-gray-900">{{ order?.userPhone }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shipping Address -->
+  <div class="border-b pb-4">
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Shipping Address</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <p class="text-sm font-medium text-gray-500">District</p>
+        <p class="text-sm text-gray-900">
+          {{ order?.shippingAddress?.district }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">City</p>
+        <p class="text-sm text-gray-900">{{ order?.shippingAddress?.city }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Street</p>
+        <p class="text-sm text-gray-900">
+          {{ order?.shippingAddress?.street }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Contact</p>
+        <p class="text-sm text-gray-900">
+          {{ order?.shippingAddress?.contact }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Type</p>
+        <p class="text-sm text-gray-900">{{ order?.shippingAddress?.type }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="border-b pb-4">
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Order Items</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Product
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Price
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Quantity
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Total
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          @for (item of order?.orderItems; track item.Id) {
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <img
+                  [src]="item.Image"
+                  class="h-10 w-10 rounded-md"
+                  [alt]="item.ProductName"
+                />
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">
+                    {{ item.ProductName }}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span [innerHTML]="item.Price | bdt"></span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ item.Quantity }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span [innerHTML]="item.Price * item.Quantity | bdt"></span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Order Summary</h3>
+    <div class="bg-gray-50 p-4 rounded-lg">
+      <div class="flex justify-between py-2">
+        <span class="text-sm font-medium text-gray-500">Subtotal</span>
+        <span
+          class="text-sm font-medium text-gray-900"
+          [innerHTML]="order?.subtotal | bdt"
+        ></span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-sm font-medium text-gray-500">Delivery Charge</span>
+        <span
+          class="text-sm font-medium text-gray-900"
+          [innerHTML]="order?.deliveryCharge | bdt"
+        ></span>
+      </div>
+      <div class="flex justify-between py-2 border-t border-gray-200">
+        <span class="text-sm font-medium text-gray-900">Total</span>
+        <span
+          class="text-sm font-bold text-gray-900"
+          [innerHTML]="order?.totalAmount | bdt"
+        ></span>
+      </div>
+    </div>
+  </div>
+</div>

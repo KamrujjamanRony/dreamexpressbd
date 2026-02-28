@@ -1,0 +1,160 @@
+<!-- order-form.component.html -->
+<h2 class="text-xl font-bold text-teal-500 mb-4">
+  {{ modalTitle }}
+</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit($event)"
+  class="min-w-100 mx-auto px-2"
+>
+  <!-- Customer Information -->
+  <h3 class="text-lg font-medium text-gray-900 mb-2">Customer Information</h3>
+
+  <Field label="Full Name">
+    <input
+      type="text"
+      [formControl]="getControl('userName')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        getControl('userName').invalid &&
+        (getControl('userName').touched || isSubmitted)
+      "
+      required
+    />
+  </Field>
+
+  <Field label="Email">
+    <input
+      type="email"
+      [formControl]="getControl('userEmail')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        getControl('userEmail').invalid &&
+        (getControl('userEmail').touched || isSubmitted)
+      "
+      required
+    />
+  </Field>
+
+  <Field label="Phone">
+    <input
+      type="tel"
+      [formControl]="getControl('userPhone')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        getControl('userPhone').invalid &&
+        (getControl('userPhone').touched || isSubmitted)
+      "
+      required
+    />
+  </Field>
+
+  <!-- Order Status -->
+  <!-- <Field label="Order Status">
+    <select
+      [formControl]="getControl('orderStatus')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        getControl('orderStatus').invalid &&
+        (getControl('orderStatus').touched || isSubmitted)
+      "
+    >
+      <option value="" disabled selected>Select Order Status</option>
+      <option *ngFor="let status of statusOptions" [value]="status.value">
+        {{ status.label }}
+      </option>
+    </select>
+  </Field> -->
+
+  <!-- Payment Method -->
+  <!-- <Field label="Payment Method">
+    <select
+      [formControl]="getControl('paymentMethod')"
+      class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="
+        getControl('paymentMethod').invalid &&
+        (getControl('paymentMethod').touched || isSubmitted)
+      "
+    >
+      <option value="" disabled selected>Select Payment Method</option>
+      <option *ngFor="let method of paymentMethods" [value]="method.value">
+        {{ method.label }}
+      </option>
+    </select>
+  </Field> -->
+
+  <!-- Shipping Address -->
+  <h3 class="text-lg font-medium text-gray-900 mt-4 mb-2">Shipping Address</h3>
+
+  <div [formGroup]="shippingAddress">
+    <Field label="District">
+      <input
+        type="text"
+        formControlName="district"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.invalid]="
+          shippingAddress.get('district')?.invalid &&
+          (shippingAddress.get('district')?.touched || isSubmitted)
+        "
+        required
+      />
+    </Field>
+
+    <Field label="City">
+      <input
+        type="text"
+        formControlName="city"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.invalid]="
+          shippingAddress.get('city')?.invalid &&
+          (shippingAddress.get('city')?.touched || isSubmitted)
+        "
+        required
+      />
+    </Field>
+
+    <Field label="Street">
+      <input
+        type="text"
+        formControlName="street"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.invalid]="
+          shippingAddress.get('street')?.invalid &&
+          (shippingAddress.get('street')?.touched || isSubmitted)
+        "
+        required
+      />
+    </Field>
+
+    <Field label="Contact">
+      <input
+        type="text"
+        formControlName="contact"
+        class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.invalid]="
+          shippingAddress.get('contact')?.invalid &&
+          (shippingAddress.get('contact')?.touched || isSubmitted)
+        "
+        required
+      />
+    </Field>
+  </div>
+
+  <div class="flex gap-2 justify-end mt-4">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      {{ selectedOrder ? "Update" : "Save" }}
+    </button>
+  </div>
+</form>

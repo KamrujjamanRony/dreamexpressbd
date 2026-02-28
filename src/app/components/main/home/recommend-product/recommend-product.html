@@ -1,0 +1,39 @@
+<!-- recommend -->
+<div class="container pb-1 lg:pb-16">
+  <div class="flex items-center justify-between my-2 lg:my-5">
+    <h2 class="text-lg lg:text-3xl font-medium text-secondary uppercase">
+      recommended for you
+    </h2>
+
+    @if (products().length > 4) {
+    <button
+      routerLink="/shop"
+      type="button"
+      class="text-white bg-linear-to-r from-rose-400 via-rose-500 to-rose-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 shadow-lg shadow-rose-500/50 dark:shadow-lg dark:shadow-rose-800/80 rounded-lg text-sm px-5 py-2.5 text-center font-bold"
+    >
+      View More
+    </button>
+    }
+  </div>
+  <!-- product grid -->
+  <swiper-container
+    mousewheel-force-to-axis="true"
+    slides-per-view="2"
+    loop="true"
+    navigation="true"
+    autoplay-delay="2500"
+    [spaceBetween]="25"
+    [breakpoints]="breakpoints"
+  >
+    <!-- single product -->
+    @for(product of products(); track product.id){
+    <swiper-slide
+      ><div class="h-full">
+        <app-product-card [product]="product"></app-product-card></div
+    ></swiper-slide>
+    }
+    <!-- single product end -->
+  </swiper-container>
+  <!-- product grid end -->
+</div>
+<!-- recommend end -->

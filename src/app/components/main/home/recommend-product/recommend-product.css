@@ -1,0 +1,15 @@
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  width: 40px;
+  height: 40px;
+  --swiper-navigation-size: 24px;
+}
+
+@media (max-width: 780px) {
+  swiper-container::part(button-prev),
+  swiper-container::part(button-next) {
+    width: 20px;
+    height: 20px;
+    --swiper-navigation-size: 12px;
+  }
+}

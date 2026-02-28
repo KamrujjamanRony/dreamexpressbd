@@ -1,0 +1,213 @@
+<section>
+  <!-- breadcrumbs -->
+  <app-breadcrumbs name="Shop" />
+  <!-- breadcrumbs end -->
+
+  <!-- shop wrapper -->
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
+    <!-- sidebar -->
+    @if (dataService.isPermitted("Shop Sidebar")) {
+    <div class="bg-white px-4 pb-6 shadow rounded overflow-hidden min-w-64">
+      <div class="divide-y divide-gray-200 space-y-5">
+        <!-- category filter -->
+        @if (categories?.length > 0) {
+        <div>
+          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
+            Categories
+          </h3>
+          <div class="space-y-2">
+            <!-- single category -->
+            @for(data of categories; track data.title){
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                [id]="data.title"
+                class="text-primary focus:ring-0 cursor-pointer rounded-sm"
+                [checked]="categoryNames.includes(data.title)"
+                (change)="toggleCategoryName(data.title, $event)"
+              />
+              <label
+                [for]="data.title"
+                class="text-gray-800 ml-3 cursor-pointer"
+                >{{ data?.title }}</label
+              >
+              <div class="ml-auto text-gray-800 text-sm">
+                ({{ data?.quantity }})
+              </div>
+            </div>
+            }
+            <!-- single category end -->
+          </div>
+        </div>
+        }
+        <!-- category filter end -->
+        <!-- brand filter -->
+        @if (brands?.length > 0) {
+        <div class="pt-4">
+          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
+            Brands
+          </h3>
+          <div class="space-y-2">
+            <!-- single brand -->
+            @for(data of brands; track data.title){
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                [id]="data.title"
+                class="text-primary focus:ring-0 cursor-pointer rounded-sm"
+                [checked]="brandNames.includes(data.title)"
+                (change)="toggleBrandName(data.title, $event)"
+              />
+              <label
+                [for]="data.title"
+                class="text-gray-800 ml-3 cursor-pointer"
+                >{{ data?.title }}</label
+              >
+              <div class="ml-auto text-gray-800 text-sm">
+                ({{ data?.quantity }})
+              </div>
+            </div>
+            }
+            <!-- single brand end -->
+          </div>
+        </div>
+        }
+        <!-- brand filter end -->
+        <!-- price filter -->
+        <div class="pt-4">
+          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
+            Price
+          </h3>
+          <div class="mt-4 flex items-center">
+            <input
+              type="number"
+              [(ngModel)]="minPrice"
+              class="w-full min-w-24 border-gray-300 focus:border-primary focus:ring-0 px-3 py-1 text-gray-800 text-sm shadow-sm rounded"
+              placeholder="min"
+              min="0"
+            />
+            <span class="px-3 text-gray-800">-</span>
+            <input
+              type="number"
+              [(ngModel)]="maxPrice"
+              class="w-full min-w-24 border-gray-300 focus:border-primary focus:ring-0 px-3 py-1 text-gray-800 text-sm shadow-sm rounded"
+              placeholder="max"
+              min="0"
+            />
+          </div>
+        </div>
+        <!-- price filter end -->
+        <!-- size filter -->
+        @if (sizes?.length > 0) {
+        <div class="pt-4">
+          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Size</h3>
+          <div class="flex items-center gap-2">
+            <!-- single size -->
+            @for(data of sizes; track data.title){
+            <div class="size-selector">
+              <input
+                type="radio"
+                class="hidden"
+                name="size"
+                [id]="data.title"
+                [checked]="sizeName === data.title"
+                (click)="toggleSizeName(data.title)"
+              />
+              <label
+                [for]="data.title"
+                class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-800"
+                >{{ data.title }}</label
+              >
+            </div>
+            }
+            <!-- single size end -->
+          </div>
+        </div>
+        }
+        <!-- size filter end -->
+        <!-- color filter -->
+        @if (colors?.length > 0) {
+        <div class="pt-4">
+          <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">
+            Color
+          </h3>
+          <div class="flex items-center gap-2">
+            <!-- single color -->
+            @for(data of colors; track data.title){
+            <div class="color-selector">
+              <input
+                type="radio"
+                name="color"
+                class="hidden"
+                [id]="data.title"
+                [checked]="colorName === data.title"
+                (click)="toggleColorName(data.title)"
+              />
+              <label
+                [for]="data.title"
+                class="border border-gray-200 rounded-sm h-5 w-5 cursor-pointer shadow-sm block"
+                [ngStyle]="{ 'background-color': data.title }"
+              ></label>
+            </div>
+            }
+            <!-- single color end -->
+          </div>
+        </div>
+        }
+        <!-- color filter end -->
+        <button
+          (click)="onClearFilter()"
+          class="bg-primary text-gray-50 w-full text-center py-2 hover:bg-rose-500"
+        >
+          Clear Filters
+        </button>
+      </div>
+    </div>
+    }
+    <!-- sidebar end -->
+
+    <!-- product -->
+    <div class="">
+      <!-- sorting -->
+      <div class="flex items-center mb-4">
+        <select
+          [(ngModel)]="sortValue"
+          class="w-44 text-sm text-gray-800 px-4 py-3 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary"
+        >
+          <option value="">Default sorting</option>
+          <option value="low-high">Price low-high</option>
+          <option value="high-low">Price high-low</option>
+          <option value="latest">Latest product</option>
+        </select>
+      </div>
+      <!-- sorting end -->
+      <!-- product grid -->
+      @if (!products) {
+      <div
+        class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
+      >
+        @for (_ of [1,2,3,4,5,6,7,8]; track _) {
+        <app-product-skeleton></app-product-skeleton>
+        }
+      </div>
+      } @else {
+      <div
+        class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 items-stretch"
+      >
+        <!-- single product -->
+        @for (product of
+        byPrice(byCategory(byBrand(bySize(byColor(bySorting(products))))));
+        track product.id) {
+        <app-product-card [product]="product"></app-product-card>
+        } @empty {
+        <div class="text-center text-gray-800 text-xl">No products found.</div>
+        }
+        <!-- single product end -->
+      </div>
+      }
+      <!-- product grid end -->
+    </div>
+    <!-- product end -->
+  </div>
+  <!-- shop wrapper end -->
+</section>
