@@ -34,6 +34,35 @@ export class Home {
   isProductsPermitted = computed(() => this.dataService.isPermitted("Products"));
   isAddSectionPermitted = computed(() => this.dataService.isPermitted("Add Section"));
   isRecommendPermitted = computed(() => this.dataService.isPermitted("Recommend Section"));
+  productWithDiscount = computed(() => {    
+    const products = this.products();
+    if (!products) return [];
+    const productsWithDiscount = products.map((product: any) => {
+      const offerPrice = product.offerPrice;
+      const regularPrice = product.regularPrice;
+      let discount = 0;
+
+      if (offerPrice > 0 && regularPrice > 0) {
+        discount = Math.round(((regularPrice - offerPrice) / regularPrice) * 100);
+      }
+
+      return {
+        ...product,
+        discount: discount
+      };
+    });
+    return productsWithDiscount;
+  });
+  categoryWiseProducts = computed(() => {
+    const categoryMap: { [key: string]: Product[] } = {};
+    for (const product of this.productWithDiscount()) {
+      if (!categoryMap[product.category]) {
+        categoryMap[product.category] = [];
+      }
+      categoryMap[product.category].push(product);
+    }
+    return categoryMap;
+  });
 
   ngOnInit() {
     if (this.products().length === 0) {

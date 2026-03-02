@@ -1,8 +1,4 @@
 <section>
-  <!-- breadcrumbs -->
-  <app-breadcrumbs name="Shop" />
-  <!-- breadcrumbs end -->
-
   <!-- shop wrapper -->
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
@@ -120,7 +116,7 @@
           <div class="relative mt-4">
             <div class="h-1.5 bg-gray-300 relative rounded-md">
               <div
-                class="absolute h-1.5 bg-pink-500 rounded-full"
+                class="absolute h-1.5 bg-purple-500 rounded-full"
                 [style.width]="activeTrackWidth()"
                 [style.left]="activeTrackLeft()"
               ></div>
@@ -132,7 +128,7 @@
               [max]="priceMax()"
               [value]="minRangeValue()"
               (input)="onMinRangeChange($event)"
-              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-pink-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
             <input
@@ -141,7 +137,7 @@
               [max]="priceMax()"
               [value]="maxRangeValue()"
               (input)="onMaxRangeChange($event)"
-              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-pink-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
             <div class="flex justify-between text-slate-600 font-medium text-sm mt-4">
@@ -190,7 +186,7 @@
                     class="flex items-center gap-2 text-slate-600 font-medium text-sm cursor-pointer"
                   >
                     <span
-                      class="block rounded-full w-4 h-4"
+                      class="block rounded-full w-4 h-4 border border-gray-300"
                       [style.backgroundColor]="data.title.toLowerCase()"
                     ></span>
                     {{ data.title }}
@@ -218,8 +214,8 @@
                   />
                   <label
                     [for]="'desk-size-' + data.title"
-                    class="text-xs border border-gray-200 rounded-sm h-8 w-8 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 hover:border-pink-500 transition-colors"
-                    [class.bg-pink-500]="sizeName() === data.title"
+                    class="text-xs border border-gray-200 rounded-sm h-8 w-full min-w-8 px-1 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 hover:border-purple-500 transition-colors"
+                    [class.bg-purple-500]="sizeName() === data.title"
                     [class.text-white]="sizeName() === data.title"
                     [class.border-pink-500]="sizeName() === data.title"
                   >
@@ -318,11 +314,11 @@
     <!-- product area with filter button -->
     <div class="w-full">
       <!-- sorting and filter button -->
-      <div class="flex items-center mb-4 gap-3">
+      <div class="flex items-center mb-4 gap-3 justify-end">
         <select
           [ngModel]="sortValue()"
           (ngModelChange)="sortValue.set($event)"
-          class="w-44 text-sm text-gray-800 px-4 py-3 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary"
+          class="w-44 text-sm px-4 py-3 border-2 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-gray-100 dark:shadow-gray-200 dark:bg-gray-100 dark:text-gray-900"
         >
           <option value="">Default sorting</option>
           <option value="low-high">Price low-high</option>
@@ -334,7 +330,7 @@
         <button
           type="button"
           (click)="openDrawer()"
-          class="md:hidden px-4 py-2 rounded-md text-white text-sm font-medium bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+          class="md:hidden px-5 py-3 rounded-md text-white text-sm font-medium bg-purple-600 hover:bg-purple-700 flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -693,7 +689,7 @@
               <button
                 type="button"
                 (click)="applyFilters()"
-                class="px-4 py-3 rounded-md text-white text-sm w-full font-medium bg-blue-600 hover:bg-blue-700-dark transition-colors cursor-pointer"
+                class="px-4 py-3 rounded-md text-white text-sm w-full font-medium bg-purple-600 hover:bg-purple-700 transition-colors cursor-pointer"
               >
                 Apply Filters
               </button>

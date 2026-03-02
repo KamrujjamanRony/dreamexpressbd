@@ -2,8 +2,8 @@
   class="flex flex-col border border-gray-300 shadow-sm rounded-md p-1.5 transition-all relative overflow-hidden"
 >
   <a [routerLink]="getViewLink(product.id)" class="block">
-    <div class="w-full bg-slate-50">
-      <span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">{{ product?.discount }}%</span>
+    <div class="w-full bg-slate-50 dark:bg-slate-800">
+      <span class="absolute top-3 left-3 bg-red-500 text-gray-50 text-xs font-bold px-2 py-1 rounded-md">{{ product?.discount }}%</span>
       <img
         [src]="product?.image"
         [alt]="product?.name"
@@ -12,18 +12,18 @@
     </div>
     <div class="py-4 px-2 text-left">
       <h6
-        class="text-sm sm:text-[15px] font-semibold text-slate-900 line-clamp-2"
+        class="text-sm sm:text-[15px] font-semibold line-clamp-2"
       >
         {{ product?.name }}
       </h6>
       <div class="mt-4">
         <p
-          class="text-slate-900 font-semibold text-sm sm:text-[15px] wrap-break-word"
+          class="font-semibold text-sm sm:text-[15px] wrap-break-word"
         >
           <span class="mr-1.5">MRP:</span
-          ><span class="mr-1.5 text-slate-600 line-through"
-            >৳{{ product?.regularPrice }}</span
-          >৳{{ product?.offerPrice }}
+          ><span [innerHTML]="product?.regularPrice | bdt" class="mr-1.5 text-slate-600 dark:text-slate-300 line-through"
+            ></span
+          > <span [innerHTML]="product?.offerPrice | bdt"></span>
         </p>
       </div>
     </div>
@@ -42,20 +42,8 @@
       <button
         type="button"
         (click)="addToWishlist(product)"
-        class="pb-0.5 pt-3 cursor-pointer text-sm sm:text-[15px] text-slate-900 font-medium whitespace-nowrap outline-0 flex items-center gap-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-4 h-4"
-          width="16px"
-          height="16px"
-          viewBox="0 0 66 66"
-        >
-          <path
-            d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-            data-original="#000000"
-          ></path>
-        </svg>
+        class="pb-0.5 pt-3 cursor-pointer text-sm sm:text-[15px] text-slate-900 dark:text-slate-50 font-medium whitespace-nowrap outline-0 flex items-center gap-2"
+      ><fa-icon [icon]="faHeart"></fa-icon>
         <span>Add to wishlist</span>
       </button>
     </div>

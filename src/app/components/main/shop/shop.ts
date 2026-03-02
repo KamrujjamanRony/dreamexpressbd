@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, Renderer2, signal, computed, effect } from '@angular/core';
-import { Breadcrumbs } from '../../shared/breadcrumbs/breadcrumbs';
+import { Component, inject, Renderer2, signal, computed, effect } from '@angular/core';
 import { ProductSkeleton } from '../../shared/product-skeleton/product-skeleton';
 import { ProductCard } from '../../shared/product-card/product-card';
 import { CommonModule } from '@angular/common';
@@ -10,11 +9,11 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-shop',
-  imports: [Breadcrumbs, ProductSkeleton, ProductCard, CommonModule, FormsModule],
+  imports: [ProductSkeleton, ProductCard, CommonModule, FormsModule],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
-export class Shop implements OnInit, OnDestroy {
+export class Shop {
   private productService = inject(SProduct);
   private dataService = inject(SData);
   private route = inject(ActivatedRoute);
@@ -104,6 +103,7 @@ export class Shop implements OnInit, OnDestroy {
   });
 
   // Filtered products computed
+
   filteredProducts = computed(() => {
     const products = this.products();
     if (!products) return null;
@@ -140,12 +140,12 @@ export class Shop implements OnInit, OnDestroy {
   constructor() {
     // Effect to handle body overflow when drawer opens/closes
     effect(() => {
-      if (this.isDrawerOpen()) {
-        this.renderer.addClass(document.body, 'overflow-hidden');
-      } else {
-        this.renderer.removeClass(document.body, 'overflow-hidden');
-      }
-    });
+  if (this.isDrawerOpen() && window.innerWidth < 768) {
+    this.renderer.addClass(document.body, 'overflow-hidden');
+  } else {
+    this.renderer.removeClass(document.body, 'overflow-hidden');
+  }
+});
   }
 
   ngOnInit() {
@@ -164,13 +164,6 @@ export class Shop implements OnInit, OnDestroy {
         this.categoryNames.set([]);
       }
       this.loadProducts();
-    });
-
-    // Open drawer by default on larger screens
-    setTimeout(() => {
-      if (window.innerWidth >= 768) {
-        this.openDrawer();
-      }
     });
   }
 

@@ -4,14 +4,18 @@ import { Router, RouterLink } from '@angular/router';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { SWishlist } from '../../../services/s-wishlist';
 import { SCart } from '../../../services/s-cart';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { BdtPipe } from "../../../pipes/bdt.pipe";
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FontAwesomeModule, BdtPipe],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })
 export class ProductCard {
+  faHeart = faHeart;
   authCookieService = inject(SAuthCookie);
   wishListService = inject(SWishlist);
   cartService = inject(SCart);

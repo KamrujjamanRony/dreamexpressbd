@@ -14,7 +14,7 @@ export class BdtPipe implements PipeTransform {
         }
 
         const formattedValue = value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        const html = `<span class="bdt-symbol">৳</span> <span class="bdt-amount">${formattedValue}</span>`;
+        const html = `<span class="bdt-symbol font-extrabold">৳</span> <span class="bdt-amount">${formattedValue}</span>`;
 
         return this.sanitizer.bypassSecurityTrustHtml(html);
     }

@@ -47,9 +47,9 @@ export class CategoryList {
 
   ngOnInit() {
     this.onLoadCategory();
-    this.isView.set(this.checkPermission("Categories", "View"));
-    this.isInsert.set(this.checkPermission("Categories", "Insert"));
-    this.isEdit.set(this.checkPermission("Categories", "Edit"));
+    this.isView.set(!this.checkPermission("Categories", "View"));
+    this.isInsert.set(!this.checkPermission("Categories", "Insert"));
+    this.isEdit.set(!this.checkPermission("Categories", "Edit"));
     this.isDelete.set(this.checkPermission("Categories", "Delete"));
   }
 

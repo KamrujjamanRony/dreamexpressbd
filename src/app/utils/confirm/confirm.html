@@ -1,0 +1,61 @@
+@if (confirm.isOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="relative p-4 w-full max-w-md">
+      <div
+        class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6"
+      >
+        <!-- CLOSE -->
+        <button
+          type="button"
+          class="absolute top-3 end-2.5 text-body hover:bg-neutral-tertiary rounded-base w-9 h-9 inline-flex items-center justify-center cursor-pointer"
+          (click)="confirm.cancel()"
+        >
+          ✕
+        </button>
+
+        <div class="p-4 md:p-5 text-center">
+          <!-- ICON -->
+          <svg
+            class="mx-auto mb-4 w-12 h-12"
+            [class]="iconClass(confirm.options()?.variant)"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+
+          <!-- MESSAGE -->
+          <h3 class="mb-6 text-body">
+            {{ confirm.options()?.message }}
+          </h3>
+
+          <!-- ACTIONS -->
+          <div class="flex justify-center gap-4">
+            <button
+              type="button"
+              class="text-white px-4 py-2.5 rounded-base shadow-xs font-medium focus:ring-4 cursor-pointer"
+              [class]="buttonClass(confirm.options()?.variant)"
+              (click)="confirm.accept()"
+            >
+              {{ confirm.options()?.confirmText }}
+            </button>
+
+            <button
+              type="button"
+              class="text-body bg-neutral-secondary-medium border border-default-medium hover:bg-neutral-tertiary-medium rounded-base px-4 py-2.5 cursor-pointer"
+              (click)="confirm.cancel()"
+            >
+              {{ confirm.options()?.cancelText }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

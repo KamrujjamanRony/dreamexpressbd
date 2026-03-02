@@ -1,16 +1,36 @@
-<div class="p-4 mx-auto lg:max-w-7xl">
-      <div class="border-b border-gray-300 pb-4">
-        <h2 class="text-slate-900 text-2xl font-bold">Hot list</h2>
-        <p class="text-slate-600 mt-2">Out the most popular and trending products.</p>
-      </div>
+<div>
+  @if (categoryWiseProducts()) {
+    @for (category of categories(); track category) {
+      @if (categoryWiseProducts()[category.name]) {
+        <div class="mb-5 md:mb-8">
+          <div class="flex items-center justify-between border-b border-gray-300 pb-4 mb-4">
+            <h2 class="text-lg lg:text-3xl font-medium text-secondary uppercase">
+              {{ category.name }}
+            </h2>
 
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-8">
-
-        <!-- single product -->
-    @for(product of products(); track $index){
-        <app-product-card [product]="product"></app-product-card>
+            @if (categoryWiseProducts()[category?.name].length > 4) {
+              <a
+                [routerLink]="['/shop']" [queryParams]="{ category: category.name }"
+                type="button"
+                class="text-white bg-linear-to-r from-purple-500 to-pink-500 hover:bg-linear-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer"
+              >
+                View More
+              </a>
+            }
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            @for (product of categoryWiseProducts()[category.name].slice(0, 4); track $index) {
+              <app-product-card [product]="product"></app-product-card>
+            }
+          </div>
+        </div>
+      }
     }
-    <!-- single product end -->
-
-      </div>
+  } @else {
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
+      @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+        <app-product-skeleton></app-product-skeleton>
+      }
     </div>
+  }
+</div>

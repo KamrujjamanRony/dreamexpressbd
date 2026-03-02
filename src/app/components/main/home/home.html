@@ -2,40 +2,52 @@
   @if (isBannerPermitted()) {
     <app-carousel />
   }
-  
-  @if (isFeaturedPermitted()) {
+
+  @if (isFeaturedPermitted() && !loading()) {
     <app-feature-product />
-  }
-  
-  @if (isCategoriesPermitted()) {
-    <app-categories [categories]="categories()" />
-  }
-  
-  @if (isProductsPermitted()) {
-    @if (loading()) {
-      @for (_ of [1,2,3,4]; track _) {
-        <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <app-product-skeleton></app-product-skeleton>
-        </div>
-      }
-    } @else {
-      <app-product-wrapper [products]="products()" />
+  } @else {
+    @for (_ of [1, 2, 3, 4]; track _) {
+      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <app-product-skeleton></app-product-skeleton>
+      </div>
     }
   }
-  
+
+  @if (isCategoriesPermitted() && !loading()) {
+    <app-categories [categories]="categories()" />
+  } @else {
+    @for (_ of [1, 2, 3, 4]; track _) {
+      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <app-product-skeleton></app-product-skeleton>
+      </div>
+    }
+  }
+
+  @if (isProductsPermitted() && !loading()) {
+    <app-product-wrapper
+      [categoryWiseProducts]="categoryWiseProducts()"
+      [categories]="categories()"
+    />
+  } @else {
+    @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <app-product-skeleton></app-product-skeleton>
+      </div>
+    }
+  }
+
   @if (isAddSectionPermitted()) {
     <app-add-section />
   }
-  
-  @if (isRecommendPermitted()) {
-    @if (loading()) {
-      @for (_ of [1,2,3,4]; track _) {
-        <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <app-product-skeleton></app-product-skeleton>
-        </div>
-      }
-    } @else {
-      <app-recommend-product [products]="products()" />
+
+  @if (!isRecommendPermitted()) {}
+  @else if (isRecommendPermitted() && !loading()) {
+    <app-recommend-product [products]="products()" />
+  } @else {
+    @for (_ of [1, 2, 3, 4]; track _) {
+      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <app-product-skeleton></app-product-skeleton>
+      </div>
     }
   }
 </section>
