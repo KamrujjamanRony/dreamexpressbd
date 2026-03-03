@@ -4,19 +4,19 @@
     @if (product?.specifications?.length > 0) {
     <div>
       <h3
-        class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium mt-5"
+        class="border-b border-gray-200 font-roboto pb-3 font-medium mt-5 dark:border-gray-300"
       >
         Specifications
       </h3>
       <table
-        class="table-auto border-collapse w-full text-left text-gray-800 text-sm mt-6"
+        class="table-auto border-collapse w-full text-left text-sm mt-6"
       >
         @for(specification of product?.specifications; track specification){
-        <thead class="bg-gray-200 text-md lg:text-lg font-bold">
-          <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
+        <thead class="bg-gray-200 text-md lg:text-lg font-bold dark:bg-gray-700">
+          <th class="py-2 px-4 border border-gray-300 w-40 font-medium dark:border-gray-400">
             {{ specification?.title }}
           </th>
-          <td class="py-2 px-4 border border-gray-300"></td>
+          <td class="py-2 px-4 border border-gray-300 dark:border-gray-400"></td>
         </thead>
         <!-- <tr
         class="bg-rose-400 text-white text-xl w-full font-medium !border-none"
@@ -28,10 +28,10 @@
       </tr> -->
         @for (specificationContent of specification.content; track $index) {
         <tr>
-          <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
+          <th class="py-2 px-4 border border-gray-300 w-40 font-medium dark:border-gray-400">
             {{ specificationContent?.item }}
           </th>
-          <td class="py-2 px-4 border border-gray-300">
+          <td class="py-2 px-4 border border-gray-300 dark:border-gray-400">
             {{ specificationContent?.value }}
           </td>
         </tr>
@@ -44,11 +44,11 @@
     @if (product?.productDetails) {
     <div class="mt-8">
       <h3
-        class="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium"
+        class="border-b border-gray-200 font-roboto pb-3 font-medium dark:border-gray-400"
       >
         Product details
       </h3>
-      <div class="text-gray-800 space-y-3 whitespace-pre-line">
+      <div class="space-y-3 whitespace-pre-line">
         {{ product?.productDetails }}
       </div>
     </div>
