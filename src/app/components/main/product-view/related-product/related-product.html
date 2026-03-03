@@ -18,10 +18,9 @@
   >
     <!-- single product -->
     @for(product of relatedProducts; track product.id){
-    <swiper-slide
-      ><div class="h-full">
-        <app-product-card [product]="product"></app-product-card></div
-    ></swiper-slide>
+    <swiper-slide>
+        <app-product-card [product]="product"></app-product-card>
+      </swiper-slide>
     }
     <!-- single product end -->
   </swiper-container>
