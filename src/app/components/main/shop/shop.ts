@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SProduct } from '../../../services/s-product';
 import { SData } from '../../../services/s-data';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-shop',
-  imports: [ProductSkeleton, ProductCard, CommonModule, FormsModule],
+  imports: [ProductSkeleton, ProductCard, CommonModule, FormsModule, RouterLink],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
 })
@@ -352,18 +352,18 @@ export class Shop {
     return data;
   }
 
-  onClearFilter() {
-    this.categoryNames.set([]);
-    this.brandNames.set([]);
-    this.sizeName.set("");
-    this.colorName.set("");
-    this.discountValues.set([]);
-    this.minRangeValue.set(this.priceMin());
-    this.maxRangeValue.set(this.priceMax());
-    this.categorySearch.set('');
-    this.brandSearch.set('');
-    this.colorSearch.set('');
-  }
+  // onClearFilter() {
+  //   this.categoryNames.set([]);
+  //   this.brandNames.set([]);
+  //   this.sizeName.set("");
+  //   this.colorName.set("");
+  //   this.discountValues.set([]);
+  //   this.minRangeValue.set(this.priceMin());
+  //   this.maxRangeValue.set(this.priceMax());
+  //   this.categorySearch.set('');
+  //   this.brandSearch.set('');
+  //   this.colorSearch.set('');
+  // }
 
   applyFilters() {
     // Filters are already applied via computed, just close drawer on mobile

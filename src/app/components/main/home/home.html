@@ -1,53 +1,76 @@
-<section class="max-w-7xl mx-auto w-full p-4">
-  @if (isBannerPermitted()) {
-    <app-carousel />
-  }
-
-  @if (isFeaturedPermitted() && !loading()) {
-    <app-feature-product />
-  } @else {
-    @for (_ of [1, 2, 3, 4]; track _) {
-      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <app-product-skeleton></app-product-skeleton>
+@if (loading() || categories().length < 1 || !products() || !categoryWiseProducts()) {
+  <section class="max-w-7xl mx-auto w-full p-4">
+      <div class="animate-pulse space-y-3 w-full pt-4 my-4">
+        <div class="h-80 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
       </div>
-    }
-  }
 
-  @if (isCategoriesPermitted() && !loading()) {
-    <app-categories [categories]="categories()" />
-  } @else {
-    @for (_ of [1, 2, 3, 4]; track _) {
-      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <app-product-skeleton></app-product-skeleton>
+      <div class="animate-pulse space-y-3 w-full pt-4 grid grid-cols-1 md:grid-cols-3 gap-5 my-4">
+        @for (_ of [1, 2, 3]; track _) {
+          <div class="h-24 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        }
       </div>
-    }
-  }
 
-  @if (isProductsPermitted() && !loading()) {
-    <app-product-wrapper
-      [categoryWiseProducts]="categoryWiseProducts()"
-      [categories]="categories()"
-    />
-  } @else {
-    @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
-      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <app-product-skeleton></app-product-skeleton>
+      <div class="animate-pulse space-y-3 w-full pt-4">
+        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
       </div>
-    }
-  }
-
-  @if (isAddSectionPermitted()) {
-    <app-add-section />
-  }
-
-  @if (!isRecommendPermitted()) {}
-  @else if (isRecommendPermitted() && !loading()) {
-    <app-recommend-product [products]="products()" />
-  } @else {
-    @for (_ of [1, 2, 3, 4]; track _) {
-      <div class="gird grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <app-product-skeleton></app-product-skeleton>
+      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+        @for (_ of [1, 2, 3, 4]; track _) {
+          <div class="h-52 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        }
       </div>
+
+      <div class="animate-pulse space-y-3 w-full pt-4">
+        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+      </div>
+      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+        @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+          <app-product-skeleton></app-product-skeleton>
+        }
+      </div>
+
+      <div class="animate-pulse space-y-3 w-full pt-4 my-4">
+        <div class="h-80 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+      </div>
+
+      <div class="animate-pulse space-y-3 w-full pt-4">
+        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+      </div>
+      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+        @for (_ of [1, 2, 3, 4]; track _) {
+          <app-product-skeleton></app-product-skeleton>
+        }
+      </div>
+  </section>
+} @else {
+  <section class="max-w-7xl mx-auto w-full p-4">
+    @if (isBannerPermitted()) {
+      <app-carousel />
     }
-  }
-</section>
+
+    @if (isFeaturedPermitted()) {
+      <app-feature-product />
+    }
+
+    @if (isCategoriesPermitted() && categories().length > 0) {
+      <app-categories [categories]="categories()" />
+    }
+
+    @if (isProductsPermitted() && categories().length > 0 && categoryWiseProducts()) {
+      <app-product-wrapper
+        [categoryWiseProducts]="categoryWiseProducts()"
+        [categories]="categories()"
+      />
+    }
+
+    @if (isAddSectionPermitted()) {
+      <app-add-section />
+    }
+
+    @if (isRecommendPermitted() && products().length > 0) {
+      <app-recommend-product [products]="products()" />
+    }
+  </section>
+}

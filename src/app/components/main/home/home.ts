@@ -10,11 +10,10 @@ import { ProductSkeleton } from "../../shared/product-skeleton/product-skeleton"
 import { ProductWrapper } from "./product-wrapper/product-wrapper";
 import { AddSection } from "./add-section/add-section";
 import { RecommendProduct } from "./recommend-product/recommend-product";
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [Carousel, FeatureProduct, Categories, ProductSkeleton, ProductWrapper, AddSection, RecommendProduct, CommonModule],
+  imports: [Carousel, FeatureProduct, Categories, ProductSkeleton, ProductWrapper, AddSection, RecommendProduct],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

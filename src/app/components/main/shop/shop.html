@@ -7,13 +7,13 @@
         <!-- Header -->
         <div class="flex items-center py-4">
           <h3 class="text-slate-900 text-lg font-semibold">Filter</h3>
-          <button
+          <a
             type="button"
-            (click)="onClearFilter()"
+            routerLink="/shop"
             class="text-sm text-red-500 font-semibold ml-auto cursor-pointer"
           >
             Clear all
-          </button>
+          </a>
         </div>
 
         <!-- Categories Section -->
@@ -370,13 +370,13 @@
             <!-- Fixed Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 class="text-slate-900 text-lg font-semibold">Filter</h3>
-              <button
+              <a
                 type="button"
-                (click)="onClearFilter()"
+                routerLink="/shop"
                 class="text-sm text-red-500 font-semibold hover:text-red-600 transition-colors"
               >
                 Clear all
-              </button>
+              </a>
             </div>
 
             <!-- Scrollable Content -->
@@ -718,7 +718,7 @@
           @for (product of filteredProducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           } @empty {
-            <div class="text-center text-gray-800 text-xl col-span-full">No products found.</div>
+            <div class="text-center text-xl col-span-full">No products found.</div>
           }
           <!-- single product end -->
         </div>
