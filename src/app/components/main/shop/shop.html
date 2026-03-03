@@ -10,6 +10,7 @@
           <a
             type="button"
             routerLink="/shop"
+            (click)="onClearFilter()"
             class="text-sm text-red-500 font-semibold ml-auto cursor-pointer"
           >
             Clear all
@@ -373,6 +374,7 @@
               <a
                 type="button"
                 routerLink="/shop"
+                (click)="onClearFilter()"
                 class="text-sm text-red-500 font-semibold hover:text-red-600 transition-colors"
               >
                 Clear all

@@ -140,7 +140,7 @@ export const routes: Routes = [
       },
       // {
       //   path: 'wish-list',
-      //   loadComponent: () => import('./components/admin/wish-list/wish-list.component').then(m => m.WishListComponent),
+      //   loadComponent: () => import('./components/admin/wish-list/wish-list').then(m => m.WishList),
       //   title: 'Wish List',
       // },
       {
