@@ -12,7 +12,7 @@
   <div class="grid md:grid-cols-3 gap-6">
     <!-- Delivery Address -->
     <div class="md:col-span-2 space-y-6">
-      <div class="bg-white p-6 rounded shadow">
+      <div class="bg-gray-50 p-6 rounded shadow dark:bg-gray-900">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-semibold">Delivery Address</h2>
           <button
@@ -34,14 +34,14 @@
             <div class="flex justify-between">
               <h3 class="font-medium">{{ address.type }}</h3>
               @if (address.isDefault) {
-              <span class="text-xs bg-gray-100 px-2 py-1 rounded">Default</span>
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded dark:bg-gray-950">Default</span>
               }
             </div>
-            <p class="text-gray-600">{{ address.street }}</p>
-            <p class="text-gray-600">
+            <p class="text-gray-600 dark:text-gray-200">{{ address.street }}</p>
+            <p class="text-gray-600 dark:text-gray-200">
               {{ address.city }}, {{ address.district }}
             </p>
-            <p class="text-gray-600">Phone: {{ address.contact }}</p>
+            <p class="text-gray-600 dark:text-gray-200">Phone: {{ address.contact }}</p>
 
             <!-- Edit button -->
             <button
@@ -66,7 +66,7 @@
             </button>
           </div>
           } } @else {
-          <div class="text-center py-4 text-gray-500">
+          <div class="text-center py-4 text-gray-500 dark:text-gray-400">
             No addresses found. Please add an address to continue.
           </div>
           }
@@ -74,7 +74,7 @@
       </div>
 
       <!-- Payment Method -->
-      <div class="bg-white p-6 rounded shadow">
+      <div class="bg-gray-50 p-6 rounded shadow dark:bg-gray-900">
         <h2 class="text-xl font-semibold mb-4">Payment Method</h2>
         <div class="space-y-2">
           <div class="flex items-center gap-2 p-3 border rounded">
@@ -89,7 +89,7 @@
             <label for="cod" class="w-full">
               <div class="flex justify-between items-center">
                 <span>Cash on Delivery</span>
-                <span class="text-sm text-gray-500"
+                <span class="text-sm text-gray-500 dark:text-gray-400"
                   >Pay when you receive the order</span
                 >
               </div>
@@ -101,7 +101,7 @@
 
     <!-- Order Summary -->
     <div>
-      <div class="bg-white p-6 rounded shadow sticky top-4">
+      <div class="h-full bg-gray-50 p-6 rounded shadow sticky top-4 dark:bg-gray-900">
         <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
 
         <div class="space-y-2 mb-4">
