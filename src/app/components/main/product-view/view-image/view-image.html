@@ -53,13 +53,13 @@
         </span>
         }
       </div>
-      <div class="text-xs text-gray-800 ml-3">
+      <div class="text-xs ml-3">
         ({{ product?.ratings?.length }} Reviews)
       </div>
     </div> -->
     <div class="space-y-2">
       @if (product?.availability) {
-      <p class="text-gray-800 font-semibold">
+      <p class="font-semibold">
         <span>Availability:</span>
         <span class="text-green-600 capitalize ml-1">{{
           product?.availability
@@ -67,18 +67,18 @@
       </p>
       } @if (product?.brand) {
       <p class="space-x-2">
-        <span class="text-gray-800 font-semibold">Brand:</span>
-        <span class="text-gray-800">{{ product?.brand }}</span>
+        <span class="font-semibold">Brand:</span>
+        <span class="font-light">{{ product?.brand }}</span>
       </p>
       } @if (product?.category) {
       <p class="space-x-2">
-        <span class="text-gray-800 font-semibold">Category:</span>
-        <span class="text-gray-800">{{ product?.category }}</span>
+        <span class="font-semibold">Category:</span>
+        <span class="font-light">{{ product?.category }}</span>
       </p>
       } @if (product?.sku) {
       <p class="space-x-2">
-        <span class="text-gray-800 font-semibold">SKU:</span>
-        <span class="text-gray-800">{{ product?.sku }}</span>
+        <span class="font-semibold">SKU:</span>
+        <span class="font-light">{{ product?.sku }}</span>
       </p>
       }
     </div>
@@ -89,7 +89,7 @@
         [innerHTML]="product?.offerPrice | bdt"
       ></p>
       <p
-        class="text-base text-gray-800 line-through"
+        class="text-base line-through"
         [innerHTML]="product?.regularPrice | bdt"
       ></p>
       } @else {
@@ -108,7 +108,7 @@
     <!-- size filter -->
     @if (product?.sizes.length > 0) {
     <div class="pt-4">
-      <h3 class="text-sm text-gray-800 uppercase font-medium mb-1">Size</h3>
+      <h3 class="text-sm uppercase font-medium mb-1">Size</h3>
       <div class="flex items-center gap-2">
         <!-- single size -->
         @for(size of product?.sizes; track size){
@@ -119,7 +119,7 @@
           <input type="radio" class="hidden" [name]="'size-'+ size" [id]="'size-'+ size" />
           <label
             for="size-{{ size }}"
-            class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 uppercase"
+            class="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm uppercase"
             >{{ size }}</label
           >
         </div>
@@ -133,7 +133,7 @@
     <!-- color filter -->
     @if (product?.colors.length > 0) {
     <div class="pt-4">
-      <h3 class="text-sm text-gray-800 uppercase font-medium mb-1">Color</h3>
+      <h3 class="text-sm uppercase font-medium mb-1">Color</h3>
       <div class="flex items-center gap-2">
         <!-- single color -->
         @for(color of product?.colors; track trackByColor($index, color)){
@@ -161,9 +161,9 @@
     <!-- color filter end -->
     <!-- quantity -->
     <div class="mt-4">
-      <h3 class="text-sm text-gray-800 uppercase font-medium mb-1">Quantity</h3>
+      <h3 class="text-sm uppercase font-medium mb-1">Quantity</h3>
       <div
-        class="flex border border-gray-300 text-gray-800 divide-x divide-gray-300 w-max"
+        class="flex border border-gray-300 divide-x divide-gray-300 w-max"
       >
         <button
           class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
@@ -190,13 +190,13 @@
     <div class="flex gap-3 pb-5 mt-6">
       <button
         (click)="addToCart(product)"
-        class="bg-primary border border-primary text-gray-50 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:bg-transparent hover:text-primary transition"
+        class="bg-purple border border-purple text-gray-50 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:bg-transparent hover:text-purple transition cursor-pointer"
       >
         <i class="fas fa-shopping-bag"></i> Add to cart
       </button>
       <button
         (click)="addToWishlist(product)"
-        class="border border-gray-300 text-gray-800 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:text-primary transition"
+        class="border border-gray-300 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:text-purple hover:border-purple transition cursor-pointer"
       >
         <i class="fas fa-heart"></i> Wish list
       </button>
@@ -208,28 +208,28 @@
       @if (product?.facebookPost) {
       <a
         [href]="product?.facebookPost"
-        class="text-gray-800 hover:text-rose-800 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+        class="hover:text-rose-800 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
       >
         <i class="fab fa-facebook-f"></i>
       </a>
       } @if (product?.youtubeLink) {
       <a
         [href]="product?.youtubeLink"
-        class="text-gray-800 hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+        class="hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
       >
         <i class="fab fa-youtube"></i>
       </a>
       } @if (product?.twitterTweet) {
       <a
         [href]="product?.twitterTweet"
-        class="text-gray-800 hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+        class="hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
       >
         <i class="fab fa-twitter"></i>
       </a>
       } @if (product?.instagramPost) {
       <a
         [href]="product?.instagramPost"
-        class="text-gray-800 hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+        class="hover:text-rose-600 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
       >
         <i class="fab fa-instagram"></i>
       </a>
