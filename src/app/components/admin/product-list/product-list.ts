@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch, faPencil, faRemove } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FontAwesomeModule, ProductForm, BdtPipe],
+  imports: [CommonModule, FontAwesomeModule, ProductForm, BdtPipe, NgOptimizedImage],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
