@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { SSetting } from '../../../services/s-setting';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
-  imports: [],
+  imports: [NgOptimizedImage],
   templateUrl: './footer.html',
   styleUrl: './footer.css',
 })
