@@ -13,26 +13,31 @@
     [breakpoints]="breakpoints"
   >
     <!-- single product -->
-    @for(item of categories(); track $index){
-    <swiper-slide
-      ><div class="h-full">
-        <a
-        [routerLink]="['/shop']"
-        [queryParams]="{ category: item.name }"
-        class="relative rounded-sm overflow-hidden group"
+    @for (item of categories(); track $index) {
+      <swiper-slide
+        ><div class="h-full">
+          <a
+            [routerLink]="['/shop']"
+            [queryParams]="{ category: item.name }"
+            class="relative rounded-sm overflow-hidden group"
+          >
+            <img
+              [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
+              width="300"
+              height="300"
+              loading="lazy"
+              decoding="async"
+              class="w-full hover:scale-125 duration-200"
+              alt="category-{{ $index + 1 }}"
+            />
+            <a
+              href="#"
+              class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
+              >{{ item?.name }}</a
+            >
+          </a>
+        </div></swiper-slide
       >
-        <img
-          src="images/category/category-{{ $index + 1 }}.jpg"
-          class="w-full hover:scale-125 duration-200"
-          alt="category-{{ $index + 1 }}"
-        />
-        <a
-          href="#"
-          class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
-          >{{ item?.name }}</a
-        >
-      </a></div
-    ></swiper-slide>
     }
     <!-- single product end -->
   </swiper-container>
