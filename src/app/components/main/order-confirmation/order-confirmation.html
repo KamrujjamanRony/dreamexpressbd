@@ -6,12 +6,7 @@
       <div
         class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
       >
-        <svg
-          class="w-8 h-8 text-green-600"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -21,122 +16,118 @@
         </svg>
       </div>
       <h1 class="text-2xl font-bold text-gray-800 mb-2">Order Confirmed!</h1>
-      <p class="text-gray-600">
-        Thank you for your purchase, {{ orderDetails?.UserName }}
-      </p>
+      <p class="text-gray-600">Thank you for your purchase, {{ orderDetails?.UserName }}</p>
       <p class="text-gray-600">
         Your order ID: <span class="font-medium">{{ orderId }}</span>
       </p>
-      <p class="text-gray-600 mt-2">
-        We've sent a confirmation to {{ orderDetails?.UserEmail }}
-      </p>
+      <p class="text-gray-600 mt-2">We've sent a confirmation to {{ orderDetails?.UserEmail }}</p>
     </div>
 
     <!-- Loading State -->
     @if (loading) {
-    <div class="flex justify-center items-center h-64">
-      <span class="loading loading-spinner loading-lg"></span>
-    </div>
+      <div class="flex justify-center items-center h-64">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
     }
 
     <!-- Order Details -->
     @if (orderDetails && !loading) {
-    <div class="border-t pt-6">
-      <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+      <div class="border-t pt-6">
+        <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
 
-      <!-- Order Items -->
-      <div class="space-y-4 mb-6">
-        @for (item of orderDetails.OrderItems.$values; track item.Id) {
-        <div class="flex items-center gap-4 border-b pb-4">
-          <img
-            [src]="item.Image"
-            alt="Product image"
-            class="w-16 h-16 object-cover rounded"
-          />
-          <div class="flex-1">
-            <h3 class="font-medium">{{ item.ProductName }}</h3>
-            <div class="flex gap-4 text-sm text-gray-600 mt-1">
-              <span>Qty: {{ item.Quantity }}</span>
-              @if (item.Size) {
-              <span>Size: {{ item.Size }}</span>
-              } @if (item.Color) {
-              <span>Color: {{ item.Color }}</span>
-              }
+        <!-- Order Items -->
+        <div class="space-y-4 mb-6">
+          @for (item of orderDetails.OrderItems.$values; track item.Id) {
+            <div class="flex items-center gap-4 border-b pb-4">
+              <img
+                [ngSrc]="item.Image"
+                width="300"
+                height="300"
+                loading="lazy"
+                decoding="async"
+                alt="Product image"
+                class="w-16 h-16 object-cover rounded"
+              />
+              <div class="flex-1">
+                <h3 class="font-medium">{{ item.ProductName }}</h3>
+                <div class="flex gap-4 text-sm text-gray-600 mt-1">
+                  <span>Qty: {{ item.Quantity }}</span>
+                  @if (item.Size) {
+                    <span>Size: {{ item.Size }}</span>
+                  }
+                  @if (item.Color) {
+                    <span>Color: {{ item.Color }}</span>
+                  }
+                </div>
+              </div>
+              <div class="font-medium" [innerHTML]="item.Price * item.Quantity | bdt"></div>
             </div>
+          }
+        </div>
+
+        <!-- Order Totals -->
+        <div class="space-y-2 border-t pt-4">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span [innerHTML]="orderDetails.Subtotal | bdt"></span>
           </div>
-          <div
-            class="font-medium"
-            [innerHTML]="item.Price * item.Quantity | bdt"
-          ></div>
-        </div>
-        }
-      </div>
-
-      <!-- Order Totals -->
-      <div class="space-y-2 border-t pt-4">
-        <div class="flex justify-between">
-          <span>Subtotal</span>
-          <span [innerHTML]="orderDetails.Subtotal | bdt"></span>
-        </div>
-        <div class="flex justify-between">
-          <span>Delivery Charge</span>
-          <span [innerHTML]="orderDetails.DeliveryCharge | bdt"></span>
-        </div>
-        <div class="flex justify-between font-bold text-lg mt-2">
-          <span>Total</span>
-          <span [innerHTML]="orderDetails.TotalAmount | bdt"></span>
-        </div>
-      </div>
-
-      <!-- Shipping Info -->
-      <div class="mt-8">
-        <h2 class="text-xl font-semibold mb-4">Shipping Information</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h3 class="font-medium text-gray-700 mb-2">Shipping Address</h3>
-            <div class="space-y-1 text-gray-600">
-              <p>{{ orderDetails.ShippingAddress.Street }}</p>
-              <p>{{ orderDetails.ShippingAddress.City }}</p>
-              @if (orderDetails.ShippingAddress.District) {
-              <p>{{ orderDetails.ShippingAddress.District }}</p>
-              }
-              <p>Phone: {{ orderDetails.ShippingAddress.Contact }}</p>
-              <p>Address Type: {{ orderDetails.ShippingAddress.Type }}</p>
-            </div>
+          <div class="flex justify-between">
+            <span>Delivery Charge</span>
+            <span [innerHTML]="orderDetails.DeliveryCharge | bdt"></span>
           </div>
-
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h3 class="font-medium text-gray-700 mb-2">Order Details</h3>
-            <div class="space-y-3 text-gray-600">
-              <div>
-                <p class="text-sm text-gray-500">Payment Method</p>
-                <p>{{ orderDetails.PaymentMethod }}</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Order Status</p>
-                <p>
-                  <span
-                    class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                  >
-                    {{ getOrderStatusText(orderDetails.OrderStatus) }}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">Order Date</p>
-                <p>{{ orderDetails.OrderDate | date : "mediumDate" }}</p>
-              </div>
-              @if (orderDetails.DeliveredDate) {
-              <div>
-                <p class="text-sm text-gray-500">Delivered Date</p>
-                <p>{{ orderDetails.DeliveredDate | date : "mediumDate" }}</p>
-              </div>
-              }
-            </div>
+          <div class="flex justify-between font-bold text-lg mt-2">
+            <span>Total</span>
+            <span [innerHTML]="orderDetails.TotalAmount | bdt"></span>
           </div>
         </div>
+
+        <!-- Shipping Info -->
+        <div class="mt-8">
+          <h2 class="text-xl font-semibold mb-4">Shipping Information</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="font-medium text-gray-700 mb-2">Shipping Address</h3>
+              <div class="space-y-1 text-gray-600">
+                <p>{{ orderDetails.ShippingAddress.Street }}</p>
+                <p>{{ orderDetails.ShippingAddress.City }}</p>
+                @if (orderDetails.ShippingAddress.District) {
+                  <p>{{ orderDetails.ShippingAddress.District }}</p>
+                }
+                <p>Phone: {{ orderDetails.ShippingAddress.Contact }}</p>
+                <p>Address Type: {{ orderDetails.ShippingAddress.Type }}</p>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="font-medium text-gray-700 mb-2">Order Details</h3>
+              <div class="space-y-3 text-gray-600">
+                <div>
+                  <p class="text-sm text-gray-500">Payment Method</p>
+                  <p>{{ orderDetails.PaymentMethod }}</p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Order Status</p>
+                  <p>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                      {{ getOrderStatusText(orderDetails.OrderStatus) }}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Order Date</p>
+                  <p>{{ orderDetails.OrderDate | date: 'mediumDate' }}</p>
+                </div>
+                @if (orderDetails.DeliveredDate) {
+                  <div>
+                    <p class="text-sm text-gray-500">Delivered Date</p>
+                    <p>{{ orderDetails.DeliveredDate | date: 'mediumDate' }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
     }
 
     <!-- Continue Shopping Button -->

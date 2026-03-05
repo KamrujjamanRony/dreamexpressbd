@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { SOrder } from '../../../services/s-order';
 
 @Component({
   selector: 'app-order-confirmation',
-  imports: [CommonModule, BdtPipe],
+  imports: [CommonModule, BdtPipe, NgOptimizedImage],
   templateUrl: './order-confirmation.html',
   styleUrl: './order-confirmation.css',
 })
