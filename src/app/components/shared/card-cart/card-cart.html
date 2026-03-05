@@ -1,11 +1,16 @@
 <!-- single cart mobile -->
-<div
-  class="flex lg:hidden justify-between gap-6 p-4 border border-gray-200 rounded bg-white"
->
+<div class="flex lg:hidden justify-between gap-6 p-4 border border-gray-200 rounded bg-white">
   <div>
     <!-- cart image -->
     <div class="w-full max-w-48 shrink-0">
-      <img [src]="product?.image" alt="{{ product?.productName }}" />
+      <img
+        [ngSrc]="product?.image"
+        alt="{{ product?.productName }}"
+        width="300"
+        height="300"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
     <!-- price -->
     <div
@@ -15,9 +20,7 @@
     <div class="flex gap-2 items-center">
       <!-- quantity -->
       <div class="">
-        <div
-          class="flex border border-gray-300 text-gray-800 divide-x divide-gray-300 w-max"
-        >
+        <div class="flex border border-gray-300 text-gray-800 divide-x divide-gray-300 w-max">
           <button
             class="h-6 w-6 text-xl flex items-center justify-center cursor-pointer select-none"
             [disabled]="count === 1"
@@ -65,11 +68,7 @@
             stroke="#ff0000"
           >
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
               <g>
                 <g>
@@ -89,25 +88,23 @@
   </div>
   <!-- cart content -->
   <div class="w-full">
-    <h2
-      [routerLink]="getViewLink(product.id)"
-      class="text-gray-800 text-xl font-medium uppercase"
-    >
+    <h2 [routerLink]="getViewLink(product.id)" class="text-gray-800 text-xl font-medium uppercase">
       {{ product?.productName }}
     </h2>
     <p class="text-gray-800 text-sm">
       Brand: <span class="text-green-600">{{ product?.brand }}</span>
     </p>
     @if (product?.selectColor) {
-    <p class="text-gray-800 text-sm">
-      Color:
-      <span class="text-green-600 uppercase">{{ product?.selectColor }}</span>
-    </p>
-    } @if (product?.selectSize) {
-    <p class="text-gray-800 text-sm">
-      Size:
-      <span class="text-green-600 uppercase">{{ product?.selectSize }}</span>
-    </p>
+      <p class="text-gray-800 text-sm">
+        Color:
+        <span class="text-green-600 uppercase">{{ product?.selectColor }}</span>
+      </p>
+    }
+    @if (product?.selectSize) {
+      <p class="text-gray-800 text-sm">
+        Size:
+        <span class="text-green-600 uppercase">{{ product?.selectSize }}</span>
+      </p>
     }
   </div>
 </div>
@@ -118,8 +115,12 @@
 >
   <div class="w-28 shrink-0">
     <img
-      [src]="product?.image"
+      [ngSrc]="product?.image"
       alt="{{ product?.productName }}"
+      width="300"
+      height="300"
+      loading="lazy"
+      decoding="async"
       class="h-full"
     />
   </div>
@@ -135,26 +136,22 @@
       Brand: <span class="text-green-600">{{ product?.brand }}</span>
     </p>
     @if (product?.selectColor) {
-    <p class="text-gray-800 text-sm">
-      Color:
-      <span class="text-green-600 uppercase">{{ product?.selectColor }}</span>
-    </p>
-    } @if (product?.selectSize) {
-    <p class="text-gray-800 text-sm">
-      Size:
-      <span class="text-green-600 uppercase">{{ product?.selectSize }}</span>
-    </p>
+      <p class="text-gray-800 text-sm">
+        Color:
+        <span class="text-green-600 uppercase">{{ product?.selectColor }}</span>
+      </p>
+    }
+    @if (product?.selectSize) {
+      <p class="text-gray-800 text-sm">
+        Size:
+        <span class="text-green-600 uppercase">{{ product?.selectSize }}</span>
+      </p>
     }
   </div>
 
-  <div
-    class="text-primary text-lg font-semibold"
-    [innerHTML]="product?.price * count | bdt"
-  ></div>
+  <div class="text-primary text-lg font-semibold" [innerHTML]="product?.price * count | bdt"></div>
 
-  <div
-    class="flex border border-gray-300 text-gray-800 divide-x divide-gray-300 w-max"
-  >
+  <div class="flex border border-gray-300 text-gray-800 divide-x divide-gray-300 w-max">
     <button
       class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
       [disabled]="count === 1"
@@ -201,11 +198,7 @@
         stroke="#ff0000"
       >
         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
         <g id="SVGRepo_iconCarrier">
           <g>
             <g>

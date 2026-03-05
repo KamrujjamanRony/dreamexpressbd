@@ -4,10 +4,11 @@ import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { SCart } from '../../../services/s-cart';
 import { SWishlist } from '../../../services/s-wishlist';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-card-cart',
-  imports: [RouterLink, BdtPipe],
+  imports: [RouterLink, BdtPipe, NgOptimizedImage],
   templateUrl: './card-cart.html',
   styleUrl: './card-cart.css',
 })
