@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ViewImage } from './view-image/view-image';
 import { ViewContent } from './view-content/view-content';
 import { Breadcrumbs } from '../../shared/breadcrumbs/breadcrumbs';
@@ -18,19 +18,19 @@ export class ProductView {
   route = inject(ActivatedRoute);
   productService = inject(SProduct);
   paramsSubscription?: Subscription;
-  product: any;
-  allProducts: any;
+  product = signal<any>(null);
+  allProducts = signal<any[]>([]);
 
   ngOnInit() {
     // Fetch all products to use in related products component
     this.productService.search().subscribe(products => {
-      this.allProducts = products;
+      this.allProducts.set(products);
     });
     this.paramsSubscription = this.route.paramMap.subscribe({
       next: (params: any) => {
         const id = params.get('id');
         this.productService.get(id).subscribe(data => {
-          this.product = data;
+          this.product.set(data);
         });
       },
     });

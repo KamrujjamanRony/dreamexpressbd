@@ -45,18 +45,6 @@
     </h2>
     }
 
-    <!-- <div class="flex items-center mb-4">
-      <div class="flex gap-1 text-sm">
-        @for(star of getStarsArray(product?.AverageRating); track $index) {
-        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
-          <i class="fas fa-star"></i>
-        </span>
-        }
-      </div>
-      <div class="text-xs ml-3">
-        ({{ product?.ratings?.length }} Reviews)
-      </div>
-    </div> -->
     <div class="space-y-2">
       @if (product?.availability) {
       <p class="font-semibold">
@@ -106,7 +94,7 @@
     }
 
     <!-- size filter -->
-    @if (product?.sizes.length > 0) {
+    @if (product?.sizes?.length > 0) {
     <div class="pt-4">
       <h3 class="text-sm uppercase font-medium mb-1">Size</h3>
       <div class="flex items-center gap-2">
@@ -131,7 +119,7 @@
     }
     <!-- size filter end -->
     <!-- color filter -->
-    @if (product?.colors.length > 0) {
+    @if (product?.colors?.length > 0) {
     <div class="pt-4">
       <h3 class="text-sm uppercase font-medium mb-1">Color</h3>
       <div class="flex items-center gap-2">
@@ -239,14 +227,3 @@
   </div>
   <!-- product content end -->
 </div>
-
-<!-- error massage -->
-<!-- @if (warningMsg) {
-<app-modal
-  heading="Warning!"
-  [description]="warningMsg"
-  [isModalOpen]="true"
-  (closeEvent)="resetWarningMsg()"
-></app-modal>
-} -->
-<!-- error massage end -->
