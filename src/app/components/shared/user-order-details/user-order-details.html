@@ -4,9 +4,7 @@
   <div class="border-b pb-4">
     <h2 class="text-xl font-bold text-gray-900">Order #{{ order?.id }}</h2>
     <div class="flex justify-between items-center mt-2">
-      <span class="text-sm text-gray-500">
-        Date: {{ order?.orderDate | date : "medium" }}
-      </span>
+      <span class="text-sm text-gray-500"> Date: {{ order?.orderDate | date: 'medium' }} </span>
       <span
         class="font-semibold inline-flex leading-5 px-2 rounded-full text-xs {{
           order?.orderStatus
@@ -104,31 +102,35 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           @for (item of order?.orderItems; track item.Id) {
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex items-center">
-                <img
-                  [src]="item.Image"
-                  class="h-10 w-10 rounded-md"
-                  [alt]="item.ProductName"
-                />
-                <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900">
-                    {{ item.ProductName }}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <img
+                    [ngSrc]="item.Image"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-10 w-10 rounded-md"
+                    [alt]="item.ProductName"
+                  />
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ item.ProductName }}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <span [innerHTML]="item.Price | bdt"></span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ item.Quantity }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <span [innerHTML]="item.Price * item.Quantity | bdt"></span>
-            </td>
-          </tr>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <span [innerHTML]="item.Price | bdt"></span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ item.Quantity }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <span [innerHTML]="item.Price * item.Quantity | bdt"></span>
+              </td>
+            </tr>
           }
         </tbody>
       </table>
@@ -141,10 +143,7 @@
     <div class="bg-gray-50 p-4 rounded-lg">
       <div class="flex justify-between py-2">
         <span class="text-sm font-medium text-gray-500">Subtotal</span>
-        <span
-          class="text-sm font-medium text-gray-900"
-          [innerHTML]="order?.subtotal | bdt"
-        ></span>
+        <span class="text-sm font-medium text-gray-900" [innerHTML]="order?.subtotal | bdt"></span>
       </div>
       <div class="flex justify-between py-2">
         <span class="text-sm font-medium text-gray-500">Delivery Charge</span>
@@ -155,10 +154,7 @@
       </div>
       <div class="flex justify-between py-2 border-t border-gray-200">
         <span class="text-sm font-medium text-gray-900">Total</span>
-        <span
-          class="text-sm font-bold text-gray-900"
-          [innerHTML]="order?.totalAmount | bdt"
-        ></span>
+        <span class="text-sm font-bold text-gray-900" [innerHTML]="order?.totalAmount | bdt"></span>
       </div>
     </div>
   </div>

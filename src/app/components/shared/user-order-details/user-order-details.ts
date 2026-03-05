@@ -1,10 +1,10 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 
 @Component({
   selector: 'app-user-order-details',
-  imports: [CommonModule, DatePipe, BdtPipe],
+  imports: [CommonModule, DatePipe, BdtPipe, NgOptimizedImage],
   templateUrl: './user-order-details.html',
   styleUrl: './user-order-details.css',
 })
