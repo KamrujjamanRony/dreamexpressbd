@@ -6,10 +6,11 @@ import { RelatedProduct } from './related-product/related-product';
 import { ActivatedRoute } from '@angular/router';
 import { SProduct } from '../../../services/s-product';
 import { Subscription } from 'rxjs';
+import { ProductSkeleton } from "../../shared/product-skeleton/product-skeleton";
 
 @Component({
   selector: 'app-product-view',
-  imports: [Breadcrumbs, ViewContent, ViewImage, RelatedProduct],
+  imports: [Breadcrumbs, ViewContent, ViewImage, RelatedProduct, ProductSkeleton],
   templateUrl: './product-view.html',
   styleUrl: './product-view.css',
 })

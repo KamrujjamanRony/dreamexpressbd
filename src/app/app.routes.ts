@@ -19,12 +19,18 @@ export const routes: Routes = [
         data: { reuse: true },
         title: 'Shop'
       },
-      {
-        path: 'shop/:category',
-        loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
-        data: { reuse: true },
-        title: 'Shop'
-      },
+      // {
+      //   path: 'shop?:category',
+      //   loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
+      //   data: { reuse: true },
+      //   title: 'Shop'
+      // },
+      // {
+      //   path: 'shop/:category',
+      //   loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
+      //   data: { reuse: true },
+      //   title: 'Shop'
+      // },
       {
         path: 'about-us',
         loadComponent: () => import('./components/main/about/about').then(m => m.About),

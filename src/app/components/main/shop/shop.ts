@@ -103,24 +103,24 @@ export class Shop {
   });
 
   // Filtered products computed
+  productsWithDiscount = computed(() => {
+    const products = this.products();
+    if (!products) return [];
+
+    return products.map((product: any) => {
+      const offer = product.offerPrice;
+      const regular = product.regularPrice;
+      const discount = offer && regular
+        ? Math.round(((regular - offer) / regular) * 100)
+        : 0;
+
+      return { ...product, discount };
+    });
+  });
 
   filteredProducts = computed(() => {
-    const products = this.products();
-    if (!products) return null;
-    const productsWithDiscount = products.map((product: any) => {
-      const offerPrice = product.offerPrice;
-      const regularPrice = product.regularPrice;
-      let discount = 0;
 
-      if (offerPrice > 0 && regularPrice > 0) {
-        discount = Math.round(((regularPrice - offerPrice) / regularPrice) * 100);
-      }
-
-      return {
-        ...product,
-        discount: discount
-      };
-    });
+    const products = this.productsWithDiscount();
 
     return this.byDiscount(
       this.byPrice(
@@ -128,24 +128,25 @@ export class Shop {
           this.byBrand(
             this.bySize(
               this.byColor(
-                this.bySorting(productsWithDiscount)
+                this.bySorting(products)
               )
             )
           )
         )
       )
     );
+
   });
 
   constructor() {
     // Effect to handle body overflow when drawer opens/closes
     effect(() => {
-  if (this.isDrawerOpen() && window.innerWidth < 768) {
-    this.renderer.addClass(document.body, 'overflow-hidden');
-  } else {
-    this.renderer.removeClass(document.body, 'overflow-hidden');
-  }
-});
+      if (this.isDrawerOpen() && window.innerWidth < 768) {
+        this.renderer.addClass(document.body, 'overflow-hidden');
+      } else {
+        this.renderer.removeClass(document.body, 'overflow-hidden');
+      }
+    });
   }
 
   ngOnInit() {
@@ -166,6 +167,22 @@ export class Shop {
       this.loadProducts();
     });
   }
+
+  // ngOnInit() {
+  //   this.dataService.loadSections().subscribe();
+  //   // load only if products not cached
+  //   if (!this.products()) {
+  //     this.loadProducts();
+  //   }
+  //   this.route.queryParamMap.subscribe(params => {
+  //     const category = params.get('category');
+  //     if (category) {
+  //       this.categoryNames.set([category]);
+  //     } else {
+  //       this.categoryNames.set([]);
+  //     }
+  //   });
+  // }
 
   loadProducts() {
     const queryParams = this.route.snapshot.queryParams;

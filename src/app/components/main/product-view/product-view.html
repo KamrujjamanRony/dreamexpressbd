@@ -10,5 +10,47 @@
     </div>
   </section>
 } @else {
+  <section class="max-w-7xl mx-auto w-full p-4">
+    <div class="animate-pulse space-y-3 w-full pt-4 my-4 grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div>
+        <div class="h-96 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        <div class="animate-pulse space-y-3 w-full pt-4 grid grid-cols-4 gap-4">
+          @for (_ of [1, 2, 3, 4]; track _) {
+            <div class="h-24 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+          }
+        </div>
+      </div>
+      <div class="space-y-3 w-full pt-4">
+        <div class="h-12 bg-gray-500 dark:bg-gray-200 rounded w-3/4"></div>
+        <div class="h-8 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        <div class="h-8 bg-gray-500 dark:bg-gray-200 rounded w-2/3"></div>
+        <div class="h-8 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        <div class="h-8 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+        <div class="flex gap-2 w-1/2 my-5">
+          <div class="h-14 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+          <div class="h-14 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+          <div class="h-14 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 w-2/3 my-5">
+          <div class="h-14 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+          <div class="h-14 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+        </div>
+        <div class="space-y-3">
+          <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+          <div class="flex gap-2">
+            <div class="h-14 w-14 bg-gray-500 dark:bg-gray-200 rounded-full"></div>
+            <div class="h-14 w-14 bg-gray-500 dark:bg-gray-200 rounded-full"></div>
+            <div class="h-14 w-14 bg-gray-500 dark:bg-gray-200 rounded-full"></div>
+            <div class="h-14 w-14 bg-gray-500 dark:bg-gray-200 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+      @for (_ of [1, 2, 3, 4]; track _) {
+        <app-product-skeleton></app-product-skeleton>
+      }
+    </div>
+  </section>
 }
