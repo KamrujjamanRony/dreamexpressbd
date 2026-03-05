@@ -7,26 +7,38 @@
       (mouseleave)="onMouseLeave()"
     >
       <img
-        [src]="viewImage ? viewImage : product?.image"
+        [ngSrc]="viewImage ? viewImage : product?.image"
         alt="product"
         class="w-full"
+        width="300"
+        height="300"
+        loading="lazy"
+        decoding="async"
       />
-      <div class="zoom" [ngStyle]="zoomStyle"></div>
+      <div class="zoom w-full h-full" [ngStyle]="zoomStyle"></div>
     </div>
     <div class="grid grid-cols-5 gap-4 mt-4">
       <img
-        [src]="product?.image"
+        [ngSrc]="product?.image"
         (click)="onViewImageClick(product?.image)"
         class="w-full cursor-pointer border"
         [ngClass]="{ 'border-primary': viewImage === product?.image }"
+        width="300"
+        height="300"
+        loading="lazy"
+        decoding="async"
       />
       @if (product?.images?.length > 0) { @for(image of product?.images; track
       image){
       <img
-        [src]="image"
+        [ngSrc]="image"
         (click)="onViewImageClick(image)"
         [ngClass]="{ 'border-primary': viewImage == image }"
         class="w-full cursor-pointer border"
+        width="300"
+        height="300"
+        loading="lazy"
+        decoding="async"
       />
       } }
     </div>

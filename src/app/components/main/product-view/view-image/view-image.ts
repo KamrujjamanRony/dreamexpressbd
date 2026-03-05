@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, Input, Renderer2 } from '@angular/core';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 import { SCart } from '../../../../services/s-cart';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-image',
-  imports: [CommonModule, BdtPipe],
+  imports: [CommonModule, BdtPipe, NgOptimizedImage],
   templateUrl: './view-image.html',
   styleUrl: './view-image.css',
 })
