@@ -7,10 +7,11 @@ import { SProduct } from '../../../services/s-product';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SAuthUser } from '../../../services/s-auth-user';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
