@@ -5,7 +5,11 @@
   <!-- wishlist image -->
   <div class="w-full md:w-28 shrink-0">
     <img
-      [src]="product?.image"
+      [ngSrc]="product?.image"
+      width="300"
+      height="300"
+      loading="lazy"
+      decoding="async"
       alt="{{ product?.productName }}"
       class="w-full h-auto"
     />
@@ -22,10 +26,7 @@
     </p>
   </div>
 
-  <div
-    class="text-primary text-lg font-semibold"
-    [innerHTML]="product?.price | bdt"
-  ></div>
+  <div class="text-primary text-lg font-semibold" [innerHTML]="product?.price | bdt"></div>
 
   <div class="flex items-center gap-1">
     <button
@@ -33,7 +34,7 @@
       [disabled]="loading"
       class="cursor-pointer px-4 py-2 text-center text-gray-50 bg-red-500 border border-red-500 rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium disabled:opacity-50"
     >
-      {{ loading ? "Processing..." : "Add to cart" }}
+      {{ loading ? 'Processing...' : 'Add to cart' }}
     </button>
     <button
       (click)="deleteFromWishlist(product)"
@@ -53,11 +54,7 @@
         stroke="#ff0000"
       >
         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
         <g id="SVGRepo_iconCarrier">
           <g>
             <g>

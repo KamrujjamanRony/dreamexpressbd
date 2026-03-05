@@ -3,10 +3,11 @@ import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { SWishlist } from '../../../services/s-wishlist';
 import { SCart } from '../../../services/s-cart';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-wishlist-card',
-  imports: [BdtPipe],
+  imports: [BdtPipe, NgOptimizedImage],
   templateUrl: './wishlist-card.html',
   styleUrl: './wishlist-card.css',
 })
