@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
@@ -10,7 +10,7 @@ import { BdtPipe } from "../../../pipes/bdt.pipe";
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule, RouterLink, FontAwesomeModule, BdtPipe],
+  imports: [CommonModule, RouterLink, FontAwesomeModule, BdtPipe, NgOptimizedImage],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })
