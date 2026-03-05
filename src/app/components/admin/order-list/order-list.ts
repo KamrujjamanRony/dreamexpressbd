@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -21,7 +21,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
     OrderStatusUpdate,
     BdtPipe,
     OrderForm, FontAwesomeModule,
-    OrderDetails
+    OrderDetails,
+    NgOptimizedImage
   ],
   templateUrl: './order-list.html',
   styleUrl: './order-list.css',

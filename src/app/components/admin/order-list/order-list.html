@@ -149,9 +149,13 @@
               @for (item of order.orderItems; track $index) {
               <div class="flex items-center mb-2 last:mb-0">
                 <img
-                  [src]="item.image"
+                  [ngSrc]="item.image"
                   class="shrink-0 h-10 w-10 rounded-md"
                   [alt]="item.productName"
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div class="ml-3">
                   <div class="text-sm font-medium text-gray-900">
