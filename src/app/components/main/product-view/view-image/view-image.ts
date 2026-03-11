@@ -5,6 +5,7 @@ import { SCart } from '../../../../services/s-cart';
 import { SWishlist } from '../../../../services/s-wishlist';
 import { SAuthCookie } from '../../../../services/s-auth-cookie';
 import { Router } from '@angular/router';
+import { CartM, CartProductM } from '../../../../models/Cart';
 
 @Component({
   selector: 'app-view-image',
@@ -111,15 +112,15 @@ export class ViewImage {
     };
 
     if (this.user?.uid) {
-      this.cartService.getCart(this.user.uid).subscribe({
+      this.cartService.search(this.user.uid).subscribe({
         next: (cart) => {
           if (cart.length > 0) {
             // Get the first cart (assuming one cart per user)
-            let userCart = { ...cart[0] };
+            let userCart: CartM = { ...cart[0] };
 
             // Check if product exists in cart
             const existingProductIndex = userCart.products.findIndex(
-              (p: any) => p.productId == cartProduct.productId
+              (p: CartProductM) => p.productId == cartProduct.productId
             );
 
             if (existingProductIndex !== -1) {
@@ -131,7 +132,7 @@ export class ViewImage {
             }
 
             // Update the cart
-            this.cartService.updateCart(userCart.id, userCart).subscribe({
+            this.cartService.update(userCart.id!, userCart).subscribe({
               next: () => {
                 // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
                 // console.log('Cart updated successfully');
@@ -144,12 +145,18 @@ export class ViewImage {
             });
           } else {
             // No cart exists - create new cart
-            const newCart = {
+            const newCart: CartM = {
               userId: this.user.uid,
+              subtotal: 0,
+              discountToken: '',
+              discountType: '',
+              discountValue: 0,
+              discountAmount: 0,
+              totalAmount: 0,
               products: [cartProduct]
             };
 
-            this.cartService.addCart(newCart).subscribe({
+            this.cartService.add(newCart).subscribe({
               next: () => {
                 // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
                 // console.log('New cart created successfully');
@@ -163,12 +170,18 @@ export class ViewImage {
         },
         error: (error) => {
           // Error fetching cart - create new one
-          const newCart = {
+          const newCart: CartM = {
             userId: this.user.uid,
+            subtotal: 0,
+            discountToken: '',
+            discountType: '',
+            discountValue: 0,
+            discountAmount: 0,
+            totalAmount: 0,
             products: [cartProduct]
           };
 
-          this.cartService.addCart(newCart).subscribe({
+          this.cartService.add(newCart).subscribe({
             next: () => {
               // console.log('New cart created successfully');
             },
