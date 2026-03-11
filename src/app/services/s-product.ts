@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, of, tap, shareReplay } from 'rxjs';
-import { Product } from '../models/Products';
+import { ProductColorsM, ProductM } from '../models/Products';
 
 @Injectable({
   providedIn: 'root',
@@ -13,13 +13,13 @@ export class SProduct {
   private apiUrl = `${environment.apiUrl}/Product`;
 
   // in-memory cache
-  private searchCache = new Map<string, Observable<Product[]>>();
+  private searchCache = new Map<string, Observable<ProductM[]>>();
 
   // -------------------------
   // ADD PRODUCT
   // -------------------------
-  add(model: Product | FormData): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, model).pipe(
+  add(model: FormData): Observable<ProductM> {
+    return this.http.post<ProductM>(this.apiUrl, model).pipe(
       tap(() => this.clearCache())
     );
   }
@@ -28,12 +28,35 @@ export class SProduct {
   // SEARCH PRODUCTS (CACHED)
   // -------------------------
   search(
-    query: string = '',
-    category: string = '',
-    brand: string = ''
-  ): Observable<Product[]> {
+    search: string = '',
+    itemId: number = 0,
+    title: string = '',
+    description: string = '',
+    brand: string = '',
+    model: string = '',
+    origin: string = '',
+    additionalInformation: string = '',
+    specialFeature: string = '',
+    catalogURL: string = '',
+    sl: number = 0,
+  ): Observable<ProductM[]> {
 
-    const cacheKey = `${query}_${category}_${brand}`;
+    const reqBody = {
+      search,
+      companyID: environment.companyCode,
+      title,
+      description,
+      itemId,
+      brand,
+      model,
+      origin,
+      additionalInformation,
+      specialFeature,
+      catalogURL,
+      sl
+    }
+
+    const cacheKey = `${environment.companyCode}_${search}_${title}_${description}_${itemId}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
 
     // return cached result if exists
     if (this.searchCache.has(cacheKey)) {
@@ -41,11 +64,7 @@ export class SProduct {
     }
 
     const request$ = this.http
-      .post<Product[]>(`${this.apiUrl}/search`, {
-        search: query,
-        category,
-        brand,
-      })
+      .post<ProductM[]>(`${this.apiUrl}/search`,reqBody)
       .pipe(
         shareReplay(1) // prevent multiple API calls
       );
@@ -58,15 +77,15 @@ export class SProduct {
   // -------------------------
   // GET SINGLE PRODUCT
   // -------------------------
-  get(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  get(id: number): Observable<ProductM> {
+    return this.http.get<ProductM>(`${this.apiUrl}/${id}`);
   }
 
   // -------------------------
   // UPDATE PRODUCT
   // -------------------------
-  update(id: string, data: Product | FormData): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`, data).pipe(
+  update(id: number, data: FormData): Observable<ProductM> {
+    return this.http.put<ProductM>(`${this.apiUrl}/${id}`, data).pipe(
       tap(() => this.clearCache())
     );
   }
@@ -74,8 +93,8 @@ export class SProduct {
   // -------------------------
   // DELETE PRODUCT
   // -------------------------
-  delete(id: string): Observable<Product> {
-    return this.http.delete<Product>(`${this.apiUrl}/${id}`).pipe(
+  delete(id: number): Observable<ProductM> {
+    return this.http.delete<ProductM>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.clearCache())
     );
   }
@@ -83,7 +102,7 @@ export class SProduct {
   // -------------------------
   // RELATED PRODUCTS
   // -------------------------
-  getRelated(productId: number): Observable<Product[]> {
+  getRelated(productId: number): Observable<ProductM[]> {
     return this.search().pipe(
       map(products => {
 
@@ -96,6 +115,32 @@ export class SProduct {
         );
 
       })
+    );
+  }
+
+
+   // -------------------------
+  // ADD PRODUCT COLORS
+  // -------------------------
+  addColor(id: number, model: ProductColorsM[]): Observable<ProductColorsM[]> {
+    return this.http.post<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`, model).pipe(
+      tap(() => this.clearCache())
+    );
+  }
+
+   // -------------------------
+  // GET SINGLE PRODUCT COLORS
+  // -------------------------
+  getColor(id: number): Observable<ProductColorsM[]> {
+    return this.http.get<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`);
+  }
+
+   // -------------------------
+  // UPDATE PRODUCT COLORS
+  // -------------------------
+  updateColor(id: number, data: ProductColorsM[]): Observable<ProductColorsM[]> {
+    return this.http.put<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`, data).pipe(
+      tap(() => this.clearCache())
     );
   }
 

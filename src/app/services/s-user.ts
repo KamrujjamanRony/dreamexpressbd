@@ -21,7 +21,7 @@ export class SUser {
   }
 
   get(id: number): Observable<UserM> {
-    return this.http.get<UserM>(`${this.apiUrl}/GetById/${id}`);
+    return this.http.get<UserM>(`${this.apiUrl}/${id}`);
   }
 
   update(id: number, updateRequest: UserFormM): Observable<UserFormResponseM> {
