@@ -149,7 +149,7 @@ export class Navbar {
       this.totalCarts.set(0);
       return;
     }
-    this.cartService.getCart(this.user?.uid).subscribe(data => {
+    this.cartService.search(this.user?.uid).subscribe(data => {
       this.totalCarts.set(data?.length > 0 ? data[0].products.reduce((sum: number, p: { quantity: any; }) => sum + p.quantity, 0) : 0);
       this.cdr.detectChanges();
     });
