@@ -1,4 +1,4 @@
-export interface MenusM {
+export interface MenuM {
   id: number;
   companyID: number;
   menuName: string;
@@ -6,6 +6,20 @@ export interface MenusM {
   url: string;
   isActive: boolean;
   icon: string;
-  permissionsKey: string[];
+  permissionsKey: any[];
   postBy: string;
+}
+
+export interface MenuItem {
+    id: number;
+    parentMenuId: number | null;
+    menuName: string;
+    permissionsKey: PermissionKey[];
+    isSelected: boolean;
+    children: MenuItem[];
+}
+
+export interface PermissionKey {
+    permission: string;
+    isSelected: boolean;
 }

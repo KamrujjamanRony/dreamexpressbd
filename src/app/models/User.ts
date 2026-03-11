@@ -1,3 +1,5 @@
+import { MenuItem } from "./Menu";
+
 export interface UsersM {
     id: number;
     userName: string;
@@ -30,18 +32,4 @@ export interface UserFormResponseM {
 export interface UserDeleteResponseM {
     user: UsersM | null;
     treeData: MenuItem[];
-}
-
-export interface MenuItem {
-    id: number;
-    parentMenuId: number | null;
-    menuName: string;
-    permissionsKey: PermissionKey[];
-    isSelected: boolean;
-    children: MenuItem[];
-}
-
-export interface PermissionKey {
-    permission: string;
-    isSelected: boolean;
 }

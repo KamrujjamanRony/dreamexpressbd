@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { MenuItem, MenuM } from '../models/Menu';
 
 @Injectable({
   providedIn: 'root',
@@ -10,28 +11,28 @@ export class SMenu {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Menu`;
 
-  add(model: any): Observable<any> {
-    return this.http.post<void>(this.apiUrl, model)
+  add(model: MenuM): Observable<MenuM> {
+    return this.http.post<MenuM>(this.apiUrl, model)
   }
 
-  search(): Observable<any> {
-    return this.http.post<any[]>(`${this.apiUrl}/SearchMenu`, {})
+  search(): Observable<MenuM[]> {
+    return this.http.post<MenuM[]>(`${this.apiUrl}/Search`, {})
   }
 
-  get(id: any): Observable<any> {
-    return this.http.post<any[]>(`${this.apiUrl}/GetById/${id}`, {})
+  get(id: number): Observable<MenuM> {
+    return this.http.get<MenuM>(`${this.apiUrl}/${id}`)
   }
 
-  update(id: any, updateRequest: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/EditMenu/${id}`, updateRequest);
+  update(id: number, updateRequest: MenuM): Observable<MenuM> {
+    return this.http.put<MenuM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: any): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/DeleteMenu?id=${id}`);
+  delete(id: number): Observable<MenuM> {
+    return this.http.delete<MenuM>(`${this.apiUrl}/${id}`);
   }
 
-  generateTreeData(userId: any = ''): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/GenerateTreeData?userId=${userId}`);
+  generateTreeData(userId: any = ''): Observable<MenuItem[]> {
+    return this.http.get<MenuItem[]>(`${this.apiUrl}/GenerateTreeData?userId=${userId}`);
   }
   
 }
