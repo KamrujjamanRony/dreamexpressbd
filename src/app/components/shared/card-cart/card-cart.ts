@@ -39,7 +39,7 @@ export class CardCart {
       ),
     };
 
-    this.cartService.updateCart(this.userCarts.id, updatedCart).subscribe({
+    this.cartService.update(this.userCarts.id, updatedCart).subscribe({
       next: (response) => {
         this.count = newQuantity;
         this.product.quantity = newQuantity;
@@ -73,7 +73,7 @@ export class CardCart {
         ),
       };
 
-      this.cartService.updateCart(this.userCarts.id, updatedCart).subscribe({
+      this.cartService.update(this.userCarts.id, updatedCart).subscribe({
         next: (response) => {
           this.cartUpdated.emit(updatedCart.products);
           // this.toastService.showMessage('success', 'Success', 'Product removed from cart');
