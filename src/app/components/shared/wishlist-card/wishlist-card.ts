@@ -4,6 +4,7 @@ import { SWishlist } from '../../../services/s-wishlist';
 import { SCart } from '../../../services/s-cart';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgOptimizedImage } from '@angular/common';
+import { CartM, CartProductM } from '../../../models/Cart';
 
 @Component({
   selector: 'app-wishlist-card',
@@ -50,16 +51,20 @@ export class WishlistCard {
 
   private async addToCart(product: any): Promise<void> {
     return new Promise((resolve, reject) => {
-      const cartItem = {
-        productId: product.productId,
-        quantity: 1
-      };
+      const cartItem: CartProductM = {
+          productId: product.productId,
+          quantity: 1,
+          selectSize: '',
+          selectColor: '',
+          price: product.price || 0,
+          totalPrice: product.price || 0
+        };
 
-      this.cartService.getCart(this.user.uid).subscribe({
+      this.cartService.search(this.user.uid).subscribe({
         next: (cartData) => {
           if (cartData.length > 0) {
             // Update existing cart
-            const cart = cartData[0];
+            const cart: CartM = cartData[0];
             const existingItem = cart.products.find((p: any) => p.productId === product.productId);
 
             if (existingItem) {
@@ -68,18 +73,24 @@ export class WishlistCard {
               cart.products.push(cartItem);
             }
 
-            this.cartService.updateCart(cart.id, cart).subscribe({
+            this.cartService.update(cart.id!, cart).subscribe({
               next: () => resolve(),
               error: (err) => reject(err)
             });
           } else {
             // Create new cart
-            const newCart = {
+            const newCart: CartM = {
               userId: this.user.uid,
-              products: [cartItem]
+              products: [cartItem],
+              subtotal: 0,
+              discountToken: '',
+              discountType: '',
+              discountAmount: 0,
+              discountValue: 0,
+              totalAmount: 0
             };
 
-            this.cartService.addCart(newCart).subscribe({
+            this.cartService.add(newCart).subscribe({
               next: () => resolve(),
               error: (err) => reject(err)
             });

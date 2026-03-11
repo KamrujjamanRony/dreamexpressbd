@@ -19,18 +19,6 @@ export const routes: Routes = [
         data: { reuse: true },
         title: 'Shop'
       },
-      // {
-      //   path: 'shop?:category',
-      //   loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
-      //   data: { reuse: true },
-      //   title: 'Shop'
-      // },
-      // {
-      //   path: 'shop/:category',
-      //   loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
-      //   data: { reuse: true },
-      //   title: 'Shop'
-      // },
       {
         path: 'about-us',
         loadComponent: () => import('./components/main/about/about').then(m => m.About),
@@ -94,11 +82,11 @@ export const routes: Routes = [
             loadComponent: () => import('./components/account/orders/orders').then(m => m.Orders),
             title: 'My Orders'
           },
-          {
-            path: 'wishlist',
-            loadComponent: () => import('./components/account/wishlist/wishlist').then(m => m.Wishlist),
-            title: 'Wishlist'
-          },
+          // {
+          //   path: 'wishlist',
+          //   loadComponent: () => import('./components/account/wishlist/wishlist').then(m => m.Wishlist),
+          //   title: 'Wishlist'
+          // },
           {
             path: 'shopping-cart',
             loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),

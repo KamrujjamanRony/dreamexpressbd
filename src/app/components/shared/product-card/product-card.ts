@@ -7,6 +7,7 @@ import { SCart } from '../../../services/s-cart';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { BdtPipe } from "../../../pipes/bdt.pipe";
+import { CartM } from '../../../models/Cart';
 
 @Component({
   selector: 'app-product-card',
@@ -101,13 +102,17 @@ export class ProductCard {
 
   addToCart(product: any) {
     const cartProduct = {
-      id: crypto.randomUUID(),
+      id: Math.floor(Math.random() * 1000000),
       productId: product?.id,
-      quantity: 1
+      quantity: 1,
+      selectSize: '',
+      selectColor: '',
+      price: product?.price || 0,
+      totalPrice: product?.price || 0
     };
 
     if (this.user?.uid) {
-      this.cartService.getCart(this.user.uid).subscribe({
+      this.cartService.search(this.user.uid).subscribe({
         next: (cart) => {
           if (cart.length > 0) {
             // Get the first cart (assuming one cart per user)
@@ -127,7 +132,7 @@ export class ProductCard {
             }
 
             // Update the cart
-            this.cartService.updateCart(userCart.id, userCart).subscribe({
+            this.cartService.update(userCart.id!, userCart).subscribe({
               next: () => {
                 // console.log('Cart updated successfully');
                 // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
@@ -140,12 +145,18 @@ export class ProductCard {
             });
           } else {
             // No cart exists - create new cart
-            const newCart = {
+            const newCart: CartM = {
               userId: this.user.uid,
-              products: [cartProduct]
+              products: [cartProduct],
+              subtotal: cartProduct.totalPrice,
+              discountToken: '',
+              discountType: '',
+              discountAmount: 0,
+              discountValue: 0,
+              totalAmount: cartProduct.totalPrice
             };
 
-            this.cartService.addCart(newCart).subscribe({
+            this.cartService.add(newCart).subscribe({
               next: () => {
                 // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
                 // console.log('New cart created successfully');

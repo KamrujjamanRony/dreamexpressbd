@@ -20,14 +20,19 @@ export class SCart {
     );
   }
 
+  search(userId: number): Observable<CartM[]> {
+    const reqBody = { userId };
+    return this.http.post<CartM[]>(`${this.apiUrl}/Search`, reqBody);
+  }
+
   get(id: number): Observable<CartM> {
     return this.http.get<CartM>(`${this.apiUrl}/${id}`);
   }
 
   update(cartId: number, updateCartRequest: CartM | FormData): Observable<CartM> {
     return this.http.put<CartM>(`${this.apiUrl}/${cartId}`, updateCartRequest).pipe(
-        tap(() => this.cartUpdated.next()) // Notify subscribers
-      );
+      tap(() => this.cartUpdated.next()) // Notify subscribers
+    );
   }
 
   delete(id: number): Observable<CartM> {
@@ -38,13 +43,17 @@ export class SCart {
 
   // Add this method to your CartService
   clearCart(userId: number): void {
-    this.get(userId).subscribe(cart => {
-      if (cart) {
-        this.delete(cart.id).subscribe(data => {
-          this.cartUpdated.next(); // Notify subscribers that the cart has been cleared
+    this.search(userId).subscribe(cartItems => {
+      if (cartItems && cartItems.length > 0) {
+        cartItems.forEach(cartItem => {
+          if (cartItem.id !== undefined && cartItem.id !== null) {
+            this.delete(cartItem.id).subscribe(() => {
+              this.cartUpdated.next(); // Notify subscribers that the cart has been cleared
+            });
+          }
         });
       }
     });
   }
-  
+
 }
