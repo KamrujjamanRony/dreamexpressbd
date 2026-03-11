@@ -3,7 +3,7 @@ export const environment = {
     companyName: 'Dream Express BD',
     companyCode: 1,
     whatsappNumber: '1818545586',
-    apiUrl: 'http://localhost:1005/api',
+    apiUrl: 'http://localhost:1005/p',
     ImageApi: 'http://localhost:1001/uploads/',
     webUrl: 'http://localhost:4200',
     // webUrl: 'https://www.triupdx-ray.com',

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { BrandM } from '../models/Brand';
 
 @Injectable({
   providedIn: 'root',
@@ -10,20 +11,24 @@ export class SBrand {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Brand`;
 
-  add(model: any): Observable<any> {
-    return this.http.post<void>(this.apiUrl, model)
+  add(model: BrandM): Observable<BrandM> {
+    return this.http.post<BrandM>(this.apiUrl, model)
   }
 
-  search(): Observable<any> {
-    return this.http.get<any[]>(`${this.apiUrl}`)
+  get(id: number): Observable<BrandM> {
+    return this.http.get<BrandM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: any, updateRequest: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, updateRequest);
+  search(): Observable<BrandM[]> {
+    return this.http.get<BrandM[]>(`${this.apiUrl}/Search`)
   }
 
-  delete(id: any): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  update(id: number, updateRequest: BrandM): Observable<BrandM> {
+    return this.http.put<BrandM>(`${this.apiUrl}/${id}`, updateRequest);
   }
-  
+
+  delete(id: number): Observable<BrandM> {
+    return this.http.delete<BrandM>(`${this.apiUrl}/${id}`);
+  }
+
 }

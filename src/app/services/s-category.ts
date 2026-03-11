@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { CategoryM } from '../models/Category';
 
 @Injectable({
   providedIn: 'root',
@@ -10,20 +11,20 @@ export class SCategory {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Category`;
 
-  add(model: any): Observable<any> {
-    return this.http.post<void>(this.apiUrl, model)
+  add(model: CategoryM): Observable<CategoryM> {
+    return this.http.post<CategoryM>(this.apiUrl, model)
   }
 
-  search(): Observable<any> {
-    return this.http.get<any[]>(`${this.apiUrl}`)
+  search(): Observable<CategoryM[]> {
+    return this.http.get<CategoryM[]>(`${this.apiUrl}`)
   }
 
-  update(id: any, updateRequest: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, updateRequest);
+  update(id: number, updateRequest: CategoryM): Observable<CategoryM> {
+    return this.http.put<CategoryM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: any): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<CategoryM> {
+    return this.http.delete<CategoryM>(`${this.apiUrl}/${id}`);
   }
   
 }
