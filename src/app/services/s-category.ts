@@ -9,14 +9,14 @@ import { CategoryM } from '../models/Category';
 })
 export class SCategory {
   private readonly http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/Category`;
+  private apiUrl = `${environment.apiUrl}/Item`;
 
   add(model: CategoryM): Observable<CategoryM> {
     return this.http.post<CategoryM>(this.apiUrl, model)
   }
 
   search(): Observable<CategoryM[]> {
-    return this.http.get<CategoryM[]>(`${this.apiUrl}`)
+    return this.http.get<CategoryM[]>(`${this.apiUrl}/Search`)
   }
 
   update(id: number, updateRequest: CategoryM): Observable<CategoryM> {
