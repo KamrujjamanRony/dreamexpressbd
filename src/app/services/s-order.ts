@@ -2,49 +2,47 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { OrderM } from '../models/OrderM';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class SOrder {
     private apiUrl = `${environment.apiUrl}/Orders`;
     private http = inject(HttpClient);
 
-    add(order: any): Observable<any> {
-        return this.http.post<any>(this.apiUrl, order);
+    add(order: OrderM): Observable<OrderM> {
+        return this.http.post<OrderM>(this.apiUrl, order);
     }
 
-    search(reqBody?: any, status?: any): Observable<any[]> {
-        // Add status to request body only if it's provided
-        if (status !== undefined && status !== null && status !== 'null') {
-            reqBody.orderStatus = status;
-        }
-        return this.http.post<any[]>(`${this.apiUrl}/searchOrder`, reqBody);
+    search(companyID: number, from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
+        const reqBody = { from, to, orderStatus, companyID };
+        return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);
     }
 
-    getByUser(userId: string): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/${userId}`);
+    // getByUser(userId: number): Observable<OrderM[]> {
+    //     return this.http.get<OrderM[]>(`${this.apiUrl}/${userId}`);
+    // }
+
+    get(orderId: number): Observable<OrderM> {
+        return this.http.get<OrderM>(`${this.apiUrl}/${orderId}`);
     }
 
-    getById(orderId: string): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/order/${orderId}`);
+    // updateStatus(id: number, orderStatus: any): Observable<any> {
+    //     // Prepare update data
+    //     const updateRequest: Partial<OrderM> & { deliveredDate?: string } = { orderStatus };
+    //     if (orderStatus == 'Delivered' || orderStatus == 3) {
+    //         updateRequest['deliveredDate'] = new Date().toISOString();
+    //     }
+    //     return this.http.put<OrderM>(`${this.apiUrl}/status/${id}`, updateRequest);
+    // }
+
+    update(id: number, updateRequest: Partial<OrderM>): Observable<OrderM> {
+        return this.http.put<OrderM>(`${this.apiUrl}/${id}`, updateRequest);
     }
 
-    updateStatus(id: string, orderStatus: any): Observable<any> {
-        // Prepare update data
-        const updateRequest: Partial<any> = { orderStatus };
-        if (orderStatus == 'Delivered' || orderStatus == 3) {
-            updateRequest['deliveredDate'] = new Date().toISOString();
-        }
-        return this.http.put<any>(`${this.apiUrl}/status/${id}`, updateRequest);
+    delete(id: number): Observable<OrderM> {
+        return this.http.delete<OrderM>(`${this.apiUrl}/${id}`);
     }
 
-    update(id: string, updateRequest: Partial<any>): Observable<any> {
-        return this.http.put<any>(`${this.apiUrl}/${id}`, updateRequest);
-    }
-
-    delete(id: string): Observable<string> {
-        return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
-    }
-  
 }
