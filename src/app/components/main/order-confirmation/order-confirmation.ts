@@ -32,7 +32,7 @@ export class OrderConfirmation {
   }
 
   loadOrderDetails() {
-    this.orderService.getById(this.orderId!).subscribe({
+    this.orderService.get(this.orderId!).subscribe({
       next: (order) => {
         this.orderDetails = order;
         this.loading = false;

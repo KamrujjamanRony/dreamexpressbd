@@ -16,7 +16,7 @@ export class SToken {
     return this.http.post<TokenM>(this.apiUrl, model)
   }
 
-  get(id: number): Observable<TokenM> {
+  get(id: any): Observable<TokenM> {
     return this.http.get<TokenM>(`${this.apiUrl}/${id}`);
   }
 
@@ -24,11 +24,11 @@ export class SToken {
     return this.http.get<TokenM[]>(`${this.apiUrl}/Search`)
   }
 
-  update(id: number, updateRequest: TokenM): Observable<TokenM> {
+  update(id: any, updateRequest: TokenM): Observable<TokenM> {
     return this.http.put<TokenM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<TokenM> {
+  delete(id: any): Observable<TokenM> {
     return this.http.delete<TokenM>(`${this.apiUrl}/${id}`);
   }
   

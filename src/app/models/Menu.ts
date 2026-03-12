@@ -1,5 +1,5 @@
 export interface MenuM {
-  id: number;
+  id?: number;
   companyID: number;
   menuName: string;
   parentMenuID?: number;

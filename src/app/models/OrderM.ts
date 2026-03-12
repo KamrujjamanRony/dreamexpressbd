@@ -1,5 +1,5 @@
 export interface OrderM{
-    id: number;
+    id?: number;
     companyID: number;
     userID: number;
     userEmail: string;
@@ -14,7 +14,7 @@ export interface OrderM{
     totalAmount: number;
     paymentMethod: string;
     orderStatus: string;
-    orderDate: Date;
+    orderDate: Date | string;
     shippingAddress: ShippingAddressM;
     orderItems: OrderItemM[];
 }

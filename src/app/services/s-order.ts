@@ -15,33 +15,33 @@ export class SOrder {
         return this.http.post<OrderM>(this.apiUrl, order);
     }
 
-    search(companyID: number, from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
+    search(companyID: any, from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
         const reqBody = { from, to, orderStatus, companyID };
         return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);
     }
 
-    // getByUser(userId: number): Observable<OrderM[]> {
+    // getByUser(userId: any): Observable<OrderM[]> {
     //     return this.http.get<OrderM[]>(`${this.apiUrl}/${userId}`);
     // }
 
-    get(orderId: number): Observable<OrderM> {
+    get(orderId: any): Observable<OrderM> {
         return this.http.get<OrderM>(`${this.apiUrl}/${orderId}`);
     }
 
-    // updateStatus(id: number, orderStatus: any): Observable<any> {
-    //     // Prepare update data
-    //     const updateRequest: Partial<OrderM> & { deliveredDate?: string } = { orderStatus };
-    //     if (orderStatus == 'Delivered' || orderStatus == 3) {
-    //         updateRequest['deliveredDate'] = new Date().toISOString();
-    //     }
-    //     return this.http.put<OrderM>(`${this.apiUrl}/status/${id}`, updateRequest);
-    // }
+    updateStatus(id: any, orderStatus: any): Observable<any> {
+        // Prepare update data
+        const updateRequest: Partial<OrderM> & { deliveredDate?: string } = { orderStatus };
+        if (orderStatus == 'Delivered' || orderStatus == 3) {
+            updateRequest['deliveredDate'] = new Date().toISOString();
+        }
+        return this.http.put<OrderM>(`${this.apiUrl}/status/${id}`, updateRequest);
+    }
 
-    update(id: number, updateRequest: Partial<OrderM>): Observable<OrderM> {
+    update(id: any, updateRequest: Partial<OrderM>): Observable<OrderM> {
         return this.http.put<OrderM>(`${this.apiUrl}/${id}`, updateRequest);
     }
 
-    delete(id: number): Observable<OrderM> {
+    delete(id: any): Observable<OrderM> {
         return this.http.delete<OrderM>(`${this.apiUrl}/${id}`);
     }
 

@@ -10,7 +10,7 @@ export class SSetting {
   private baseURL = `${environment.apiUrl}/SiteSetting`;
   private http = inject(HttpClient);
 
-  get(id: number): Observable<any> {
+  get(id: any): Observable<any> {
     return this.http.get(`${this.baseURL}/${id}`);
   }
 
@@ -18,11 +18,11 @@ export class SSetting {
     return this.http.post(`${this.baseURL}`, data);
   }
 
-  update(id: number, data: any): Observable<any> {
+  update(id: any, data: any): Observable<any> {
     return this.http.put(`${this.baseURL}/${id}`, data);
   }
 
-  delete(id: number): Observable<any> {
+  delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseURL}/${id}`);
   }
   

@@ -19,15 +19,15 @@ export class SMenu {
     return this.http.post<MenuM[]>(`${this.apiUrl}/Search`, {})
   }
 
-  get(id: number): Observable<MenuM> {
+  get(id: any): Observable<MenuM> {
     return this.http.get<MenuM>(`${this.apiUrl}/${id}`)
   }
 
-  update(id: number, updateRequest: MenuM): Observable<MenuM> {
+  update(id: any, updateRequest: MenuM): Observable<MenuM> {
     return this.http.put<MenuM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<MenuM> {
+  delete(id: any): Observable<MenuM> {
     return this.http.delete<MenuM>(`${this.apiUrl}/${id}`);
   }
 

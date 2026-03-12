@@ -15,7 +15,7 @@ export class SCarousel {
     return this.http.post<CarouselM>(this.apiUrl, model)
   }
 
-  get(id: number): Observable<CarouselM> {
+  get(id: any): Observable<CarouselM> {
     return this.http.get<CarouselM>(`${this.apiUrl}/${id}`);
   }
 
@@ -23,11 +23,11 @@ export class SCarousel {
     return this.http.get<CarouselM[]>(`${this.apiUrl}/Search`)
   }
 
-  update(id: number, updateRequest: CarouselM): Observable<CarouselM> {
+  update(id: any, updateRequest: CarouselM): Observable<CarouselM> {
     return this.http.put<CarouselM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<CarouselM> {
+  delete(id: any): Observable<CarouselM> {
     return this.http.delete<CarouselM>(`${this.apiUrl}/${id}`);
   }
   

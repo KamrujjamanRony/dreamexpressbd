@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { ConfirmOptions } from './confirm.model';
 
 @Injectable({ providedIn: 'root' })
-export class ConfirmService {
+export class SConfirm {
   private resolver!: (value: boolean) => void;
 
   readonly isOpen = signal(false);

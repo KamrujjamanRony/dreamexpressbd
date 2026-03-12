@@ -10,21 +10,20 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './about.css',
 })
 export class About {
-    private siteSettingService = inject(SSetting);
+    // private siteSettingService = inject(SSetting);
     siteId = environment.companyCode;
     siteInfo = signal<any>(null);
 
-    ngOnInit() {
-        this.siteSettingService.get(this.siteId).subscribe({
-            next: (data: any) => {
-                this.siteInfo.set(data);
-                // console.log(this.siteInfo());
-            },
-            error: (err: any) => {
-                // this.toastService.showMessage('error', 'Error', 'Failed to load about us information.');
-                console.error('Failed to load about us information:', err);
-            }
-        });
-    }
+    // ngOnInit() {
+    //     this.siteSettingService.get(this.siteId).subscribe({
+    //         next: (data: any) => {
+    //             this.siteInfo.set(data);
+    //         },
+    //         error: (err: any) => {
+    //             // this.toastService.showMessage('error', 'Error', 'Failed to load about us information.');
+    //             console.error('Failed to load about us information:', err);
+    //         }
+    //     });
+    // }
 
 }

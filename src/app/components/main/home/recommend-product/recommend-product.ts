@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { Product } from '../../../../models/Products';
 import { ProductCard } from '../../../shared/product-card/product-card';
+import { ProductM } from '../../../../models/Products';
 
 @Component({
   selector: 'app-recommend-product',
@@ -10,7 +10,7 @@ import { ProductCard } from '../../../shared/product-card/product-card';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RecommendProduct {
-  products = input<Product[]>([]);
+  products = input<ProductM[]>([]);
 
   breakpoints = {
     480: { slidesPerView: 2, spaceBetween: 5 },

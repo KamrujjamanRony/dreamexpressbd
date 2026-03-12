@@ -20,29 +20,29 @@ export class SCart {
     );
   }
 
-  search(userId: number): Observable<CartM[]> {
+  search(userId: any): Observable<CartM[]> {
     const reqBody = { userId };
     return this.http.post<CartM[]>(`${this.apiUrl}/Search`, reqBody);
   }
 
-  get(id: number): Observable<CartM> {
+  get(id: any): Observable<CartM> {
     return this.http.get<CartM>(`${this.apiUrl}/${id}`);
   }
 
-  update(cartId: number, updateCartRequest: CartM | FormData): Observable<CartM> {
+  update(cartId: any, updateCartRequest: CartM | FormData): Observable<CartM> {
     return this.http.put<CartM>(`${this.apiUrl}/${cartId}`, updateCartRequest).pipe(
       tap(() => this.cartUpdated.next()) // Notify subscribers
     );
   }
 
-  delete(id: number): Observable<CartM> {
+  delete(id: any): Observable<CartM> {
     return this.http.delete<CartM>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.cartUpdated.next())
     );
   }
 
   // Add this method to your CartService
-  clearCart(userId: number): void {
+  clearCart(userId: any): void {
     this.search(userId).subscribe(cartItems => {
       if (cartItems && cartItems.length > 0) {
         cartItems.forEach(cartItem => {

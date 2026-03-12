@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { ToastService } from './toast.service';
+import { SToast } from './toast.service';
 import { ToastM, ToastPosition } from './toast.model';
 
 @Component({
@@ -10,7 +10,7 @@ import { ToastM, ToastPosition } from './toast.model';
     styleUrl: './toast.css',
 })
 export class Toast {
-  public toastService = inject(ToastService);
+  public toastService = inject(SToast);
 
   // 🔑 THIS fixes the typing issue
   readonly positions: readonly ToastPosition[] = [

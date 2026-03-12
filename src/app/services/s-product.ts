@@ -28,8 +28,8 @@ export class SProduct {
   // SEARCH PRODUCTS (CACHED)
   // -------------------------
   search(
+    itemId: any = 0,
     search: string = '',
-    itemId: number = 0,
     title: string = '',
     description: string = '',
     brand: string = '',
@@ -38,22 +38,22 @@ export class SProduct {
     additionalInformation: string = '',
     specialFeature: string = '',
     catalogURL: string = '',
-    sl: number = 0,
+    sl: any = 0,
   ): Observable<ProductM[]> {
 
     const reqBody = {
-      search,
       companyID: environment.companyCode,
-      title,
-      description,
-      itemId,
-      brand,
-      model,
-      origin,
-      additionalInformation,
-      specialFeature,
-      catalogURL,
-      sl
+      ...(itemId && itemId > 0 ? { itemId: itemId } : {}),
+      ...(search ? { search: search.trim() } : {}),
+      ...(title ? { title: title.trim() } : {}),
+      ...(description ? { description: description.trim() } : {}),
+      ...(brand ? { brand: brand.trim() } : {}),
+      ...(model ? { model: model.trim() } : {}),
+      ...(origin ? { origin: origin.trim() } : {}),
+      ...(additionalInformation ? { additionalInformation: additionalInformation.trim() } : {}),
+      ...(specialFeature ? { specialFeature: specialFeature.trim() } : {}),
+      ...(catalogURL ? { catalogURL: catalogURL.trim() } : {}),
+      ...(sl && sl > 0 ? { sl: sl } : {})
     }
 
     const cacheKey = `${environment.companyCode}_${search}_${title}_${description}_${itemId}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
@@ -77,14 +77,14 @@ export class SProduct {
   // -------------------------
   // GET SINGLE PRODUCT
   // -------------------------
-  get(id: number): Observable<ProductM> {
+  get(id: any): Observable<ProductM> {
     return this.http.get<ProductM>(`${this.apiUrl}/${id}`);
   }
 
   // -------------------------
   // UPDATE PRODUCT
   // -------------------------
-  update(id: number, data: FormData): Observable<ProductM> {
+  update(id: any, data: FormData): Observable<ProductM> {
     return this.http.put<ProductM>(`${this.apiUrl}/${id}`, data).pipe(
       tap(() => this.clearCache())
     );
@@ -93,7 +93,7 @@ export class SProduct {
   // -------------------------
   // DELETE PRODUCT
   // -------------------------
-  delete(id: number): Observable<ProductM> {
+  delete(id: any): Observable<ProductM> {
     return this.http.delete<ProductM>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.clearCache())
     );
@@ -102,7 +102,7 @@ export class SProduct {
   // -------------------------
   // RELATED PRODUCTS
   // -------------------------
-  getRelated(productId: number): Observable<ProductM[]> {
+  getRelated(productId: any): Observable<ProductM[]> {
     return this.search().pipe(
       map(products => {
 
@@ -122,7 +122,7 @@ export class SProduct {
    // -------------------------
   // ADD PRODUCT COLORS
   // -------------------------
-  addColor(id: number, model: ProductColorsM[]): Observable<ProductColorsM[]> {
+  addColor(id: any, model: ProductColorsM[]): Observable<ProductColorsM[]> {
     return this.http.post<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`, model).pipe(
       tap(() => this.clearCache())
     );
@@ -131,14 +131,14 @@ export class SProduct {
    // -------------------------
   // GET SINGLE PRODUCT COLORS
   // -------------------------
-  getColor(id: number): Observable<ProductColorsM[]> {
+  getColor(id: any): Observable<ProductColorsM[]> {
     return this.http.get<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`);
   }
 
    // -------------------------
   // UPDATE PRODUCT COLORS
   // -------------------------
-  updateColor(id: number, data: ProductColorsM[]): Observable<ProductColorsM[]> {
+  updateColor(id: any, data: ProductColorsM[]): Observable<ProductColorsM[]> {
     return this.http.put<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`, data).pipe(
       tap(() => this.clearCache())
     );

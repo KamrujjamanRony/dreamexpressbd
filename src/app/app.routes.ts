@@ -137,11 +137,11 @@ export const routes: Routes = [
       //   loadComponent: () => import('./components/admin/wish-list/wish-list').then(m => m.WishList),
       //   title: 'Wish List',
       // },
-      {
-        path: 'settings',
-        loadComponent: () => import('./components/admin/settings/settings').then(m => m.Settings),
-        title: 'Settings',
-      },
+      // {
+      //   path: 'settings',
+      //   loadComponent: () => import('./components/admin/settings/settings').then(m => m.Settings),
+      //   title: 'Settings',
+      // },
     ]
   },
   {

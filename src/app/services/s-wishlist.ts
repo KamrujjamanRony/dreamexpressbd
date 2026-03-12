@@ -19,18 +19,18 @@ export class SWishlist {
     );
   }
 
-  getWishlist(id: string): Observable<any> {
+  getWishlist(id: any): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  updateWishlist(id: string, updateWishlistRequest: any | FormData): Observable<string> {
+  updateWishlist(id: any, updateWishlistRequest: any | FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, updateWishlistRequest,
       { responseType: 'text' }).pipe(
         tap(() => this.wishlistUpdated.next()) // Notify subscribers
       );
   }
 
-  deleteWishlist(id: string): Observable<any> {
+  deleteWishlist(id: any): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, {
       responseType: 'text' as const  // Use 'as const' to properly type the response
     }).pipe(
@@ -38,7 +38,7 @@ export class SWishlist {
     );
   }
 
-  clearWishlist(userId: string): any {
+  clearWishlist(userId: any): any {
     // console.log(`Clearing Wishlist for user: ${userId}`);
     this.getWishlist(userId).subscribe(Wishlist => {
       if (Wishlist[0]) {

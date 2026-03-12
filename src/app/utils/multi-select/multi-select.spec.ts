@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MenuForm } from './menu-form';
+import { MultiSelect } from './multi-select';
 
-describe('MenuForm', () => {
-  let component: MenuForm;
-  let fixture: ComponentFixture<MenuForm>;
+describe('MultiSelect', () => {
+  let component: MultiSelect;
+  let fixture: ComponentFixture<MultiSelect>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MenuForm]
+      imports: [MultiSelect]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MenuForm);
+    fixture = TestBed.createComponent(MultiSelect);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -33,3 +33,8 @@ export interface UserDeleteResponseM {
     user: UsersM | null;
     treeData: MenuItem[];
 }
+
+export interface PermissionOptionM {
+  key: string;
+  value: string;
+}

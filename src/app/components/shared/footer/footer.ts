@@ -15,16 +15,16 @@ export class Footer {
     siteInfo = signal<any>(null);
 
     ngOnInit() {
-        this.settingService.get(this.siteId).subscribe({
-            next: (data) => {
-                console.log(data);
-                this.siteInfo.set(data);
-            },
-            error: (err) => {
-                // this.toastService.showMessage('error', 'Error', 'Failed to load about us information.');
-                console.error('Failed to load about us information:', err);
-            }
-        });
+        // this.settingService.get(this.siteId).subscribe({
+        //     next: (data) => {
+        //         console.log(data);
+        //         this.siteInfo.set(data);
+        //     },
+        //     error: (err) => {
+        //         // this.toastService.showMessage('error', 'Error', 'Failed to load about us information.');
+        //         console.error('Failed to load about us information:', err);
+        //     }
+        // });
     }
 
 }

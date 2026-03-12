@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ConfirmService } from './confirm.service';
+import { SConfirm } from './confirm.service';
 
 @Component({
   selector: 'app-confirm',
@@ -8,7 +8,7 @@ import { ConfirmService } from './confirm.service';
   styleUrl: './confirm.css',
 })
 export class Confirm {
-  readonly confirm = inject(ConfirmService);
+  readonly confirm = inject(SConfirm);
 
   iconClass(variant: string | undefined) {
     return {

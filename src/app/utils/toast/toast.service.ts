@@ -2,7 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { ToastM, ToastType, ToastPosition } from './toast.model';
 
 @Injectable({ providedIn: 'root' })
-export class ToastService {
+export class SToast {
   private id = 0;
   private timers = new Map<number, any>();
 

@@ -15,15 +15,15 @@ export class SContact {
     return this.http.post<ContactM>(this.apiUrl, model)
   }
 
-  get(id: number): Observable<ContactM> {
+  get(id: any): Observable<ContactM> {
     return this.http.get<ContactM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, updateRequest: ContactM): Observable<ContactM> {
+  update(id: any, updateRequest: ContactM): Observable<ContactM> {
     return this.http.put<ContactM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<ContactM> {
+  delete(id: any): Observable<ContactM> {
     return this.http.delete<ContactM>(`${this.apiUrl}/${id}`);
   }
   

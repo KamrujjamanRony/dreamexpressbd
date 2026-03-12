@@ -1,186 +1,269 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
+import { Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSearch, faPencil, faRemove } from '@fortawesome/free-solid-svg-icons';
-import { MenuForm } from './menu-form/menu-form';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { SMenu } from '../../../services/s-menu';
-import { SDataFetch } from '../../../services/s-data-fetch';
-import { SAuth } from '../../../services/s-auth';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { MenuM } from '../../../models/Menu';
+import { SPermission } from '../../../services/s-permission';
+import { SToast } from '../../../utils/toast/toast.service';
+import { SConfirm } from '../../../utils/confirm/confirm.service';
+import { PermissionOptionM } from '../../../models/User';
+import { MultiSelect } from '../../../utils/multi-select/multi-select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-menus',
-  imports: [CommonModule, MenuForm, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, FormField, MultiSelect, FormsModule],
   templateUrl: './menus.html',
   styleUrl: './menus.css',
 })
 export class Menus {
-  faSearch = faSearch;
   faPencil = faPencil;
-  faRemove = faRemove;
-  fb = inject(NonNullableFormBuilder);
+  faXmark = faXmark;
+  faMagnifyingGlass = faMagnifyingGlass;
+
+  /* ---------------- DI ---------------- */
   private menuService = inject(SMenu);
-  private dataFetchService = inject(SDataFetch);
-  private authService = inject(SAuth);
-  isView = signal<boolean>(false);
-  isInsert = signal<boolean>(false);
-  isEdit = signal<boolean>(false);
-  isDelete = signal<boolean>(false);
-  filteredMenuList = signal<any[]>([]);
-  menuOptions = signal<any[]>([]);
-  highlightedTr: number = -1;
-  selectedMenu: any;
-  showModal = false;
-  modalTitle = 'Add New Menu';
+  private permissionService = inject(SPermission);
+  private toast = inject(SToast);
+  private confirm = inject(SConfirm);
+  readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 
-  private searchQuery$ = new BehaviorSubject<string>('');
-  isLoading$: Observable<any> | undefined;
-  hasError$: Observable<any> | undefined;
-  isSubmitted = false;
-  options: any[] = ['View', 'Insert', 'Edit', 'Delete'];
+  /* ---------------- SIGNAL STATE ---------------- */
+  menus = signal<MenuM[]>([]);
+  searchQuery = signal('');
+  permissionsKey: PermissionOptionM[] = []; // Change to PermissionOption array
 
-  form = this.fb.group({
-    menuName: ['', [Validators.required]],
-    moduleName: [''],
-    parentMenuId: [null],
-    url: [''],
-    isActive: [true],
-    icon: [''],
-    permissionsKey: [''],
+  filteredMenuList = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+
+    return this.menus()
+      .filter(menu =>
+        menu.menuName?.toLowerCase().includes(query) ||
+        menu.url?.toLowerCase().includes(query) ||
+        menu.icon?.toLowerCase().includes(query)
+      )
+      .reverse();
   });
 
-  ngOnInit() {
-    this.onLoadMenu();
-    this.isView.set(this.checkPermission("Menu List", "View"));
-    this.isInsert.set(this.checkPermission("Menu List", "Insert"));
-    this.isEdit.set(this.checkPermission("Menu List", "Edit"));
-    this.isDelete.set(this.checkPermission("Menu List", "Delete"));
-  }
+  menuOptions = computed(() =>
+    this.menus().map(menu => ({
+      key: menu.id,
+      value: menu.menuName
+    }))
+  );
 
-  openAddModal() {
-    this.modalTitle = 'Add New Menu';
-    this.selectedMenu = null;
-    this.showModal = true;
-  }
+  selected = signal<MenuM | null>(null);
 
-  openEditModal(menu: any) {
-    this.modalTitle = 'Edit Menu';
-    this.selectedMenu = menu;
-    this.showModal = true;
-  }
+  isLoading = signal(false);
+  hasError = signal(false);
+  isSubmitted = signal(false);
 
-  closeModal() {
-    this.showModal = false;
-    this.selectedMenu = null;
-  }
+  isView = signal(false);
+  isInsert = signal(false);
+  isEdit = signal(false);
+  isDelete = signal(false);
+  showList = signal(true);
 
-  handleFormSubmit(formData: any) {
-    if (this.selectedMenu) {
-      this.menuService.update(this.selectedMenu.id, {
-        ...formData,
-        parentMenuId: formData.parentMenuId || null,
-        permissionsKey: formData.permissionsKey || []
-      }).subscribe({
-        next: (response) => {
-          if (response) {
-            // this.toastService.showMessage('success', 'Success', 'Menu successfully updated!');
-            const rest = this.filteredMenuList().filter(d => d.id !== response.id);
-            this.filteredMenuList.set([response, ...rest]);
-            this.closeModal();
-            this.onLoadMenu();
-          }
-        },
-        error: (error) => {
-          console.error('Error updating Menu:', error);
-          // this.toastService.showMessage('error', 'Error', `Error updating Menu: ${error.error.message || error.error.title}`);
+  // Define permission options as array of objects
+  permissionOptions: PermissionOptionM[] = [
+    { key: 'view', value: 'View' },
+    { key: 'create', value: 'Create' },
+    { key: 'edit', value: 'Edit' },
+    { key: 'delete', value: 'Delete' },
+  ];
+
+  /* ---------------- FORM MODEL ---------------- */
+  model = signal({
+    menuName: '',
+    parentMenuID: '',
+    url: '',
+    isActive: 'true',
+    icon: '',
+    permissionsKey: [] as string[], // Keep as string[] for form
+    postBy: ''
+  });
+
+  /* ---------------- SIGNAL FORM ---------------- */
+  form = form(this.model, (schemaPath) => {
+    required(schemaPath.menuName, { message: 'Menu Name is required' });
+    required(schemaPath.url, { message: 'Menu URL is required' });
+    validate(schemaPath.url, ({ value }) => {
+      if (!value().startsWith('/')) {
+        return {
+          kind: 'https',
+          message: 'URL must start with / symbol'
         }
-      });
-    } else {
-      this.menuService.add({
-        ...formData,
-        parentMenuId: formData.parentMenuId || null,
-        permissionsKey: formData.permissionsKey || []
-      }).subscribe({
-        next: (response) => {
-          if (response) {
-            // this.toastService.showMessage('success', 'Success', 'Menu successfully added!');
-            this.filteredMenuList.set([response, ...this.filteredMenuList()]);
-            this.closeModal();
-            this.onLoadMenu();
-          }
-        },
-        error: (error) => {
-          console.error('Error adding Menu:', error);
-          // this.toastService.showMessage('error', 'Error', `Error adding Menu: ${error.error.message || error.error.title}`);
-        }
-      });
-    }
-  }
-
-
-  checkPermission(moduleName: string, permission: string) {
-    const user = this.authService.getUser();
-    const modulePermission = user?.userMenu?.find((module: any) => module?.menuName?.toLowerCase() === moduleName.toLowerCase());
-    if (modulePermission && user?.username.toLowerCase() === 'supersoft') {
-      const permissionValue = modulePermission.permissions.find((perm: any) => perm.toLowerCase() === permission.toLowerCase());
-      if (permissionValue) {
-        return true;
-      } else {
-        return false;
       }
-    } else {
-      return false;
-    }
+      return null
+    })
+
+    debounce(schemaPath.menuName, 300);
+    debounce(schemaPath.url, 300);
+  });
+
+  /* ---------------- LIFECYCLE ---------------- */
+  ngOnInit(): void {
+    this.loadMenus();
+    this.loadPermissions();
   }
 
-  onLoadMenu() {
-    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.menuService.search());
+  /* ---------------- LOADERS ---------------- */
+  loadPermissions() {
+    this.isView.set(this.permissionService.hasPermission('Menu'));
+    this.isInsert.set(this.permissionService.hasPermission('Menu', 'create'));
+    this.isEdit.set(this.permissionService.hasPermission('Menu', 'edit'));
+    this.isDelete.set(this.permissionService.hasPermission('Menu', 'delete'));
+  }
 
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
-    // Combine the original data stream with the search query to create a filtered list
-    combineLatest([
-      data$,
-      this.searchQuery$
-    ]).pipe(
-      map(([data, query]) =>
-        data.filter((menuData: any) =>
-          menuData.menuName?.toLowerCase().includes(query) ||
-          menuData.moduleName?.toLowerCase().includes(query) ||
-          menuData.parentMenuId == query ||
-          menuData.url?.toLowerCase().includes(query)
-        )
-      )
-    ).subscribe(filteredData => {
-      this.filteredMenuList.set(filteredData.reverse());
-      this.menuOptions.set(filteredData.map((menuData: any) => ({ key: menuData.id, value: menuData.menuName })));
+  loadMenus() {
+    this.isLoading.set(true);
+    this.hasError.set(false);
+
+    this.menuService.search().subscribe({
+      next: data => {
+        this.menus.set((data as MenuM[]) ?? []);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.hasError.set(true);
+        this.isLoading.set(false);
+      }
     });
   }
 
-  // Method to filter Menu list based on search query
-  onSearchMenu(event: Event) {
-    const query = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchQuery$.next(query);
+  /* ---------------- SEARCH ---------------- */
+  onSearch(event: Event) {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
   }
 
+  /* ---------------- FORM HELPERS ---------------- */
   getParentMenuName(menuId: any): string {
-    const parentMenu = this.menuOptions().find(m => m.key === menuId);
-    return parentMenu?.value ?? '';
+    return this.menuOptions().find(m => m.key === menuId)?.value ?? '';
   }
 
-  onDelete(id: any) {
-    if (confirm("Are you sure you want to delete?")) {
-      this.menuService.delete(id).subscribe(data => {
-        if (data.id) {
-          // this.toastService.showMessage('success', 'Success', 'Menu successfully deleted!');
-          this.filteredMenuList.set(this.filteredMenuList().filter(d => d.id !== id));
-        } else {
-          console.error('Error deleting Menu:', data);
-          // this.toastService.showMessage('error', 'Error', `Error deleting Menu: ${data.message}`);
+  // Convert PermissionOption[] to string[] (just keys)
+  getPermissionKeys(permissions: PermissionOptionM[]): string[] {
+    return permissions.map(p => p.key);
+  }
+
+  /* ---------------- SUBMIT ---------------- */
+  onSubmit(event: Event) {
+    event.preventDefault();
+
+    if (!this.form().valid()) {
+      this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
+      return;
+    }
+    const formValue = this.form().value();
+    this.isSubmitted.set(true);
+
+    const payload = {
+      companyID: this.selected()?.companyID ?? 0,
+      menuName: formValue.menuName,
+      parentMenuID: formValue.parentMenuID ? Number(formValue.parentMenuID) : undefined,
+      url: formValue.url,
+      isActive: formValue.isActive === 'true',
+      icon: formValue.icon,
+      permissionsKey: this.getPermissionKeys(this.permissionsKey), // Convert to string[]
+      postBy: formValue.postBy
+    };
+
+    const request$ = this.selected()
+      ? this.menuService.update(this.selected()!.id, payload)
+      : this.menuService.add(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.loadMenus();
+        this.onToggleList();
+        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+      },
+      error: (error) => {
+        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+        console.error('Error submitting form:', error);
+        this.isSubmitted.set(false);
+      }
+    });
+  }
+
+  /* ---------------- UPDATE ---------------- */
+  onUpdate(menu: MenuM) {
+    this.selected.set(menu);
+
+    // Convert string[] to PermissionOption[]
+    if (menu.permissionsKey) {
+      this.permissionsKey = this.permissionOptions.filter(option =>
+        menu.permissionsKey!.includes(option.key)
+      );
+    } else {
+      this.permissionsKey = [];
+    }
+
+    // Update the form model
+    this.model.update(current => ({
+      ...current,
+      menuName: menu.menuName,
+      parentMenuID: menu.parentMenuID ? String(menu.parentMenuID) : '',
+      url: menu.url ?? '',
+      isActive: menu.isActive ? 'true' : 'false',
+      icon: menu.icon ?? '',
+      permissionsKey: menu.permissionsKey ?? []
+    }));
+    this.showList.set(false);
+
+    // Reset validation states
+    this.form().reset();
+  }
+
+  /* ---------------- DELETE ---------------- */
+  async onDelete(id: any) {
+    const ok = await this.confirm.confirm({
+      message: 'Are you sure you want to delete this Menu?',
+      confirmText: "Yes, I'm sure",
+      cancelText: 'No, cancel',
+      variant: 'danger',
+    });
+
+    if (ok) {
+      // Delete Menu
+      this.menuService.delete(id).subscribe({
+        next: () => {
+          this.menus.update(list => list.filter(i => i.id !== id));
+          this.toast.success('Menu deleted successfully!', 'bottom-right', 5000);
+        },
+        error: (error) => {
+        this.toast.danger('Menu deleted unsuccessful!', 'bottom-left', 3000);
+          console.error('Error deleting Menu:', error);
         }
       });
     }
+  }
+
+  /* ---------------- RESET ---------------- */
+  formReset() {
+    // Reset the model
+    this.model.set({
+      menuName: '',
+      parentMenuID: '',
+      url: '',
+      isActive: 'true',
+      icon: '',
+      permissionsKey: [],
+      postBy: '',
+    });
+
+    // Reset permissions
+    this.permissionsKey = [];
+    this.selected.set(null);
+    this.isSubmitted.set(false);
+    this.form().reset();
+  }
+
+  onToggleList() {
+    this.showList.update(s => !s);
+    this.formReset();
   }
 
 

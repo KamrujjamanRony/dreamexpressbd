@@ -15,15 +15,15 @@ export class SAbout {
     return this.http.post<AboutUsM>(this.apiUrl, model)
   }
 
-  get(id: number): Observable<AboutUsM> {
+  get(id: any): Observable<AboutUsM> {
     return this.http.get<AboutUsM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, updateRequest: AboutUsM): Observable<AboutUsM> {
+  update(id: any, updateRequest: AboutUsM): Observable<AboutUsM> {
     return this.http.put<AboutUsM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<AboutUsM> {
+  delete(id: any): Observable<AboutUsM> {
     return this.http.delete<AboutUsM>(`${this.apiUrl}/${id}`);
   }
   

@@ -15,7 +15,7 @@ export class SBrand {
     return this.http.post<BrandM>(this.apiUrl, model)
   }
 
-  get(id: number): Observable<BrandM> {
+  get(id: any): Observable<BrandM> {
     return this.http.get<BrandM>(`${this.apiUrl}/${id}`);
   }
 
@@ -23,11 +23,11 @@ export class SBrand {
     return this.http.get<BrandM[]>(`${this.apiUrl}/Search`)
   }
 
-  update(id: number, updateRequest: BrandM): Observable<BrandM> {
+  update(id: any, updateRequest: BrandM): Observable<BrandM> {
     return this.http.put<BrandM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<BrandM> {
+  delete(id: any): Observable<BrandM> {
     return this.http.delete<BrandM>(`${this.apiUrl}/${id}`);
   }
 

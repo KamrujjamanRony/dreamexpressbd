@@ -16,14 +16,15 @@ export class SCategory {
   }
 
   search(): Observable<CategoryM[]> {
-    return this.http.get<CategoryM[]>(`${this.apiUrl}/Search`)
+    const reqBody = { companyID: environment.companyCode };
+    return this.http.post<CategoryM[]>(`${this.apiUrl}/Search`, reqBody)
   }
 
-  update(id: number, updateRequest: CategoryM): Observable<CategoryM> {
+  update(id: any, updateRequest: CategoryM): Observable<CategoryM> {
     return this.http.put<CategoryM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
-  delete(id: number): Observable<CategoryM> {
+  delete(id: any): Observable<CategoryM> {
     return this.http.delete<CategoryM>(`${this.apiUrl}/${id}`);
   }
   

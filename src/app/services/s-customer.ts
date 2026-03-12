@@ -20,16 +20,16 @@ export class SCustomer {
     return this.http.get<CustomerM[]>(`${this.apiUrl}/Search`)
   }
 
-  get(id: number): Observable<CustomerM> {
+  get(id: any): Observable<CustomerM> {
     return this.http.get<CustomerM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, updateRequest: CustomerM): Observable<CustomerM> {
+  update(id: any, updateRequest: CustomerM): Observable<CustomerM> {
     return this.http.put<CustomerM>(`${this.apiUrl}/${id}`, updateRequest,
       { responseType: 'text' as 'json' });
   }
 
-  delete(id: number): Observable<CustomerM> {
+  delete(id: any): Observable<CustomerM> {
     return this.http.delete<CustomerM>(`${this.apiUrl}/${id}`);
   }
   

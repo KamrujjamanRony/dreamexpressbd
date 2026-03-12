@@ -153,10 +153,10 @@ export class OrderList {
       this.orderService.update(this.selectedOrder().id, formData).subscribe({
         next: (updatedOrder) => {
           this.orders.update(orders =>
-            orders.map(order => order.Id === updatedOrder.Id ? updatedOrder : order)
+            orders.map(order => order.id === updatedOrder.id ? updatedOrder : order)
           );
           this.filteredOrders.update(orders =>
-            orders.map(order => order.Id === updatedOrder.Id ? updatedOrder : order)
+            orders.map(order => order.id === updatedOrder.id ? updatedOrder : order)
           );
           // this.toastService.showMessage('success', 'Success', 'Order updated successfully');
           this.closeModal();
@@ -187,7 +187,7 @@ export class OrderList {
     if (confirm(`Are you sure you want to delete order #${order.id}?`)) {
       // console.log(`Deleting order with ID: ${order.id}`);
       this.orderService.delete(order.id).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           // Check if response is the expected "Deleted" string
           if (response === 'Deleted') {
             this.orders.update(orders => orders.filter(o => o.id !== order.id));

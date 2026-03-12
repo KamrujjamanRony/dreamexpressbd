@@ -178,7 +178,7 @@ export class Users {
 
   onDelete(id: any) {
     if (confirm("Are you sure you want to delete?")) {
-      this.userService.delete(id).subscribe(data => {
+      this.userService.delete(id).subscribe((data: any) => {
         if (data.id) {
           // this.toastService.showMessage('success', 'Successful', 'User deleted successfully!');
           this.filteredUserList.set(this.filteredUserList().filter(d => d.id !== id));

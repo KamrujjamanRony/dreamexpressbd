@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { SData } from '../../../services/s-data';
 import { SCategory } from '../../../services/s-category';
 import { SProduct } from '../../../services/s-product';
-import { Product } from '../../../models/Products';
 import { Carousel } from "./carousel/carousel";
 import { FeatureProduct } from "./feature-product/feature-product";
 import { Categories } from "./categories/categories";
@@ -10,6 +9,7 @@ import { ProductSkeleton } from "../../shared/product-skeleton/product-skeleton"
 import { ProductWrapper } from "./product-wrapper/product-wrapper";
 import { AddSection } from "./add-section/add-section";
 import { RecommendProduct } from "./recommend-product/recommend-product";
+import { ProductM } from '../../../models/Products';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +23,7 @@ export class Home {
   private productService = inject(SProduct);
 
   loading = signal(true);
-  products = signal<Product[]>([]);
+  products = signal<ProductM[]>([]);
   categories = signal<any[]>([]);
   
   // Create computed signals for permissions
@@ -53,7 +53,7 @@ export class Home {
     return productsWithDiscount;
   });
   categoryWiseProducts = computed(() => {
-    const categoryMap: { [key: string]: Product[] } = {};
+    const categoryMap: { [key: string]: ProductM[] } = {};
     for (const product of this.productWithDiscount()) {
       if (!categoryMap[product.category]) {
         categoryMap[product.category] = [];

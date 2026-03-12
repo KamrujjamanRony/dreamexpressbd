@@ -5,6 +5,7 @@ import { SCart } from '../../../services/s-cart';
 import { SProduct } from '../../../services/s-product';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { Router } from '@angular/router';
+import { CartM } from '../../../models/Cart';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -20,7 +21,7 @@ export class ShoppingCart {
   // private auth = inject(Auth);
 
   carts: any[] = [];
-  userCarts: any[] = [];
+  userCarts: CartM[] = [];
   products: any[] = [];
   user: any;
   totalPrice: number = 0;
@@ -49,11 +50,11 @@ export class ShoppingCart {
       this.productService.search().subscribe((productData) => {
         this.products = productData;
 
-        this.cartService.getCart(this.user?.uid).subscribe((cartData) => {
+        this.cartService.search(this.user?.uid).subscribe((cartData: CartM[]) => {
           if (!cartData) {
             return;
           }
-          this.userCarts = cartData[0];
+          this.userCarts = cartData;
           this.carts = this.mergeCartAndProducts(cartData[0]?.products || []);
           this.calculateTotals();
         });

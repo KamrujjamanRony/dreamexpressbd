@@ -20,11 +20,11 @@ export class SUser {
     return this.http.post<UsersM[]>(`${this.apiUrl}/Search`, reqBody);
   }
 
-  get(id: number): Observable<UserM> {
+  get(id: any): Observable<UserM> {
     return this.http.get<UserM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, updateRequest: UserFormM): Observable<UserFormResponseM> {
+  update(id: any, updateRequest: UserFormM): Observable<UserFormResponseM> {
     const req = {
       ...updateRequest,
       userId: id
@@ -32,7 +32,7 @@ export class SUser {
     return this.http.put<UserFormResponseM>(`${this.apiUrl}/${id}`, req);
   }
 
-  delete(id: number): Observable<UserDeleteResponseM> {
+  delete(id: any): Observable<UserDeleteResponseM> {
     return this.http.delete<UserDeleteResponseM>(`${this.apiUrl}/${id}`);
   }
   

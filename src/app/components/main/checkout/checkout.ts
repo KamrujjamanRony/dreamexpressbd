@@ -8,12 +8,13 @@ import { SOrder } from '../../../services/s-order';
 import { SCustomer } from '../../../services/s-customer';
 import { SSetting } from '../../../services/s-setting';
 import { environment } from '../../../../environments/environment';
+import { OrderM } from '../../../models/OrderM';
 
 @Component({
-  selector: 'app-checkout',
-  imports: [FormsModule, BdtPipe, AddressModal],
-  templateUrl: './checkout.html',
-  styleUrl: './checkout.css',
+    selector: 'app-checkout',
+    imports: [FormsModule, BdtPipe, AddressModal],
+    templateUrl: './checkout.html',
+    styleUrl: './checkout.css',
 })
 export class Checkout {
     private router = inject(Router);
@@ -76,7 +77,7 @@ export class Checkout {
         this.usersService.get(userId).subscribe({
             next: (data) => {
                 this.userDetails = data;
-                this.userAddresses.set(data.address || []);
+                this.userAddresses.set(Array.isArray(data.address) ? data.address : []);
                 this.setDefaultAddress();
                 this.loading = false;
 
@@ -215,8 +216,8 @@ export class Checkout {
             image: item.image || ''
         }));
 
-        const order = {
-            userId: this.user.uid || '',
+        const order: OrderM = {
+            userID: this.user.uid || '',
             userEmail: this.user.email || '',
             userName: this.userDetails?.fullname || '',
             userPhone: this.deliveryAddress().contact || '',
@@ -226,11 +227,16 @@ export class Checkout {
             totalAmount: this.orderData.subtotal + this.deliveryCharge() || 0,
             paymentMethod: this.paymentMethod || 'Cash on Delivery',
             orderStatus: 'Pending',
+            companyID: this.siteId,
+            discountToken: '',
+            discountType: '',
+            discountValue: 0,
+            discountAmount: 0,
             shippingAddress: {
                 // id: this.deliveryAddress().id,
                 district: this.deliveryAddress().district || '',
                 city: this.deliveryAddress().city || '',
-                street: this.deliveryAddress().street || '',
+                state: this.deliveryAddress().state || '',
                 contact: this.deliveryAddress().contact || '',
                 type: this.deliveryAddress().type || '',
                 // isDefault: this.deliveryAddress().isDefault
@@ -242,7 +248,7 @@ export class Checkout {
             const response = await this.orderService.add(order).toPromise();
             await this.cartService.clearCart(this.user.uid);
             this.router.navigate(['/order-confirmation'], {
-                state: { orderId: response.Id }
+                state: { orderId: response?.id }
             });
         } catch (err) {
             console.error('Order failed:', err);

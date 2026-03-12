@@ -42,7 +42,7 @@ export class Orders {
       return;
     }
 
-    this.orderService.getByUser(this.userId).subscribe({
+    this.orderService.search(this.userId).subscribe({
       next: (response: any) => {
         // Transform the response to handle $values and status
         const orders = (response.$values || []).map((order: any) => ({
