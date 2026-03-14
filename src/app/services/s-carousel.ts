@@ -11,7 +11,7 @@ export class SCarousel {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Carousel`;
 
-  add(model: CarouselM): Observable<CarouselM> {
+  add(model: FormData): Observable<CarouselM> {
     return this.http.post<CarouselM>(this.apiUrl, model)
   }
 
@@ -19,11 +19,16 @@ export class SCarousel {
     return this.http.get<CarouselM>(`${this.apiUrl}/${id}`);
   }
 
-  search(): Observable<CarouselM[]> {
-    return this.http.get<CarouselM[]>(`${this.apiUrl}/Search`)
+  search(title?: string, description?: string): Observable<CarouselM[]> {
+    const reqBody = {
+      "companyID": environment.companyCode,
+      ...(title && title.length > 0 ? { title: title.trim() } : {}),
+      ...(description && description.length > 0 ? { description: description.trim() } : {})
+    }
+    return this.http.post<CarouselM[]>(`${this.apiUrl}/Search`, reqBody)
   }
 
-  update(id: any, updateRequest: CarouselM): Observable<CarouselM> {
+  update(id: any, updateRequest: FormData): Observable<CarouselM> {
     return this.http.put<CarouselM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 

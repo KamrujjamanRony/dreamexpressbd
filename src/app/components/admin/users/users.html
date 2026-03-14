@@ -1,150 +1,257 @@
 @if (isView()) {
-<div class="px-10">
-  <div class="w-full border mb-10 px-3 max-h-[98vh] overflow-scroll">
-    <h1
-      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
-    >
-      User List
-    </h1>
-
-    <div class="flex justify-between items-center mb-4">
-      @if (isInsert()) {
-      <button
-        (click)="openAddModal()"
-        class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
-      >
-        Add New User
-      </button>
-      }
-
-      <div class="w-full max-w-lg">
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative mt-1">
-          <div
-            class="absolute inset-y-0 rtl:inset-r-0 inset-s-0 flex items-center ps-3 pointer-events-none"
-          >
-            <fa-icon [icon]="faSearch"></fa-icon>
-          </div>
-          <input
-            #searchInput
-            type="text"
-            id="table-search"
-            autocomplete="off"
-            class="block ps-10 text-xs text-gray-950 border border-gray-300 rounded bg-teal-100 focus:ring-teal-500 focus:border-teal-500 w-full"
-            placeholder="Search"
-            (input)="onSearchUser($event)"
-          />
-        </div>
-      </div>
-    </div>
-
-    @if (isLoading$ | async) {
-    <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
-    } @else if (hasError$ | async) {
-    <p class="text-3xl font-bold text-center p-10 text-red-600">
-      There was an error loading data.
-    </p>
-    } @else if (filteredUserList().length === 0) {
-    <p class="text-3xl font-bold text-center p-10 text-orange-600">
-      Data is Empty.
-    </p>
-    } @else {
-    <table class="w-full text-sm text-left rtl:text-right text-gray-950 mt-2">
-      <thead class="text-sm text-gray-50 uppercase bg-gray-800">
-        <tr>
-          <th scope="col" class="p-1">user Name</th>
-          <th scope="col" class="p-1">password</th>
-          @if (isEdit() || isDelete()) {
-          <th scope="col" class="px-1">Action</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of filteredUserList().slice(0,20); track item?.id || $index)
-        {
-        <tr
-          id="row-{{ $index }}"
-          class="bg-teal-50 border-b hover:bg-teal-600 hover:text-gray-50 cursor-pointer"
+  @if (showList()) {
+    <div class="max-w-5xl mx-auto relative mt-5">
+      <div class="w-full mb-10 px-3">
+        <div
+          class="relative overflow-x-auto bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-neutral-primary-dark dark:border-default-dark transition-all"
         >
-          <td scope="row" class="p-1">
-            {{ item?.userName }}
-          </td>
-          <td class="p-1">
-            {{ item?.password }}
-          </td>
-          <td class="flex gap-1">
-            @if (isEdit()) {
-            <button
-              class="text-orange-50 bg-orange-400 hover:bg-orange-500 p-1 rounded"
-              (click)="openEditModal(item)"
+          <div class="flex justify-between p-4">
+            <div class="w-full">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 inset-x-0 flex items-center ps-3 pointer-events-none text-gray-600 dark:text-gray-400"
+                >
+                  <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                </div>
+                <input
+                  #searchInput
+                  autocomplete="off"
+                  (input)="onSearch($event)"
+                  type="text"
+                  id="search"
+                  class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-secondary-dark dark:border-default-dark dark:text-heading-dark dark:placeholder:text-body-dark"
+                  placeholder="Search by Name, Mobile, or Address"
+                />
+              </div>
+            </div>
+            <h1
+              class="text-xl md:text-3xl font-bold text-emerald-500 underline text-center mb-1 w-full"
             >
-              <fa-icon [icon]="faPencil"></fa-icon>
-            </button>
-            } @if (isDelete()) {
-            <button
-              class="text-teal-50 bg-teal-600 hover:bg-teal-700 px-2 py-px rounded"
-              (click)="onDelete(item?.id)"
-            >
-              <fa-icon [icon]="faRemove"></fa-icon>
-            </button>
+              User List
+            </h1>
+            @if (isInsert()) {
+              <div class="w-full flex justify-end">
+                <button
+                  type="button"
+                  (click)="showList.set(false)"
+                  class="text-white bg-linear-to-r from-green-400 via-green-500 to-green-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer dark:focus:ring-green-800"
+                >
+                  Add
+                </button>
+              </div>
             }
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-    }
-  </div>
-
-  <!-- Modal -->
-  @if (showModal) {
-  <div
-    class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
-    (click)="closeModal()"
-  >
-    <div
-      class="bg-white rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="flex flex-col lg:flex-row gap-6">
-        <!-- User Form -->
-        <div class="w-full lg:w-1/2">
-          <app-user-form
-            [selectedUser]="selectedUser"
-            [modalTitle]="modalTitle"
-            (submitForm)="handleFormSubmit($event)"
-            (cancel)="closeModal()"
-          ></app-user-form>
-        </div>
-
-        <!-- User Access Tree -->
-        @if ((isInsert() || isEdit()) && userAccessTree().length > 0) {
-        <div class="w-full lg:w-1/2">
-          <div class="bg-teal-50 rounded-lg p-4 shadow-md h-full">
-            <h2 class="text-lg font-semibold text-teal-700 mb-4">
-              User Access Permissions
-            </h2>
-            <div class="border rounded p-2 h-[calc(100%-3rem)] overflow-y-auto">
-              <app-user-access-tree
-                [nodes]="userAccessTree()"
-              ></app-user-access-tree>
-            </div>
-            <div class="text-xs text-gray-600">
-              <p>
-                Select the modules and permissions this user should have access
-                to.
-              </p>
-            </div>
           </div>
+
+          <!-- Loading State -->
+          @if (isLoading()) {
+            <p class="text-3xl font-bold text-center p-10 text-emerald-600">Loading ...</p>
+          }
+
+          <!-- Error State -->
+          @else if (hasError()) {
+            <p class="text-3xl font-bold text-center p-10 text-red-600">
+              There was an error loading data.
+            </p>
+          }
+
+          <!-- Empty State -->
+          @else if (filteredUserList().length === 0) {
+            <p class="text-3xl font-bold text-center p-10 text-orange-600">No Items found.</p>
+          }
+
+          <!-- Table -->
+          @else {
+            <table class="w-full text-sm text-left rtl:text-right text-body overflow-scroll">
+              <thead
+                class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium dark:bg-neutral-secondary-dark dark:border-default-dark"
+              >
+                <tr>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Name</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Post By</th>
+                  @if (isEdit() || isDelete()) {
+                    <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of filteredUserList(); track item?.id || $index) {
+                  <tr
+                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-gray-950 dark:border-gray-700 dark:hover:bg-gray-800"
+                    [class.bg-blue-50]="selected()?.id === item.id"
+                  >
+                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                      {{ item?.userName }}
+                    </th>
+                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                      {{ item?.postBy || 'N/A' }}
+                    </th>
+                    <td class="px-6 py-4">
+                      @if (isEdit()) {
+                        <button
+                          class="text-orange-50 bg-orange-400 hover:bg-orange-500 px-1 py-0.5 rounded cursor-pointer mr-1"
+                          (click)="onUpdate(item)"
+                        >
+                          <fa-icon [icon]="faPencil"></fa-icon>
+                        </button>
+                      }
+                      @if (isDelete()) {
+                        <button
+                          class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
+                          (click)="onDelete(item?.id)"
+                        >
+                          <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
         </div>
-        }
       </div>
     </div>
-  </div>
+  } @else {
+    <div>
+      <div class="max-w-5xl mx-auto relative">
+        <!-- Menu Registration Form -->
+        <div
+          class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-default-dark mt-5"
+        >
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold text-gray-800 transition-all dark:text-gray-50">
+                User Form
+              </h2>
+              <button
+                class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
+                (click)="onToggleList()"
+              >
+                <fa-icon [icon]="faXmark"></fa-icon>
+              </button>
+            </div>
+
+            <!-- Form Fields -->
+            <form class="space-y-6" (submit)="onSubmit($event)">
+              <div class="">
+                <!-- username -->
+                <div>
+                  @let usernameError = form.username().invalid() && form.username().touched();
+                  <div class="relative pb-2">
+                    <input
+                      type="text"
+                      [formField]="form.username"
+                      id="username"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                      placeholder=" "
+                      autocomplete="off"
+                    />
+                    <label
+                      for="username"
+                      class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1 capitalize"
+                      >username</label
+                    >
+                  </div>
+                  @if (usernameError) {
+                    <ul class="-mt-2 mb-2 unordered-list-disc list-inside">
+                      @for (error of form.username().errors(); track error) {
+                        <li class="text-sm text-red-600 list-disc">{{ error.message }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+
+                <!-- password -->
+                <div>
+                  @let password = form.password();
+                  @let passwordError = form.password().invalid() && form.password().touched();
+                  <div class="relative pb-2">
+                    <input
+                      type="text"
+                      [formField]="form.password"
+                      id="password"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                      placeholder=" "
+                      autocomplete="off"
+                    />
+                    <label
+                      for="password"
+                      class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1 capitalize"
+                      >password</label
+                    >
+                  </div>
+                  @if (passwordError) {
+                    <ul class="-mt-2 mb-2 unordered-list-disc list-inside">
+                      @for (error of password.errors(); track error) {
+                        <li class="text-sm text-red-600 list-disc">{{ error.message }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+
+                <!-- Is Active Radio Buttons -->
+                <div class="text-heading">
+                  <p class="text-sm font-medium">Status</p>
+                  <div class="flex space-x-6">
+                    <label class="inline-flex items-center">
+                      <input
+                        type="radio"
+                        [formField]="form.isActive"
+                        value="true"
+                        class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span class="ml-2 text-sm">Active</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input
+                        type="radio"
+                        [formField]="form.isActive"
+                        value="false"
+                        class="h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span class="ml-2 text-sm">Inactive</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="flex gap-2 lg:col-span-2 xl:col-span-3">
+                  <!-- Save -->
+                  <input
+                    type="submit"
+                    [value]="isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save'"
+                    [disabled]="form().invalid() || isSubmitted()"
+                    class="text-gray-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50invalid:opacity-50"
+                  />
+
+                  <button
+                    type="button"
+                    (click)="onToggleList()"
+                    class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      @if (isInsert() || isEdit()) {
+        <div class="max-w-5xl mx-auto relative mt-5">
+          <div class="w-full mx-auto p-4 rounded-lg shadow-md bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 transition-all">
+            <h2 class="text-lg font-semibold text-emerald-700 mb-4 dark:text-emerald-300">User Access</h2>
+
+            <app-user-access-tree [nodes]="userAccessTree()"></app-user-access-tree>
+          </div>
+        </div>
+      }
+    </div>
   }
-</div>
 } @else {
-<p class="text-3xl font-bold text-center p-10 text-red-600">
-  You don't have permission to view this page.
-</p>
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
 }
+

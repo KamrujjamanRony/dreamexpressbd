@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faLock, faFolder, faHome, faGear, faBagShopping, faBuilding, faLayerGroup, faList, faBasketShopping, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faFolder, faHome, faGear, faBagShopping, faBuilding, faLayerGroup, faList, faBasketShopping, faChartBar, faChartPie, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { SAuth } from '../../../services/s-auth';
 // import { faStar } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
@@ -11,6 +12,7 @@ import { faLock, faFolder, faHome, faGear, faBagShopping, faBuilding, faLayerGro
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
+  auth = inject(SAuth);
   faLock = faLock;
   faFolder = faFolder;
   faHome = faHome;
@@ -22,11 +24,17 @@ export class Sidebar {
   faBasketShopping = faBasketShopping;
   faChartPie = faChartPie;
   faChartBar = faChartBar;
+  faRightFromBracket = faRightFromBracket;
   menu: any[] = [
     {
       title: 'Dashboard',
       icon: faChartPie,
       link: '/admin/dashboard'
+    },
+    {
+      title: 'Carousels',
+      icon: faBasketShopping,
+      link: '/admin/carousel-list'
     },
     {
       title: 'Products',
@@ -37,6 +45,11 @@ export class Sidebar {
       title: 'Menu',
       icon: faChartBar,
       link: '/admin/menu-list'
+    },
+    {
+      title: 'Users',
+      icon: faChartBar,
+      link: '/admin/user-list'
     },
     {
       title: 'Categories',
@@ -62,6 +75,16 @@ export class Sidebar {
       title: 'Settings',
       icon: faGear,
       link: '/admin/settings'
+    },
+    {
+      title: 'About Us',
+      icon: faGear,
+      link: '/admin/about'
+    },
+    {
+      title: 'Contact',
+      icon: faGear,
+      link: '/admin/contact'
     },
     {
       title: 'Home',

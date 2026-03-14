@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SAuth {
+  hasPermission(arg0: string, arg1: string): boolean {
+    throw new Error('Method not implemented.');
+  }
   private memoryCache: any = null;
   private storageKey = '*_*';
   private encryptionKey = 'your-dynamic-key'; // In production, fetch from API/backend
+  private router = inject(Router);
 
   constructor() {
     // Restore from secure storage on service init
@@ -29,6 +34,7 @@ export class SAuth {
   deleteUser() {
     this.memoryCache = null;
     localStorage.removeItem(this.storageKey);
+    this.router.navigate(['/admin-login']);
   }
 
   private backupUser() {

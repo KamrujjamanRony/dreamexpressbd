@@ -1,5 +1,5 @@
 export interface BrandM {
-    id: number;
+    id?: number;
     companyID: number;
     slBrand: number;
     brandName: string;

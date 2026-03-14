@@ -15,9 +15,10 @@ export interface UserM {
 }
 
 export interface UserFormM {
-    userId: number;
-    userName: string;
+    companyID: number;
+    username: string;
     password: string;
+    postBy: string;
     isActive: boolean;
     menuPermissions: MenuItem[];
 }

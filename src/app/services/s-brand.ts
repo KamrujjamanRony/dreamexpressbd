@@ -19,8 +19,12 @@ export class SBrand {
     return this.http.get<BrandM>(`${this.apiUrl}/${id}`);
   }
 
-  search(): Observable<BrandM[]> {
-    return this.http.get<BrandM[]>(`${this.apiUrl}/Search`)
+  search(id: any = 0): Observable<BrandM[]> {
+    const reqBody = {
+      "companyID": environment.companyCode,
+      ...(id && id > 0 ? { id: id } : {})
+    }
+    return this.http.post<BrandM[]>(`${this.apiUrl}/Search`, reqBody)
   }
 
   update(id: any, updateRequest: BrandM): Observable<BrandM> {

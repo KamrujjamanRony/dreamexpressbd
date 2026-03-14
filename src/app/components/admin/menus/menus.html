@@ -81,7 +81,7 @@
               <tbody>
                 @for (item of filteredMenuList(); track item?.id || $index) {
                   <tr
-                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:hover:bg-yellow-700"
+                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-gray-950 dark:border-gray-700 dark:hover:bg-gray-800"
                     [class.bg-blue-50]="selected()?.id === item.id"
                   >
                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
@@ -179,7 +179,7 @@
                   <select
                     [formField]="form.parentMenuID"
                     id="parentMenuID"
-                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer dark:bg-gray-950 dark:border-gray-700"
                   >
                     <option value="">Select Parent Menu</option>
                     @for (option of menuOptions(); track $index) {

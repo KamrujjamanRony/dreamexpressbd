@@ -1,176 +1,215 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSearch, faPencil, faRemove } from '@fortawesome/free-solid-svg-icons';
-import { CategoryForm } from './category-form/category-form';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FormsModule } from '@angular/forms';
 import { SCategory } from '../../../services/s-category';
-import { SDataFetch } from '../../../services/s-data-fetch';
-import { SAuth } from '../../../services/s-auth';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { debounce, form, FormField, required, validate } from '@angular/forms/signals';
+import { environment } from '../../../../environments/environment.production';
+import { SPermission } from '../../../services/s-permission';
+import { SToast } from '../../../utils/toast/toast.service';
+import { SConfirm } from '../../../utils/confirm/confirm.service';
+import { CategoryM } from '../../../models/Category';
 
 @Component({
   selector: 'app-category-list',
-  imports: [CommonModule, FontAwesomeModule, CategoryForm],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule],
   templateUrl: './category-list.html',
   styleUrl: './category-list.css',
 })
 export class CategoryList {
-  faSearch = faSearch;
   faPencil = faPencil;
-  faRemove = faRemove;
-  fb = inject(NonNullableFormBuilder);
-  private CategoryService = inject(SCategory);
-  private dataFetchService = inject(SDataFetch);
-  private authService = inject(SAuth);
-  isView = signal<boolean>(false);
-  isInsert = signal<boolean>(false);
-  isEdit = signal<boolean>(false);
-  isDelete = signal<boolean>(false);
-  filteredCategoryList = signal<any[]>([]);
-  CategoryOptions = signal<any[]>([]);
-  highlightedTr: number = -1;
-  selectedCategory: any;
-  showModal = false;
-  modalTitle = 'Add New Category';
+  faXmark = faXmark;
+  faMagnifyingGlass = faMagnifyingGlass;
+  
+  /* ---------------- DI ---------------- */
+  private categoryService = inject(SCategory);
+  private permissionService = inject(SPermission);
+      private toast = inject(SToast);
+      private confirm = inject(SConfirm);
+  
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  private searchQuery$ = new BehaviorSubject<string>('');
-  isLoading$: Observable<any> | undefined;
-  hasError$: Observable<any> | undefined;
-  isSubmitted = signal<boolean>(false);
-  options: any[] = ['View', 'Insert', 'Edit', 'Delete'];
+  /* ---------------- SIGNAL STATE ---------------- */
+  items = signal<CategoryM[]>([]);
+  searchQuery = signal('');
 
-  form = this.fb.group({
-    name: ['', [Validators.required]],
-    image: ['']
+  filteredList = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+
+    return this.items()
+      .filter(item =>
+        String(item.id ?? '').toLowerCase().includes(query) ||
+        String(item.slItem ?? '').toLowerCase().includes(query) ||
+        item.itemName?.toLowerCase().includes(query)
+      )
+      .sort((a, b) => (a.slItem! - b.slItem!));
   });
 
-  ngOnInit() {
-    this.onLoadCategory();
-    this.isView.set(!this.checkPermission("Categories", "View"));
-    this.isInsert.set(!this.checkPermission("Categories", "Insert"));
-    this.isEdit.set(!this.checkPermission("Categories", "Edit"));
-    this.isDelete.set(this.checkPermission("Categories", "Delete"));
-  }
+  selected = signal<CategoryM | null>(null);
 
-  openAddModal() {
-    this.modalTitle = 'Add New Category';
-    this.selectedCategory = null;
-    this.showModal = true;
-  }
+  isLoading = signal(false);
+  hasError = signal(false);
 
-  openEditModal(Category: any) {
-    this.modalTitle = 'Edit Category';
-    this.selectedCategory = Category;
-    this.showModal = true;
-  }
+  isView = signal(false);
+  isInsert = signal(false);
+  isEdit = signal(false);
+  isDelete = signal(false);
+  showList = signal(true);
 
-  closeModal() {
-    this.showModal = false;
-    this.selectedCategory = null;
-    this.isSubmitted.set(false);
-  }
+  isSubmitted = signal(false);
 
-  handleFormSubmit(formData: any) {
-    if (!this.isSubmitted()) {
-      this.isSubmitted.set(true);
-      if (this.selectedCategory) {
-        this.CategoryService.update(this.selectedCategory.id, {
-          ...formData,
-          parentCategoryId: formData.parentCategoryId || null,
-          permissionsKey: formData.permissionsKey || []
-        }).subscribe({
-          next: (response) => {
-            if (response) {
-              // this.toastService.showMessage('success', 'Success', 'Category successfully updated!');
-              const rest = this.filteredCategoryList().filter(d => d.id !== response.id);
-              this.filteredCategoryList.set([response, ...rest]);
-              this.closeModal();
-              this.onLoadCategory();
-            }
-          },
-          error: (error) => {
-            console.error('Error updating Category:', error);
-            // this.toastService.showMessage('error', 'Error', `Error updating Category: ${error.error.message || error.error.title}`);
-          }
-        });
-      } else {
-        this.CategoryService.add({
-          ...formData,
-          parentCategoryId: formData.parentCategoryId || null,
-          permissionsKey: formData.permissionsKey || []
-        }).subscribe({
-          next: (response) => {
-            if (response) {
-              // this.toastService.showMessage('success', 'Success', 'Category successfully added!');
-              this.filteredCategoryList.set([response, ...this.filteredCategoryList()]);
-              this.closeModal();
-              this.onLoadCategory();
-            }
-          },
-          error: (error) => {
-            console.error('Error adding Category:', error);
-            // this.toastService.showMessage('error', 'Error', `Error adding Category: ${error.error.message || error.error.title}`);
-          }
-        });
+  /* ---------------- FORM MODEL ---------------- */
+  model = signal({
+    itemName: '',
+    slItem: '',
+    companyID: environment.companyCode.toString(),
+  });
+
+  /* ---------------- SIGNAL FORM ---------------- */
+  form = form(this.model, (schemaPath) => {
+    required(schemaPath.itemName, { message: 'itemName is required' });
+    validate(schemaPath.slItem, ({ value }) => {
+      if (value() && !/^\d+$/.test(value())) {
+        return {
+          kind: 'complexity',
+          message: 'SL Item must be a valid number'
+        }
       }
-    }
+      return null;
+    })
+
+    debounce(schemaPath.itemName, 300);
+  });
+
+  /* ---------------- LIFECYCLE ---------------- */
+  ngOnInit(): void {
+    this.loadItems();
+    this.loadPermissions();
   }
 
+  /* ---------------- LOADERS ---------------- */
+  loadPermissions() {
+    this.isView.set(this.permissionService.hasPermission('Item', 'view'));
+    this.isInsert.set(this.permissionService.hasPermission('Item', 'create'));
+    this.isEdit.set(this.permissionService.hasPermission('Item', 'edit'));
+    this.isDelete.set(this.permissionService.hasPermission('Item', 'delete'));
+  }
 
-  checkPermission(moduleName: string, permission: string) {
-    const modulePermission = this.authService.getUser()?.userMenu?.find((module: any) => module?.menuName?.toLowerCase() === moduleName.toLowerCase());
-    if (modulePermission) {
-      const permissionValue = modulePermission.permissions.find((perm: any) => perm.toLowerCase() === permission.toLowerCase());
-      if (permissionValue) {
-        return true;
-      } else {
-        return false;
+  loadItems() {
+    this.isLoading.set(true);
+    this.hasError.set(false);
+
+    this.categoryService.search().subscribe({
+      next: (data) => {
+        this.items.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.hasError.set(true);
+        this.isLoading.set(false);
       }
-    } else {
-      return false;
-    }
-  }
-
-  onLoadCategory() {
-    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.CategoryService.search());
-
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
-    // Combine the original data stream with the search query to create a filtered list
-    combineLatest([
-      data$,
-      this.searchQuery$
-    ]).pipe(
-      map(([data, query]) =>
-        data.filter((CategoryData: any) =>
-          CategoryData.name?.toLowerCase().includes(query)
-        )
-      )
-    ).subscribe(filteredData => {
-      this.filteredCategoryList.set(filteredData.reverse());
-      this.CategoryOptions.set(filteredData.map((CategoryData: any) => ({ key: CategoryData.id, value: name })));
     });
   }
 
-  // Method to filter Category list based on search query
-  onSearchCategory(event: Event) {
-    const query = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchQuery$.next(query);
+  /* ---------------- SEARCH ---------------- */
+  onSearch(event: Event) {
+    this.searchQuery.set((event.target as HTMLInputElement).value.trim());
   }
 
-  onDelete(id: any) {
-    if (confirm("Are you sure you want to delete?")) {
-      this.CategoryService.delete(id).subscribe(data => {
-        if (data.id) {
-          // this.toastService.showMessage('success', 'Success', 'Category successfully deleted!');
-          this.filteredCategoryList.set(this.filteredCategoryList().filter(d => d.id !== id));
-        } else {
-          console.error('Error deleting Category:', data);
-          // this.toastService.showMessage('error', 'Error', `Error deleting Category: ${data.message}`);
+  /* ---------------- SUBMIT ---------------- */
+  onSubmit(event: Event) {
+    event.preventDefault();
+
+    if (!this.form().valid()) {
+      this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
+      return;
+    }
+
+    this.isSubmitted.set(true);
+
+    const formValue = this.form().value();
+
+    const payload:CategoryM = {
+      companyID: Number(formValue.companyID),
+      itemName: formValue.itemName,
+      slItem: formValue.slItem ? Number(formValue.slItem) : null,
+    };
+    
+    const request$ = this.selected()
+      ? this.categoryService.update(this.selected()!.id!, payload)
+      : this.categoryService.add(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.loadItems();
+        this.onToggleList();
+        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+      },
+      error: (error) => {
+        this.isSubmitted.set(false);
+        console.error(error?.message || error?.error?.message || 'An error occurred during submission.');
+        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+      }
+    });
+  }
+
+  /* ---------------- UPDATE ---------------- */
+  onUpdate(item: CategoryM) {
+    this.selected.set(item);
+
+    // Update form model
+    this.model.update(current => ({
+      ...current,
+      itemName: item.itemName ?? '',
+      slItem: item.slItem?.toString() ?? '',
+      companyID: item.companyID.toString(),
+    }));
+
+    this.form().reset();
+    this.showList.set(false);
+  }
+
+  /* ---------------- DELETE ---------------- */
+  async onDelete(id: any) {
+    const ok = await this.confirm.confirm({
+      message: 'Are you sure you want to delete this item?',
+      confirmText: "Yes, I'm sure",
+      cancelText: 'No, cancel',
+      variant: 'danger',
+    });
+
+    if (ok) {
+      // Delete item
+      this.categoryService.delete(id).subscribe({
+        next: () => {
+          this.items.update(list => list.filter(i => i.id !== id));
+          this.toast.success('item deleted successfully!', 'bottom-right', 5000);
+        },
+        error: (error) => {
+          this.toast.danger('item deleted unsuccessful!', 'bottom-left', 3000);
+          console.error('Error deleting item:', error);
         }
       });
     }
+  }
+
+  /* ---------------- RESET ---------------- */
+  formReset() {
+    this.model.set({
+      itemName: '',
+      slItem: '',
+      companyID: environment.companyCode.toString(),
+    });
+
+    this.selected.set(null);
+    this.isSubmitted.set(false);
+    this.form().reset();
+  }
+
+  onToggleList() {
+    this.showList.update(s => !s);
+    this.formReset();
   }
 
 }

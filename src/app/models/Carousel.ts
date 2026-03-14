@@ -1,5 +1,5 @@
 export interface CarouselM {
-  id: any;
+  id?: any;
   companyID: any;
   title: string;
   description: string;

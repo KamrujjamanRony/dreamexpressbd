@@ -1,248 +1,246 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { UserAccessTree } from '../../shared/user-access-tree/user-access-tree';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSearch, faPencil, faRemove } from '@fortawesome/free-solid-svg-icons';
-import { UserForm } from '../../shared/user-form/user-form';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { SUser } from '../../../services/s-user';
-import { SDataFetch } from '../../../services/s-data-fetch';
 import { SMenu } from '../../../services/s-menu';
 import { SAuth } from '../../../services/s-auth';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { debounce, form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { environment } from '../../../../environments/environment';
+import { SToast } from '../../../utils/toast/toast.service';
+import { SConfirm } from '../../../utils/confirm/confirm.service';
+import { MenuItem } from '../../../models/Menu';
+import { UserFormM } from '../../../models/User';
+import { SPermission } from '../../../services/s-permission';
 
 @Component({
   selector: 'app-users',
-  imports: [UserAccessTree, CommonModule, FontAwesomeModule, UserForm],
+  imports: [UserAccessTree, CommonModule, FontAwesomeModule, FormField],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
 export class Users {
-  faSearch = faSearch;
   faPencil = faPencil;
-  faRemove = faRemove;
-  fb = inject(NonNullableFormBuilder);
-  private userService = inject(SUser);
-  private dataFetchService = inject(SDataFetch);
-  private menuService = inject(SMenu);
-  private authService = inject(SAuth);
-  isView = signal<boolean>(false);
-  isInsert = signal<boolean>(false);
-  isEdit = signal<boolean>(false);
-  isDelete = signal<boolean>(false);
-  filteredUserList = signal<any[]>([]);
-  highlightedTr: number = -1;
-  selectedUser: any;
-  showModal = false;
-  modalTitle = 'Add New Admin';
+  faXmark = faXmark;
+  faMagnifyingGlass = faMagnifyingGlass;
+  /* ---------------- DI ---------------- */
+  private userS = inject(SUser);
+  private menuS = inject(SMenu);    
+  private auth = inject(SAuth);
+  private permissionService = inject(SPermission);
+  private toast = inject(SToast);
+  private confirm = inject(SConfirm);
 
-  private searchQuery$ = new BehaviorSubject<string>('');
-  userAccessTree = signal<any[]>([]);
-  showAccessTree = signal<boolean>(false);
-  isLoading$: Observable<any> | undefined;
-  hasError$: Observable<any> | undefined;
-  isSubmitted = false;
+  /* ---------------- SIGNAL STATE ---------------- */
 
-  form = this.fb.group({
-    userName: ['', [Validators.required]],
-    password: [''],
-    eId: null,
-    isActive: [true],
-    menuPermissions: [['']],
+  loginUser = signal(this.auth.getUser());
+  users = signal<any[]>([]);
+  searchQuery = signal('');
+  userAccessTree = signal<MenuItem[]>([]);
+  selected = signal<any | null>(null);
+
+  isLoading = signal(false);
+  hasError = signal(false);
+  isSubmitted = signal(false);
+  showList = signal(true);
+
+  isView = signal(false);
+  isInsert = signal(false);
+  isEdit = signal(false);
+  isDelete = signal(false);
+
+  highlightedTr = signal<number>(-1);
+
+  /* ---------------- COMPUTED ---------------- */
+
+  filteredUserList = computed(() => {
+    const query = this.searchQuery().toLowerCase() || '';
+    return this.users()
+      .filter(u => u.userName?.toLowerCase().includes(query))
+    // .slice(1); // remove first element
   });
 
+  /* ---------------- FORM MODEL ---------------- */
+  model = signal({
+    username: '',
+    password: '',
+    companyID: environment.companyCode,
+    isActive: 'true',
+    menuPermissions: [],
+  });
+
+  /* ---------------- SIGNAL FORM ---------------- */
+  form = form(this.model, (schemaPath) => {
+    required(schemaPath.username, { message: 'Username is required' });
+    required(schemaPath.password, { message: 'Password is required' });
+    minLength(schemaPath.password, 6, { message: 'Password must be at least 6 character' })
+    maxLength(schemaPath.password, 18, { message: 'Password cannot exceed 18 character' })
+    validate(schemaPath.password, ({ value }) => {
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+      if (!specialCharRegex.test(value())) {
+        return {
+          kind: 'complexity',
+          message: 'Password must contain at least one special character'
+        }
+      }
+      return null
+    })
+    debounce(schemaPath.username, 500);
+    debounce(schemaPath.password, 500);
+  });
+
+  /* ---------------- LIFECYCLE ---------------- */
+
   ngOnInit(): void {
-    this.onLoadTreeData("");
-
-    this.onLoadUsers();
-
-    this.isView.set(this.checkPermission("Admin List", "View"));
-    this.isInsert.set(this.checkPermission("Admin List", "Insert"));
-    this.isEdit.set(this.checkPermission("Admin List", "Edit"));
-    this.isDelete.set(this.checkPermission("Admin List", "Delete"));
+    this.loadPermissions();
+    this.loadUsers();
+    this.loadTreeData('');
   }
 
+  /* ---------------- LOADERS ---------------- */
 
-  checkPermission(moduleName: string, permission: string) {
-    const modulePermission = this.authService.getUser()?.userMenu?.find((module: any) => module?.menuName?.toLowerCase() === moduleName.toLowerCase());
-    if (modulePermission) {
-      const permissionValue = modulePermission.permissions.find((perm: any) => perm.toLowerCase() === permission.toLowerCase());
-      if (permissionValue) {
-        return true;
-      } else {
-        return false;
+  loadPermissions() {
+    this.isView.set(this.permissionService.hasPermission('User', 'view'));
+    this.isInsert.set(this.permissionService.hasPermission('User', 'create'));
+    this.isEdit.set(this.permissionService.hasPermission('User', 'edit'));
+    this.isDelete.set(this.permissionService.hasPermission('User', 'delete'));
+  }
+
+  loadUsers() {
+    this.isLoading.set(true);
+    this.hasError.set(false);
+
+    this.userS.search().subscribe({
+      next: data => {
+        this.users.set(data ?? []);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.hasError.set(true);
+        this.isLoading.set(false);
       }
-    } else {
-      return false;
-    }
-  }
-
-  openAddModal() {
-    this.modalTitle = 'Add New User';
-    this.selectedUser = null;
-    this.onLoadTreeData("");
-    this.showModal = true;
-    this.showAccessTree.set(true);
-  }
-
-  openEditModal(user: any) {
-    this.modalTitle = 'Edit User';
-    this.selectedUser = user;
-    this.onLoadTreeData(user.id);
-    this.showModal = true;
-    this.showAccessTree.set(true);
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.selectedUser = null;
-    this.showAccessTree.set(false);
-  }
-
-  onLoadTreeData(userId: any) {
-    this.menuService.generateTreeData(userId).subscribe((data) => {
-      this.userAccessTree.set(data);
-      this.showAccessTree.set(data.length > 0);
     });
   }
 
-  handleFormSubmit(formData: any): any {
-    // Save permissions before submitting
-    this.savePermissions();
-
-    if (this.selectedUser) {
-      this.userService.update(this.selectedUser.id, {
-        ...formData,
-        menuPermissions: this.userAccessTree()
-      }).subscribe({
-        next: (response) => {
-          if (response) {
-            // this.toastService.showMessage('success', 'Successful', 'User successfully updated!');
-            this.onLoadUsers();
-            this.closeModal();
-          }
-        },
-        error: (error) => {
-          console.error('Error updating user:', error);
-          // this.toastService.showMessage('error', 'Error', `${error.error.status} : ${error.error.message || error.error.title}`);
-        }
+  loadTreeData(userId: any) {
+    this.menuS
+      .generateTreeData(userId)
+      .subscribe(tree => {
+        this.userAccessTree.set(tree)
       });
-    } else {
-      this.userService.add({
-        ...formData,
-        menuPermissions: this.userAccessTree()
-      }).subscribe({
-        next: (response: any) => {
-          if (response) {
-            // this.toastService.showMessage('success', 'Successful', 'User successfully added!');
-            this.onLoadUsers();
-            this.closeModal();
-          }
-        },
-        error: (error) => {
-          console.error('Error adding user:', error);
-          // this.toastService.showMessage('error', 'Error', `${error.error.status} : ${error.error.message || error.error.title}`);
-        }
-      });
-    }
   }
 
-  onLoadUsers() {
-    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.userService.search(""));
+  /* ---------------- SEARCH ---------------- */
 
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
-    // Combine the original data stream with the search query to create a filtered list
-    combineLatest([
-      data$,
-      this.searchQuery$
-    ]).pipe(
-      map(([data, query]) =>
-        data.filter((UserData: any) =>
-          UserData.userName?.toLowerCase().includes(query)
-        )
-      )
-    ).subscribe(filteredData => {     // ToDo: user data request due
-      if (!this.searchQuery$.getValue() || this.searchQuery$.getValue()?.toLowerCase() === 's' || this.searchQuery$.getValue()?.toLowerCase() === 'su' || this.searchQuery$.getValue()?.toLowerCase() === 'sup' || this.searchQuery$.getValue()?.toLowerCase() === 'supe' || this.searchQuery$.getValue()?.toLowerCase() === 'super' || this.searchQuery$.getValue()?.toLowerCase() === 'supers' || this.searchQuery$.getValue()?.toLowerCase() === 'superso' || this.searchQuery$.getValue()?.toLowerCase() === 'supersof' || this.searchQuery$.getValue()?.toLowerCase() === 'supersoft') {
-        filteredData.shift();
-      }
-      this.filteredUserList.set(filteredData)
+  onSearch(event: Event) {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
+
+  /* ---------------- SUBMIT ---------------- */
+  onSubmit(event: Event) {
+    event.preventDefault();
+
+    if (!this.form().valid()) {
+      this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
+      return;
+    }
+      this.isSubmitted.set(true);
+
+      // Create the payload with proper types
+      const formValue = this.form().value();
+
+      const payload: UserFormM = {
+        username: formValue.username,
+        password: formValue.password,
+        postBy: this.loginUser().username || '',
+        companyID: formValue.companyID,
+        isActive: formValue.isActive === 'true', // Convert string to boolean
+        menuPermissions: this.userAccessTree(),
+      };
+
+      const request$ = this.selected()
+        ? this.userS.update(this.selected()!.id, payload)
+        : this.userS.add(payload);
+
+      request$.subscribe({
+        next: () => {
+          this.loadUsers();
+          this.onToggleList();
+        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+        },
+        error: (err) => {
+        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+          console.error('Error submitting form:', err);
+          this.isSubmitted.set(false);
+        }
+      });
+  }
+
+  /* ---------------- UPDATE ---------------- */
+  onUpdate(user: any) {
+    this.selected.set({ ...user, username: user.userName });
+    this.loadTreeData(user.id);
+    console.log(this.selected());
+
+    // Update the form model
+    this.model.update(current => ({
+      ...current,
+      username: user.userName,
+      password: user.password ?? '',
+      companyID: user.companyID ?? environment.companyCode,
+      isActive: user.isActive ? 'true' : 'false',
+      menuPermissions: user.menuPermissions ?? []
+    }));
+
+    // Reset validation states
+    this.form().reset();
+    this.showList.set(false);
+  }
+
+  /* ---------------- DELETE ---------------- */
+  async onDelete(id: any) {
+    const ok = await this.confirm.confirm({
+      message: 'Are you sure you want to delete this User?',
+      confirmText: "Yes, I'm sure",
+      cancelText: 'No, cancel',
+      variant: 'danger',
     });
-  }
 
-  // Method to filter User list based on search query
-  onSearchUser(event: Event) {
-    const query = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchQuery$.next(query);
-  }
-
-  onDelete(id: any) {
-    if (confirm("Are you sure you want to delete?")) {
-      this.userService.delete(id).subscribe((data: any) => {
-        if (data.id) {
-          // this.toastService.showMessage('success', 'Successful', 'User deleted successfully!');
-          this.filteredUserList.set(this.filteredUserList().filter(d => d.id !== id));
-        } else {
-          console.error('Error deleting User:', data);
-          // this.toastService.showMessage('error', 'Error Deleting', data.message);
+    if (ok) {
+      // Delete User
+      this.userS.delete(id).subscribe({
+        next: () => {
+          this.users.update(list => list.filter(i => i.id !== id));
+          this.toast.success('User deleted successfully!', 'bottom-right', 5000);
+        },
+        error: (error) => {
+        this.toast.danger('User deleted unsuccessful!', 'bottom-left', 3000);
+          console.error('Error deleting User:', error);
         }
       });
     }
   }
 
-  // User Accessibility Code Start----------------------------------------------------------------
-
-  savePermissions() {
-    // const selectedNodes = this.getSelectedNodes(this.userAccessTree());
-    const selectedNodes = this.userAccessTree();
-    // console.log('Selected Access:', selectedNodes);
-    this.form.patchValue({ menuPermissions: selectedNodes });
+  /* ---------------- RESET ---------------- */
+  formReset() {
+    // Reset the model
+    this.model.set({
+      username: '',
+      password: '',
+      companyID: environment.companyCode,
+      isActive: 'true',
+      menuPermissions: [],
+    });
+    this.loadTreeData('');
+    this.selected.set(null);
+    this.isSubmitted.set(false);
+    this.form().reset();
   }
 
-  private getSelectedNodes(nodes: any[]): any[] {
-    return nodes.reduce((acc: any[], node: any) => {
-      // Recursively update the isSelected property of parent nodes
-      this.updateParentSelection(node);
-
-      // Include node if it is selected or has selected children
-      if (node.isSelected || (node.children && node.children.some((child: any) => child.isSelected))) {
-        const selectedPermissions = node.permissionsKey
-          ?.filter((p: any) => p.isSelected)
-          .map((p: any) => p.permission);
-
-        acc.push({
-          menuId: node.id,
-          PermissionKey: selectedPermissions || [], // Include empty array if no permissions
-        });
-      }
-
-      // Flatten selected children into the same array
-      if (node.children) {
-        acc.push(...this.getSelectedNodes(node.children));
-      }
-
-      return acc;
-    }, []);
+  onToggleList() {
+    this.showList.update(s => !s);
+    this.formReset();
   }
-
-  private updateParentSelection(node: any): boolean {
-    // Check if the node has children
-    if (node.children && node.children.length > 0) {
-      // console.log('Processing node:', node.menuName, 'isSelected:', node.isSelected);
-
-      // Recursively update the isSelected property of children
-      const anyChildSelected = node.children.some((child: any) => this.updateParentSelection(child));
-      // console.log('Any child selected for node', node.menuName, ':', anyChildSelected);
-
-      // Update the current node's isSelected property based on its children
-      node.isSelected = anyChildSelected || node.isSelected;
-      // console.log('Updated node', node.menuName, 'isSelected:', node.isSelected);
-
-      return node.isSelected;
-    }
-    return node.isSelected;
-  }
-
-  // User Accessibility Code End--------------------------------------------------------
 
 }

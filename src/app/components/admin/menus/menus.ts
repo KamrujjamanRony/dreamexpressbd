@@ -11,6 +11,7 @@ import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { PermissionOptionM } from '../../../models/User';
 import { MultiSelect } from '../../../utils/multi-select/multi-select';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-menus',
@@ -160,7 +161,7 @@ export class Menus {
     this.isSubmitted.set(true);
 
     const payload = {
-      companyID: this.selected()?.companyID ?? 0,
+      companyID: this.selected()?.companyID ?? environment.companyCode,
       menuName: formValue.menuName,
       parentMenuID: formValue.parentMenuID ? Number(formValue.parentMenuID) : undefined,
       url: formValue.url,

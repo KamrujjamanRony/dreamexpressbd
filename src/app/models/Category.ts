@@ -1,6 +1,6 @@
 export interface CategoryM {
-  id: number;
+  id?: number;
   companyID: number;
-  slItem: number;
+  slItem:   number | null;
   itemName: string;
 }

@@ -11,7 +11,7 @@ export class SAbout {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/AboutUs`;
 
-  add(model: AboutUsM): Observable<AboutUsM> {
+  add(model: FormData): Observable<AboutUsM> {
     return this.http.post<AboutUsM>(this.apiUrl, model)
   }
 
@@ -19,7 +19,7 @@ export class SAbout {
     return this.http.get<AboutUsM>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: any, updateRequest: AboutUsM): Observable<AboutUsM> {
+  update(id: any, updateRequest: FormData): Observable<AboutUsM> {
     return this.http.put<AboutUsM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 

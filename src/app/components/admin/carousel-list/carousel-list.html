@@ -1,0 +1,271 @@
+<!-- carousel-list.html -->
+@if (isView()) {
+  @if (showList()) {
+    <div class="max-w-8xl mx-auto relative mt-5">
+      <div class="w-full mb-10 px-3">
+        <div
+          class="relative overflow-x-auto bg-neutral-primary shadow-xs rounded-base border border-default"
+        >
+          <div class="flex justify-between p-4">
+            <div class="w-full">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-gray-600"
+                >
+                  <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                </div>
+                <input
+                  #searchInput
+                  autocomplete="off"
+                  (input)="onSearch($event)"
+                  type="text"
+                  id="search"
+                  class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body"
+                  placeholder="Search by Title or Description"
+                />
+              </div>
+            </div>
+            <h1
+              class="text-xl md:text-3xl font-bold text-emerald-500 underline text-center mb-1 w-full"
+            >
+              Carousel List
+            </h1>
+            @if (isInsert()) {
+              <div class="w-full flex justify-end">
+                <button
+                  type="button"
+                  (click)="showList.set(false)"
+                  class="text-white bg-linear-to-r from-green-400 via-green-500 to-green-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer"
+                >
+                  Add Carousel
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Loading State -->
+          @if (isLoading()) {
+            <p class="text-3xl font-bold text-center p-10 text-emerald-600">Loading ...</p>
+          }
+
+          <!-- Error State -->
+          @else if (hasError()) {
+            <p class="text-3xl font-bold text-center p-10 text-red-600">
+              There was an error loading data.
+            </p>
+          }
+
+          <!-- Empty State -->
+          @else if (filteredList().length === 0) {
+            <p class="text-3xl font-bold text-center p-10 text-orange-600">No Items found.</p>
+          }
+
+          <!-- Table -->
+          @else {
+            <table class="w-full text-sm text-left rtl:text-right text-body overflow-scroll">
+              <thead
+                class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium"
+              >
+                <tr>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Title</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Description</th>
+                  @if (isEdit() || isDelete()) {
+                    <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of filteredList(); track item?.id || $index) {
+                  <tr
+                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft"
+                    [class.bg-blue-50]="selected()?.id === item.id"
+                  >
+                    <td class="px-6 py-4">
+                      <div class="relative w-16 h-16">
+                        @if (item.imageUrl) {
+                          <img
+                            [ngSrc]="item.imageUrl"
+                            fill
+                            ngSrcset="64w, 128w, 256w"
+                            sizes="64px"
+                            alt="Carousel Image"
+                            class="object-cover rounded"
+                            [priority]="$index < 2"
+                            [loaderParams]="{ w: 64 }"
+                          />
+                        } @else {
+                          <div
+                            class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center"
+                          >
+                            <span class="text-gray-400 text-xs">No image</span>
+                          </div>
+                        }
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium">{{ item?.title }}</td>
+                    <td class="px-6 py-4 max-w-xs truncate">{{ item?.description || '-' }}</td>
+                    <td class="px-6 py-4">
+                      @if (isEdit()) {
+                        <button
+                          class="text-orange-50 bg-orange-400 hover:bg-orange-500 px-2 py-1 rounded cursor-pointer mr-1 transition-colors"
+                          (click)="onUpdate(item)"
+                          title="Edit"
+                        >
+                          <fa-icon [icon]="faPencil"></fa-icon>
+                        </button>
+                      }
+                      @if (isDelete()) {
+                        <button
+                          class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-2 py-1 rounded cursor-pointer transition-colors"
+                          (click)="onDelete(item?.id)"
+                          title="Delete"
+                        >
+                          <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="max-w-8xl mx-auto relative">
+      <!-- Carousel Registration Form -->
+      <div
+        class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-gray-700"
+      >
+        <!-- Form Header -->
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 transition-all">
+              {{ selected() ? 'Edit' : 'Add' }} Carousel
+            </h2>
+            <button
+              class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-2 py-1 rounded cursor-pointer transition-colors"
+              (click)="onToggleList()"
+              title="Close"
+            >
+              <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
+          </div>
+
+          <!-- Form Fields -->
+          <form class="space-y-6" (submit)="onSubmit($event)">
+            <!-- Title -->
+            <div>
+              @let title = form.title();
+              @let titleError = form.title().invalid() && form.title().touched();
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.title"
+                  id="title"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="title"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                  >Title *</label
+                >
+              </div>
+              @if (titleError) {
+                <ul class="-mt-2 mb-2">
+                  @for (error of title.errors(); track error) {
+                    <li class="text-sm text-red-600">{{ error.message }}</li>
+                  }
+                </ul>
+              }
+            </div>
+
+            <!-- Description -->
+            <div class="relative pb-2">
+              <textarea
+                id="description"
+                [formField]="form.description"
+                rows="4"
+                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                placeholder=" "
+              ></textarea>
+              <label
+                for="description"
+                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-6 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                >Description *</label
+              >
+            </div>
+
+            <!-- Image File Upload -->
+            <div class="pb-2">
+              <label class="block text-sm font-medium text-heading mb-2" for="imageUrl">
+                Image {{ !selected() ? '*' : '' }}
+              </label>
+
+              <!-- Image Preview -->
+              @if (previewUrl()) {
+                <div class="mb-3 relative inline-block">
+                  <img
+                    [src]="previewUrl()"
+                    alt="Preview"
+                    class="h-32 w-32 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeImage()"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                    title="Remove image"
+                  >
+                    <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                  </button>
+                </div>
+              }
+
+              <input
+                #fileInput
+                id="imageUrl"
+                type="file"
+                accept="image/*"
+                (change)="onFileSelect($event)"
+                class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+              />
+              <p class="mt-1 text-xs text-gray-500">SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)</p>
+            </div>
+
+            <div class="flex gap-2 pt-4">
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                [disabled]="form().invalid() || isSubmitted()"
+                class="text-white bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center h-10 w-full disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+              >
+                @if (isSubmitted()) {
+                  <span>Submitting...</span>
+                } @else {
+                  <span>{{ selected() ? 'Update' : 'Save' }}</span>
+                }
+              </button>
+
+              <!-- Close Button -->
+              <button
+                type="button"
+                (click)="onToggleList()"
+                class="text-white bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center h-10 transition-all"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+} @else {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
+}
