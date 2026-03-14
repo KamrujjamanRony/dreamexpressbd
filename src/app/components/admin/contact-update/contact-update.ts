@@ -31,7 +31,6 @@ export class ContactUpdate {
   isLoading = signal(false);
   hasError = signal(false);
   isSubmitted = signal(false);
-  isUpdated = signal(false);
 
   isView = signal(false);
   isEdit = signal(false);
@@ -54,16 +53,16 @@ export class ContactUpdate {
   form = form(this.model, (schemaPath) => {
     required(schemaPath.address1, { message: 'Address 1 is required' });
     required(schemaPath.phoneNumber1, { message: 'Phone Number 1 is required' });
-    required(schemaPath.email, { message: 'Email is required' });
-    validate(schemaPath.email, ({ value }) => {
-      if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
-        return {
-          kind: 'email',
-          message: 'Please enter a valid email address'
-        }
-      }
-      return null;
-    });
+    // required(schemaPath.email, { message: 'Email is required' });
+    // validate(schemaPath.email, ({ value }) => {
+    //   if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
+    //     return {
+    //       kind: 'email',
+    //       message: 'Please enter a valid email address'
+    //     }
+    //   }
+    //   return null;
+    // });
   });
 
   /* ---------------- LIFECYCLE ---------------- */
@@ -115,6 +114,7 @@ export class ContactUpdate {
 
   /* ---------------- SUBMIT ---------------- */
   onSubmit(event: Event) {
+    console.log("clicked");
     event.preventDefault();
 
     if (!this.form().valid()) {
@@ -146,15 +146,12 @@ export class ContactUpdate {
         this.contactData.set(response);
         this.updateForm(response);
         this.isSubmitted.set(false);
-        this.isUpdated.set(true);
-
-        // Reset update message after 3 seconds
-        setTimeout(() => this.isUpdated.set(false), 3000);
+        this.toast.success('Contact information updated successfully!', 'bottom-right', 5000);
       },
       error: (error) => {
         console.error('Error updating contact:', error);
         this.isSubmitted.set(false);
-        alert('Failed to update contact information. Please try again.');
+        this.toast.danger('Failed to update contact information. Please try again.', 'bottom-right', 5000);
       }
     });
   }

@@ -15,8 +15,8 @@ export class SOrder {
         return this.http.post<OrderM>(this.apiUrl, order);
     }
 
-    search(companyID: any, from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
-        const reqBody = { from, to, orderStatus, companyID };
+    search(from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
+        const reqBody = { from, to, orderStatus, companyID: environment.companyCode };
         return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);
     }
 
@@ -28,14 +28,14 @@ export class SOrder {
         return this.http.get<OrderM>(`${this.apiUrl}/${orderId}`);
     }
 
-    updateStatus(id: any, orderStatus: any): Observable<any> {
-        // Prepare update data
-        const updateRequest: Partial<OrderM> & { deliveredDate?: string } = { orderStatus };
-        if (orderStatus == 'Delivered' || orderStatus == 3) {
-            updateRequest['deliveredDate'] = new Date().toISOString();
-        }
-        return this.http.put<OrderM>(`${this.apiUrl}/status/${id}`, updateRequest);
-    }
+    // updateStatus(id: any, orderStatus: any): Observable<any> {
+    //     // Prepare update data
+    //     const updateRequest: Partial<OrderM> & { deliveredDate?: string } = { orderStatus };
+    //     if (orderStatus == 'Delivered' || orderStatus == 3) {
+    //         updateRequest['deliveredDate'] = new Date().toISOString();
+    //     }
+    //     return this.http.put<OrderM>(`${this.apiUrl}/status/${id}`, updateRequest);
+    // }
 
     update(id: any, updateRequest: Partial<OrderM>): Observable<OrderM> {
         return this.http.put<OrderM>(`${this.apiUrl}/${id}`, updateRequest);
