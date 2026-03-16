@@ -8,14 +8,14 @@ import { OrderM } from '../models/OrderM';
     providedIn: 'root',
 })
 export class SOrder {
-    private apiUrl = `${environment.apiUrl}/Orders`;
+    private apiUrl = `${environment.apiUrl}/Order`;
     private http = inject(HttpClient);
 
     add(order: OrderM): Observable<OrderM> {
         return this.http.post<OrderM>(this.apiUrl, order);
     }
 
-    search(from: string = '', to: string = '', orderStatus: string = ''): Observable<OrderM[]> {
+    search(from: any = '', to: any = '', orderStatus: string = ''): Observable<OrderM[]> {
         const reqBody = { from, to, orderStatus, companyID: environment.companyCode };
         return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);
     }

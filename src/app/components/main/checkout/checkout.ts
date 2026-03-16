@@ -217,7 +217,7 @@ export class Checkout {
         }));
 
         const order: OrderM = {
-            userID: this.user.uid || '',
+            userId: this.user.uid || '',
             userEmail: this.user.email || '',
             userName: this.userDetails?.fullname || '',
             userPhone: this.deliveryAddress().contact || '',
@@ -236,7 +236,7 @@ export class Checkout {
                 // id: this.deliveryAddress().id,
                 district: this.deliveryAddress().district || '',
                 city: this.deliveryAddress().city || '',
-                state: this.deliveryAddress().state || '',
+                street: this.deliveryAddress().street || '',
                 contact: this.deliveryAddress().contact || '',
                 type: this.deliveryAddress().type || '',
                 // isDefault: this.deliveryAddress().isDefault
