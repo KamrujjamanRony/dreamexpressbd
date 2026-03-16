@@ -1,5 +1,7 @@
+// order-status-update.component.ts
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { OrderM } from '../../../../models/OrderM';
 
 @Component({
   selector: 'app-order-status-update',
@@ -8,19 +10,19 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './order-status-update.css',
 })
 export class OrderStatusUpdate {
-  @Input() currentStatus!: any;
-  @Input() order!: any;
-  @Output() statusUpdated = new EventEmitter<any>();
+  @Input() currentStatus!: string;
+  @Input() order!: OrderM;
+  @Output() statusUpdated = new EventEmitter<{ id: number; status: string }>();
 
-  newStatus: any = signal(this.currentStatus);
+  newStatus = signal<string>('');
   showModal = false;
 
   statusOptions = [
-    { value: 0, label: 'Pending' },
-    { value: 1, label: 'Processing' },
-    { value: 2, label: 'Shipped' },
-    { value: 3, label: 'Delivered' },
-    { value: 4, label: 'Cancelled' }
+    { value: 'Pending', label: 'Pending' },
+    { value: 'Processing', label: 'Processing' },
+    { value: 'Shipped', label: 'Shipped' },
+    { value: 'Delivered', label: 'Delivered' },
+    { value: 'Cancelled', label: 'Cancelled' }
   ];
 
   openModal() {
@@ -29,13 +31,17 @@ export class OrderStatusUpdate {
   }
 
   updateStatus() {
-    this.statusUpdated.emit({ id: this.order.id, status: this.newStatus() });
-    this.showModal = false;
+    if (this.newStatus() && this.newStatus() !== this.currentStatus) {
+      this.statusUpdated.emit({ 
+        ...this.order,
+        id: this.order.id!, 
+        status: this.newStatus()
+      });
+    }
+    this.closeModal(); // Call closeModal instead of just setting showModal to false
   }
 
-  // getStatusLabel(status: any): string {
-  //   console.log(status, this.statusOptions);
-  //   return this.statusOptions.find(opt => opt.value === status)?.label || '';
-  // }
-
+  closeModal() {
+    this.showModal = false;
+  }
 }
