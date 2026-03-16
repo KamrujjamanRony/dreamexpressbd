@@ -1,129 +1,116 @@
-<!-- order-details.component.html -->
+<!-- order-details.html -->
 <div class="space-y-6">
   <!-- Order Header -->
-  <div class="border-b pb-4">
-    <h2 class="text-xl font-bold text-gray-900">Order #{{ order.id }}</h2>
+  <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Order #{{ order?.id }}</h2>
     <div class="flex justify-between items-center mt-2">
-      <span class="text-sm text-gray-500">
-        Date: {{ order.orderDate | date : "medium" }}
+      <span class="text-sm text-gray-500 dark:text-gray-400">
+        Date: {{ order?.orderDate | date : "medium" }}
       </span>
-      <span
-        class="px-2 py-1 text-xs font-semibold rounded-full {{
-          order.orderStatus
-        }}"
-      >
-        {{ order.orderStatus }}
+      <span class="px-2 py-1 text-xs font-semibold rounded-full {{ getStatusClass(order?.orderStatus || '') }}">
+        {{ order?.orderStatus }}
       </span>
     </div>
   </div>
 
   <!-- Customer Information -->
-  <div class="border-b pb-4">
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Customer Information</h3>
+  <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Customer Information</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
-        <p class="text-sm font-medium text-gray-500">Name</p>
-        <p class="text-sm text-gray-900">{{ order.userName }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.userName }}</p>
       </div>
       <div>
-        <p class="text-sm font-medium text-gray-500">Email</p>
-        <p class="text-sm text-gray-900">{{ order.userEmail }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.userEmail }}</p>
       </div>
       <div>
-        <p class="text-sm font-medium text-gray-500">Phone</p>
-        <p class="text-sm text-gray-900">{{ order.userPhone }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.userPhone }}</p>
       </div>
     </div>
   </div>
 
   <!-- Shipping Address -->
-  <div class="border-b pb-4">
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Shipping Address</h3>
+  <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Shipping Address</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
-        <p class="text-sm font-medium text-gray-500">District</p>
-        <p class="text-sm text-gray-900">
-          {{ order.shippingAddress?.district }}
-        </p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">District</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.district }}</p>
       </div>
       <div>
-        <p class="text-sm font-medium text-gray-500">City</p>
-        <p class="text-sm text-gray-900">{{ order.shippingAddress?.city }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">City</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.city }}</p>
       </div>
       <div>
-        <p class="text-sm font-medium text-gray-500">Street</p>
-        <p class="text-sm text-gray-900">{{ order.shippingAddress?.street }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Street</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.street }}</p>
       </div>
       <div>
-        <p class="text-sm font-medium text-gray-500">Contact</p>
-        <p class="text-sm text-gray-900">
-          {{ order.shippingAddress?.contact }}
-        </p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Contact</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.contact }}</p>
       </div>
+      @if (order?.shippingAddress?.type) {
       <div>
-        <p class="text-sm font-medium text-gray-500">Type</p>
-        <p class="text-sm text-gray-900">{{ order.shippingAddress?.type }}</p>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</p>
+        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.type }}</p>
       </div>
+      }
     </div>
   </div>
 
   <!-- Order Items -->
-  <div class="border-b pb-4">
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Order Items</h3>
+  <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Order Items</h3>
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Product
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Price
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Quantity
             </th>
-            <th
-              scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Total
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          @for (item of order.orderItems; track item.id) {
+        <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
+          @for (item of order?.orderItems; track item.productId) {
           <tr>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <img
                   [src]="item.image"
-                  class="h-10 w-10 rounded-md"
+                  class="h-10 w-10 rounded-md object-cover"
                   [alt]="item.productName"
                 />
                 <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
                     {{ item.productName }}
                   </div>
+                  @if (item.size || item.color) {
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    @if (item.size) { Size: {{ item.size }} } @if (item.color) { Color: {{ item.color }} }
+                  </div>
+                  }
                 </div>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
               <span [innerHTML]="item.price | bdt"></span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
               {{ item.quantity }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
               <span [innerHTML]="item.price * item.quantity | bdt"></span>
             </td>
           </tr>
@@ -135,28 +122,25 @@
 
   <!-- Order Summary -->
   <div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Order Summary</h3>
-    <div class="bg-gray-50 p-4 rounded-lg">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Order Summary</h3>
+    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
       <div class="flex justify-between py-2">
-        <span class="text-sm font-medium text-gray-500">Subtotal</span>
-        <span
-          class="text-sm font-medium text-gray-900"
-          [innerHTML]="order.subtotal | bdt"
-        ></span>
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Subtotal</span>
+        <span class="text-sm font-medium text-gray-900 dark:text-white" [innerHTML]="order?.subtotal | bdt"></span>
       </div>
       <div class="flex justify-between py-2">
-        <span class="text-sm font-medium text-gray-500">Delivery Charge</span>
-        <span
-          class="text-sm font-medium text-gray-900"
-          [innerHTML]="order.deliveryCharge | bdt"
-        ></span>
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Delivery Charge</span>
+        <span class="text-sm font-medium text-gray-900 dark:text-white" [innerHTML]="order?.deliveryCharge | bdt"></span>
       </div>
-      <div class="flex justify-between py-2 border-t border-gray-200">
-        <span class="text-sm font-medium text-gray-900">Total</span>
-        <span
-          class="text-sm font-bold text-gray-900"
-          [innerHTML]="order.totalAmount | bdt"
-        ></span>
+      @if (order && order.discountAmount && order.discountAmount > 0) {
+      <div class="flex justify-between py-2">
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</span>
+        <span class="text-sm font-medium text-green-600 dark:text-green-400" [innerHTML]="'-' + (order.discountAmount | bdt)"></span>
+      </div>
+      }
+      <div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Total</span>
+        <span class="text-sm font-bold text-gray-900 dark:text-white" [innerHTML]="order?.totalAmount | bdt"></span>
       </div>
     </div>
   </div>
