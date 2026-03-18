@@ -80,7 +80,7 @@
 
             <button
               (click)="resetFilters()"
-              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-base text-sm px-4 py-2.5 transition-colors"
+              class="bg-gray-200 hover:bg-gray-300 font-medium rounded-base text-sm px-4 py-2.5 transition-colors"
             >
               Reset Filters
             </button>
@@ -108,7 +108,7 @@
             <div class="overflow-x-auto">
               <table class="w-full text-sm text-left rtl:text-right text-body">
                 <thead
-                  class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium"
+                  class="text-sm bg-neutral-secondary-medium border-b border-t border-default-medium"
                 >
                   <tr>
                     <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
@@ -126,7 +126,7 @@
                 <tbody>
                   @for (item of filteredList(); track item.id) {
                     <tr
-                      class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft"
+                      class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-gray-950 dark:border-gray-700 dark:hover:bg-yellow-700"
                       [class.bg-blue-50]="selected()?.id === item.id"
                     >
                       <td class="px-6 py-4">
@@ -158,13 +158,17 @@
                       <td class="px-6 py-4">{{ item.brand || '-' }}</td>
                       <td class="px-6 py-4">{{ item.model || '-' }}</td>
                       <td class="px-6 py-4">
-                        <div class="font-semibold text-emerald-600">৳{{ item.offerPrice || item.regularPrice }}</div>
+                        <div class="font-semibold text-emerald-600">
+                          ৳{{ item.offerPrice || item.regularPrice }}
+                        </div>
                         @if (item.regularPrice && item.offerPrice) {
-                          <div class="text-xs text-gray-500 line-through">৳{{ item.regularPrice }}</div>
+                          <div class="text-xs text-gray-500 line-through">
+                            ৳{{ item.regularPrice }}
+                          </div>
                         }
                       </td>
                       <td class="px-6 py-4">
-                        <span 
+                        <span
                           class="px-2 py-1 text-xs rounded-full"
                           [class.bg-green-100]="item.isActive"
                           [class.text-green-800]="item.isActive"
@@ -291,15 +295,20 @@
                           id="itemId"
                           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
                         >
-                          <option value="" disabled selected>Select a category</option>
+                          <option value="" disabled selected class="dark:bg-gray-900">
+                            Select a category
+                          </option>
                           @for (cat of categories(); track cat.id) {
-                            <option [value]="cat.id">{{ cat.itemName }}</option>
+                            <option [value]="cat.id" class="dark:bg-gray-900">
+                              {{ cat.itemName }}
+                            </option>
                           }
                         </select>
                         <label
                           for="itemId"
                           class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                        >Category *</label>
+                          >Category *</label
+                        >
                       </div>
                     </div>
 
@@ -312,15 +321,20 @@
                           id="brand"
                           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
                         >
-                          <option value="" disabled selected>Select a brand</option>
+                          <option value="" disabled selected class="dark:bg-gray-900">
+                            Select a brand
+                          </option>
                           @for (brand of brands(); track brand.id) {
-                            <option [value]="brand.brandName">{{ brand.brandName }}</option>
+                            <option [value]="brand.brandName" class="dark:bg-gray-900">
+                              {{ brand.brandName }}
+                            </option>
                           }
                         </select>
                         <label
                           for="brand"
                           class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                        >Brand *</label>
+                          >Brand *</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -340,7 +354,8 @@
                       <label
                         for="title"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Title *</label>
+                        >Title *</label
+                      >
                     </div>
                     @if (titleError) {
                       <ul class="-mt-2 mb-2">
@@ -363,7 +378,8 @@
                     <label
                       for="description"
                       class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-6 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                    >Description</label>
+                      >Description</label
+                    >
                   </div>
 
                   <!-- Model and Origin Row -->
@@ -379,7 +395,8 @@
                       <label
                         for="model"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Model</label>
+                        >Model</label
+                      >
                     </div>
                     <div class="relative pb-2">
                       <input
@@ -392,7 +409,8 @@
                       <label
                         for="origin"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Origin</label>
+                        >Origin</label
+                      >
                     </div>
                   </div>
 
@@ -409,7 +427,8 @@
                       <label
                         for="sku"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >SKU</label>
+                        >SKU</label
+                      >
                     </div>
                     <div class="relative pb-2">
                       <input
@@ -422,7 +441,8 @@
                       <label
                         for="sizes"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Sizes (comma separated)</label>
+                        >Sizes (comma separated)</label
+                      >
                     </div>
                   </div>
 
@@ -439,7 +459,8 @@
                       <label
                         for="regularPrice"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Regular Price *</label>
+                        >Regular Price *</label
+                      >
                     </div>
                     <div class="relative pb-2">
                       <input
@@ -452,7 +473,8 @@
                       <label
                         for="offerPrice"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Offer Price</label>
+                        >Offer Price</label
+                      >
                     </div>
                   </div>
 
@@ -469,7 +491,8 @@
                       <label
                         for="specialFeature"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Special Feature</label>
+                        >Special Feature</label
+                      >
                     </div>
                     <div class="relative pb-2">
                       <input
@@ -482,7 +505,8 @@
                       <label
                         for="additionalInformation"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Additional Information</label>
+                        >Additional Information</label
+                      >
                     </div>
                   </div>
 
@@ -499,7 +523,8 @@
                       <label
                         for="youtubeLink"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >YouTube Link</label>
+                        >YouTube Link</label
+                      >
                     </div>
                     <div class="relative pb-2">
                       <input
@@ -512,7 +537,8 @@
                       <label
                         for="facebookPost"
                         class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                      >Facebook Post</label>
+                        >Facebook Post</label
+                      >
                     </div>
                   </div>
 
@@ -524,9 +550,7 @@
                       id="isActive"
                       class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500"
                     />
-                    <label for="isActive" class="ml-2 text-sm font-medium text-gray-700">
-                      Active Product
-                    </label>
+                    <label for="isActive" class="ml-2 text-sm font-medium"> Active Product </label>
                   </div>
                 </div>
               }
@@ -567,7 +591,9 @@
                       (change)="onFileSelect($event)"
                       class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
                     />
-                    <p class="mt-1 text-xs text-gray-500">SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                      SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)
+                    </p>
                   </div>
 
                   <!-- Multiple Images -->
@@ -623,7 +649,8 @@
                     <label
                       for="catalogURL"
                       class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                    >Catalog URL</label>
+                      >Catalog URL</label
+                    >
                   </div>
                 </div>
               }
@@ -633,82 +660,126 @@
                 <div class="space-y-6">
                   <div class="flex justify-between items-center">
                     <h3 class="text-lg font-medium">Product Colors</h3>
-                    <button
-                      type="button"
-                      (click)="addColor()"
-                      class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition-colors"
-                    >
-                      + Add Color
-                    </button>
+                    @if (selected()) {
+                      <button
+                        type="button"
+                        (click)="addColor()"
+                        class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition-colors"
+                      >
+                        + Add Color
+                      </button>
+                    }
                   </div>
 
-                  <!-- Colors List -->
-                  <div class="space-y-4">
-                    @for (color of colorsList(); track $index; let i = $index) {
-                      <div class="border rounded-lg p-4 bg-gray-50">
-                        <div class="flex justify-between items-start mb-3">
-                          <h4 class="font-medium">Color #{{ i + 1 }}</h4>
-                          <button
-                            type="button"
-                            (click)="removeColor(i)"
-                            class="text-red-500 hover:text-red-700"
-                          >
-                            <fa-icon [icon]="faTrash"></fa-icon>
-                          </button>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <!-- Color Name -->
-                          <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                              Color Name
-                            </label>
-                            <input
-                              type="text"
-                              [(ngModel)]="color.colorName"
-                              [ngModelOptions]="{standalone: true}"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-                              placeholder="e.g., Red, Blue, Black"
-                            />
+                  @if (!selected()) {
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-700">
+                      <p class="text-sm">
+                        Please save the product first to add colors. Colors can be managed when
+                        editing the product.
+                      </p>
+                    </div>
+                  } @else {
+                    <!-- Colors List -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-4">
+                      @for (color of colorsList(); track $index; let i = $index) {
+                        <div class="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                          <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-medium">Color #{{ i + 1 }}</h4>
+                            <button
+                              type="button"
+                              (click)="removeColor(i)"
+                              class="text-red-500 hover:text-red-700"
+                            >
+                              <fa-icon [icon]="faTrash"></fa-icon>
+                            </button>
                           </div>
 
-                          <!-- Color Image -->
-                          <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                              Color Image
-                            </label>
-                            @if (color.image) {
-                              <div class="mb-2 relative inline-block">
-                                <img
-                                  [src]="color.image"
-                                  alt="Color"
-                                  class="h-16 w-16 object-cover rounded border"
-                                />
-                                <button
-                                  type="button"
-                                  (click)="removeColorImage(i)"
-                                  class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                                  title="Remove image"
-                                >
-                                  <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
-                                </button>
+                          <div class="">
+                            <!-- Color Name -->
+                            <div>
+                              <label class="block text-sm font-medium mb-1"> Color Name </label>
+                              <input
+                                type="text"
+                                [(ngModel)]="color.colorName"
+                                [ngModelOptions]="{ standalone: true }"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:border-gray-600"
+                                placeholder="e.g., Red, Blue, Black"
+                                required
+                              />
+                            </div>
+
+                            <!-- Color Image Selection -->
+                            <div>
+                              <label class="block text-sm font-medium mb-1"> Color Image </label>
+                              <div class="flex border-b border-gray-200 mb-3">
+                                Choose from Product Images
                               </div>
-                            }
-                            <input
-                              type="file"
-                              accept="image/*"
-                              (change)="onColorImageSelect($event, i)"
-                              class="w-full text-sm"
-                            />
+
+                              <!-- Current Image Preview -->
+                              @if (color.image) {
+                                <div class="mb-2 relative inline-block">
+                                  <img
+                                    [src]="color.image"
+                                    alt="Color"
+                                    class="h-48 w-48 object-cover rounded border"
+                                  />
+                                  <button
+                                    type="button"
+                                    (click)="removeColorImage(i)"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 pb-1 hover:bg-red-600 transition-colors cursor-pointer"
+                                    title="Remove image"
+                                  >
+                                    <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                                  </button>
+                                </div>
+                              } @else {
+                                <!-- Choose from Product Images -->
+                                <div>
+                                  @if (multiplePreviews().length > 0) {
+                                    <div class="flex gap-2 mt-2">
+                                      @for (
+                                        preview of multiplePreviews();
+                                        track $index;
+                                        let imgIndex = $index
+                                      ) {
+                                        <div
+                                          class="relative cursor-pointer border-2 rounded p-1 hover:border-emerald-500 transition-colors"
+                                          [class.border-emerald-500]="
+                                            selectedColorImageIndex() === imgIndex
+                                          "
+                                          (click)="selectColorImageFromProduct(i, imgIndex)"
+                                        >
+                                          <img
+                                            [src]="preview.url"
+                                            alt="Product image"
+                                            class="h-12 w-12 object-cover rounded"
+                                          />
+                                        </div>
+                                      }
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                      Click on an image to use it for this color
+                                    </p>
+                                  } @else {
+                                    <p class="text-sm text-gray-500">
+                                      No product images available. Please upload images in the
+                                      Images tab first.
+                                    </p>
+                                  }
+                                </div>
+                              }
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    }
+                      }
 
-                    @if (colorsList().length === 0) {
-                      <p class="text-center text-gray-500 py-4">No colors added yet.</p>
-                    }
-                  </div>
+                      @if (colorsList().length === 0) {
+                        <p class="text-center text-gray-500 py-4">
+                          No colors added yet. Click "Add Color" to start adding colors.
+                        </p>
+                      }
+                    </div>
+                  }
                 </div>
               }
 
@@ -716,47 +787,115 @@
               @if (activeTab() === 'related') {
                 <div class="space-y-6">
                   <h3 class="text-lg font-medium">Related Products</h3>
-                  
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                      Select Related Products
-                    </label>
-                    <div class="border rounded-lg p-4 max-h-80 overflow-y-auto">
-                      @for (product of availableProducts(); track product.id) {
-                        @if (product.id !== selected()?.id) {
-                          <div class="flex items-center mb-2">
-                            <input
-                              type="checkbox"
-                              [id]="'related_' + product.id"
-                              [value]="product.id"
-                              (change)="toggleRelatedProduct(product.id, $event)"
-                              [checked]="isProductRelated(product.id)"
-                              class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500"
-                            />
-                            <label [for]="'related_' + product.id" class="ml-2 text-sm text-gray-700">
-                              {{ product.title }} 
-                              @if (product.brand) {
-                                <span class="text-xs text-gray-500">({{ product.brand }})</span>
-                              }
-                            </label>
-                          </div>
-                        }
-                      }
+
+                  <!-- Search Input -->
+                  <div class="relative">
+                    <div
+                      class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                    >
+                      <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
                     </div>
+                    <input
+                      type="text"
+                      [(ngModel)]="relatedSearchQuery"
+                      (input)="filterRelatedProducts()"
+                      placeholder="Search products by title, brand, or model..."
+                      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+                    />
                   </div>
 
-                  <!-- Selected Related Products -->
+                  <!-- Product Selection -->
+                  <div>
+                    <label class="block text-sm font-medium mb-2"> Select Related Products </label>
+
+                    <!-- Loading State -->
+                    @if (isFilteringRelated()) {
+                      <div class="text-center py-4">
+                        <span class="text-gray-500">Searching...</span>
+                      </div>
+                    } @else {
+                      <!-- Products List -->
+                      <div class="border rounded-lg p-4 max-h-80 overflow-y-auto">
+                        @if (filteredRelatedProducts().length === 0) {
+                          <p class="text-center text-gray-500 py-4">
+                            No products found matching your search.
+                          </p>
+                        } @else {
+                          @for (product of filteredRelatedProducts(); track product.id) {
+                            @if (product.id !== selected()?.id) {
+                              <div
+                                class="flex items-center mb-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded"
+                              >
+                                <input
+                                  type="checkbox"
+                                  [id]="'related_' + product.id"
+                                  [value]="product.id"
+                                  (change)="toggleRelatedProduct(product.id, $event)"
+                                  [checked]="isProductRelated(product.id)"
+                                  class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500"
+                                />
+                                <label
+                                  [for]="'related_' + product.id"
+                                  class="ml-2 flex-1 flex items-center cursor-pointer"
+                                >
+                                  <!-- Product Image -->
+                                  <div class="w-10 h-10 mr-3 shrink-0">
+                                    @if (product.imageUrl) {
+                                      <img
+                                        [src]="imgURL + product.imageUrl"
+                                        [alt]="product.title"
+                                        class="w-10 h-10 object-cover rounded"
+                                        loading="lazy"
+                                      />
+                                    } @else {
+                                      <div
+                                        class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center"
+                                      >
+                                        <span class="text-xs text-gray-400">No img</span>
+                                      </div>
+                                    }
+                                  </div>
+
+                                  <!-- Product Info -->
+                                  <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium truncate">
+                                      {{ product.title }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                      @if (product.brand) {
+                                        <span class="mr-2">{{ product.brand }}</span>
+                                      }
+                                      @if (product.model) {
+                                        <span>| {{ product.model }}</span>
+                                      }
+                                    </div>
+                                  </div>
+                                </label>
+                              </div>
+                            }
+                          }
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Selected Related Products Summary -->
                   @if (relatedProductsList().length > 0) {
                     <div>
-                      <h4 class="text-sm font-medium text-gray-700 mb-2">Selected Related Products</h4>
+                      <h4 class="text-sm font-medium mb-2">
+                        Selected Products ({{ relatedProductsList().length }})
+                      </h4>
                       <div class="flex flex-wrap gap-2">
                         @for (id of relatedProductsList(); track id) {
-                          <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-sm flex items-center">
+                          <span
+                            class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-sm flex items-center"
+                          >
                             {{ getProductTitle(id) }}
                             <button
                               type="button"
                               (click)="removeRelatedProduct(id)"
-                              class="ml-1 text-emerald-600 hover:text-emerald-800"
+                              class="ml-1 text-emerald-600 hover:text-emerald-800 font-bold"
+                              title="Remove"
                             >
                               ×
                             </button>
@@ -765,6 +904,14 @@
                       </div>
                     </div>
                   }
+
+                  <!-- Quick Selection Help -->
+                  <div class="text-xs text-gray-500 border-t pt-4">
+                    <p>
+                      Total available products: {{ availableProducts().length }} | Selected:
+                      {{ relatedProductsList().length }}
+                    </p>
+                  </div>
                 </div>
               }
 

@@ -44,7 +44,7 @@ export class ProductList {
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
   faTrash = faTrash;
-  
+
   /* ---------------- DI ---------------- */
   private productService = inject(SProduct);
   private brandService = inject(SBrand);
@@ -52,14 +52,14 @@ export class ProductList {
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
-  
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('multipleFileInput') multipleFileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('categoryFilter') categoryFilter!: ElementRef<HTMLSelectElement>;
   @ViewChild('brandFilter') brandFilter!: ElementRef<HTMLSelectElement>;
   @ViewChild('statusFilter') statusFilter!: ElementRef<HTMLSelectElement>;
-  
+
   imgURL = environment.ImageApi;
   emptyImg = environment.emptyImg;
 
@@ -67,12 +67,12 @@ export class ProductList {
   products = signal<ProductM[]>([]);
   brands = signal<BrandM[]>([]);
   categories = signal<CategoryM[]>([]);
-  
+
   searchQuery = signal('');
   selectedCategory = signal<number | null>(null);
   selectedBrand = signal<string | null>(null);
   selectedStatus = signal<boolean | null>(null);
-  
+
   activeTab = signal<'basic' | 'images' | 'colors' | 'related'>('basic');
 
   filteredList = computed(() => {
@@ -84,7 +84,7 @@ export class ProductList {
     return this.products()
       .filter(product => {
         // Search filter
-        const matchesSearch = !query || 
+        const matchesSearch = !query ||
           product.title?.toLowerCase().includes(query) ||
           product.description?.toLowerCase().includes(query) ||
           product.brand?.toLowerCase().includes(query) ||
@@ -115,8 +115,14 @@ export class ProductList {
   multiplePreviews = signal<ImagePreview[]>([]);
 
   colorsList = signal<ProductColorsM[]>([]);
-  colorsFiles = signal<{index: number, file: File}[]>([]);
+  colorsFiles = signal<{ index: number, file: File }[]>([]);
   
+  selectedColorImageIndex = signal<number | null>(null);
+  colorImageReferences = signal<{ colorIndex: number, imagePath: string }[]>([]);
+  relatedSearchQuery = signal('');
+  filteredRelatedProducts = signal<ProductM[]>([]);
+  isFilteringRelated = signal(false);
+
   relatedProductsList = signal<number[]>([]);
 
   isLoading = signal(false);
@@ -150,6 +156,8 @@ export class ProductList {
     facebookPost: '',
     others: '',
     isActive: true,
+    imageUrl: '',
+    images: [] as any[],
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
@@ -227,7 +235,7 @@ export class ProductList {
     this.selectedCategory.set(null);
     this.selectedBrand.set(null);
     this.selectedStatus.set(null);
-    
+
     // Reset select elements
     if (this.categoryFilter) {
       this.categoryFilter.nativeElement.value = '';
@@ -264,7 +272,7 @@ export class ProductList {
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       if (!this.validateImageFile(file)) return;
 
       this.selectedFile.set(file);
@@ -295,7 +303,7 @@ export class ProductList {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.multiplePreviews.update(prev => [
-            ...prev, 
+            ...prev,
             { file, url: e.target?.result as string }
           ]);
         };
@@ -303,7 +311,7 @@ export class ProductList {
       });
 
       this.multipleFiles.update(prev => [...prev, ...validFiles]);
-      
+
       // Clear input
       input.value = '';
     }
@@ -314,7 +322,7 @@ export class ProductList {
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       if (!this.validateImageFile(file)) return;
 
       // Store file for later upload
@@ -336,7 +344,7 @@ export class ProductList {
         });
       };
       reader.readAsDataURL(file);
-      
+
       // Clear input
       input.value = '';
     }
@@ -382,7 +390,6 @@ export class ProductList {
   }
 
   removeColorImage(index: number) {
-    this.colorsFiles.update(prev => prev.filter(f => f.index !== index));
     this.colorsList.update(colors => {
       const updated = [...colors];
       updated[index] = {
@@ -391,9 +398,42 @@ export class ProductList {
       };
       return updated;
     });
+
+    // Remove any references
+    this.colorImageReferences.update(refs => refs.filter(r => r.colorIndex !== index));
+    this.selectedColorImageIndex.set(null);
   }
 
   /* ---------------- COLORS MANAGEMENT ---------------- */
+  selectColorImageFromProduct(colorIndex: number, imageIndex: number) {
+    const preview = this.multiplePreviews()[imageIndex];
+    if (preview) {
+      this.colorsList.update(colors => {
+        const updated = [...colors];
+        updated[colorIndex] = {
+          ...updated[colorIndex],
+          image: preview.url
+        };
+        return updated;
+      });
+
+      // Store reference to the original product image if it's an existing image
+      if (!preview.file && this.selected()) {
+        // This is an existing product image from the server
+        const productImage = this.selected()?.images?.[imageIndex];
+        if (productImage) {
+          // Store the image path for later submission
+          this.colorImageReferences.update(refs => {
+            const filtered = refs.filter(r => r.colorIndex !== colorIndex);
+            return [...filtered, { colorIndex, imagePath: productImage }];
+          });
+        }
+      }
+
+      this.selectedColorImageIndex.set(imageIndex);
+    }
+  }
+
   addColor() {
     this.colorsList.update(prev => [...prev, { colorName: '', image: '' }]);
   }
@@ -407,9 +447,31 @@ export class ProductList {
   }
 
   /* ---------------- RELATED PRODUCTS ---------------- */
+  filterRelatedProducts() {
+    const query = this.relatedSearchQuery().toLowerCase().trim();
+
+    if (!query) {
+      this.filteredRelatedProducts.set(this.availableProducts());
+      return;
+    }
+
+    this.isFilteringRelated.set(true);
+
+    // Simulate async filtering for better UX
+    setTimeout(() => {
+      const filtered = this.availableProducts().filter(product =>
+        product.title?.toLowerCase().includes(query) ||
+        product.brand?.toLowerCase().includes(query) ||
+        product.model?.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query)
+      );
+      this.filteredRelatedProducts.set(filtered);
+      this.isFilteringRelated.set(false);
+    }, 300);
+  }
   toggleRelatedProduct(productId: number, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    
+
     if (checked) {
       this.relatedProductsList.update(prev => [...prev, productId]);
     } else {
@@ -431,7 +493,7 @@ export class ProductList {
     }
 
     const formValue = this.form().value();
-    
+
     // Validate required fields
     if (!formValue.itemId) {
       this.toast.warning('Please select a category!', 'bottom-right', 5000);
@@ -479,30 +541,53 @@ export class ProductList {
       }
     });
 
+    // first remove then Append isActive as numeric value (1 or 0)
+    formData.delete('isActive');
+    formData.append('isActive', formValue.isActive ? '1' : '0');
+
     // Append main image
     if (this.selectedFile()) {
+      formData.delete('ImageFile');
       formData.append('ImageFile', this.selectedFile() as File);
     }
 
     // Append multiple images
     this.multipleFiles().forEach((file) => {
-      formData.append('Images', file);
+      formData.append('ImageFiles', file);
     });
 
-    // Append colors
-    if (this.colorsList().length > 0) {
-      const colorsData = this.colorsList().map(color => ({
+    // Append colors with special handling for existing product images
+    const colorsData = this.colorsList().map((color, index) => {
+      // Check if this color uses an existing product image
+      const imageRef = this.colorImageReferences().find(r => r.colorIndex === index);
+      if (imageRef) {
+        return {
+          colorName: color.colorName,
+          image: imageRef.imagePath // Use the existing image path
+        };
+      }
+      return {
         colorName: color.colorName,
         image: color.image && !color.image.startsWith('data:') ? color.image : ''
-      }));
-      
-      formData.append('Colors', JSON.stringify(colorsData));
-      
-      // Append color image files
-      this.colorsFiles().forEach(({ file }) => {
-        formData.append('ColorImages', file);
-      });
-    }
+      };
+    });
+
+    formData.append('Colors', JSON.stringify(colorsData));
+
+    // Append colors
+    // if (this.colorsList().length > 0) {
+    //   const colorsData = this.colorsList().map(color => ({
+    //     colorName: color.colorName,
+    //     image: color.image && !color.image.startsWith('data:') ? color.image : ''
+    //   }));
+
+    //   formData.append('Colors', JSON.stringify(colorsData));
+
+    //   // Append color image files
+    //   this.colorsFiles().forEach(({ file }) => {
+    //     formData.append('ColorImages', file);
+    //   });
+    // }
 
     // Append related products
     if (this.relatedProductsList().length > 0) {
@@ -524,8 +609,8 @@ export class ProductList {
         this.isSubmitted.set(false);
         console.error('Error:', error);
         this.toast.danger(
-          error?.error?.message || 'Save unsuccessful!', 
-          'bottom-left', 
+          error?.error?.message || 'Save unsuccessful!',
+          'bottom-left',
           3000
         );
       }
@@ -555,18 +640,26 @@ export class ProductList {
       facebookPost: product.facebookPost || '',
       others: product.others || '',
       isActive: product.isActive ?? true,
+      imageUrl: product.imageUrl || '',
+      images: product.images || [],
     });
 
     this.form().reset();
 
+    // Initialize filtered related products
+    this.filteredRelatedProducts.set(this.availableProducts());
+
     // Set related products
     if (product.relatedProducts) {
+
       this.relatedProductsList.set(product.relatedProducts);
     }
 
     // Set colors
-    if (product.productsColors) {
-      this.colorsList.set(product.productsColors);
+    if (product.colors) {
+      const parsed: any[] = JSON.parse(product.colors as any);
+      console.log(parsed);
+      this.colorsList.set(product.colors);
     }
 
     // Set main image preview
@@ -615,8 +708,8 @@ export class ProductList {
         },
         error: (error) => {
           this.toast.danger(
-            error?.error?.message || 'Delete unsuccessful!', 
-            'bottom-left', 
+            error?.error?.message || 'Delete unsuccessful!',
+            'bottom-left',
             3000
           );
           console.error('Error deleting Product:', error);
@@ -646,6 +739,8 @@ export class ProductList {
       facebookPost: '',
       others: '',
       isActive: true,
+      imageUrl: '',
+      images: [],
     });
 
     this.selected.set(null);
@@ -658,6 +753,11 @@ export class ProductList {
     this.relatedProductsList.set([]);
     this.isSubmitted.set(false);
     this.activeTab.set('basic');
+
+    this.selectedColorImageIndex.set(null);
+    this.relatedSearchQuery.set('');
+    this.filteredRelatedProducts.set([]);
+    this.colorImageReferences.set([]);
 
     this.form().reset();
     this.clearFileInput();
