@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { Profile } from '../profile/profile';
 import { ModalAddress } from '../../shared/modal-address/modal-address';
 import { SCustomer } from '../../../services/s-customer';
 import { ProfileCard } from "../../shared/profile-card/profile-card";
@@ -7,7 +6,7 @@ import { CustomerM } from '../../../models/Customer';
 
 @Component({
   selector: 'app-address',
-  imports: [ModalAddress, ProfileCard],
+  imports: [],
   templateUrl: './address.html',
   styleUrl: './address.css',
 })
