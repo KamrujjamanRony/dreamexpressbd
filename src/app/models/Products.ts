@@ -16,6 +16,7 @@ export interface ProductM {
   sl: number;
   sku: string;
   sizes: string;
+  colors: any[];
   regularPrice: number;
   offerPrice: number;
   image: string;
@@ -25,7 +26,7 @@ export interface ProductM {
   youtubeLink: string;
   facebookPost: string;
   others: string;
-  isActive: boolean;
+  isActive: any;
 }
 
 
