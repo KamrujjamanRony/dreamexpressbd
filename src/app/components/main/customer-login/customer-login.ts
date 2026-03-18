@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { SAuth } from '../../../services/s-auth';
 import { SLogin } from '../../../services/s-login';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-customer-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './customer-login.html',
   styleUrl: './customer-login.css',
 })
