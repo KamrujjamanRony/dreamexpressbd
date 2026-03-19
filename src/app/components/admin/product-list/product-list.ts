@@ -15,6 +15,7 @@ import { SProduct } from '../../../services/s-product';
 import { SBrand } from '../../../services/s-brand';
 import { SCategory } from '../../../services/s-category';
 import { environment } from '../../../../environments/environment';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 
 interface ColorWithFile extends ProductColorsM {
   file?: File;
@@ -116,12 +117,13 @@ export class ProductList {
 
   colorsList = signal<ProductColorsM[]>([]);
   colorsFiles = signal<{ index: number, file: File }[]>([]);
-  
+
   selectedColorImageIndex = signal<number | null>(null);
-  colorImageReferences = signal<{ colorIndex: number, imagePath: string }[]>([]);
   relatedSearchQuery = signal('');
   filteredRelatedProducts = signal<ProductM[]>([]);
   isFilteringRelated = signal(false);
+  isLoadingColors = signal(false);
+  colorImageReferences = signal<{ colorIndex: number, imagePath: string }[]>([]);
 
   relatedProductsList = signal<number[]>([]);
 
@@ -207,6 +209,30 @@ export class ProductList {
     this.categoryService.search().subscribe({
       next: (data) => this.categories.set(data),
       error: (error) => console.error('Error loading categories:', error)
+    });
+  }
+
+  // Add this method to load colors when editing a product
+  loadProductColors(productId: number) {
+    this.isLoadingColors.set(true);
+
+    this.productService.getColor(productId).subscribe({
+      next: (colors) => {
+        // Map the colors and ensure images are properly formatted
+        const colorsWithUrls = colors.map(color => ({
+          ...color,
+          // If image is a path, prepend the image URL
+          image: color.image ? (color.image.startsWith('http') ? color.image : `${this.imgURL}${color.image}`) : ''
+        }));
+
+        this.colorsList.set(colorsWithUrls);
+        this.isLoadingColors.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading colors:', error);
+        this.toast.danger('Failed to load product colors', 'bottom-right', 3000);
+        this.isLoadingColors.set(false);
+      }
     });
   }
 
@@ -428,6 +454,9 @@ export class ProductList {
             return [...filtered, { colorIndex, imagePath: productImage }];
           });
         }
+      } else if (preview.file) {
+        // This is a newly uploaded image - will be handled by the main product upload
+        // For now, we'll just use the data URL as preview
       }
 
       this.selectedColorImageIndex.set(imageIndex);
@@ -529,6 +558,9 @@ export class ProductList {
     this.isSubmitted.set(true);
 
     const formData = new FormData();
+    formData.delete('colors');
+    formData.delete('productColors');
+
 
     // Append all basic fields
     Object.entries(formValue).forEach(([key, value]) => {
@@ -536,12 +568,24 @@ export class ProductList {
       if (key === 'itemId') {
         value = Number(value);
       }
+      // images array should be sent key value[0], key value[1]... and so on
+      if (key === 'images') {
+        if (Array.isArray(value)) {
+          value.forEach((img: any) => {
+            formData.append(`images`, img);
+          });
+        }
+        return;
+
+      }
       if (value !== null && value !== undefined && value !== '') {
         formData.append(key, String(value));
       }
     });
 
     // first remove then Append isActive as numeric value (1 or 0)
+    formData.delete('colors');
+    formData.delete('productColors');
     formData.delete('isActive');
     formData.append('isActive', formValue.isActive ? '1' : '0');
 
@@ -556,42 +600,12 @@ export class ProductList {
       formData.append('ImageFiles', file);
     });
 
-    // Append colors with special handling for existing product images
-    const colorsData = this.colorsList().map((color, index) => {
-      // Check if this color uses an existing product image
-      const imageRef = this.colorImageReferences().find(r => r.colorIndex === index);
-      if (imageRef) {
-        return {
-          colorName: color.colorName,
-          image: imageRef.imagePath // Use the existing image path
-        };
-      }
-      return {
-        colorName: color.colorName,
-        image: color.image && !color.image.startsWith('data:') ? color.image : ''
-      };
-    });
-
-    formData.append('Colors', JSON.stringify(colorsData));
-
-    // Append colors
-    // if (this.colorsList().length > 0) {
-    //   const colorsData = this.colorsList().map(color => ({
-    //     colorName: color.colorName,
-    //     image: color.image && !color.image.startsWith('data:') ? color.image : ''
-    //   }));
-
-    //   formData.append('Colors', JSON.stringify(colorsData));
-
-    //   // Append color image files
-    //   this.colorsFiles().forEach(({ file }) => {
-    //     formData.append('ColorImages', file);
-    //   });
-    // }
-
     // Append related products
     if (this.relatedProductsList().length > 0) {
-      formData.append('RelatedProducts', JSON.stringify(this.relatedProductsList()));
+      this.relatedProductsList().forEach((id: any) => {
+        formData.append(`relatedProducts`, String(id));
+      });
+      return;
     }
 
     const request$ = this.selected()
@@ -600,10 +614,29 @@ export class ProductList {
 
     request$.subscribe({
       next: () => {
-        this.loadProducts();
-        this.onToggleList();
-        this.toast.success('Product saved successfully!', 'bottom-right', 5000);
-        this.isSubmitted.set(false);
+        // After product is saved, save colors if any      
+        if (this.selected()) {
+          this.saveColors(this.selected()!.id).subscribe({
+            next: () => {
+              this.loadProducts();
+              this.onToggleList();
+              this.toast.success('Product and colors saved successfully!', 'bottom-right', 5000);
+              this.isSubmitted.set(false);
+            },
+            error: (colorError) => {
+              console.error('Error saving colors:', colorError);
+              this.toast.success('Product saved but colors failed to save', 'bottom-right', 5000);
+              this.loadProducts();
+              this.onToggleList();
+              this.isSubmitted.set(false);
+            }
+          });
+        } else {
+          this.loadProducts();
+          this.onToggleList();
+          this.toast.success('Product saved successfully!', 'bottom-right', 5000);
+          this.isSubmitted.set(false);
+        }
       },
       error: (error) => {
         this.isSubmitted.set(false);
@@ -656,11 +689,10 @@ export class ProductList {
     }
 
     // Set colors
-    if (product.colors) {
-      const parsed: any[] = JSON.parse(product.colors as any);
-      console.log(parsed);
-      this.colorsList.set(product.colors);
-    }
+
+
+    // Load colors from API
+    this.loadProductColors(product.id);
 
     // Set main image preview
     if (product.imageUrl) {
@@ -685,10 +717,76 @@ export class ProductList {
     this.selectedFile.set(null);
     this.multipleFiles.set([]);
     this.colorsFiles.set([]);
+    this.colorImageReferences.set([]);
     this.clearFileInput();
     this.clearMultipleFileInput();
     this.activeTab.set('basic');
     this.showList.set(false);
+  }
+
+  // Add method to save colors separately
+  saveColors(productId: number): Observable<any> {
+    // Prepare colors data according to API format
+    const colorsData = this.colorsList().map((color, index) => {
+      // Check if this color uses an existing product image
+      const imageRef = this.colorImageReferences().find(r => r.colorIndex === index);
+
+      if (imageRef) {
+        // Use existing image path
+        return {
+          colorName: color.colorName || '',
+          image: imageRef.imagePath
+        };
+      } else if (color.image && !color.image.startsWith('data:')) {
+        // This is an existing color with a server path
+        // Extract just the filename/path without the base URL
+        let imagePath = color.image;
+
+        // Remove base URL if present
+        if (this.imgURL && color.image.startsWith(this.imgURL)) {
+          imagePath = color.image.replace(this.imgURL, '');
+        }
+
+        // Remove any leading slashes
+        imagePath = imagePath.replace(/^\/+/, '');
+
+        return {
+          colorName: color.colorName || '',
+          image: imagePath
+        };
+      } else if (color.image && color.image.startsWith('data:')) {
+        // This is a new image with data URL - we need to upload it first
+        // For now, return empty string (will need separate file upload)
+        return {
+          colorName: color.colorName || '',
+          image: '' // Empty string for new images
+        };
+      } else {
+        // Color without image
+        return {
+          colorName: color.colorName || '',
+          image: ''
+        };
+      }
+    });
+
+    // Check if colors already exist for this product
+    return this.productService.getColor(productId).pipe(
+      switchMap(existingColors => {
+        if (existingColors && existingColors.length > 0) {
+          // Update existing colors
+          return this.productService.updateColor(productId, colorsData);
+        } else {
+          // Add new colors
+          return this.productService.addColor(productId, colorsData);
+        }
+      }),
+      catchError(error => {
+        console.error('Error saving colors:', error);
+        // If getColor fails (maybe 404), try addColor
+        return this.productService.addColor(productId, colorsData);
+      })
+    );
   }
 
   /* ---------------- DELETE ---------------- */

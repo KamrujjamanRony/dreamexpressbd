@@ -16,7 +16,7 @@ export interface ProductM {
   sl: number;
   sku: string;
   sizes: string;
-  colors: any[];
+  colors: any;
   regularPrice: number;
   offerPrice: number;
   image: string;

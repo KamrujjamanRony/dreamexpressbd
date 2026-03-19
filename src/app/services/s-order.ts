@@ -16,7 +16,12 @@ export class SOrder {
     }
 
     search(from: any = '', to: any = '', orderStatus: string = ''): Observable<OrderM[]> {
-        const reqBody = { from, to, orderStatus, companyID: environment.companyCode };
+        const reqBody = { 
+            ...(from && { from }),
+            ...(to && { to }),
+            ...(orderStatus && { orderStatus }),
+            companyID: environment.companyCode 
+        };
         return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);
     }
 
@@ -38,7 +43,7 @@ export class SOrder {
     // }
 
     update(id: any, updateRequest: Partial<OrderM>): Observable<OrderM> {
-        return this.http.put<OrderM>(`${this.apiUrl}/${id}`, updateRequest);
+        return this.http.patch<OrderM>(`${this.apiUrl}/${id}`, updateRequest);
     }
 
     delete(id: any): Observable<OrderM> {
