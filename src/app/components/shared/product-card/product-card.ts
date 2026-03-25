@@ -1,5 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { SWishlist } from '../../../services/s-wishlist';
@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { BdtPipe } from "../../../pipes/bdt.pipe";
 import { CartM } from '../../../models/Cart';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-card',
@@ -16,12 +17,13 @@ import { CartM } from '../../../models/Cart';
   styleUrl: './product-card.css',
 })
 export class ProductCard {
+  product = input<any>(null);
   faHeart = faHeart;
+  imageBaseUrl = environment.ImageApi;
   authCookieService = inject(SAuthCookie);
   wishListService = inject(SWishlist);
   cartService = inject(SCart);
   router = inject(Router);
-  @Input() product: any;
   user = this.authCookieService.getUserData();
 
   // Function to generate an array of stars based on average rating
@@ -40,7 +42,7 @@ export class ProductCard {
 
     const favoriteProduct = {
       id: crypto.randomUUID(),  // Generate a unique ID for the product
-      productId: product.id
+      productId: product().id
     };
 
     if (this.user?.uid) {
@@ -101,10 +103,10 @@ export class ProductCard {
   }
 
   addToCart(product: any) {
-    const price = product?.offerPrice || product?.price || 0;
+    const price = product()?.offerPrice || product()?.price || 0;
     const cartProduct = {
       id: Math.floor(Math.random() * 1000000),
-      productId: product?.id,
+      productId: product()?.id,
       quantity: 1,
       selectSize: '',
       selectColor: '',
