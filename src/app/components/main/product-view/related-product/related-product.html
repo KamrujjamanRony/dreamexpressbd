@@ -1,5 +1,5 @@
 <!-- Related Products -->
-@if (relatedProducts.length > 0) {
+@if (relatedProduct().length > 0) {
   <div class="mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
     <div class="flex items-center gap-3 mb-6">
       <div class="w-1 h-8 bg-purple-600 rounded-full"></div>
@@ -18,7 +18,7 @@
       [breakpoints]="breakpoints"
       speed="600"
     >
-      @for (product of relatedProducts; track product.id) {
+      @for (product of relatedProduct(); track product.id) {
         <swiper-slide>
           <div class="h-full pb-2">
             <app-product-card [product]="product"></app-product-card>

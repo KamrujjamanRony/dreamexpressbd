@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, Input } from '@angular/core';
 import { ProductCard } from '../../../shared/product-card/product-card';
 
 @Component({
@@ -9,18 +9,19 @@ import { ProductCard } from '../../../shared/product-card/product-card';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RelatedProduct {
-  @Input() currentProduct: any;
-  @Input() allProducts: any[] = [];
+  currentProduct = input<any>(null);
+  allProducts = input<any[]>([]);
 
-  get relatedProducts() {
-    if (!this.currentProduct?.relatedProducts || !this.allProducts?.length) {
+  // Get related products based on the current product's relatedProducts array
+  relatedProduct = computed(() => {
+     if (!this.currentProduct()?.relatedProducts || !this.allProducts()?.length) {
       return [];
     }
-    return this.allProducts.filter(product =>
-      this.currentProduct.relatedProducts.includes(product.id) &&
-      product.id !== this.currentProduct.id
+    return this.allProducts().filter(product =>
+      this.currentProduct()?.relatedProducts.includes(product.id) &&
+      product.id !== this.currentProduct()?.id
     );
-  }
+  });
 
   breakpoints = {
     480: { slidesPerView: 2, spaceBetween: 15 },
