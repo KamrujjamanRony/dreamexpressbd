@@ -1,32 +1,43 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject, Input, Renderer2 } from '@angular/core';
+import { Component, inject, input, Renderer2 } from '@angular/core';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 import { SCart } from '../../../../services/s-cart';
 import { SWishlist } from '../../../../services/s-wishlist';
 import { SAuthCookie } from '../../../../services/s-auth-cookie';
 import { Router } from '@angular/router';
 import { CartM, CartProductM } from '../../../../models/Cart';
+import { environment } from '../../../../../environments/environment';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faShoppingBag, faMinus, faPlus, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-view-image',
-  imports: [CommonModule, BdtPipe, NgOptimizedImage],
+  imports: [CommonModule, BdtPipe, NgOptimizedImage, FontAwesomeModule],
   templateUrl: './view-image.html',
   styleUrl: './view-image.css',
 })
 export class ViewImage {
+  product = input<any>(null);
   cartService = inject(SCart);
   wishListService = inject(SWishlist);
   authCookieService = inject(SAuthCookie);
   renderer = inject(Renderer2);
   router = inject(Router);
-  @Input() product: any;
-  count: any = 1;
+  imgBaseUrl = environment.ImageApi;
+  count: number = 1;
   viewImage: any;
   viewSize: any;
   viewColor: any;
   warningMsg: any;
   zoomStyle = {};
   user = this.authCookieService.getUserData();
+
+  faHeart = faHeart;
+  faShoppingBag = faShoppingBag;
+  faMinus = faMinus;
+  faPlus = faPlus;
+  faShareAlt = faShareAlt;
 
   ngOnInit() {
     this.scrollToTop();
@@ -36,32 +47,71 @@ export class ViewImage {
     this.warningMsg = null;
   }
 
+  get mainImage(): string {
+    return this.viewImage || this.imgBaseUrl + this.product()?.imageUrl;
+  }
+
+  /** All gallery images: [main, ...images, ...colorImages] */
+  get galleryImages(): string[] {
+    const images: string[] = [];
+    if (this.product()?.imageUrl) {
+      images.push(this.imgBaseUrl + this.product()?.imageUrl);
+    }
+    if (this.product()?.images?.length) {
+      for (const img of this.product()?.images) {
+        images.push(this.imgBaseUrl + img);
+      }
+    }
+    return images;
+  }
+
+  /** Parse sizes from comma-separated string or array */
+  get sizeOptions(): string[] {
+    if (!this.product()?.sizes) return [];
+    if (Array.isArray(this.product()?.sizes)) return this.product()?.sizes;
+    return this.product()?.sizes.split(',').map((s: string) => s.trim()).filter((s: string) => s);
+  }
+
+  /** Get product colors array (handles both productColors and productsColors) */
+  get colorOptions(): any[] {
+    return this.product()?.productColors || this.product()?.productsColors || [];
+  }
+
+  /** Discount percentage */
+  get discountPercent(): number {
+    if (this.product()?.discount) return this.product()?.discount;
+    if (this.product()?.offerPrice > 0 && this.product()?.regularPrice > 0) {
+      return Math.round(((this.product()?.regularPrice - this.product()?.offerPrice) / this.product()?.regularPrice) * 100);
+    }
+    return 0;
+  }
+
   increase() {
     this.count++;
   }
 
   decrease() {
-    this.count--;
+    if (this.count > 1) this.count--;
   }
 
-  onViewImageClick(img: any) {
+  onViewImageClick(img: string) {
     this.viewImage = img;
   }
-  onViewSizeClick(size: any) {
-    this.viewSize = size;
+
+  onViewSizeClick(size: string) {
+    this.viewSize = this.viewSize === size ? null : size;
   }
+
   onViewColorClick(color: any) {
-    this.viewColor = color;
-  }
-
-  trackByColor(index: number, color: string): string {
-    return color;
-  }
-
-  // Function to generate an array of stars based on average rating
-  getStarsArray(averageRating: number): boolean[] {
-    const roundedRating = Math.round(averageRating * 2) / 2;
-    return Array.from({ length: 5 }, (_, index) => index < roundedRating);
+    if (this.viewColor?.colorName === color.colorName) {
+      this.viewColor = null;
+      this.viewImage = null;
+    } else {
+      this.viewColor = color;
+      if (color.image) {
+        this.viewImage = this.imgBaseUrl + color.image;
+      }
+    }
   }
 
   onMouseMove(event: MouseEvent): void {
@@ -80,7 +130,6 @@ export class ViewImage {
     const xPercent = (x / containerRect.width) * 100;
     const yPercent = (y / containerRect.height) * 100;
 
-    // Ensure the zoom box stays within the image boundaries
     const zoomBoxWidth = zoom.offsetWidth;
     const zoomBoxHeight = zoom.offsetHeight;
     const zoomBoxLeft = Math.max(0, Math.min(x - zoomBoxWidth / 2, containerRect.width - zoomBoxWidth));
@@ -97,9 +146,7 @@ export class ViewImage {
   }
 
   onMouseLeave(): void {
-    this.zoomStyle = {
-      display: 'none',
-    };
+    this.zoomStyle = { display: 'none' };
   }
 
   addToCart(product: any) {
@@ -107,7 +154,7 @@ export class ViewImage {
       id: crypto.randomUUID(),
       productId: product.id,
       ...(this.viewSize && { selectSize: this.viewSize }),
-      ...(this.viewColor && { selectColor: this.viewColor }),
+      ...(this.viewColor && { selectColor: this.viewColor.colorName }),
       quantity: this.count
     };
 
