@@ -1,8 +1,11 @@
 // order-form.component.ts
-import { Component, EventEmitter, Input, Output, signal, computed, effect, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, computed, effect, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
 import { OrderM } from '../../../../models/OrderM';
+import { TokenM } from '../../../../models/TokenM';
+import { SToken } from '../../../../services/s-token';
 import { environment } from '../../../../../environments/environment';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 
@@ -14,6 +17,10 @@ interface OrderFormModel {
   userPhone: string;
   subtotal: number;
   deliveryCharge: number;
+  discountToken: string;
+  discountType: string;
+  discountValue: number;
+  discountAmount: number;
   totalAmount: number;
   paymentMethod: string;
   orderStatus: string;
@@ -29,7 +36,7 @@ interface OrderFormModel {
 
 @Component({
   selector: 'app-order-form',
-  imports: [CommonModule, FormField, BdtPipe],
+  imports: [CommonModule, FormsModule, FormField, BdtPipe],
   templateUrl: './order-form.html',
   styleUrl: './order-form.css',
 })
@@ -41,6 +48,14 @@ export class OrderForm implements OnChanges {
   @Output() submitForm = new EventEmitter<Partial<OrderM>>();
   @Output() cancel = new EventEmitter<void>();
 
+  private tokenService = inject(SToken);
+
+  // Discount token state
+  tokenCode = '';
+  tokenError = '';
+  tokenApplied = signal(false);
+  tokenLoading = false;
+
   /* ---------------- FORM MODEL ---------------- */
   model = signal<OrderFormModel>({
     companyID: environment.companyCode,
@@ -50,6 +65,10 @@ export class OrderForm implements OnChanges {
     userPhone: '',
     subtotal: 0,
     deliveryCharge: 60,
+    discountToken: '',
+    discountType: '',
+    discountValue: 0,
+    discountAmount: 0,
     totalAmount: 0,
     paymentMethod: 'CashOnDelivery',
     orderStatus: 'Pending',
@@ -123,14 +142,27 @@ export class OrderForm implements OnChanges {
   /* ---------------- COMPUTED VALUES ---------------- */
   totalAmount = computed(() => {
     const m = this.model();
-    return (m.subtotal || 0) + (m.deliveryCharge || 0);
+    return (m.subtotal || 0) + (m.deliveryCharge || 0) - (m.discountAmount || 0);
   });
 
   /* ---------------- EFFECTS ---------------- */
   constructor() {
+    // Sync totalAmount back to model
     effect(() => {
       const total = this.totalAmount();
       this.model.update(m => ({ ...m, totalAmount: total }));
+    });
+
+    // Auto-calculate delivery charge based on district
+    effect(() => {
+      const district = this.form.shippingAddress.district().value().toLowerCase();
+      if (!district) return;
+
+      const charge = district.includes('dhaka') ? 60 : 120;
+      // Only update if token doesn't grant free delivery
+      if (!this.tokenApplied() || this.model().discountType !== 'FreeDelivery') {
+        this.model.update(m => ({ ...m, deliveryCharge: charge }));
+      }
     });
   }
 
@@ -154,6 +186,10 @@ export class OrderForm implements OnChanges {
       userPhone: this.selectedOrder.userPhone || '',
       subtotal: this.selectedOrder.subtotal || 0,
       deliveryCharge: this.selectedOrder.deliveryCharge || 60,
+      discountToken: this.selectedOrder.discountToken || '',
+      discountType: this.selectedOrder.discountType || '',
+      discountValue: this.selectedOrder.discountValue || 0,
+      discountAmount: this.selectedOrder.discountAmount || 0,
       totalAmount: this.selectedOrder.totalAmount || 0,
       paymentMethod: this.selectedOrder.paymentMethod || 'CashOnDelivery',
       orderStatus: this.selectedOrder.orderStatus || 'Pending',
@@ -167,6 +203,11 @@ export class OrderForm implements OnChanges {
       }
     });
 
+    if (this.selectedOrder.discountToken) {
+      this.tokenCode = this.selectedOrder.discountToken;
+      this.tokenApplied.set(true);
+    }
+
     this.form().reset();
   }
 
@@ -179,6 +220,10 @@ export class OrderForm implements OnChanges {
       userPhone: '',
       subtotal: 0,
       deliveryCharge: 60,
+      discountToken: '',
+      discountType: '',
+      discountValue: 0,
+      discountAmount: 0,
       totalAmount: 0,
       paymentMethod: 'CashOnDelivery',
       orderStatus: 'Pending',
@@ -192,6 +237,9 @@ export class OrderForm implements OnChanges {
       }
     });
 
+    this.tokenCode = '';
+    this.tokenError = '';
+    this.tokenApplied.set(false);
     this.form().reset();
   }
 
@@ -209,13 +257,103 @@ export class OrderForm implements OnChanges {
       id: this.selectedOrder?.id,
       orderDate: formValue.orderDate || new Date().toISOString(),
       orderItems: this.selectedOrder?.orderItems || [],
-      discountToken: this.selectedOrder?.discountToken,
-      discountType: this.selectedOrder?.discountType,
-      discountValue: this.selectedOrder?.discountValue,
-      discountAmount: this.selectedOrder?.discountAmount,
     };
 
     this.submitForm.emit(orderData);
+  }
+
+  /* ---------------- DISCOUNT TOKEN ---------------- */
+  applyToken() {
+    const code = this.tokenCode.trim();
+    if (!code) {
+      this.tokenError = 'Please enter a token code';
+      return;
+    }
+
+    this.tokenLoading = true;
+    this.tokenError = '';
+
+    this.tokenService.search().subscribe({
+      next: (tokens: TokenM[]) => {
+        const token = tokens.find(t =>
+          t.code.toLowerCase() === code.toLowerCase() && t.isActive && t.usedCount < t.maxUseCount
+        );
+
+        if (!token) {
+          this.tokenError = 'Invalid or expired token';
+          this.tokenLoading = false;
+          return;
+        }
+
+        const now = new Date();
+        if (new Date(token.expireAt) < now) {
+          this.tokenError = 'This token has expired';
+          this.tokenLoading = false;
+          return;
+        }
+
+        // Apply token
+        const subtotal = this.model().subtotal;
+        let discountAmount = 0;
+        let discountType = token.type;
+
+        if (token.type === 'FreeDelivery') {
+          // Free delivery
+          this.model.update(m => ({
+            ...m,
+            deliveryCharge: 0,
+            discountToken: token.code,
+            discountType: 'FreeDelivery',
+            discountValue: token.value,
+            discountAmount: 0
+          }));
+        } else if (token.type === 'Percentage') {
+          discountAmount = Math.round((subtotal * token.value) / 100);
+          this.model.update(m => ({
+            ...m,
+            discountToken: token.code,
+            discountType: 'Percentage',
+            discountValue: token.value,
+            discountAmount
+          }));
+        } else {
+          // Fixed amount
+          discountAmount = Math.min(token.value, subtotal);
+          this.model.update(m => ({
+            ...m,
+            discountToken: token.code,
+            discountType: 'Fixed',
+            discountValue: token.value,
+            discountAmount
+          }));
+        }
+
+        this.tokenApplied.set(true);
+        this.tokenLoading = false;
+      },
+      error: () => {
+        this.tokenError = 'Failed to validate token';
+        this.tokenLoading = false;
+      }
+    });
+  }
+
+  removeToken() {
+    const district = this.form.shippingAddress.district().value().toLowerCase();
+    const charge = district.includes('dhaka') ? 60 : 120;
+
+    this.model.update(m => ({
+      ...m,
+      deliveryCharge: charge,
+      discountToken: '',
+      discountType: '',
+      discountValue: 0,
+      discountAmount: 0
+    }));
+
+    this.tokenCode = '';
+    this.tokenError = '';
+    this.tokenApplied.set(false);
   }
 
   onCancel() {

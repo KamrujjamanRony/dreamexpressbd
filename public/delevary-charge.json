@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "Inside Dhaka",
+        "charge": 60
+    },
+    {
+        "id": 2,
+        "name": "Outside Dhaka",
+        "charge": 120
+    },
+    {
+        "id": 3,
+        "name": "Free Delivery",
+        "charge": 0
+    }
+]

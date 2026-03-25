@@ -7,6 +7,8 @@ import { SCart } from '../../../services/s-cart';
 import { SOrder } from '../../../services/s-order';
 import { SCustomer } from '../../../services/s-customer';
 import { SSetting } from '../../../services/s-setting';
+import { SToken } from '../../../services/s-token';
+import { TokenM } from '../../../models/TokenM';
 import { environment } from '../../../../environments/environment';
 import { OrderM } from '../../../models/OrderM';
 
@@ -22,6 +24,7 @@ export class Checkout {
     private orderService = inject(SOrder);
     private usersService = inject(SCustomer);
     private siteSettingService = inject(SSetting);
+    private tokenService = inject(SToken);
     siteId = environment.companyCode;
     orderData: any;
     user: any;
@@ -33,6 +36,16 @@ export class Checkout {
     deliveryAddress = signal<any>(null);
     userAddresses = signal<any[]>([]);
     selectedAddressId = signal<string | null>(null);
+
+    // Discount token
+    tokenCode = '';
+    tokenError = '';
+    tokenApplied = signal(false);
+    tokenLoading = false;
+    discountToken = signal<string>('');
+    discountType = signal<string>('');
+    discountValue = signal<number>(0);
+    discountAmount = signal<number>(0);
 
     // For address modal
     showAddressModal = false;
@@ -55,21 +68,93 @@ export class Checkout {
     }
 
     private calculateDeliveryCharge() {
-        this.siteSettingService.get(this.siteId).subscribe({
-            next: (charges) => {
-                if (charges && charges.deliveryCharges.length > 0) {
-                    if (this.deliveryAddress() && this.deliveryAddress().district.includes('Dhaka')) {
-                        this.deliveryCharge.set(charges.deliveryCharges[0]?.amount || 0);
-                    } else {
-                        this.deliveryCharge.set(charges.deliveryCharges[1]?.amount || 0);
-                    }
+        if (this.tokenApplied() && this.discountType() === 'FreeDelivery') {
+            this.deliveryCharge.set(0);
+            return;
+        }
+
+        const district = this.deliveryAddress()?.district || '';
+        if (district.toLowerCase().includes('dhaka')) {
+            this.deliveryCharge.set(60); // Inside Dhaka
+        } else {
+            this.deliveryCharge.set(120); // Outside Dhaka
+        }
+    }
+
+    applyToken() {
+        const code = this.tokenCode.trim();
+        if (!code) {
+            this.tokenError = 'Please enter a token code';
+            return;
+        }
+
+        this.tokenLoading = true;
+        this.tokenError = '';
+
+        this.tokenService.search().subscribe({
+            next: (tokens: TokenM[]) => {
+                const token = tokens.find(t =>
+                    t.code.toLowerCase() === code.toLowerCase() && t.isActive && t.usedCount < t.maxUseCount
+                );
+
+                if (!token) {
+                    this.tokenError = 'Invalid or expired token';
+                    this.tokenLoading = false;
+                    return;
                 }
+
+                const now = new Date();
+                if (new Date(token.expireAt) < now) {
+                    this.tokenError = 'This token has expired';
+                    this.tokenLoading = false;
+                    return;
+                }
+
+                const subtotal = this.orderData?.subtotal || 0;
+
+                if (token.type === 'FreeDelivery') {
+                    this.discountToken.set(token.code);
+                    this.discountType.set('FreeDelivery');
+                    this.discountValue.set(token.value);
+                    this.discountAmount.set(0);
+                    this.deliveryCharge.set(0);
+                } else if (token.type === 'Percentage') {
+                    const amount = Math.round((subtotal * token.value) / 100);
+                    this.discountToken.set(token.code);
+                    this.discountType.set('Percentage');
+                    this.discountValue.set(token.value);
+                    this.discountAmount.set(amount);
+                } else {
+                    const amount = Math.min(token.value, subtotal);
+                    this.discountToken.set(token.code);
+                    this.discountType.set('Fixed');
+                    this.discountValue.set(token.value);
+                    this.discountAmount.set(amount);
+                }
+
+                this.tokenApplied.set(true);
+                this.tokenLoading = false;
             },
-            error: (err) => {
-                console.error('Failed to load delivery charges:', err);
-                this.deliveryCharge.set(0);
+            error: () => {
+                this.tokenError = 'Failed to validate token';
+                this.tokenLoading = false;
             }
         });
+    }
+
+    removeToken() {
+        this.discountToken.set('');
+        this.discountType.set('');
+        this.discountValue.set(0);
+        this.discountAmount.set(0);
+        this.tokenCode = '';
+        this.tokenError = '';
+        this.tokenApplied.set(false);
+        this.calculateDeliveryCharge();
+    }
+
+    getOrderTotal(): number {
+        return (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount();
     }
 
     loadUserDetails(userId: string) {
@@ -80,22 +165,7 @@ export class Checkout {
                 this.userAddresses.set(Array.isArray(data.address) ? data.address : []);
                 this.setDefaultAddress();
                 this.loading = false;
-
-                this.siteSettingService.get(this.siteId).subscribe({
-                    next: (charges) => {
-                        if (charges && charges.deliveryCharges.length > 0) {
-                            if (this.deliveryAddress() && this.deliveryAddress().district.includes('Dhaka')) {
-                                this.deliveryCharge.set(charges.deliveryCharges[0]?.amount || 0);
-                            } else {
-                                this.deliveryCharge.set(charges.deliveryCharges[1]?.amount || 0);
-                            }
-                        }
-                    },
-                    error: (err) => {
-                        console.error('Failed to load delivery charges:', err);
-                        this.deliveryCharge.set(0); // Fallback to 0 if there's an error
-                    }
-                });
+                this.calculateDeliveryCharge();
             },
             error: (err) => {
                 console.error('Failed to load user details:', err);
@@ -224,14 +294,14 @@ export class Checkout {
             orderItems,
             subtotal: this.orderData.subtotal || 0,
             deliveryCharge: this.deliveryCharge() || 0,
-            totalAmount: this.orderData.subtotal + this.deliveryCharge() || 0,
+            totalAmount: this.getOrderTotal(),
             paymentMethod: this.paymentMethod || 'Cash on Delivery',
             orderStatus: 'Pending',
             companyID: this.siteId,
-            discountToken: '',
-            discountType: '',
-            discountValue: 0,
-            discountAmount: 0,
+            discountToken: this.discountToken(),
+            discountType: this.discountType(),
+            discountValue: this.discountValue(),
+            discountAmount: this.discountAmount(),
             shippingAddress: {
                 // id: this.deliveryAddress().id,
                 district: this.deliveryAddress().district || '',

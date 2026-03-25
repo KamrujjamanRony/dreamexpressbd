@@ -29,7 +29,10 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm text-gray-600 dark:text-gray-400">Total Revenue</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalRevenue() | bdt }}</p>
+          <p
+            class="text-2xl font-bold text-gray-900 dark:text-white"
+            [innerHTML]="totalRevenue() | bdt"
+          ></p>
         </div>
         <fa-icon [icon]="faCheckCircle" class="text-3xl text-green-500"></fa-icon>
       </div>
@@ -117,6 +120,13 @@
         <fa-icon [icon]="faDownload" class="mr-2"></fa-icon>
         Export CSV
       </button>
+      <button
+        (click)="exportToPDF()"
+        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
+        <fa-icon [icon]="faDownload" class="mr-2"></fa-icon>
+        Export PDF
+      </button>
     </div>
   </div>
 
@@ -199,9 +209,8 @@
                 </td>
                 <td
                   class="px-6 py-4 whitespace-nowrap text-sm font-bold text-emerald-600 dark:text-emerald-400"
-                >
-                  {{ order.totalAmount | bdt }}
-                </td>
+                  [innerHTML]="order.totalAmount | bdt"
+                ></td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{

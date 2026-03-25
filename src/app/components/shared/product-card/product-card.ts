@@ -101,14 +101,15 @@ export class ProductCard {
   }
 
   addToCart(product: any) {
+    const price = product?.offerPrice || product?.price || 0;
     const cartProduct = {
       id: Math.floor(Math.random() * 1000000),
       productId: product?.id,
       quantity: 1,
       selectSize: '',
       selectColor: '',
-      price: product?.price || 0,
-      totalPrice: product?.price || 0
+      price: price,
+      totalPrice: price
     };
 
     if (this.user?.uid) {

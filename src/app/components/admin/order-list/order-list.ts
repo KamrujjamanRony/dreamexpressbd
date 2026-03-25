@@ -2,8 +2,8 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { 
-  faEye, faPencil, faTrash, faSearch, 
+import {
+  faEye, faPencil, faTrash, faSearch,
   faFilter, faDownload, faSync, faCheckCircle,
   faTimesCircle, faTruck, faClock
 } from '@fortawesome/free-solid-svg-icons';
@@ -62,23 +62,23 @@ export class OrderList implements OnInit {
   // Computed filtered orders
   filteredOrders = computed(() => {
     let result = this.orders();
-    
+
     // Filter by search query
     const query = this.searchQuery().toLowerCase();
     if (query) {
-      result = result.filter(order => 
+      result = result.filter(order =>
         order.userName?.toLowerCase().includes(query) ||
         order.userEmail?.toLowerCase().includes(query) ||
         order.userPhone?.includes(query) ||
         order.id?.toString().includes(query)
       );
     }
-    
+
     // Filter by status
     if (this.selectedStatus()) {
       result = result.filter(order => order.orderStatus === this.selectedStatus());
     }
-    
+
     // Filter by date range
     if (this.dateFrom()) {
       result = result.filter(order => order.orderDate >= this.dateFrom());
@@ -86,22 +86,22 @@ export class OrderList implements OnInit {
     if (this.dateTo()) {
       result = result.filter(order => order.orderDate <= this.dateTo());
     }
-    
+
     // Sort by date (newest first)
-    return result.sort((a, b) => 
+    return result.sort((a, b) =>
       new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
     );
   });
 
   // Statistics
   totalOrders = computed(() => this.filteredOrders().length);
-  totalRevenue = computed(() => 
+  totalRevenue = computed(() =>
     this.filteredOrders().reduce((sum, order) => sum + (order.totalAmount || 0), 0)
   );
-  pendingOrders = computed(() => 
+  pendingOrders = computed(() =>
     this.filteredOrders().filter(o => o.orderStatus === 'Pending').length
   );
-  deliveredOrders = computed(() => 
+  deliveredOrders = computed(() =>
     this.filteredOrders().filter(o => o.orderStatus === 'Delivered').length
   );
 
@@ -227,7 +227,7 @@ export class OrderList implements OnInit {
   updateOrderStatus(order: OrderM, newStatus: string) {
     this.orderService.update(order.id!, { orderStatus: newStatus }).subscribe({
       next: (updatedOrder) => {
-        this.orders.update(orders => 
+        this.orders.update(orders =>
           orders.map(o => o.id === order.id ? updatedOrder : o)
         );
         this.toast.success(`Order status updated to ${newStatus}`, 'bottom-right', 3000);
@@ -250,7 +250,7 @@ export class OrderList implements OnInit {
       next: (savedOrder) => {
         if (orderData.id) {
           // Update existing order
-          this.orders.update(orders => 
+          this.orders.update(orders =>
             orders.map(o => o.id === savedOrder.id ? savedOrder : o)
           );
           this.toast.success('Order updated successfully!', 'bottom-right', 3000);
@@ -265,8 +265,8 @@ export class OrderList implements OnInit {
       error: (error) => {
         console.error('Error saving order:', error);
         this.toast.danger(
-          error?.error?.message || 'Failed to save order', 
-          'bottom-right', 
+          error?.error?.message || 'Failed to save order',
+          'bottom-right',
           3000
         );
         this.isSubmitted.set(false);
@@ -308,5 +308,66 @@ export class OrderList implements OnInit {
     a.download = `orders_${new Date().toISOString()}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  // Export to PDF
+  exportToPDF() {
+    const orders = this.filteredOrders();
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const rows = orders.map(order => `
+      <tr>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center">#${order.id}</td>
+        <td style="padding:8px;border:1px solid #ddd">${order.userName}</td>
+        <td style="padding:8px;border:1px solid #ddd">${order.userEmail}</td>
+        <td style="padding:8px;border:1px solid #ddd">${order.userPhone}</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:right">৳ ${(order.subtotal || 0).toFixed(2)}</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:right">৳ ${(order.deliveryCharge || 0).toFixed(2)}</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold">৳ ${(order.totalAmount || 0).toFixed(2)}</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center">${order.orderStatus}</td>
+        <td style="padding:8px;border:1px solid #ddd">${new Date(order.orderDate).toLocaleDateString()}</td>
+      </tr>
+    `).join('');
+
+    const totalRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Orders Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+          h1 { color: #059669; margin-bottom: 4px; }
+          .meta { color: #666; font-size: 14px; margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; font-size: 13px; }
+          th { padding: 10px 8px; border: 1px solid #ddd; background: #059669; color: white; text-align: left; }
+          .summary { margin-top: 16px; text-align: right; font-size: 16px; }
+          .summary strong { color: #059669; }
+          @media print { body { margin: 0; } }
+        </style>
+      </head>
+      <body>
+        <h1>Dream Express BD - Orders Report</h1>
+        <p class="meta">Generated: ${new Date().toLocaleString()} | Total Orders: ${orders.length}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Customer</th><th>Email</th><th>Phone</th>
+              <th style="text-align:right">Subtotal</th><th style="text-align:right">Delivery</th>
+              <th style="text-align:right">Total</th><th style="text-align:center">Status</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p class="summary">Total Revenue: <strong>৳ ${totalRevenue.toFixed(2)}</strong></p>
+        <script>window.onload = function() { window.print(); }</script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
   }
 }
