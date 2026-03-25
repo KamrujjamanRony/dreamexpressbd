@@ -2,7 +2,7 @@
 <header
   class="flex bg-purple-300 border-b border-purple-400 py-1 sm:px-6 px-4 min-h-18.75 tracking-wide relative z-50 dark:bg-purple-800 dark:border-purple-700"
 >
-  <div class="flex max-w-7xl mx-auto w-full">
+  <div class="flex max-w-8xl mx-auto w-full">
     <div class="flex flex-wrap items-center lg:gap-y-2 gap-4 w-full">
       <!-- logo -->
       <a routerLink="/" class="max-sm:hidden">
@@ -149,7 +149,8 @@
         <div
           class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-200 focus-within:border-purple-500 rounded-full px-4 py-2 overflow-hidden max-w-52 max-lg:hidden dark:bg-purple-700 dark:border-purple-500 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-500"
         >
-          <input autocomplete="off"
+          <input
+            autocomplete="off"
             type="text"
             [formControl]="searchControl"
             (focus)="onSearchFocus()"
@@ -299,7 +300,7 @@
 <div
   class="hidden lg:block bg-purple-100 border-b border-purple-200 dark:bg-purple-700 dark:border-purple-600"
 >
-  <div class="max-w-7xl mx-auto px-6">
+  <div class="max-w-8xl mx-auto px-6">
     <div class="flex items-center space-x-6 py-2">
       <span class="text-sm font-semibold text-purple-700 dark:text-purple-100">Categories:</span>
       @for (item of categories.slice(0, 8); track item?.id) {
@@ -344,7 +345,8 @@
   <div
     class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-300 focus-within:border-purple-400 rounded-full px-4 py-1 overflow-hidden dark:bg-purple-500 dark:border-purple-300 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-400"
   >
-    <input autocomplete="off"
+    <input
+      autocomplete="off"
       type="text"
       [formControl]="searchControl"
       (focus)="onSearchFocus()"

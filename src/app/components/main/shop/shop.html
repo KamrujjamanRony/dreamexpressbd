@@ -1,6 +1,6 @@
 <section>
   <!-- shop wrapper -->
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
+  <div class="max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
     <div class="hidden md:block bg-white px-4 pb-6 shadow rounded overflow-hidden min-w-64">
       <div class="divide-y divide-gray-300">
@@ -24,7 +24,8 @@
             <div
               class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
             >
-              <input autocomplete="off"
+              <input
+                autocomplete="off"
                 type="text"
                 [ngModel]="categorySearch()"
                 (ngModelChange)="categorySearch.set($event)"
@@ -71,7 +72,8 @@
             <div
               class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
             >
-              <input autocomplete="off"
+              <input
+                autocomplete="off"
                 type="text"
                 [ngModel]="brandSearch()"
                 (ngModelChange)="brandSearch.set($event)"
@@ -123,7 +125,8 @@
               ></div>
             </div>
 
-            <input autocomplete="off"
+            <input
+              autocomplete="off"
               type="range"
               [min]="priceMin()"
               [max]="priceMax()"
@@ -132,7 +135,8 @@
               class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
-            <input autocomplete="off"
+            <input
+              autocomplete="off"
               type="range"
               [min]="priceMin()"
               [max]="priceMax()"
@@ -155,7 +159,8 @@
             <div
               class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2"
             >
-              <input autocomplete="off"
+              <input
+                autocomplete="off"
                 type="text"
                 [ngModel]="colorSearch()"
                 (ngModelChange)="colorSearch.set($event)"
@@ -316,7 +321,8 @@
     <div class="w-full">
       <!-- sorting and filter button -->
       <div class="flex items-center mb-4 gap-3 justify-end">
-        <select autocomplete="off"
+        <select
+          autocomplete="off"
           [ngModel]="sortValue()"
           (ngModelChange)="sortValue.set($event)"
           class="w-44 text-sm px-4 py-3 border-2 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-gray-100 dark:shadow-gray-200 dark:bg-gray-100 dark:text-gray-900"
@@ -391,7 +397,8 @@
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
                     >
-                      <input autocomplete="off"
+                      <input
+                        autocomplete="off"
                         type="text"
                         [ngModel]="categorySearch()"
                         (ngModelChange)="categorySearch.set($event)"
@@ -438,7 +445,8 @@
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
                     >
-                      <input autocomplete="off"
+                      <input
+                        autocomplete="off"
                         type="text"
                         [ngModel]="brandSearch()"
                         (ngModelChange)="brandSearch.set($event)"
@@ -490,7 +498,8 @@
                       ></div>
                     </div>
 
-                    <input autocomplete="off"
+                    <input
+                      autocomplete="off"
                       type="range"
                       [min]="priceMin()"
                       [max]="priceMax()"
@@ -499,7 +508,8 @@
                       class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:hover:bg-primary-dark [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
                     />
 
-                    <input autocomplete="off"
+                    <input
+                      autocomplete="off"
                       type="range"
                       [min]="priceMin()"
                       [max]="priceMax()"
@@ -522,7 +532,8 @@
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-50 overflow-hidden mb-4"
                     >
-                      <input autocomplete="off"
+                      <input
+                        autocomplete="off"
                         type="text"
                         [ngModel]="colorSearch()"
                         (ngModelChange)="colorSearch.set($event)"
