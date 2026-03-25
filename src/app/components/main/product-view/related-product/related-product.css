@@ -1,0 +1,26 @@
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  color: #1f2937;
+  --swiper-navigation-size: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+swiper-container::part(button-prev):hover,
+swiper-container::part(button-next):hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  swiper-container::part(button-prev),
+  swiper-container::part(button-next) {
+    width: 28px;
+    height: 28px;
+    --swiper-navigation-size: 12px;
+  }
+}

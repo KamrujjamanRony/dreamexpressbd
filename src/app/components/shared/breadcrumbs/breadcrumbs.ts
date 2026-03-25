@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-breadcrumbs',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './breadcrumbs.html',
   styleUrl: './breadcrumbs.css',
 })

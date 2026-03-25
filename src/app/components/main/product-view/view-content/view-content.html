@@ -1,61 +1,104 @@
-<div class="container pb-16 mt-4">
-  <div class="w-full pt-6">
-    <!-- table -->
-    @if (product?.specifications?.length > 0) {
-    <div>
-      <h3
-        class="border-b border-gray-200 font-roboto pb-3 font-medium mt-5 dark:border-gray-300"
-      >
-        Specifications
-      </h3>
-      <table
-        class="table-auto border-collapse w-full text-left text-sm mt-6"
-      >
-        @for(specification of product?.specifications; track specification){
-        <thead class="bg-gray-200 text-md lg:text-lg font-bold dark:bg-gray-700">
-          <th class="py-2 px-4 border border-gray-300 w-40 font-medium dark:border-gray-400">
-            {{ specification?.title }}
-          </th>
-          <td class="py-2 px-4 border border-gray-300 dark:border-gray-400"></td>
-        </thead>
-        <!-- <tr
-        class="bg-rose-400 text-white text-xl w-full font-medium !border-none"
-      >
-        <th class="py-2 px-4 border border-gray-300 w-40 font-medium">
-          {{ specification?.title }}
-        </th>
-        <td class="py-2 px-4 border border-gray-300"></td>
-      </tr> -->
-        @for (specificationContent of specification.content; track $index) {
-        <tr>
-          <th class="py-2 px-4 border border-gray-300 w-40 font-medium dark:border-gray-400">
-            {{ specificationContent?.item }}
-          </th>
-          <td class="py-2 px-4 border border-gray-300 dark:border-gray-400">
-            {{ specificationContent?.value }}
-          </td>
-        </tr>
-        } }
-      </table>
+@if (
+  product?.specifications?.length > 0 || product?.productDetails || product?.additionalInformation
+) {
+  <div class="mt-10 border-t border-gray-200 dark:border-gray-700">
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-200 dark:border-gray-700 -mt-px">
+      @if (product?.specifications?.length > 0) {
+        <button
+          type="button"
+          (click)="activeTab = 'specs'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'specs'
+              ? 'border-b-2 border-purple-600 text-purple-600'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+          "
+        >
+          Specifications
+        </button>
+      }
+      @if (product?.productDetails) {
+        <button
+          type="button"
+          (click)="activeTab = 'details'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'details'
+              ? 'border-b-2 border-purple-600 text-purple-600'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+          "
+        >
+          Product Details
+        </button>
+      }
+      @if (product?.additionalInformation) {
+        <button
+          type="button"
+          (click)="activeTab = 'info'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'info'
+              ? 'border-b-2 border-purple-600 text-purple-600'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+          "
+        >
+          Additional Info
+        </button>
+      }
     </div>
-    }
-    <!-- table end -->
-    <!-- product details -->
-    @if (product?.productDetails) {
-    <div class="mt-8">
-      <h3
-        class="border-b border-gray-200 font-roboto pb-3 font-medium dark:border-gray-400"
-      >
-        Product details
-      </h3>
-      <div class="space-y-3 whitespace-pre-line">
-        {{ product?.productDetails }}
-      </div>
-    </div>
-    }
-    <!-- product details end -->
 
-    <!-- ratting & reviews -->
-    <!-- <app-ratting-reviews [product]="product"></app-ratting-reviews> -->
+    <!-- Tab Content -->
+    <div class="py-6">
+      <!-- Specifications Tab -->
+      @if (activeTab === 'specs' && product?.specifications?.length > 0) {
+        <div class="overflow-x-auto">
+          @for (specification of product.specifications; track specification) {
+            <table class="w-full text-sm text-left mb-6">
+              <thead>
+                <tr class="bg-gray-100 dark:bg-gray-700">
+                  <th
+                    colspan="2"
+                    class="py-3 px-5 font-semibold text-gray-800 dark:text-gray-200 text-base"
+                  >
+                    {{ specification?.title }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                @for (item of specification.content; track $index) {
+                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                    <td class="py-3 px-5 font-medium text-gray-700 dark:text-gray-300 w-1/3">
+                      {{ item?.item }}
+                    </td>
+                    <td class="py-3 px-5 text-gray-600 dark:text-gray-400">
+                      {{ item?.value }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      }
+
+      <!-- Product Details Tab -->
+      @if (activeTab === 'details' && product?.productDetails) {
+        <div
+          class="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line"
+        >
+          {{ product.productDetails }}
+        </div>
+      }
+
+      <!-- Additional Info Tab -->
+      @if (activeTab === 'info' && product?.additionalInformation) {
+        <div
+          class="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line"
+        >
+          {{ product.additionalInformation }}
+        </div>
+      }
+    </div>
   </div>
-</div>
+}

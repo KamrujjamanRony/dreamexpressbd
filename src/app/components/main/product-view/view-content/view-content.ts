@@ -8,5 +8,15 @@ import { Component, Input } from '@angular/core';
 })
 export class ViewContent {
   @Input() product: any;
+  activeTab = 'specs';
 
+  ngOnInit() {
+    if (this.product?.specifications?.length > 0) {
+      this.activeTab = 'specs';
+    } else if (this.product?.productDetails) {
+      this.activeTab = 'details';
+    } else if (this.product?.additionalInformation) {
+      this.activeTab = 'info';
+    }
+  }
 }
