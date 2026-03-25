@@ -67,7 +67,7 @@
           [icon]="faSearch"
           class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
         ></fa-icon>
-        <input
+        <input autocomplete="off"
           type="text"
           (input)="onSearch($event)"
           placeholder="Search by name, email, phone or order ID..."
@@ -75,7 +75,7 @@
         />
       </div>
 
-      <select
+      <select autocomplete="off"
         (change)="onStatusFilter($event)"
         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
       >
@@ -84,14 +84,14 @@
         }
       </select>
 
-      <input
+      <input autocomplete="off"
         type="date"
         (change)="onDateFromChange($event)"
         placeholder="From Date"
         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
       />
 
-      <input
+      <input autocomplete="off"
         type="date"
         (change)="onDateToChange($event)"
         placeholder="To Date"

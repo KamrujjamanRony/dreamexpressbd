@@ -20,7 +20,7 @@
 
   <!-- Form -->
   @else {
-  <form (submit)="onSubmit($event)" class="space-y-4" enctype="multipart/form-data">
+  <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-4" enctype="multipart/form-data">
     <!-- Heading -->
     <div>
       @let heading = form.heading(); @let headingError = form.heading().invalid() &&
@@ -86,7 +86,7 @@
         @let description = form.description(); @let descriptionError = form.description().invalid()
         && form.description().touched();
         <div class="relative pb-2">
-          <textarea
+          <textarea autocomplete="off"
             id="description"
             [formField]="form.description"
             rows="2"
@@ -133,7 +133,7 @@
 
       <div>
         <div class="relative pb-2">
-          <textarea
+          <textarea autocomplete="off"
             id="description2"
             [formField]="form.description2"
             rows="2"
@@ -173,7 +173,7 @@
 
       <div>
         <div class="relative pb-2">
-          <textarea
+          <textarea autocomplete="off"
             id="description3"
             [formField]="form.description3"
             rows="2"
@@ -213,7 +213,7 @@
 
       <div>
         <div class="relative pb-2">
-          <textarea
+          <textarea autocomplete="off"
             id="description4"
             [formField]="form.description4"
             rows="2"
@@ -253,7 +253,7 @@
 
       <div>
         <div class="relative pb-2">
-          <textarea
+          <textarea autocomplete="off"
             id="description5"
             [formField]="form.description5"
             rows="2"

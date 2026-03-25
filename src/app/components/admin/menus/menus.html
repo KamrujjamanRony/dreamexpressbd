@@ -140,7 +140,7 @@
           </div>
 
           <!-- Form Fields -->
-          <form class="space-y-6" (submit)="onSubmit($event)">
+          <form autocomplete="off" class="space-y-6" (submit)="onSubmit($event)">
             <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
               <!-- menuName -->
               <div class="">
@@ -176,7 +176,7 @@
                 @let parentMenuIDError =
                   form.parentMenuID().invalid() && form.parentMenuID().touched();
                 <div class="relative pb-2">
-                  <select
+                  <select autocomplete="off"
                     [formField]="form.parentMenuID"
                     id="parentMenuID"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer dark:bg-gray-950 dark:border-gray-700"

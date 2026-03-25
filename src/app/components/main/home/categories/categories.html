@@ -18,7 +18,7 @@
         ><div class="h-full">
           <a
             [routerLink]="['/shop']"
-            [queryParams]="{ category: item.name }"
+            [queryParams]="{ category: item.itemName }"
             class="relative rounded-sm overflow-hidden group"
           >
             <img
@@ -33,7 +33,7 @@
             <a
               href="#"
               class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
-              >{{ item?.name }}</a
+              >{{ item?.itemName }}</a
             >
           </a>
         </div></swiper-slide
@@ -45,7 +45,7 @@
     @for (item of categories(); track $index) {
       <a
         [routerLink]="['/shop']"
-        [queryParams]="{ category: item.name }"
+        [queryParams]="{ category: item.itemName }"
         class="relative rounded-sm overflow-hidden group"
       >
         <img

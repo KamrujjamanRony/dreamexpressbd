@@ -43,7 +43,7 @@
           <label class="block text-sm font-medium text-gray-700"
             >Address Type</label
             >
-            <select
+            <select autocomplete="off"
               [(ngModel)]="formData.type"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
               >
@@ -57,7 +57,7 @@
           <!-- Region (Division) Selection -->
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Division*</label>
-            <select
+            <select autocomplete="off"
               [(ngModel)]="formData.region"
               (change)="onRegionChange(formData.region)"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
@@ -74,7 +74,7 @@
           <!-- City (District) Selection -->
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">District*</label>
-            <select
+            <select autocomplete="off"
               [(ngModel)]="formData.city"
               (change)="onCityChange(formData.city)"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
@@ -92,7 +92,7 @@
           <!-- Area Selection -->
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Area</label>
-            <select
+            <select autocomplete="off"
               [(ngModel)]="formData.area"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500"
               [disabled]="!formData.city"
@@ -109,7 +109,7 @@
             <label class="block text-sm font-medium text-gray-700"
               >Street Address*</label
               >
-              <input
+              <input autocomplete="off"
                 type="text"
                 [(ngModel)]="formData.street"
                 placeholder="Enter street address"
@@ -121,7 +121,7 @@
                 <label class="block text-sm font-medium text-gray-700"
                   >Contact Number*</label
                   >
-                  <input
+                  <input autocomplete="off"
                     type="tel"
                     [(ngModel)]="formData.contact"
                     placeholder="Enter contact number"

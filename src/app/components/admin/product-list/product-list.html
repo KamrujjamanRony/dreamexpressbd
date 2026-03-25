@@ -46,7 +46,7 @@
 
           <!-- Filters -->
           <div class="px-4 pb-4 grid grid-cols-1 md:grid-cols-4 gap-3">
-            <select
+            <select autocomplete="off"
               #categoryFilter
               (change)="onFilterByCategory($event)"
               class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-2.5"
@@ -57,7 +57,7 @@
               }
             </select>
 
-            <select
+            <select autocomplete="off"
               #brandFilter
               (change)="onFilterByBrand($event)"
               class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-2.5"
@@ -68,7 +68,7 @@
               }
             </select>
 
-            <select
+            <select autocomplete="off"
               #statusFilter
               (change)="onFilterByStatus($event)"
               class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-2.5"
@@ -280,7 +280,7 @@
               </nav>
             </div>
 
-            <form (submit)="onSubmit($event)">
+            <form autocomplete="off" (submit)="onSubmit($event)">
               <!-- Tab 1: Basic Info -->
               @if (activeTab() === 'basic') {
                 <div class="space-y-6">
@@ -290,7 +290,7 @@
                     <div>
                       <!-- @let itemIdField = form.itemId(); -->
                       <div class="relative pb-2">
-                        <select
+                        <select autocomplete="off"
                           [formField]="form.itemId"
                           id="itemId"
                           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
@@ -316,7 +316,7 @@
                     <div>
                       <!-- @let brandField = form.brand(); -->
                       <div class="relative pb-2">
-                        <select
+                        <select autocomplete="off"
                           [formField]="form.brand"
                           id="brand"
                           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
@@ -344,7 +344,7 @@
                     @let title = form.title();
                     @let titleError = form.title().invalid() && form.title().touched();
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.title"
                         id="title"
@@ -368,7 +368,7 @@
 
                   <!-- Description -->
                   <div class="relative pb-2">
-                    <textarea
+                    <textarea autocomplete="off"
                       id="description"
                       [formField]="form.description"
                       rows="3"
@@ -385,7 +385,7 @@
                   <!-- Model and Origin Row -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.model"
                         id="model"
@@ -399,7 +399,7 @@
                       >
                     </div>
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.origin"
                         id="origin"
@@ -417,7 +417,7 @@
                   <!-- SKU and Sizes Row -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.sku"
                         id="sku"
@@ -431,7 +431,7 @@
                       >
                     </div>
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.sizes"
                         id="sizes"
@@ -449,7 +449,7 @@
                   <!-- Price Row -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="number"
                         [formField]="form.regularPrice"
                         id="regularPrice"
@@ -463,7 +463,7 @@
                       >
                     </div>
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="number"
                         [formField]="form.offerPrice"
                         id="offerPrice"
@@ -481,7 +481,7 @@
                   <!-- Additional Info -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.specialFeature"
                         id="specialFeature"
@@ -495,7 +495,7 @@
                       >
                     </div>
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="text"
                         [formField]="form.additionalInformation"
                         id="additionalInformation"
@@ -513,7 +513,7 @@
                   <!-- Social Links -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="url"
                         [formField]="form.youtubeLink"
                         id="youtubeLink"
@@ -527,7 +527,7 @@
                       >
                     </div>
                     <div class="relative pb-2">
-                      <input
+                      <input autocomplete="off"
                         type="url"
                         [formField]="form.facebookPost"
                         id="facebookPost"
@@ -639,7 +639,7 @@
 
                   <!-- Catalog URL -->
                   <div class="relative pb-2">
-                    <input
+                    <input autocomplete="off"
                       type="url"
                       [formField]="form.catalogURL"
                       id="catalogURL"
@@ -705,7 +705,7 @@
                             <!-- Color Name -->
                             <div>
                               <label class="block text-sm font-medium mb-1"> Color Name </label>
-                              <input
+                              <input autocomplete="off"
                                 type="text"
                                 [(ngModel)]="color.colorName"
                                 [ngModelOptions]="{ standalone: true }"
@@ -804,7 +804,7 @@
                     >
                       <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
                     </div>
-                    <input
+                    <input autocomplete="off"
                       type="text"
                       [(ngModel)]="relatedSearchQuery"
                       [ngModelOptions]="{ standalone: true }"

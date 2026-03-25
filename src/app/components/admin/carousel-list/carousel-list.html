@@ -156,13 +156,13 @@
           </div>
 
           <!-- Form Fields -->
-          <form class="space-y-6" (submit)="onSubmit($event)">
+          <form autocomplete="off" class="space-y-6" (submit)="onSubmit($event)">
             <!-- Title -->
             <div>
               @let title = form.title();
               @let titleError = form.title().invalid() && form.title().touched();
               <div class="relative pb-2">
-                <input
+                <input autocomplete="off"
                   type="text"
                   [formField]="form.title"
                   id="title"
@@ -186,7 +186,7 @@
 
             <!-- Description -->
             <div class="relative pb-2">
-              <textarea
+              <textarea autocomplete="off"
                 id="description"
                 [formField]="form.description"
                 rows="4"

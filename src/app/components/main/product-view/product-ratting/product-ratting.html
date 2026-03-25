@@ -75,7 +75,7 @@
     <div class="flex flex-col md:flex-row justify-between gap-3">
       <div class="flex items-center gap-2">
         <label for="rating">Rating</label>
-        <select
+        <select autocomplete="off"
           class="rounded-md"
           id="rating"
           [(ngModel)]="ratingFilter"
@@ -91,7 +91,7 @@
       </div>
       <div class="flex items-center gap-2">
         <label for="sort">Sort By</label>
-        <select
+        <select autocomplete="off"
           class="rounded-md"
           id="sort"
           [(ngModel)]="sortFilter"

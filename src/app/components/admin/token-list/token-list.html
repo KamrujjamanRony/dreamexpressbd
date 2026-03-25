@@ -194,7 +194,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Token Code *</label
             >
-            <input
+            <input autocomplete="off"
               type="text"
               [(ngModel)]="formData.code"
               placeholder="e.g. SAVE20"
@@ -206,7 +206,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Type *</label
             >
-            <select
+            <select autocomplete="off"
               [(ngModel)]="formData.type"
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
             >
@@ -221,7 +221,7 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ formData.type === 'Percentage' ? 'Discount (%)' : 'Discount Amount (৳)' }} *
               </label>
-              <input
+              <input autocomplete="off"
                 type="number"
                 [(ngModel)]="formData.value"
                 min="0"
@@ -234,7 +234,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Max Use Count *</label
             >
-            <input
+            <input autocomplete="off"
               type="number"
               [(ngModel)]="formData.maxUseCount"
               min="1"
@@ -246,7 +246,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Expires At *</label
             >
-            <input
+            <input autocomplete="off"
               type="datetime-local"
               [(ngModel)]="formData.expireAt"
               class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"

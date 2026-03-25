@@ -2,12 +2,12 @@
 <div class="col-span-9 shadow rounded px-6 pt-5 pb-7">
   <h4 class="text-lg font-medium capitalize mb-4">Profile Information</h4>
   <div class="space-y-4">
-    <form #form="ngForm" (ngSubmit)="onFormSubmit()" class="w-full">
+    <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()" class="w-full">
       <!-- fullname -->
       <div class="grid grid-cols-1 gap-4">
         <div class="w-full">
           <label for="" class="text-gray-800 mb-2 block">Full name</label>
-          <input
+          <input autocomplete="off"
             type="text"
             id="fullname"
             name="fullname"
@@ -24,7 +24,7 @@
         <div class="grid grid-cols-1 gap-4">
           <div class="w-full">
             <label for="" class="text-gray-800 mb-2 block">Username</label>
-            <input
+            <input autocomplete="off"
               type="text"
               id="username"
               name="username"
@@ -38,7 +38,7 @@
         <!-- gender -->
         <div>
           <label for="" class="text-gray-800 mb-2 block">Gender</label>
-          <select
+          <select autocomplete="off"
             id="gender"
             name="gender"
             [(ngModel)]="model.gender"
@@ -57,7 +57,7 @@
         <!-- email -->
         <div>
           <label for="" class="text-gray-800 mb-2 block">Email address</label>
-          <input
+          <input autocomplete="off"
             type="email"
             id="email"
             name="email"
@@ -71,7 +71,7 @@
         <!-- phoneNumber -->
         <div>
           <label for="" class="text-gray-800 mb-2 block">Phone number</label>
-          <input
+          <input autocomplete="off"
             type="text"
             id="phoneNumber"
             name="phoneNumber"

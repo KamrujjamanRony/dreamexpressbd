@@ -5,7 +5,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-      <select
+      <select autocomplete="off"
         [(ngModel)]="localStatus"
         (change)="applyFilters()"
         class="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
@@ -22,7 +22,7 @@
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >From Date</label
       >
-      <input
+      <input autocomplete="off"
         type="date"
         [(ngModel)]="localFromDate"
         (change)="applyFilters()"
@@ -33,7 +33,7 @@
 
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
-      <input
+      <input autocomplete="off"
         type="date"
         [(ngModel)]="localToDate"
         (change)="applyFilters()"

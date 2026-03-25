@@ -4,7 +4,7 @@
     {{ modalTitle }}
   </h2>
 
-  <form (submit)="onSubmit($event)" class="space-y-6">
+  <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-6">
     <!-- Customer Information -->
     <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Customer Information</h3>
@@ -214,7 +214,7 @@
           @let paymentMethodError =
             form.paymentMethod().invalid() && form.paymentMethod().touched();
           <div class="relative pb-1">
-            <select
+            <select autocomplete="off"
               [formField]="form.paymentMethod"
               id="paymentMethod"
               class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 dark:text-white bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
@@ -248,7 +248,7 @@
           >
           @if (!tokenApplied()) {
             <div class="flex gap-2">
-              <input
+              <input autocomplete="off"
                 type="text"
                 [(ngModel)]="tokenCode"
                 placeholder="Enter token code"

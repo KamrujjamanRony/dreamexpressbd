@@ -2,14 +2,14 @@
   {{ modalTitle }}
 </h2>
 
-<form
+<form autocomplete="off"
   [formGroup]="form"
   (ngSubmit)="onSubmit($event)"
   class="min-w-100 mx-auto px-2"
 >
   <!-- userName -->
   <Field label="userName">
-    <input
+    <input autocomplete="off"
       #inputRef
       type="text"
       [formControl]="getControl('userName')"
@@ -25,7 +25,7 @@
 
   <!-- password -->
   <Field label="password">
-    <input
+    <input autocomplete="off"
       #inputRef
       type="text"
       [formControl]="getControl('password')"

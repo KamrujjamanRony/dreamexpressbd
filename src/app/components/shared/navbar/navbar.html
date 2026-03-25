@@ -149,7 +149,7 @@
         <div
           class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-200 focus-within:border-purple-500 rounded-full px-4 py-2 overflow-hidden max-w-52 max-lg:hidden dark:bg-purple-700 dark:border-purple-500 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-500"
         >
-          <input
+          <input autocomplete="off"
             type="text"
             [formControl]="searchControl"
             (focus)="onSearchFocus()"
@@ -344,7 +344,7 @@
   <div
     class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-300 focus-within:border-purple-400 rounded-full px-4 py-1 overflow-hidden dark:bg-purple-500 dark:border-purple-300 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-400"
   >
-    <input
+    <input autocomplete="off"
       type="text"
       [formControl]="searchControl"
       (focus)="onSearchFocus()"

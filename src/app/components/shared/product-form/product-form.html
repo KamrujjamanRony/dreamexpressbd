@@ -2,7 +2,7 @@
   {{ modalTitle }}
 </h2>
 
-<form
+<form autocomplete="off"
   [formGroup]="form"
   (ngSubmit)="onSubmit($event)"
   class="min-w-100 mx-auto px-2"
@@ -13,7 +13,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Name -->
       <Field label="Product Name">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="name"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -28,7 +28,7 @@
 
       <!-- SKU -->
       <Field label="SKU">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="sku"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -43,7 +43,7 @@
 
       <!-- Category -->
       <Field label="Category">
-        <select
+        <select autocomplete="off"
           formControlName="category"
           class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
           required
@@ -59,7 +59,7 @@
 
       <!-- Brand -->
       <Field label="Brand">
-        <select
+        <select autocomplete="off"
           formControlName="brand"
           class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
           required
@@ -75,7 +75,7 @@
 
       <!-- Regular Price -->
       <Field label="Regular Price">
-        <input
+        <input autocomplete="off"
           type="number"
           formControlName="regularPrice"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -93,7 +93,7 @@
 
       <!-- Offer Price -->
       <Field label="Offer Price">
-        <input
+        <input autocomplete="off"
           type="number"
           formControlName="offerPrice"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -105,7 +105,7 @@
 
       <!-- Availability -->
       <Field label="Availability">
-        <select
+        <select autocomplete="off"
           formControlName="availability"
           class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
           required
@@ -120,7 +120,7 @@
 
       <!-- Serial -->
       <Field label="Serial Number">
-        <input
+        <input autocomplete="off"
           type="number"
           formControlName="serial"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -137,7 +137,7 @@
     <div class="grid grid-cols-1 gap-4">
       <!-- Main Image -->
       <Field label="Main Image URL">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="image"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -152,7 +152,7 @@
         <div class="space-y-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           @for(imageCtrl of imagesArray.controls; track $index; let i = $index){
           <div class="flex items-center gap-2 w-full">
-            <input
+            <input autocomplete="off"
               type="text"
               [formControl]="imageCtrl"
               class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -185,7 +185,7 @@
     <div class="grid grid-cols-1 gap-4">
       <!-- Short Description -->
       <Field label="Short Description">
-        <textarea
+        <textarea autocomplete="off"
           formControlName="shortDescription"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           [class.invalid]="
@@ -201,7 +201,7 @@
 
       <!-- Product Details -->
       <Field label="Full Product Details">
-        <textarea
+        <textarea autocomplete="off"
           formControlName="productDetails"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
@@ -237,7 +237,7 @@
           }
         </div>
         <div class="flex gap-2">
-          <select
+          <select autocomplete="off"
             #sizeSelect
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
           >
@@ -278,7 +278,7 @@
           }
         </div>
         <div class="flex gap-2">
-          <select
+          <select autocomplete="off"
             #colorSelect
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
           >
@@ -307,7 +307,7 @@
       <div class="border rounded p-4">
         <div class="flex justify-between items-center mb-2 gap-2">
           <Field [label]="'Specification Group ' + (i + 1)" class="w-full">
-            <input
+            <input autocomplete="off"
               type="text"
               [formControl]="getSpecTitle(spec)"
               class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -326,13 +326,13 @@
           @for(item of getSpecContent(spec).controls; track $index; let j =
           $index){
           <div class="flex items-center gap-2">
-            <input
+            <input autocomplete="off"
               type="text"
               [formControl]="getItemField(getItemControl(item), 'item')"
               class="block py-2 px-2 w-1/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
               placeholder="Specification"
             />
-            <input
+            <input autocomplete="off"
               type="text"
               [formControl]="getItemField(getItemControl(item), 'value')"
               class="block py-2 px-2 w-2/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -374,7 +374,7 @@
       @for(relatedProductCtrl of relatedProductsArray.controls; track $index;
       let i = $index){
       <div class="flex items-center gap-2">
-        <select
+        <select autocomplete="off"
           [formControl]="$any(relatedProductCtrl)"
           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
         >
@@ -413,7 +413,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- YouTube Link -->
       <Field label="YouTube Link">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="youtubeLink"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -423,7 +423,7 @@
 
       <!-- Facebook Post -->
       <Field label="Facebook Post">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="facebookPost"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -433,7 +433,7 @@
 
       <!-- Twitter Tweet -->
       <Field label="Twitter Tweet">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="twitterTweet"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -443,7 +443,7 @@
 
       <!-- Instagram Post -->
       <Field label="Instagram Post">
-        <input
+        <input autocomplete="off"
           type="text"
           formControlName="instagramPost"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -453,7 +453,7 @@
 
       <!-- Others -->
       <Field label="Other Information">
-        <textarea
+        <textarea autocomplete="off"
           formControlName="others"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
