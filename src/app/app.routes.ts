@@ -105,7 +105,12 @@ export const routes: Routes = [
     loadComponent: () => import('./layouts/admin/admin').then(m => m.Admin),
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'admin-list', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./components/admin/dashboard/dashboard').then(m => m.Dashboard),
+        title: `Dashboard | ${companyName}`,
+      },
       {
         path: 'admin-list',
         loadComponent: () => import('./components/admin/users/users').then(m => m.Users),
@@ -145,6 +150,11 @@ export const routes: Routes = [
         path: 'brand-list',
         loadComponent: () => import('./components/admin/brand-list/brand-list').then(m => m.BrandList),
         title: `Brand List | ${companyName}`,
+      },
+      {
+        path: 'token-list',
+        loadComponent: () => import('./components/admin/token-list/token-list').then(m => m.TokenList),
+        title: `Discount Tokens | ${companyName}`,
       },
       {
         path: 'about',
