@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Order Management</h1>
-    @if (!isInsert()) {
+    @if (isInsert()) {
       <button
         (click)="addOrder()"
         class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -212,13 +212,11 @@
                   [innerHTML]="order.totalAmount | bdt"
                 ></td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{
-                      getStatusColor(order.orderStatus)
-                    }}"
-                  >
-                    {{ order.orderStatus }}
-                  </span>
+                  <app-order-status-update
+                    [currentStatus]="order.orderStatus"
+                    [order]="order"
+                    (statusUpdated)="onStatusUpdated($event)"
+                  ></app-order-status-update>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                   {{ order.orderDate | date: 'medium' }}
@@ -280,6 +278,30 @@
             (submitForm)="onFormSubmit($event)"
             (cancel)="onFormCancel()"
           ></app-order-form>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Order Details Modal -->
+  @if (showDetails() && selectedOrder()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div
+        class="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+        >
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Order Details</h2>
+          <button
+            (click)="closeDetails()"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="p-6">
+          <app-order-details [order]="selectedOrder()"></app-order-details>
         </div>
       </div>
     </div>

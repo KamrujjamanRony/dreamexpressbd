@@ -9,6 +9,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { DatePipe } from '@angular/common';
 import { OrderForm } from './order-form/order-form';
+import { OrderDetails } from './order-details/order-details';
+import { OrderStatusUpdate } from './order-status-update/order-status-update';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { SOrder } from '../../../services/s-order';
 import { SToast } from '../../../utils/toast/toast.service';
@@ -19,7 +21,7 @@ import { OrderM } from '../../../models/OrderM';
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, OrderForm, BdtPipe, DatePipe],
+  imports: [CommonModule, FontAwesomeModule, OrderForm, OrderDetails, OrderStatusUpdate, BdtPipe, DatePipe],
   templateUrl: './order-list.html',
   styleUrls: ['./order-list.css']
 })
@@ -46,6 +48,7 @@ export class OrderList implements OnInit {
   isLoading = signal(false);
   hasError = signal(false);
   showForm = signal(false);
+  showDetails = signal(false);
   selectedOrder = signal<OrderM | null>(null);
   isSubmitted = signal(false);
   searchQuery = signal('');
@@ -128,10 +131,10 @@ export class OrderList implements OnInit {
   }
 
   loadPermissions() {
-    this.isView.set(this.permissionService.hasPermission('Order', 'view'));
-    this.isInsert.set(this.permissionService.hasPermission('Order', 'create'));
-    this.isEdit.set(this.permissionService.hasPermission('Order', 'edit'));
-    this.isDelete.set(this.permissionService.hasPermission('Order', 'delete'));
+    this.isView.set(this.permissionService.hasPermission('Orders', 'view'));
+    this.isInsert.set(this.permissionService.hasPermission('Orders', 'create'));
+    this.isEdit.set(this.permissionService.hasPermission('Orders', 'edit'));
+    this.isDelete.set(this.permissionService.hasPermission('Orders', 'delete'));
   }
 
   loadOrders() {
@@ -198,8 +201,17 @@ export class OrderList implements OnInit {
   }
 
   viewOrder(order: OrderM) {
-    // Implement view order details modal
-    console.log('View order:', order);
+    this.selectedOrder.set(order);
+    this.showDetails.set(true);
+  }
+
+  closeDetails() {
+    this.showDetails.set(false);
+    this.selectedOrder.set(null);
+  }
+
+  onStatusUpdated(event: { id: number; status: string }) {
+    this.updateOrderStatus({ id: event.id } as OrderM, event.status);
   }
 
   async deleteOrder(order: OrderM) {
