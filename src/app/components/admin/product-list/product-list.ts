@@ -515,6 +515,7 @@ export class ProductList {
   /* ---------------- SUBMIT ---------------- */
   onSubmit(event: Event) {
     event.preventDefault();
+    console.log('Form Value:', this.form().value());
 
     if (!this.form().valid()) {
       this.toast.warning('Please fill all required fields!', 'bottom-right', 5000);
@@ -558,8 +559,7 @@ export class ProductList {
     this.isSubmitted.set(true);
 
     const formData = new FormData();
-    formData.delete('colors');
-    formData.delete('productColors');
+    console.log("form values:", formValue);
 
 
     // Append all basic fields
@@ -602,10 +602,10 @@ export class ProductList {
 
     // Append related products
     if (this.relatedProductsList().length > 0) {
+      console.log(this.relatedProductsList());
       this.relatedProductsList().forEach((id: any) => {
-        formData.append(`relatedProducts`, String(id));
+        formData.append(`relatedProducts`, id);
       });
-      return;
     }
 
     const request$ = this.selected()

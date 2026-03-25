@@ -721,11 +721,7 @@
 
                               <!-- Tabs for image selection method -->
                               <div class="flex border-b border-gray-200 mb-3">
-                                <h1
-                                  class="text-sm"
-                                >
-                                  Choose from Product Images
-                                </h1>
+                                <h1 class="text-sm">Choose from Product Images</h1>
                               </div>
 
                               <!-- Current Image Preview -->
@@ -811,6 +807,7 @@
                     <input
                       type="text"
                       [(ngModel)]="relatedSearchQuery"
+                      [ngModelOptions]="{ standalone: true }"
                       (input)="filterRelatedProducts()"
                       placeholder="Search products by title, brand, or model..."
                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
