@@ -1,12 +1,14 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-carousel',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './carousel.html',
   styleUrl: './carousel.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class Carousel {
+export class Carousel {  
+    carousels = input<any[]>([]);
 
 }

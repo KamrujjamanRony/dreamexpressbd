@@ -10,6 +10,7 @@ import { ProductWrapper } from "./product-wrapper/product-wrapper";
 import { AddSection } from "./add-section/add-section";
 import { RecommendProduct } from "./recommend-product/recommend-product";
 import { ProductM } from '../../../models/Products';
+import { SCarousel } from '../../../services/s-carousel';
 
 @Component({
   selector: 'app-home',
@@ -21,10 +22,12 @@ export class Home {
   private dataService = inject(SData);
   private categoryService = inject(SCategory);
   private productService = inject(SProduct);
+  private carouselService = inject(SCarousel);
 
   loading = signal(true);
   products = signal<ProductM[]>([]);
   categories = signal<any[]>([]);
+  carousels = signal<any[]>([]);
   
   // Create computed signals for permissions
   isBannerPermitted = computed(() => this.dataService.isPermitted("Banner"));
@@ -55,7 +58,7 @@ export class Home {
   categoryWiseProducts = computed(() => {
     const categoryMap: { [key: string]: ProductM[] } = {};
     for (const product of this.productWithDiscount()) {
-      if (!categoryMap[product.category]) {
+      if (!categoryMap[product.itemName]) {
         categoryMap[product.category] = [];
       }
       categoryMap[product.category].push(product);
@@ -79,6 +82,14 @@ export class Home {
       },
       error: () => this.loading.set(false),
     });
+
+      this.carouselService.search().subscribe({
+        next: (data) => {
+          this.carousels.set(data);
+        },
+        error: (err) => console.error('Carousel load failed:', err),
+      });
+
 
     // Load sections first
     this.dataService.loadSections().subscribe({

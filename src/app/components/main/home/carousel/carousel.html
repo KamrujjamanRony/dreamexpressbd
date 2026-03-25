@@ -7,32 +7,22 @@
     [spaceBetween]="25"
     animation="fade"
   >
-    <!-- @for(product of products(); track product.id){ -->
+    @for(item of carousels(); track item.id){
     <swiper-slide
       >
-      <div class="w-full h-full mx-auto bg-cover bg-center relative rounded-lg" style="background-image: url('images/banner-bg.jpg');">
+      <div class="w-full h-full mx-auto bg-cover bg-center relative rounded-lg" [style.backgroundImage]="'url(' + item.image + ')'">
       <div class="grid md:grid-cols-2 gap-x-8 gap-y-14 h-full min-h-96 px-8 md:px-16 py-12 overflow-hidden rounded-lg">
+        @if (item.title || item.description) {
         <div class="md:max-w-md flex flex-col justify-center">
-          <h2 class="text-3xl font-semibold text-purple-700 leading-tight">Elevate Your Experience with Modern Elegance</h2>
-          <p class="text-base text-purple-500 leading-relaxed mt-4">Laboris qui Lorem ad tempor ut reprehenderit. Nostrud anim nulla officia ea sit deserunt.</p>
-          <button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg text-sm cursor-pointer w-max mt-6">
-            Get started
+          <h2 class="text-3xl font-semibold text-purple-700 leading-tight">{{ item.title }}</h2>
+          <p class="text-base text-purple-500 leading-relaxed mt-4">{{ item.description }}</p>
+          <button routerLink="/shop" type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg text-sm cursor-pointer w-max mt-6">
+            Shop Now
           </button>
         </div>
+        }
       </div>
     </div>
   </swiper-slide>
-    <swiper-slide
-      ><div class="w-full h-full mx-auto bg-cover bg-center relative rounded-lg" style="background-image: url('images/banner-bg.jpg');">
-      <div class="grid md:grid-cols-2 gap-x-8 gap-y-14 h-full min-h-96 px-8 md:px-16 py-12 overflow-hidden rounded-lg">
-        <div class="md:max-w-md flex flex-col justify-center">
-          <h2 class="text-3xl font-semibold text-purple-700 leading-tight">Elevate Your Experience with Modern Elegance</h2>
-          <p class="text-base text-purple-500 leading-relaxed mt-4">Laboris qui Lorem ad tempor ut reprehenderit. Nostrud anim nulla officia ea sit deserunt.</p>
-          <button type="button" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-6 rounded-lg text-sm cursor-pointer w-max mt-6">
-            Get started
-          </button>
-        </div>
-      </div>
-    </div></swiper-slide>
-    <!-- } -->
+    }
   </swiper-container>
