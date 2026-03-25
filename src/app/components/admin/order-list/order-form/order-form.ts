@@ -3,9 +3,11 @@ import { Component, EventEmitter, inject, Input, Output, signal, computed, effec
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
-import { OrderM } from '../../../../models/OrderM';
+import { OrderM, OrderItemM } from '../../../../models/OrderM';
 import { TokenM } from '../../../../models/TokenM';
+import { ProductM } from '../../../../models/Products';
 import { SToken } from '../../../../services/s-token';
+import { SProduct } from '../../../../services/s-product';
 import { environment } from '../../../../../environments/environment';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 
@@ -49,6 +51,26 @@ export class OrderForm implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   private tokenService = inject(SToken);
+  private productService = inject(SProduct);
+
+  // Product selection state
+  products = signal<ProductM[]>([]);
+  productSearch = signal('');
+  showProductDropdown = signal(false);
+  orderItems = signal<OrderItemM[]>([]);
+
+  filteredProducts = computed(() => {
+    const query = this.productSearch().toLowerCase();
+    if (!query) return this.products().slice(0, 20);
+    return this.products().filter(p =>
+      p.title?.toLowerCase().includes(query)
+    ).slice(0, 20);
+  });
+
+  // Auto-calculate subtotal from order items
+  calculatedSubtotal = computed(() =>
+    this.orderItems().reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  );
 
   // Discount token state
   tokenCode = '';
@@ -147,6 +169,15 @@ export class OrderForm implements OnChanges {
 
   /* ---------------- EFFECTS ---------------- */
   constructor() {
+    // Load products
+    this.productService.search().subscribe(products => this.products.set(products));
+
+    // Sync subtotal from orderItems
+    effect(() => {
+      const subtotal = this.calculatedSubtotal();
+      this.model.update(m => ({ ...m, subtotal }));
+    });
+
     // Sync totalAmount back to model
     effect(() => {
       const total = this.totalAmount();
@@ -208,6 +239,11 @@ export class OrderForm implements OnChanges {
       this.tokenApplied.set(true);
     }
 
+    // Load order items
+    if (this.selectedOrder.orderItems?.length) {
+      this.orderItems.set([...this.selectedOrder.orderItems]);
+    }
+
     this.form().reset();
   }
 
@@ -240,6 +276,8 @@ export class OrderForm implements OnChanges {
     this.tokenCode = '';
     this.tokenError = '';
     this.tokenApplied.set(false);
+    this.orderItems.set([]);
+    this.productSearch.set('');
     this.form().reset();
   }
 
@@ -256,7 +294,7 @@ export class OrderForm implements OnChanges {
       totalAmount: this.totalAmount(),
       id: this.selectedOrder?.id,
       orderDate: formValue.orderDate || new Date().toISOString(),
-      orderItems: this.selectedOrder?.orderItems || [],
+      orderItems: this.orderItems(),
     };
 
     this.submitForm.emit(orderData);
@@ -354,6 +392,43 @@ export class OrderForm implements OnChanges {
     this.tokenCode = '';
     this.tokenError = '';
     this.tokenApplied.set(false);
+  }
+
+  /* ---------------- PRODUCT SELECTION ---------------- */
+  addProduct(product: ProductM) {
+    const existing = this.orderItems().find(i => i.productId === product.id);
+    if (existing) {
+      this.orderItems.update(items =>
+        items.map(i => i.productId === product.id ? { ...i, quantity: i.quantity + 1 } : i)
+      );
+    } else {
+      const item: OrderItemM = {
+        productId: product.id!,
+        productName: product.title,
+        quantity: 1,
+        price: product.offerPrice || product.regularPrice || 0,
+        image: product.image || ''
+      };
+      this.orderItems.update(items => [...items, item]);
+    }
+    this.productSearch.set('');
+    this.showProductDropdown.set(false);
+  }
+
+  removeItem(productId: number) {
+    this.orderItems.update(items => items.filter(i => i.productId !== productId));
+  }
+
+  updateItemQuantity(productId: number, qty: number) {
+    if (qty < 1) return;
+    this.orderItems.update(items =>
+      items.map(i => i.productId === productId ? { ...i, quantity: qty } : i)
+    );
+  }
+
+  onProductSearch(event: Event) {
+    this.productSearch.set((event.target as HTMLInputElement).value);
+    this.showProductDropdown.set(true);
   }
 
   onCancel() {
