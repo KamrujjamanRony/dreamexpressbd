@@ -1,10 +1,31 @@
 // order-form.component.ts
-import { Component, EventEmitter, inject, Input, Output, signal, computed, effect } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, computed, effect, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
 import { OrderM } from '../../../../models/OrderM';
 import { environment } from '../../../../../environments/environment';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
+
+interface OrderFormModel {
+  companyID: number;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  userPhone: string;
+  subtotal: number;
+  deliveryCharge: number;
+  totalAmount: number;
+  paymentMethod: string;
+  orderStatus: string;
+  orderDate: string;
+  shippingAddress: {
+    district: string;
+    city: string;
+    street: string;
+    contact: string;
+    type: string;
+  };
+}
 
 @Component({
   selector: 'app-order-form',
@@ -12,7 +33,7 @@ import { BdtPipe } from '../../../../pipes/bdt.pipe';
   templateUrl: './order-form.html',
   styleUrl: './order-form.css',
 })
-export class OrderForm {
+export class OrderForm implements OnChanges {
   @Input() selectedOrder: OrderM | null = null;
   @Input() modalTitle: string = 'Order Form';
   @Input() isSubmitted = false;
@@ -21,7 +42,8 @@ export class OrderForm {
   @Output() cancel = new EventEmitter<void>();
 
   /* ---------------- FORM MODEL ---------------- */
-  model = signal({
+  model = signal<OrderFormModel>({
+    companyID: environment.companyCode,
     userId: '',
     userEmail: '',
     userName: '',
@@ -32,7 +54,6 @@ export class OrderForm {
     paymentMethod: 'CashOnDelivery',
     orderStatus: 'Pending',
     orderDate: new Date().toISOString(),
-    companyID: environment.companyCode,
     shippingAddress: {
       district: '',
       city: '',
@@ -43,61 +64,70 @@ export class OrderForm {
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
-  form = form(this.model, (schemaPath) => {
-    // Customer Information
-    required(schemaPath.userName, { message: 'Customer name is required' });
-    required(schemaPath.userEmail, { message: 'Email is required' });
-    required(schemaPath.userPhone, { message: 'Phone is required' });
-    
-    // Email validation
-    validate(schemaPath.userEmail, ({ value }) => {
-      if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
-        return {
-          kind: 'invalid',
-          message: 'Please enter a valid email address'
-        };
+  form = form(this.model, (s) => {
+    required(s.userName, { message: 'Customer name is required' });
+    required(s.userEmail, { message: 'Email is required' });
+    required(s.userPhone, { message: 'Phone is required' });
+
+    validate(s.userEmail, ({ value }) => {
+      const v = value();
+      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+        return { kind: 'invalid', message: 'Please enter a valid email address' };
       }
       return null;
     });
 
-    // Payment method
-    required(schemaPath.paymentMethod, { message: 'Payment method is required' });
-    
-    // Shipping address validations
-    required(schemaPath.shippingAddress.district, { message: 'District is required' });
-    required(schemaPath.shippingAddress.city, { message: 'City is required' });
-    required(schemaPath.shippingAddress.street, { message: 'Street is required' });
-    required(schemaPath.shippingAddress.contact, { message: 'Contact number is required' });
+    validate(s.userPhone, ({ value }) => {
+      const v = value();
+      if (v && !/^(?:\+88|88)?(01[3-9]\d{8})$/.test(v)) {
+        return { kind: 'invalid', message: 'Please enter a valid Bangladeshi phone number' };
+      }
+      return null;
+    });
 
-    // Debounce for performance
-    debounce(schemaPath.userName, 300);
-    debounce(schemaPath.userEmail, 300);
+    required(s.paymentMethod, { message: 'Payment method is required' });
+
+    validate(s.subtotal, ({ value }) => {
+      if (value() <= 0) {
+        return { kind: 'invalid', message: 'Subtotal must be greater than 0' };
+      }
+      return null;
+    });
+
+    required(s.shippingAddress.district, { message: 'District is required' });
+    required(s.shippingAddress.city, { message: 'City is required' });
+    required(s.shippingAddress.street, { message: 'Street is required' });
+    required(s.shippingAddress.contact, { message: 'Contact number is required' });
+
+    validate(s.shippingAddress.contact, ({ value }) => {
+      const v = value();
+      if (v && !/^(?:\+88|88)?(01[3-9]\d{8})$/.test(v)) {
+        return { kind: 'invalid', message: 'Please enter a valid Bangladeshi phone number' };
+      }
+      return null;
+    });
+
+    debounce(s.userName, 300);
+    debounce(s.userEmail, 300);
+    debounce(s.userPhone, 300);
   });
-
-  statusOptions = [
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Processing', value: 'Processing' },
-    { label: 'Shipped', value: 'Shipped' },
-    { label: 'Delivered', value: 'Delivered' },
-    { label: 'Cancelled', value: 'Cancelled' }
-  ];
 
   paymentMethods = [
     { label: 'Cash on Delivery', value: 'CashOnDelivery' },
-    { label: 'Online Payment', value: 'OnlinePayment' }
+    // { label: 'Online Payment', value: 'OnlinePayment' },
+    // { label: 'Bkash', value: 'Bkash' },
+    // { label: 'Nagad', value: 'Nagad' },
+    // { label: 'Rocket', value: 'Rocket' }
   ];
 
   /* ---------------- COMPUTED VALUES ---------------- */
   totalAmount = computed(() => {
-    const currentValue = this.model();
-    const subtotal = currentValue.subtotal || 0;
-    const deliveryCharge = currentValue.deliveryCharge || 0;
-    return subtotal + deliveryCharge;
+    const m = this.model();
+    return (m.subtotal || 0) + (m.deliveryCharge || 0);
   });
 
   /* ---------------- EFFECTS ---------------- */
   constructor() {
-    // Update total amount when subtotal or delivery charge changes
     effect(() => {
       const total = this.totalAmount();
       this.model.update(m => ({ ...m, totalAmount: total }));
@@ -105,116 +135,84 @@ export class OrderForm {
   }
 
   /* ---------------- LIFECYCLE ---------------- */
-  ngOnChanges() {
-    if (this.selectedOrder) {
-      this.model.set({
-        userId: this.selectedOrder.userId || '',
-        userEmail: this.selectedOrder.userEmail || '',
-        userName: this.selectedOrder.userName || '',
-        userPhone: this.selectedOrder.userPhone || '',
-        subtotal: this.selectedOrder.subtotal || 0,
-        deliveryCharge: this.selectedOrder.deliveryCharge || 60,
-        totalAmount: this.selectedOrder.totalAmount || 0,
-        paymentMethod: this.selectedOrder.paymentMethod || 'CashOnDelivery',
-        orderStatus: this.selectedOrder.orderStatus || 'Pending',
-        orderDate: this.selectedOrder.orderDate || new Date().toISOString(),
-        companyID: this.selectedOrder.companyID || environment.companyCode,
-        shippingAddress: {
-          district: this.selectedOrder.shippingAddress?.district || '',
-          city: this.selectedOrder.shippingAddress?.city || '',
-          street: this.selectedOrder.shippingAddress?.street || '',
-          contact: this.selectedOrder.shippingAddress?.contact || '',
-          type: this.selectedOrder.shippingAddress?.type || 'Home'
-        }
-      });
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedOrder'] && this.selectedOrder) {
+      this.loadOrderData();
+    } else if (changes['selectedOrder'] && !this.selectedOrder) {
+      this.resetForm();
     }
   }
 
-  /* ---------------- FORM FIELD ACCESSORS ---------------- */
-  
-  // Get field state - returns the field signal
-  getField(fieldName: string) {
-    return (this.form() as any)[fieldName];
+  loadOrderData() {
+    if (!this.selectedOrder) return;
+
+    this.model.set({
+      companyID: this.selectedOrder.companyID || environment.companyCode,
+      userId: this.selectedOrder.userId || '',
+      userEmail: this.selectedOrder.userEmail || '',
+      userName: this.selectedOrder.userName || '',
+      userPhone: this.selectedOrder.userPhone || '',
+      subtotal: this.selectedOrder.subtotal || 0,
+      deliveryCharge: this.selectedOrder.deliveryCharge || 60,
+      totalAmount: this.selectedOrder.totalAmount || 0,
+      paymentMethod: this.selectedOrder.paymentMethod || 'CashOnDelivery',
+      orderStatus: this.selectedOrder.orderStatus || 'Pending',
+      orderDate: this.selectedOrder.orderDate || new Date().toISOString(),
+      shippingAddress: {
+        district: this.selectedOrder.shippingAddress?.district || '',
+        city: this.selectedOrder.shippingAddress?.city || '',
+        street: this.selectedOrder.shippingAddress?.street || '',
+        contact: this.selectedOrder.shippingAddress?.contact || '',
+        type: this.selectedOrder.shippingAddress?.type || 'Home'
+      }
+    });
+
+    this.form().reset();
   }
 
-  // Get shipping address field state
-  getShippingField(fieldName: string) {
-    const shippingAddressField = (this.form() as any).get?.('shippingAddress');
-    return shippingAddressField ? shippingAddressField[fieldName] : undefined;
-  }
+  resetForm() {
+    this.model.set({
+      companyID: environment.companyCode,
+      userId: '',
+      userEmail: '',
+      userName: '',
+      userPhone: '',
+      subtotal: 0,
+      deliveryCharge: 60,
+      totalAmount: 0,
+      paymentMethod: 'CashOnDelivery',
+      orderStatus: 'Pending',
+      orderDate: new Date().toISOString(),
+      shippingAddress: {
+        district: '',
+        city: '',
+        street: '',
+        contact: '',
+        type: 'Home'
+      }
+    });
 
-  // Check if field is invalid
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.getField(fieldName);
-    return field ? field.invalid && field.touched : false;
-  }
-
-  // Check if shipping field is invalid
-  isShippingFieldInvalid(fieldName: string): boolean {
-    const field = this.getShippingField(fieldName);
-    return field ? field.invalid && field.touched : false;
-  }
-
-  // Get field errors
-  getFieldErrors(fieldName: string): any[] {
-    const field = this.getField(fieldName);
-    return field?.errors || [];
-  }
-
-  // Get shipping field errors
-  getShippingFieldErrors(fieldName: string): any[] {
-    const field = this.getShippingField(fieldName);
-    return field?.errors || [];
-  }
-
-  // Mark field as touched
-  markFieldTouched(fieldName: string) {
-    const field = this.getField(fieldName);
-    if (field && typeof field.markAsTouched === 'function') {
-      field.markAsTouched();
-    }
-  }
-
-  // Mark shipping field as touched
-  markShippingFieldTouched(fieldName: string) {
-    const field = this.getShippingField(fieldName);
-    if (field && typeof field.markAsTouched === 'function') {
-      field.markAsTouched();
-    }
-  }
-
-  // Mark all fields as touched
-  markAllFieldsTouched() {
-    // Mark main fields
-    ['userName', 'userEmail', 'userPhone', 'paymentMethod'].forEach(field => 
-      this.markFieldTouched(field)
-    );
-    
-    // Mark shipping fields
-    ['district', 'city', 'street', 'contact'].forEach(field => 
-      this.markShippingFieldTouched(field)
-    );
-  }
-
-  // Check if form is valid
-  isFormValid(): boolean {
-    return this.form().valid();
+    this.form().reset();
   }
 
   onSubmit(event: Event) {
     event.preventDefault();
 
-    if (!this.isFormValid()) {
-      this.markAllFieldsTouched();
+    if (!this.form().valid()) {
       return;
     }
 
     const formValue = this.model();
-    
     const orderData: Partial<OrderM> = {
       ...formValue,
       totalAmount: this.totalAmount(),
-      id: this.selectedOrder?.id
+      id: this.selectedOrder?.id,
+      orderDate: formValue.orderDate || new Date().toISOString(),
+      orderItems: this.selectedOrder?.orderItems || [],
+      discountToken: this.selectedOrder?.discountToken,
+      discountType: this.selectedOrder?.discountType,
+      discountValue: this.selectedOrder?.discountValue,
+      discountAmount: this.selectedOrder?.discountAmount,
     };
 
     this.submitForm.emit(orderData);

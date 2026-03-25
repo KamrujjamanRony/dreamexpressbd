@@ -1,249 +1,208 @@
 // order-list.component.ts
-import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faRemove, faPencil, faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { BdtPipe } from '../../../pipes/bdt.pipe';
-import { OrderListFilter } from './order-list-filter/order-list-filter';
-import { OrderStatusUpdate } from './order-status-update/order-status-update';
+import { 
+  faEye, faPencil, faTrash, faSearch, 
+  faFilter, faDownload, faSync, faCheckCircle,
+  faTimesCircle, faTruck, faClock
+} from '@fortawesome/free-solid-svg-icons';
+import { DatePipe } from '@angular/common';
 import { OrderForm } from './order-form/order-form';
-import { OrderDetails } from './order-details/order-details';
+import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { SOrder } from '../../../services/s-order';
-import { SAuth } from '../../../services/s-auth';
-import { OrderM } from '../../../models/OrderM';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
+import { SPermission } from '../../../services/s-permission';
+import { OrderM } from '../../../models/OrderM';
 
 @Component({
   selector: 'app-order-list',
-  imports: [
-    CommonModule,
-    FormsModule,
-    OrderListFilter,
-    OrderStatusUpdate,
-    BdtPipe,
-    OrderForm,
-    FontAwesomeModule,
-    OrderDetails,
-    NgOptimizedImage
-  ],
+  standalone: true,
+  imports: [CommonModule, FontAwesomeModule, OrderForm, BdtPipe, DatePipe],
   templateUrl: './order-list.html',
-  styleUrl: './order-list.css',
-  providers: [DatePipe],
+  styleUrls: ['./order-list.css']
 })
-export class OrderList {
-  faRemove = faRemove;
-  faPencil = faPencil;
+export class OrderList implements OnInit {
   faEye = faEye;
-  faPlus = faPlus;
+  faPencil = faPencil;
+  faTrash = faTrash;
+  faSearch = faSearch;
+  faFilter = faFilter;
+  faDownload = faDownload;
+  faSync = faSync;
+  faCheckCircle = faCheckCircle;
+  faTimesCircle = faTimesCircle;
+  faTruck = faTruck;
+  faClock = faClock;
 
   private orderService = inject(SOrder);
-  private authService = inject(SAuth);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
-  private datePipe = inject(DatePipe);
+  private permissionService = inject(SPermission);
 
-  /* ---------------- SIGNAL STATE ---------------- */
+  // State
   orders = signal<OrderM[]>([]);
-  filteredOrders = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    if (!query) return this.orders();
-
-    return this.orders().filter(order =>
-      order.id?.toString().includes(query) ||
-      order.userName?.toLowerCase().includes(query) ||
-      order.userEmail?.toLowerCase().includes(query) ||
-      order.userPhone?.includes(query)
-    );
-  });
-  fromDate = signal<string>('');
-  toDate = signal<string>('');
-
-  resetFilters() {
-    const today = new Date();
-    const formattedDate = this.datePipe.transform(today, 'yyyy-MM-dd') || '';
-
-    this.fromDate.set(formattedDate);
-    this.toDate.set(formattedDate);
-
-    // Load orders with today's date
-    this.loadOrders({
-      status: '',
-      fromDate: formattedDate,
-      toDate: formattedDate
-    });
-  }
-
-  selectedOrder = signal<OrderM | null>(null);
-  searchQuery = signal('');
-
   isLoading = signal(false);
   hasError = signal(false);
+  showForm = signal(false);
+  selectedOrder = signal<OrderM | null>(null);
   isSubmitted = signal(false);
+  searchQuery = signal('');
+  selectedStatus = signal<string>('');
+  dateFrom = signal<string>('');
+  dateTo = signal<string>('');
 
+  // Permissions
   isView = signal(false);
   isInsert = signal(false);
   isEdit = signal(false);
   isDelete = signal(false);
 
-  showModal = false;
-  viewMode: 'details' | 'form' = 'details';
-  modalTitle = 'Order Details';
+  // Computed filtered orders
+  filteredOrders = computed(() => {
+    let result = this.orders();
+    
+    // Filter by search query
+    const query = this.searchQuery().toLowerCase();
+    if (query) {
+      result = result.filter(order => 
+        order.userName?.toLowerCase().includes(query) ||
+        order.userEmail?.toLowerCase().includes(query) ||
+        order.userPhone?.includes(query) ||
+        order.id?.toString().includes(query)
+      );
+    }
+    
+    // Filter by status
+    if (this.selectedStatus()) {
+      result = result.filter(order => order.orderStatus === this.selectedStatus());
+    }
+    
+    // Filter by date range
+    if (this.dateFrom()) {
+      result = result.filter(order => order.orderDate >= this.dateFrom());
+    }
+    if (this.dateTo()) {
+      result = result.filter(order => order.orderDate <= this.dateTo());
+    }
+    
+    // Sort by date (newest first)
+    return result.sort((a, b) => 
+      new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+    );
+  });
+
+  // Statistics
+  totalOrders = computed(() => this.filteredOrders().length);
+  totalRevenue = computed(() => 
+    this.filteredOrders().reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+  );
+  pendingOrders = computed(() => 
+    this.filteredOrders().filter(o => o.orderStatus === 'Pending').length
+  );
+  deliveredOrders = computed(() => 
+    this.filteredOrders().filter(o => o.orderStatus === 'Delivered').length
+  );
 
   statusOptions = [
-    { value: 0, label: 'Pending' },
-    { value: 1, label: 'Processing' },
-    { value: 2, label: 'Shipped' },
-    { value: 3, label: 'Delivered' },
-    { value: 4, label: 'Cancelled' }
+    { label: 'All', value: '' },
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Processing', value: 'Processing' },
+    { label: 'Shipped', value: 'Shipped' },
+    { label: 'Delivered', value: 'Delivered' },
+    { label: 'Cancelled', value: 'Cancelled' }
   ];
 
-  ngOnInit(): void {
+  statusColors: { [key: string]: string } = {
+    'Pending': 'bg-yellow-100 text-yellow-800',
+    'Processing': 'bg-blue-100 text-blue-800',
+    'Shipped': 'bg-purple-100 text-purple-800',
+    'Delivered': 'bg-green-100 text-green-800',
+    'Cancelled': 'bg-red-100 text-red-800'
+  };
+
+  ngOnInit() {
     this.loadPermissions();
-    this.resetFilters();
+    this.loadOrders();
   }
 
   loadPermissions() {
-    this.isView.set(this.checkPermission("Orders", "View"));
-    this.isInsert.set(this.checkPermission("Orders", "Insert"));
-    this.isEdit.set(this.checkPermission("Orders", "Edit"));
-    this.isDelete.set(this.checkPermission("Orders", "Delete"));
+    this.isView.set(this.permissionService.hasPermission('Order', 'view'));
+    this.isInsert.set(this.permissionService.hasPermission('Order', 'create'));
+    this.isEdit.set(this.permissionService.hasPermission('Order', 'edit'));
+    this.isDelete.set(this.permissionService.hasPermission('Order', 'delete'));
   }
 
-  loadOrders(filters: any = {}): void {
+  loadOrders() {
     this.isLoading.set(true);
     this.hasError.set(false);
 
-    // Update the signals with new filter values if provided
-    if (filters.fromDate !== undefined) {
-      this.fromDate.set(filters.fromDate);
-    }
-    if (filters.toDate !== undefined) {
-      this.toDate.set(filters.toDate);
-    }
-
-    // Get the current values (either from filters or existing signals)
-    const fromDateStr = filters.fromDate !== undefined ? filters.fromDate : this.fromDate();
-    const toDateStr = filters.toDate !== undefined ? filters.toDate : this.toDate();
-
-    // Convert to Date objects only if the string is not empty
-    let from = '';
-    let to = '';
-
-    if (fromDateStr) {
-      const fromDate = new Date(fromDateStr);
-      // Check if date is valid
-      if (!isNaN(fromDate.getTime())) {
-        from = this.datePipe.transform(fromDate, 'yyyy-MM-dd') || '';
-      }
-    }
-
-    if (toDateStr) {
-      const toDate = new Date(toDateStr);
-      // Check if date is valid
-      if (!isNaN(toDate.getTime())) {
-        to = this.datePipe.transform(toDate, 'yyyy-MM-dd') || '';
-      }
-    }
-
-    this.orderService.search(from, to, filters.status).subscribe({
-      next: (orders) => {
-        this.orders.set(orders);
+    this.orderService.search(
+      this.dateFrom(),
+      this.dateTo(),
+      this.selectedStatus()
+    ).subscribe({
+      next: (data) => {
+        this.orders.set(data);
         this.isLoading.set(false);
       },
-      error: (err) => {
+      error: (error) => {
+        console.error('Error loading orders:', error);
         this.hasError.set(true);
         this.isLoading.set(false);
-        this.toast.danger('Failed to load orders', 'bottom-right', 5000);
-        console.error('Error loading orders:', err);
+        this.toast.danger('Failed to load orders', 'bottom-right', 3000);
       }
     });
+  }
+
+  refreshOrders() {
+    this.loadOrders();
   }
 
   onSearch(event: Event) {
-    this.searchQuery.set((event.target as HTMLInputElement).value.trim());
+    this.searchQuery.set((event.target as HTMLInputElement).value);
   }
 
-  onStatusUpdated(updateData: { id: number; status: string }): void {
-    const order = this.orders().find(o => o.id === updateData.id);
-    if (!order) return;
-
-    const updateRequest: Partial<OrderM> = {
-      orderStatus: updateData.status
-    };
-
-    this.orderService.update(updateData.id, updateRequest).subscribe({
-      next: (updatedOrder) => {
-        this.orders.update(orders =>
-          orders.map(o => o.id === updatedOrder.id ? updatedOrder : o)
-        );
-        this.toast.success('Order status updated successfully!', 'bottom-right', 5000);
-      },
-      error: (err) => {
-        console.error('Error updating order status:', err);
-        this.toast.danger('Failed to update order status', 'bottom-left', 5000);
-      }
-    });
+  onStatusFilter(event: Event) {
+    this.selectedStatus.set((event.target as HTMLSelectElement).value);
+    this.loadOrders();
   }
 
-  openAddModal() {
-    this.modalTitle = 'Add New Order';
-    this.viewMode = 'form';
+  onDateFromChange(event: Event) {
+    this.dateFrom.set((event.target as HTMLInputElement).value);
+    this.loadOrders();
+  }
+
+  onDateToChange(event: Event) {
+    this.dateTo.set((event.target as HTMLInputElement).value);
+    this.loadOrders();
+  }
+
+  resetFilters() {
+    this.searchQuery.set('');
+    this.selectedStatus.set('');
+    this.dateFrom.set('');
+    this.dateTo.set('');
+    this.loadOrders();
+  }
+
+  addOrder() {
     this.selectedOrder.set(null);
-    this.showModal = true;
+    this.showForm.set(true);
   }
 
-  viewOrderDetails(order: OrderM) {
-    this.modalTitle = 'Order Details';
-    this.viewMode = 'details';
+  editOrder(order: OrderM) {
     this.selectedOrder.set(order);
-    this.showModal = true;
+    this.showForm.set(true);
   }
 
-  openEditModal(order: OrderM) {
-    this.modalTitle = 'Edit Order';
-    this.viewMode = 'form';
-    this.selectedOrder.set(order);
-    this.showModal = true;
+  viewOrder(order: OrderM) {
+    // Implement view order details modal
+    console.log('View order:', order);
   }
 
-  closeModal() {
-    this.showModal = false;
-    this.selectedOrder.set(null);
-  }
-
-  handleFormSubmit(formData: Partial<OrderM>) {
-    this.isSubmitted.set(true);
-
-    const request$ = this.selectedOrder()
-      ? this.orderService.update(this.selectedOrder()!.id!, formData)
-      : this.orderService.add(formData as OrderM);
-
-    request$.subscribe({
-      next: (response) => {
-        this.loadOrders();
-        this.closeModal();
-        this.toast.success(
-          this.selectedOrder() ? 'Order updated successfully!' : 'Order created successfully!',
-          'bottom-right',
-          5000
-        );
-        this.isSubmitted.set(false);
-      },
-      error: (err) => {
-        this.isSubmitted.set(false);
-        console.error('Error saving order:', err);
-        this.toast.danger(
-          err.error?.message || 'Failed to save order',
-          'bottom-left',
-          5000
-        );
-      }
-    });
-  }
-
-  async onDelete(order: OrderM) {
+  async deleteOrder(order: OrderM) {
     const confirmed = await this.confirm.confirm({
       message: `Are you sure you want to delete order #${order.id}?`,
       confirmText: 'Yes, delete',
@@ -252,36 +211,102 @@ export class OrderList {
     });
 
     if (confirmed) {
-      this.orderService.delete(order.id).subscribe({
+      this.orderService.delete(order.id!).subscribe({
         next: () => {
           this.orders.update(orders => orders.filter(o => o.id !== order.id));
-          this.toast.success('Order deleted successfully!', 'bottom-right', 5000);
+          this.toast.success('Order deleted successfully!', 'bottom-right', 3000);
         },
-        error: (err) => {
-          console.error('Error deleting order:', err);
-          this.toast.danger('Failed to delete order', 'bottom-left', 5000);
+        error: (error) => {
+          console.error('Error deleting order:', error);
+          this.toast.danger('Failed to delete order', 'bottom-right', 3000);
         }
       });
     }
   }
 
-  checkPermission(moduleName: string, permission: string): boolean {
-    const modulePermission = this.authService.getUser()?.userMenu?.find(
-      (module: any) => module?.menuName?.toLowerCase() === moduleName.toLowerCase()
-    );
-    return modulePermission?.permissions?.some(
-      (perm: any) => perm.toLowerCase() === permission.toLowerCase()
-    ) || false;
+  updateOrderStatus(order: OrderM, newStatus: string) {
+    this.orderService.update(order.id!, { orderStatus: newStatus }).subscribe({
+      next: (updatedOrder) => {
+        this.orders.update(orders => 
+          orders.map(o => o.id === order.id ? updatedOrder : o)
+        );
+        this.toast.success(`Order status updated to ${newStatus}`, 'bottom-right', 3000);
+      },
+      error: (error) => {
+        console.error('Error updating order status:', error);
+        this.toast.danger('Failed to update order status', 'bottom-right', 3000);
+      }
+    });
   }
 
-  getStatusClass(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'Pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      'Processing': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      'Shipped': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      'Delivered': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      'Cancelled': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-    };
-    return statusMap[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+  onFormSubmit(orderData: Partial<OrderM>) {
+    this.isSubmitted.set(true);
+
+    const request$ = orderData.id
+      ? this.orderService.update(orderData.id, orderData)
+      : this.orderService.add(orderData as OrderM);
+
+    request$.subscribe({
+      next: (savedOrder) => {
+        if (orderData.id) {
+          // Update existing order
+          this.orders.update(orders => 
+            orders.map(o => o.id === savedOrder.id ? savedOrder : o)
+          );
+          this.toast.success('Order updated successfully!', 'bottom-right', 3000);
+        } else {
+          // Add new order
+          this.orders.update(orders => [savedOrder, ...orders]);
+          this.toast.success('Order created successfully!', 'bottom-right', 3000);
+        }
+        this.showForm.set(false);
+        this.isSubmitted.set(false);
+      },
+      error: (error) => {
+        console.error('Error saving order:', error);
+        this.toast.danger(
+          error?.error?.message || 'Failed to save order', 
+          'bottom-right', 
+          3000
+        );
+        this.isSubmitted.set(false);
+      }
+    });
+  }
+
+  onFormCancel() {
+    this.showForm.set(false);
+    this.selectedOrder.set(null);
+  }
+
+  getStatusColor(status: string): string {
+    return this.statusColors[status] || 'bg-gray-100 text-gray-800';
+  }
+
+  // Export to CSV
+  exportToCSV() {
+    const orders = this.filteredOrders();
+    const headers = ['Order ID', 'Customer Name', 'Email', 'Phone', 'Total', 'Status', 'Date'];
+    const csvData = orders.map(order => [
+      order.id,
+      order.userName,
+      order.userEmail,
+      order.userPhone,
+      order.totalAmount,
+      order.orderStatus,
+      new Date(order.orderDate).toLocaleDateString()
+    ]);
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `orders_${new Date().toISOString()}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
