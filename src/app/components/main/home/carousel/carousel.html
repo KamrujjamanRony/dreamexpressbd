@@ -1,8 +1,8 @@
 <div class="relative overflow-hidden rounded-2xl shadow-xl">
+  <!-- navigation="true" -->
   <swiper-container
     slides-per-view="1"
     loop="true"
-    navigation="true"
     autoplay-delay="4000"
     autoplay-disable-on-interaction="false"
     effect="fade"
@@ -14,7 +14,7 @@
     @for (item of carousels(); track item.id) {
       <swiper-slide>
         <div
-          class="relative w-full min-h-[300px] md:min-h-[440px] lg:min-h-[520px] overflow-hidden"
+          class="relative w-full min-h-75 md:min-h-110 lg:min-h-130 overflow-hidden"
         >
           <!-- Background Image with Ken Burns -->
           <div
@@ -23,12 +23,12 @@
           ></div>
           <!-- Gradient Overlay -->
           <div
-            class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent"
+            class="absolute inset-0 bg-linear-to-r from-black/70 via-black/35 to-transparent"
           ></div>
           <!-- Content -->
           @if (item.title || item.description) {
             <div
-              class="relative z-10 flex items-center h-full min-h-[300px] md:min-h-[440px] lg:min-h-[520px] px-8 md:px-14 lg:px-20"
+              class="relative z-10 flex items-center h-full min-h-75 md:min-h-110 lg:min-h-130 px-8 md:px-14 lg:px-20"
             >
               <div class="max-w-xl">
                 <h2
