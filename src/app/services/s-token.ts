@@ -21,7 +21,7 @@ export class SToken {
   }
 
   search(): Observable<TokenM[]> {
-    return this.http.get<TokenM[]>(`${this.apiUrl}/Search`)
+    return this.http.get<TokenM[]>(`${this.apiUrl}`)
   }
 
   update(id: any, updateRequest: TokenM): Observable<TokenM> {
