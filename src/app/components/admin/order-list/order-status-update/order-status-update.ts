@@ -32,9 +32,9 @@ export class OrderStatusUpdate {
 
   updateStatus() {
     if (this.newStatus() && this.newStatus() !== this.currentStatus) {
-      this.statusUpdated.emit({ 
+      this.statusUpdated.emit({
         ...this.order,
-        id: this.order.id!, 
+        id: this.order.id!,
         status: this.newStatus()
       });
     }
@@ -43,5 +43,16 @@ export class OrderStatusUpdate {
 
   closeModal() {
     this.showModal = false;
+  }
+
+  getStatusColor(status: string): string {
+    const colors: { [key: string]: string } = {
+      'Pending': 'bg-yellow-100 text-yellow-800',
+      'Processing': 'bg-blue-100 text-blue-800',
+      'Shipped': 'bg-purple-100 text-purple-800',
+      'Delivered': 'bg-green-100 text-green-800',
+      'Cancelled': 'bg-red-100 text-red-800'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
   }
 }
