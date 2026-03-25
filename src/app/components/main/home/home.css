@@ -1,0 +1,40 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:host {
+  display: block;
+}
+
+app-carousel,
+app-feature-product,
+app-categories,
+app-product-wrapper,
+app-add-section,
+app-recommend-product {
+  display: block;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+app-feature-product {
+  animation-delay: 0.1s;
+}
+app-categories {
+  animation-delay: 0.15s;
+}
+app-product-wrapper {
+  animation-delay: 0.2s;
+}
+app-add-section {
+  animation-delay: 0.25s;
+}
+app-recommend-product {
+  animation-delay: 0.3s;
+}

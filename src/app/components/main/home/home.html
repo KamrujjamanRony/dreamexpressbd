@@ -1,51 +1,40 @@
 @if (loading() || categories().length < 1 || !products() || !categoryWiseProducts()) {
-  <section class="max-w-7xl mx-auto w-full p-4">
-      <div class="animate-pulse space-y-3 w-full pt-4 my-4">
-        <div class="h-80 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-      </div>
+  <!-- Skeleton Loading -->
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-8">
+    <!-- Carousel Skeleton -->
+    <div class="animate-pulse">
+      <div class="h-[300px] md:h-[440px] bg-gray-300 dark:bg-gray-700 rounded-2xl w-full"></div>
+    </div>
 
-      <div class="animate-pulse space-y-3 w-full pt-4 grid grid-cols-1 md:grid-cols-3 gap-5 my-4">
-        @for (_ of [1, 2, 3]; track _) {
-          <div class="h-24 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-        }
-      </div>
+    <!-- Features Skeleton -->
+    <div class="animate-pulse grid grid-cols-1 md:grid-cols-3 gap-4">
+      @for (_ of [1, 2, 3]; track _) {
+        <div class="h-20 bg-gray-300 dark:bg-gray-700 rounded-xl"></div>
+      }
+    </div>
 
-      <div class="animate-pulse space-y-3 w-full pt-4">
-        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
-        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-      </div>
-      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+    <!-- Category Skeleton -->
+    <div class="animate-pulse">
+      <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-48 mb-4"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @for (_ of [1, 2, 3, 4]; track _) {
-          <div class="h-52 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
+          <div class="aspect-[4/3] bg-gray-300 dark:bg-gray-700 rounded-xl"></div>
         }
       </div>
+    </div>
 
-      <div class="animate-pulse space-y-3 w-full pt-4">
-        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
-        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-      </div>
-      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
+    <!-- Products Skeleton -->
+    <div class="animate-pulse">
+      <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-48 mb-4"></div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
           <app-product-skeleton></app-product-skeleton>
         }
       </div>
-
-      <div class="animate-pulse space-y-3 w-full pt-4 my-4">
-        <div class="h-80 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-      </div>
-
-      <div class="animate-pulse space-y-3 w-full pt-4">
-        <div class="h-4 lg:h-12 bg-gray-500 dark:bg-gray-200 rounded w-1/2"></div>
-        <div class="h-1 bg-gray-500 dark:bg-gray-200 rounded w-full"></div>
-      </div>
-      <div class="animate-pulse grid grid-cols-2 lg:grid-cols-4 gap-5 my-4">
-        @for (_ of [1, 2, 3, 4]; track _) {
-          <app-product-skeleton></app-product-skeleton>
-        }
-      </div>
+    </div>
   </section>
 } @else {
-  <section class="max-w-7xl mx-auto w-full p-4">
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-2">
     @if (isBannerPermitted()) {
       <app-carousel [carousels]="carousels()" />
     }

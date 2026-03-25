@@ -1,12 +1,17 @@
 <div
-  class="h-full flex flex-col border border-gray-300 shadow-sm rounded-md p-1.5 transition-all relative overflow-hidden"
+  class="product-card group h-full flex flex-col bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative"
 >
-  <a [routerLink]="getViewLink(product.id)" class="block">
-    <div class="w-full">
+  <a [routerLink]="getViewLink(product.id)" class="block relative">
+    <!-- Discount Badge -->
+    @if (product?.discount > 0) {
       <span
-        class="absolute top-3 left-3 bg-red-500 text-gray-50 text-xs font-bold px-2 py-1 rounded-md"
-        >{{ product?.discount }}%</span
+        class="absolute top-3 left-3 z-10 bg-red-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md"
       >
+        -{{ product?.discount }}%
+      </span>
+    }
+    <!-- Product Image -->
+    <div class="overflow-hidden bg-gray-50 dark:bg-gray-700">
       <img
         [ngSrc]="product?.image"
         [alt]="product?.name"
@@ -14,41 +19,62 @@
         height="300"
         loading="lazy"
         decoding="async"
-        class="w-full aspect-square object-cover object-top"
+        class="w-full aspect-square object-cover object-top transition-transform duration-500 group-hover:scale-110"
       />
     </div>
-    <div class="py-4 px-2 text-left text-xs md:text-md lg:text-lg">
-      <h6 class="font-semibold line-clamp-2">
+  </a>
+
+  <!-- Product Info -->
+  <div class="flex flex-col flex-1 p-3 md:p-4">
+    <a [routerLink]="getViewLink(product.id)" class="block">
+      <h6
+        class="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 line-clamp-2 leading-snug hover:text-purple-600 transition-colors"
+      >
         {{ product?.name }}
       </h6>
-      <div class="mt-4">
-        <p class="font-semibold wrap-break-word">
-          <span class="mr-1.5">MRP:</span
-          ><span
-            [innerHTML]="product?.regularPrice | bdt"
-            class="mr-1.5 text-slate-600 dark:text-slate-300 line-through"
-          ></span>
-          <span [innerHTML]="product?.offerPrice | bdt"></span>
-        </p>
-      </div>
+    </a>
+
+    <!-- Price -->
+    <div class="mt-2 md:mt-3 flex items-baseline gap-2 flex-wrap">
+      <span
+        class="text-base md:text-lg font-bold text-purple-600"
+        [innerHTML]="product?.offerPrice | bdt"
+      ></span>
+      @if (product?.regularPrice > product?.offerPrice) {
+        <span
+          class="text-xs md:text-sm text-gray-400 line-through"
+          [innerHTML]="product?.regularPrice | bdt"
+        ></span>
+      }
     </div>
-  </a>
-  <div class="h-full min-h-19.5">
-    <div class="flex flex-col items-center w-full absolute left-0 right-0 px-2 bottom-3">
+
+    <!-- Spacer -->
+    <div class="flex-1 min-h-2"></div>
+
+    <!-- Actions -->
+    <div class="mt-3 flex flex-col gap-1.5">
       <button
         type="button"
         (click)="addToCart(product)"
-        class="flex items-center justify-center gap-2 px-2 py-2 cursor-pointer rounded-md text-white text-sm sm:text-[15px] font-medium whitespace-nowrap border-0 outline-0 w-full bg-purple-700 hover:bg-purple-800"
+        class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
       >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
+        </svg>
         Add to Bag
       </button>
       <button
         type="button"
         (click)="addToWishlist(product)"
-        class="pb-0.5 pt-3 cursor-pointer text-sm sm:text-[15px] text-slate-900 dark:text-slate-50 font-medium whitespace-nowrap outline-0 flex items-center gap-2"
+        class="w-full flex items-center justify-center gap-1.5 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 font-medium transition-colors cursor-pointer"
       >
-        <fa-icon [icon]="faHeart"></fa-icon>
-        <span>Add to wishlist</span>
+        <fa-icon [icon]="faHeart" class="text-xs"></fa-icon>
+        <span>Wishlist</span>
       </button>
     </div>
   </div>

@@ -28,7 +28,7 @@ export class Home {
   products = signal<ProductM[]>([]);
   categories = signal<any[]>([]);
   carousels = signal<any[]>([]);
-  
+
   // Create computed signals for permissions
   isBannerPermitted = computed(() => this.dataService.isPermitted("Banner"));
   isFeaturedPermitted = computed(() => this.dataService.isPermitted("Featured Product"));
@@ -36,7 +36,7 @@ export class Home {
   isProductsPermitted = computed(() => this.dataService.isPermitted("Products"));
   isAddSectionPermitted = computed(() => this.dataService.isPermitted("Add Section"));
   isRecommendPermitted = computed(() => this.dataService.isPermitted("Recommend Section"));
-  productWithDiscount = computed(() => {    
+  productWithDiscount = computed(() => {
     const products = this.products();
     if (!products) return [];
     const productsWithDiscount = products.map((product: any) => {
@@ -58,10 +58,11 @@ export class Home {
   categoryWiseProducts = computed(() => {
     const categoryMap: { [key: string]: ProductM[] } = {};
     for (const product of this.productWithDiscount()) {
-      if (!categoryMap[product.itemName]) {
-        categoryMap[product.category] = [];
+      const categoryName = product.itemName;
+      if (!categoryMap[categoryName]) {
+        categoryMap[categoryName] = [];
       }
-      categoryMap[product.category].push(product);
+      categoryMap[categoryName].push(product);
     }
     return categoryMap;
   });
@@ -83,12 +84,12 @@ export class Home {
       error: () => this.loading.set(false),
     });
 
-      this.carouselService.search().subscribe({
-        next: (data) => {
-          this.carousels.set(data);
-        },
-        error: (err) => console.error('Carousel load failed:', err),
-      });
+    this.carouselService.search().subscribe({
+      next: (data) => {
+        this.carousels.set(data);
+      },
+      error: (err) => console.error('Carousel load failed:', err),
+    });
 
 
     // Load sections first

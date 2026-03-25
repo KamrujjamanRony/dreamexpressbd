@@ -1,0 +1,77 @@
+/* Ken Burns zoom effect on background */
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carousel-bg {
+  animation: kenBurns 6s ease-out forwards;
+}
+
+.carousel-title {
+  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.carousel-desc {
+  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.carousel-btn {
+  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+/* Navigation buttons */
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  color: white;
+  --swiper-navigation-size: 20px;
+  transition: all 0.3s ease;
+}
+
+swiper-container::part(button-prev):hover,
+swiper-container::part(button-next):hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Pagination dots */
+swiper-container::part(bullet) {
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  width: 10px;
+  height: 10px;
+}
+
+swiper-container::part(bullet-active) {
+  background: white;
+  width: 28px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  swiper-container::part(button-prev),
+  swiper-container::part(button-next) {
+    width: 32px;
+    height: 32px;
+    --swiper-navigation-size: 14px;
+  }
+}

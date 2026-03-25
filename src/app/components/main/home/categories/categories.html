@@ -1,65 +1,52 @@
 <!-- categories -->
-<div class="py-2 mb-5">
-  <div class="border-b border-gray-300 pb-4 mb-4">
-    <h2 class="text-lg lg:text-3xl font-medium text-secondary uppercase">shop by category</h2>
+<div class="py-4 mb-4">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-1 h-8 bg-purple-600 rounded-full"></div>
+    <h2
+      class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-100 uppercase"
+    >
+      Shop by Category
+    </h2>
   </div>
   <swiper-container
     mousewheel-force-to-axis="true"
     slides-per-view="2"
     loop="true"
     navigation="true"
-    autoplay-delay="2500"
-    [spaceBetween]="25"
+    autoplay-delay="3000"
+    autoplay-disable-on-interaction="false"
+    [spaceBetween]="16"
     [breakpoints]="breakpoints"
+    speed="600"
   >
-    <!-- single product -->
     @for (item of categories(); track $index) {
-      <swiper-slide
-        ><div class="h-full">
-          <a
-            [routerLink]="['/shop']"
-            [queryParams]="{ category: item.itemName }"
-            class="relative rounded-sm overflow-hidden group"
-          >
+      <swiper-slide>
+        <a
+          [routerLink]="['/shop']"
+          [queryParams]="{ category: item.itemName }"
+          class="relative block rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
+        >
+          <div class="overflow-hidden">
             <img
               [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
               width="300"
               height="300"
               loading="lazy"
               decoding="async"
-              class="w-full hover:scale-125 duration-200"
+              class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-110"
               alt="category-{{ $index + 1 }}"
             />
-            <a
-              href="#"
-              class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
-              >{{ item?.itemName }}</a
-            >
-          </a>
-        </div></swiper-slide
-      >
+          </div>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-4"
+          >
+            <span class="text-white text-base md:text-lg font-semibold drop-shadow-md">
+              {{ item?.itemName }}
+            </span>
+          </div>
+        </a>
+      </swiper-slide>
     }
-    <!-- single product end -->
   </swiper-container>
-  <!-- <div class="grid grid-cols-4 gap-3">
-    @for (item of categories(); track $index) {
-      <a
-        [routerLink]="['/shop']"
-        [queryParams]="{ category: item.itemName }"
-        class="relative rounded-sm overflow-hidden group"
-      >
-        <img
-          src="images/category/category-{{ $index + 1 }}.jpg"
-          class="w-full hover:scale-125 duration-200"
-          alt="category-{{ $index + 1 }}"
-        />
-        <a
-          href="#"
-          class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
-          >{{ item?.name }}</a
-        >
-      </a>
-    }
-  </div> -->
 </div>
 <!-- categories end -->

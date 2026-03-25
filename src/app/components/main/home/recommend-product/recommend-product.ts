@@ -1,10 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ProductCard } from '../../../shared/product-card/product-card';
 import { ProductM } from '../../../../models/Products';
 
 @Component({
   selector: 'app-recommend-product',
-  imports: [ProductCard],
+  imports: [ProductCard, RouterLink],
   templateUrl: './recommend-product.html',
   styleUrl: './recommend-product.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
