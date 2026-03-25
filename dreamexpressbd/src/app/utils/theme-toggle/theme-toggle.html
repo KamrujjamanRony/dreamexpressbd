@@ -1,0 +1,36 @@
+<div class="hidden lg:block fixed top-1/2 right-10 z-50 rotate-90 origin-right bg-gray-50 dark:bg-gray-800 rounded-full p-2">
+  <button
+    (click)="themeModeToggle()"
+    type="button"
+    class="bg-transparent cursor-pointer"
+  >
+    <label class="theme">
+      <span class="theme__label text-sm">Light</span>
+      <span class="theme__toggle-wrap">
+        <input 
+          #themeCheckbox
+          class="theme__toggle" 
+          type="checkbox" 
+          role="switch" 
+          name="theme" 
+          id="theme-toggle"
+          [checked]="isDarkMode"
+          (click)="$event.preventDefault()"
+        >
+        <span class="theme__fill"></span>
+        <span class="theme__icon">
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+          <span class="theme__icon-part"></span>
+        </span>
+      </span>
+      <span class="theme__label text-sm">Dark</span>
+    </label>  
+  </button>
+</div>

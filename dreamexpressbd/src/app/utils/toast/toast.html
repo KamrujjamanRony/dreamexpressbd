@@ -1,0 +1,63 @@
+@for (position of positions; track position) {
+  <div class="fixed z-50 space-y-3" [class]="containerClass(position)">
+    @for (toast of toastService.toastsByPosition()[position]; track toast.id) {
+      <div
+        class="toast-item flex items-center w-full max-w-sm p-4 bg-neutral-primary-soft rounded-base shadow-xs border border-default"
+        role="alert"
+        (mouseenter)="toastService.pause(toast.id)"
+        (mouseleave)="toastService.resume(toast.id)"
+      >
+        <!-- ICON -->
+        <div
+          class="inline-flex items-center justify-center shrink-0 w-7 h-7 rounded"
+          [class]="iconBg(toast.type)"
+        >
+          @switch (toast.type) {
+            @case ('success') {
+              <svg class="w-5 h-5 text-fg-success" viewBox="0 0 24 24" fill="none">
+                <path stroke="currentColor" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
+              </svg>
+            }
+            @case ('danger') {
+              <svg class="w-5 h-5 text-fg-danger" viewBox="0 0 24 24" fill="none">
+                <path stroke="currentColor" stroke-width="2" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            }
+            @case ('warning') {
+              <svg class="w-5 h-5 text-fg-warning" viewBox="0 0 24 24" fill="none">
+                <path
+                  stroke="currentColor"
+                  stroke-width="2"
+                  d="M12 9v4m0 4h.01
+                     M21 12a9 9 0 1 1-18 0"
+                />
+              </svg>
+            }
+          }
+        </div>
+
+        <!-- MESSAGE -->
+        <div class="ms-3 text-sm font-normal text-body flex-1">
+          {{ toast.message }}
+
+          <!-- ⏳ PROGRESS BAR -->
+          <div class="mt-2 h-1 w-full bg-neutral-secondary-soft rounded">
+            <div
+              class="toast-progress"
+              [style.animationDuration.ms]="toast.duration"
+              [class.paused]="toast.paused"
+            ></div>
+          </div>
+        </div>
+
+        <!-- CLOSE -->
+        <button
+          class="ms-auto h-8 w-8 flex items-center justify-center bg-rose-500 text-white hover:bg-rose-600 rounded cursor-pointer"
+          (click)="toastService.remove(toast.id)"
+        >
+          ✕
+        </button>
+      </div>
+    }
+  </div>
+}

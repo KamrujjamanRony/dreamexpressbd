@@ -1,0 +1,448 @@
+@if (isView()) {
+<div class="max-w-4xl mx-auto p-4 dark:bg-gray-950 rounded-lg shadow-md">
+  <h1 class="text-2xl md:text-3xl font-bold text-emerald-600 text-center mb-6">
+    Update About Information
+  </h1>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+  <div class="text-center p-10">
+    <p class="text-xl text-emerald-600">Loading about information...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @else if (hasError()) {
+  <div class="text-center p-10">
+    <p class="text-xl text-red-600">Error loading about information.</p>
+  </div>
+  }
+
+  <!-- Form -->
+  @else {
+  <form (submit)="onSubmit($event)" class="space-y-4" enctype="multipart/form-data">
+    <!-- Heading -->
+    <div>
+      @let heading = form.heading(); @let headingError = form.heading().invalid() &&
+      form.heading().touched();
+      <div class="relative pb-2">
+        <input
+          type="text"
+          [formField]="form.heading"
+          id="heading"
+          autocomplete="off"
+          class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+          placeholder=" "
+          [class.bg-gray-100]="!isEdit()"
+          [class.cursor-not-allowed]="!isEdit()"
+        />
+        <label
+          for="heading"
+          class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+          >Heading</label
+        >
+      </div>
+      @if (headingError) {
+      <ul class="-mt-2 mb-2">
+        @for (error of heading.errors(); track error) {
+        <li class="text-sm text-red-600">{{ error.message }}</li>
+        }
+      </ul>
+      }
+    </div>
+
+    <!-- Title & Description 1 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        @let title = form.title(); @let titleError = form.title().invalid() &&
+        form.title().touched();
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title"
+            id="title"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Title 1</label
+          >
+        </div>
+        @if (titleError) {
+        <ul class="-mt-2 mb-2">
+          @for (error of title.errors(); track error) {
+          <li class="text-sm text-red-600">{{ error.message }}</li>
+          }
+        </ul>
+        }
+      </div>
+
+      <div>
+        @let description = form.description(); @let descriptionError = form.description().invalid()
+        && form.description().touched();
+        <div class="relative pb-2">
+          <textarea
+            id="description"
+            [formField]="form.description"
+            rows="2"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=""
+          ></textarea>
+          <label
+            for="description"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Description 1</label
+          >
+        </div>
+        @if (descriptionError) {
+        <ul class="-mt-2 mb-2">
+          @for (error of description.errors(); track error) {
+          <li class="text-sm text-red-600">{{ error.message }}</li>
+          }
+        </ul>
+        }
+      </div>
+    </div>
+
+    <!-- Title & Description 2 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title2"
+            id="title2"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title2"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Title 2</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <div class="relative pb-2">
+          <textarea
+            id="description2"
+            [formField]="form.description2"
+            rows="2"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=""
+          ></textarea>
+          <label
+            for="description2"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Description 2</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Title & Description 3 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title3"
+            id="title3"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title3"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Title 3</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <div class="relative pb-2">
+          <textarea
+            id="description3"
+            [formField]="form.description3"
+            rows="2"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=""
+          ></textarea>
+          <label
+            for="description3"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Description 3</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Title & Description 4 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title4"
+            id="title4"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title4"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Title 4</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <div class="relative pb-2">
+          <textarea
+            id="description4"
+            [formField]="form.description4"
+            rows="2"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=""
+          ></textarea>
+          <label
+            for="description4"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Description 4</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Title & Description 5 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title5"
+            id="title5"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title5"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Title 5</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <div class="relative pb-2">
+          <textarea
+            id="description5"
+            [formField]="form.description5"
+            rows="2"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=""
+          ></textarea>
+          <label
+            for="description5"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Description 5</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Title & Description 6 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title6"
+            id="title6"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title6"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Left State Title</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.description6"
+            id="description6"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="description6"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Left State Value</label
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Title & Description 7 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title7"
+            id="title7"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title7"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Middle State Title</label
+          >
+        </div>
+      </div>
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.description7"
+            id="description7"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="description7"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Middle State Value</label
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Title & Description 8 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.title8"
+            id="title8"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="title8"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Right State Title</label
+          >
+        </div>
+      </div>
+      <div>
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [formField]="form.description8"
+            id="description8"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-gray-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+          />
+          <label
+            for="description8"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Right State Value</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="pb-2">
+      <label class="block text-sm font-medium text-heading" for="imageUrl">About Image</label>
+      <input
+        #fileInput
+        id="imageUrl"
+        type="file"
+        accept="image/*"
+        (change)="onFileSelect($event)"
+        class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+      />
+  <p class="mt-1 text-sm text-gray-500" id="file_input_help">SVG, PNG, JPG or WEBP (MAX. 1280x720px).</p>
+
+      <!-- Image Preview -->
+      @if (previewUrl()) {
+      <div class="mt-2">
+        <img [src]="previewUrl()" alt="Preview" class="h-48 w-auto object-contain rounded border" />
+      </div>
+      }
+    </div>
+
+    <!-- Action Buttons -->
+    @if (isEdit()) {
+    <div class="flex gap-2 pt-4">
+      <button
+        type="submit"
+        [disabled]="form().invalid() || isSubmitted()"
+        class="flex items-center gap-2 text-gray-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center"
+      >
+        <fa-icon [icon]="faSave"></fa-icon>
+        {{ isSubmitted() ? 'Updating...' : 'Update About' }}
+      </button>
+
+      <button
+        type="button"
+        (click)="formReset()"
+        [disabled]="isSubmitted()"
+        class="flex items-center gap-2 text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center"
+      >
+        <fa-icon [icon]="faTimes"></fa-icon>
+        Reset
+      </button>
+    </div>
+    }
+  </form>
+  }
+</div>
+} @else {
+<p class="text-3xl font-bold text-center p-10 text-red-600">
+  You don't have permission to view this page.
+</p>
+}

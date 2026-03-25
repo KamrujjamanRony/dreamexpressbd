@@ -1,0 +1,26 @@
+/* Custom dialog header style */
+.p-dialog .p-dialog-header {
+  padding: 0.1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Close button style */
+.p-dialog-header-icon {
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.p-dialog-header-icon:hover {
+  color: #1f2937;
+}
+
+/* Form field spacing */
+.field {
+  margin-bottom: 0.1rem;
+}
+
+/* Input field styling */
+.p-inputtext {
+  width: 100%;
+  padding: 0.5rem;
+}

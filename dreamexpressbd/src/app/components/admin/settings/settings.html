@@ -1,0 +1,161 @@
+@if (isView()) {
+<div class="w-full border mb-10 px-3 max-h-[98vh] overflow-scroll">
+  <h1 class="text-xl md:text-3xl font-bold text-teal-500 underline text-center">
+    Company Settings
+  </h1>
+
+  @if (isEdit()) {
+  <div class="flex justify-end mb-4">
+    <button
+      (click)="openEditModal()"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Edit Settings
+    </button>
+  </div>
+  } @if (isLoading$ | async) {
+  <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
+  } @else if (hasError$ | async) {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    There was an error loading settings.
+  </p>
+  } @else if (!settings()) {
+  <p class="text-3xl font-bold text-center p-10 text-orange-600">
+    No settings found.
+  </p>
+  } @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Company Information -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-lg font-bold text-teal-600 mb-4">Company Information</h2>
+      <div class="space-y-3">
+        <div>
+          <p class="text-sm font-medium text-gray-500">Company Name</p>
+          <p class="text-gray-900">{{ settings()?.companyName }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Contact Phone</p>
+          <p class="text-gray-900">{{ settings()?.contactPhone }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Address</p>
+          <p class="text-gray-900">{{ settings()?.address1 }}</p>
+          @if (settings()?.address2) {
+          <p class="text-gray-900">{{ settings()?.address2 }}</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-lg font-bold text-teal-600 mb-4">Social Links</h2>
+      <div class="space-y-3">
+        @if (settings()?.socialLinks?.facebook) {
+        <div>
+          <p class="text-sm font-medium text-gray-500">Facebook</p>
+          <a
+            [href]="settings()?.socialLinks?.facebook"
+            target="_blank"
+            class="text-blue-600 hover:underline"
+          >
+            {{ settings()?.socialLinks?.facebook }}
+          </a>
+        </div>
+        } @if (settings()?.socialLinks?.twitter) {
+        <div>
+          <p class="text-sm font-medium text-gray-500">Twitter</p>
+          <a
+            [href]="settings()?.socialLinks?.twitter"
+            target="_blank"
+            class="text-blue-400 hover:underline"
+          >
+            {{ settings()?.socialLinks?.twitter }}
+          </a>
+        </div>
+        } @if (settings()?.socialLinks?.instagram) {
+        <div>
+          <p class="text-sm font-medium text-gray-500">Instagram</p>
+          <a
+            [href]="settings()?.socialLinks?.instagram"
+            target="_blank"
+            class="text-pink-600 hover:underline"
+          >
+            {{ settings()?.socialLinks?.instagram }}
+          </a>
+        </div>
+        } @if (settings()?.socialLinks?.linkedin) {
+        <div>
+          <p class="text-sm font-medium text-gray-500">LinkedIn</p>
+          <a
+            [href]="settings()?.socialLinks?.linkedin"
+            target="_blank"
+            class="text-blue-700 hover:underline"
+          >
+            {{ settings()?.socialLinks?.linkedin }}
+          </a>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Delivery Charges -->
+    <div class="bg-white p-6 rounded-lg shadow md:col-span-2">
+      <h2 class="text-lg font-bold text-teal-600 mb-4">Delivery Charges</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-900">
+          <thead class="text-sm text-gray-50 uppercase bg-gray-800">
+            <tr>
+              <th scope="col" class="px-6 py-3">Name</th>
+              <th scope="col" class="px-6 py-3">Amount</th>
+              <th scope="col" class="px-6 py-3">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of settings()?.deliveryCharges; track item?.id) {
+            <tr class="bg-white border-b hover:bg-gray-50">
+              <td class="px-6 py-4">{{ item?.name }}</td>
+              <td class="px-6 py-4">{{ item?.amount | currency : "BDT " }}</td>
+              <td class="px-6 py-4">
+                <span
+                  [class.bg-green-100]="item?.isActive"
+                  [class.bg-red-100]="!item?.isActive"
+                  [class.text-green-800]="item?.isActive"
+                  [class.text-red-800]="!item?.isActive"
+                  class="text-xs font-medium px-2.5 py-0.5 rounded"
+                >
+                  {{ item?.isActive ? "Active" : "Inactive" }}
+                </span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- Edit Modal -->
+@if (showModal) {
+<div
+  class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <app-settings-form
+      [siteSettings]="settings()"
+      (submitForm)="updateSettings($event)"
+      (cancel)="closeModal()"
+    ></app-settings-form>
+  </div>
+</div>
+} } @else {
+<p class="text-3xl font-bold text-center p-10 text-red-600">
+  You don't have permission to view this page.
+</p>
+}

@@ -1,0 +1,143 @@
+<div class="my-2 p-5 border border-gray-300 rounded-md max-w-4xl">
+  <h2 class="text-3xl font-medium uppercase mb-2">Rating & Reviews</h2>
+  <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+    <div class="text-sm w-full h-full">
+      <h2 class="text-4xl font-bold mb-2">{{ product?.ratings?.length }}/5</h2>
+      <div class="mb-2">
+        @for(star of getStarsArray(product?.AverageRating); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star text-xl"></i>
+        </span>
+        }
+      </div>
+      <div class="">{{ product?.ratings?.length }} Ratings</div>
+    </div>
+    <div class="hidden md:block text-sm w-1 h-32 bg-gray-200 rounded-lg"></div>
+    <div class="w-full flex flex-col md:items-center">
+      <div class="mb-2">
+        @for(star of getStarsArray(5); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star"></i>
+        </span>
+        }
+        <span class="text-md text-gray-800 ml-4 font-bold">{{
+          fiveStar().length
+        }}</span>
+      </div>
+      <div class="mb-2">
+        @for(star of getStarsArray(4); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star"></i>
+        </span>
+        }
+        <span class="text-md text-gray-800 ml-4 font-bold">{{
+          fourStar().length
+        }}</span>
+      </div>
+      <div class="mb-2">
+        @for(star of getStarsArray(3); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star"></i>
+        </span>
+        }
+        <span class="text-md text-gray-800 ml-4 font-bold">{{
+          threeStar().length
+        }}</span>
+      </div>
+      <div class="mb-2">
+        @for(star of getStarsArray(2); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star"></i>
+        </span>
+        }
+        <span class="text-md text-gray-800 ml-4 font-bold">{{
+          twoStar().length
+        }}</span>
+      </div>
+      <div class="mb-2">
+        @for(star of getStarsArray(1); track $index) {
+        <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+          <i class="fas fa-star"></i>
+        </span>
+        }
+        <span class="text-md text-gray-800 ml-4 font-bold">{{
+          oneStar().length
+        }}</span>
+      </div>
+    </div>
+  </div>
+  <!-- divider-container  -->
+  <div class="border-t border-gray-200 w-full"></div>
+  <!-- divider-container end -->
+  <!-- review section  -->
+  <div class="my-2">
+    <!-- filter review section  -->
+    <div class="flex flex-col md:flex-row justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <label for="rating">Rating</label>
+        <select
+          class="rounded-md"
+          id="rating"
+          [(ngModel)]="ratingFilter"
+          (change)="onRatingChange()"
+        >
+          <option value="">All</option>
+          <option value="5">Five Star</option>
+          <option value="4">Four Star</option>
+          <option value="3">Three Star</option>
+          <option value="2">Two Star</option>
+          <option value="1">One Star</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <label for="sort">Sort By</label>
+        <select
+          class="rounded-md"
+          id="sort"
+          [(ngModel)]="sortFilter"
+          (change)="onSortChange()"
+        >
+          <option value="">Newest First</option>
+          <option value="asc">Oldest First</option>
+          <option value="desc">Highest Rated First</option>
+          <option value="ascdesc">Lowest Rated First</option>
+        </select>
+      </div>
+      <button
+        (click)="onFilterClear()"
+        class="btn bg-primary text-gray-50 px-5 py-2"
+      >
+        Clear Filter
+      </button>
+    </div>
+    <!-- filter review section end -->
+    <!-- review card section  -->
+    @for (item of ratings(); track $index) {
+    <div class="border-b border-gray-200 w-full p-5">
+      <div class="flex justify-between gap-3">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1">
+            @for(star of getStarsArray(item.ratingValue); track $index) {
+            <span [ngClass]="{ 'text-yellow-400': star, 'text-senary': !star }">
+              <i class="fas fa-star"></i>
+            </span>
+            }
+          </div>
+          <div class="text-sm text-gray-800">
+            {{ showUserName(item?.userId) }}
+          </div>
+        </div>
+        <div class="text-sm text-gray-800">
+          {{ timeAgo(item?.date) }}
+        </div>
+      </div>
+      <div class="">
+        <p>{{ item?.review }}</p>
+      </div>
+    </div>
+    } @empty {
+    <div class="text-center text-rose-600">No reviews found.</div>
+    }
+  </div>
+  <!-- review section end -->
+</div>

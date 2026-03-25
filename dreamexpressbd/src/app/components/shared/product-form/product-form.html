@@ -1,0 +1,521 @@
+<h2 class="text-xl font-bold text-teal-500 mb-4">
+  {{ modalTitle }}
+</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit($event)"
+  class="min-w-100 mx-auto px-2"
+>
+  <!-- Basic Information -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Basic Information</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Name -->
+      <Field label="Product Name">
+        <input
+          type="text"
+          formControlName="name"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            (form.get('name')?.invalid && form.get('name')?.touched) ||
+            isSubmitted
+          "
+          placeholder=""
+          required
+        />
+      </Field>
+
+      <!-- SKU -->
+      <Field label="SKU">
+        <input
+          type="text"
+          formControlName="sku"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            (form.get('sku')?.invalid && form.get('sku')?.touched) ||
+            isSubmitted
+          "
+          placeholder=""
+          required
+        />
+      </Field>
+
+      <!-- Category -->
+      <Field label="Category">
+        <select
+          formControlName="category"
+          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+          required
+        >
+          <option value="" class="capitalize">Select Category</option>
+          @for(category of categories; track $index){
+          <option [value]="category" class="capitalize">
+            {{ category }}
+          </option>
+          }
+        </select>
+      </Field>
+
+      <!-- Brand -->
+      <Field label="Brand">
+        <select
+          formControlName="brand"
+          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+          required
+        >
+          <option value="" class="capitalize">Select Brand</option>
+          @for(brand of brands; track $index){
+          <option [value]="brand" class="capitalize">
+            {{ brand }}
+          </option>
+          }
+        </select>
+      </Field>
+
+      <!-- Regular Price -->
+      <Field label="Regular Price">
+        <input
+          type="number"
+          formControlName="regularPrice"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            (form.get('regularPrice')?.invalid &&
+              form.get('regularPrice')?.touched) ||
+            isSubmitted
+          "
+          placeholder=""
+          required
+          min="0"
+          step="0.01"
+        />
+      </Field>
+
+      <!-- Offer Price -->
+      <Field label="Offer Price">
+        <input
+          type="number"
+          formControlName="offerPrice"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+          min="0"
+          step="0.01"
+        />
+      </Field>
+
+      <!-- Availability -->
+      <Field label="Availability">
+        <select
+          formControlName="availability"
+          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+          required
+        >
+          @for(status of availabilityOptions; track $index){
+          <option [value]="status" class="capitalize">
+            {{ status }}
+          </option>
+          }
+        </select>
+      </Field>
+
+      <!-- Serial -->
+      <Field label="Serial Number">
+        <input
+          type="number"
+          formControlName="serial"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+          min="0"
+        />
+      </Field>
+    </div>
+  </div>
+
+  <!-- Images -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Images</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <!-- Main Image -->
+      <Field label="Main Image URL">
+        <input
+          type="text"
+          formControlName="image"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        />
+      </Field>
+
+      <!-- Additional Images -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2"
+          >Additional Images</label
+        >
+        <div class="space-y-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+          @for(imageCtrl of imagesArray.controls; track $index; let i = $index){
+          <div class="flex items-center gap-2 w-full">
+            <input
+              type="text"
+              [formControl]="imageCtrl"
+              class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+              placeholder="Additional Images {{ i + 1 }}"
+            />
+            <button
+              type="button"
+              (click)="removeImageField(i)"
+              class="text-red-600 hover:text-red-900 text-xl font-bold"
+            >
+              &times;
+            </button>
+          </div>
+          }
+          <button
+            type="button"
+            (click)="addImageField()"
+            class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 w-fit"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Descriptions -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Descriptions</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <!-- Short Description -->
+      <Field label="Short Description">
+        <textarea
+          formControlName="shortDescription"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            (form.get('shortDescription')?.invalid &&
+              form.get('shortDescription')?.touched) ||
+            isSubmitted
+          "
+          placeholder=""
+          required
+          rows="2"
+        ></textarea>
+      </Field>
+
+      <!-- Product Details -->
+      <Field label="Full Product Details">
+        <textarea
+          formControlName="productDetails"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+          rows="4"
+        ></textarea>
+      </Field>
+    </div>
+  </div>
+
+  <!-- Variants -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Variants</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Sizes -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Sizes</label
+        >
+        <div class="flex flex-wrap gap-2 mb-2">
+          @for(size of sizes.controls; track $index){
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
+          >
+            {{ size.value }}
+            <button
+              type="button"
+              (click)="removeSize($index)"
+              class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+            >
+              &times;
+            </button>
+          </span>
+          }
+        </div>
+        <div class="flex gap-2">
+          <select
+            #sizeSelect
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+          >
+            <option value="" disabled selected>Select Size</option>
+            @for(size of sizeOptions; track $index){
+            <option [value]="size">{{ size | uppercase }}</option>
+            }
+          </select>
+          <button
+            type="button"
+            (click)="addSize(sizeSelect.value); sizeSelect.value = ''"
+            class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+
+      <!-- Colors -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Colors</label
+        >
+        <div class="flex flex-wrap gap-2 mb-2">
+          @for(color of colors.controls; track $index){
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
+          >
+            {{ color.value }}
+            <button
+              type="button"
+              (click)="removeColor($index)"
+              class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+            >
+              &times;
+            </button>
+          </span>
+          }
+        </div>
+        <div class="flex gap-2">
+          <select
+            #colorSelect
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+          >
+            <option value="" disabled selected>Select Color</option>
+            @for(color of colorOptions; track $index){
+            <option [value]="color">{{ color | titlecase }}</option>
+            }
+          </select>
+          <button
+            type="button"
+            (click)="addColor(colorSelect.value); colorSelect.value = ''"
+            class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specifications -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Specifications</h3>
+    <div class="space-y-4">
+      @for(spec of specifications.controls; track $index; let i = $index){
+      <div class="border rounded p-4">
+        <div class="flex justify-between items-center mb-2 gap-2">
+          <Field [label]="'Specification Group ' + (i + 1)" class="w-full">
+            <input
+              type="text"
+              [formControl]="getSpecTitle(spec)"
+              class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            />
+          </Field>
+          <button
+            type="button"
+            (click)="removeSpecification(i)"
+            class="text-red-600 hover:text-red-900 text-xl font-bold"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="ml-4 space-y-2">
+          @for(item of getSpecContent(spec).controls; track $index; let j =
+          $index){
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              [formControl]="getItemField(getItemControl(item), 'item')"
+              class="block py-2 px-2 w-1/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+              placeholder="Specification"
+            />
+            <input
+              type="text"
+              [formControl]="getItemField(getItemControl(item), 'value')"
+              class="block py-2 px-2 w-2/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+              placeholder="Value"
+            />
+            <button
+              type="button"
+              (click)="removeSpecItem(i, j)"
+              class="text-red-600 hover:text-red-900"
+            >
+              &times;
+            </button>
+          </div>
+          }
+          <button
+            type="button"
+            (click)="addSpecItem(i)"
+            class="mt-2 inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-teal-700 bg-teal-100 hover:bg-teal-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+          >
+            Add Item
+          </button>
+        </div>
+      </div>
+      }
+      <button
+        type="button"
+        (click)="addSpecification()"
+        class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+      >
+        Add Group
+      </button>
+    </div>
+  </div>
+
+  <!-- Related Products Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Related Products</h3>
+    <div class="space-y-2">
+      @for(relatedProductCtrl of relatedProductsArray.controls; track $index;
+      let i = $index){
+      <div class="flex items-center gap-2">
+        <select
+          [formControl]="$any(relatedProductCtrl)"
+          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+        >
+          <option value="0">Select Related Product</option>
+          @for(product of allProducts; track product.id){
+          <option
+            [value]="product.id"
+            [selected]="relatedProductCtrl.value === product.id"
+          >
+            {{ product.name }} (ID: {{ product.id }})
+          </option>
+          }
+        </select>
+        <button
+          type="button"
+          (click)="removeRelatedProductField(i)"
+          class="text-red-600 hover:text-red-900 text-xl font-bold"
+        >
+          &times;
+        </button>
+      </div>
+      }
+      <button
+        type="button"
+        (click)="addRelatedProductField()"
+        class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+      >
+        Add Related Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Social & Others -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Social & Others</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- YouTube Link -->
+      <Field label="YouTube Link">
+        <input
+          type="text"
+          formControlName="youtubeLink"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+        />
+      </Field>
+
+      <!-- Facebook Post -->
+      <Field label="Facebook Post">
+        <input
+          type="text"
+          formControlName="facebookPost"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+        />
+      </Field>
+
+      <!-- Twitter Tweet -->
+      <Field label="Twitter Tweet">
+        <input
+          type="text"
+          formControlName="twitterTweet"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+        />
+      </Field>
+
+      <!-- Instagram Post -->
+      <Field label="Instagram Post">
+        <input
+          type="text"
+          formControlName="instagramPost"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+        />
+      </Field>
+
+      <!-- Others -->
+      <Field label="Other Information">
+        <textarea
+          formControlName="others"
+          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+          rows="2"
+        ></textarea>
+      </Field>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-teal-700 mb-3">Status</h3>
+    <div class="flex flex-wrap gap-6">
+      <!-- Featured -->
+      <div class="flex items-center">
+        <input
+          id="featured-checkbox"
+          type="checkbox"
+          formControlName="isFeatured"
+          class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+        />
+        <label
+          for="featured-checkbox"
+          class="ms-2 text-sm font-medium text-gray-900"
+        >
+          Featured Product
+        </label>
+      </div>
+
+      <!-- Active -->
+      <div class="flex items-center">
+        <input
+          id="active-checkbox"
+          type="checkbox"
+          formControlName="isActive"
+          class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+        />
+        <label
+          for="active-checkbox"
+          class="ms-2 text-sm font-medium text-gray-900"
+        >
+          Active
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex gap-2 justify-end">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      {{ product ? "Update" : "Save" }}
+    </button>
+  </div>
+</form>

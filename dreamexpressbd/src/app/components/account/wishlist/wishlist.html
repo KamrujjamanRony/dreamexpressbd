@@ -1,0 +1,13 @@
+<!-- wishlist -->
+<div class="gap-2 grid grid-cols-1">
+  @for(product of wishlist; track product.id){
+  <app-wishlist-card
+    [product]="product"
+    [userWishlist]="userWishlist"
+    (cartUpdated)="updateCartAfterChange($event)"
+  ></app-wishlist-card>
+  } @empty {
+  <div class="text-center text-gray-800 text-xl">No product found.</div>
+  }
+</div>
+<!-- wishlist end -->

@@ -1,0 +1,65 @@
+<!-- categories -->
+<div class="py-2 mb-5">
+  <div class="border-b border-gray-300 pb-4 mb-4">
+    <h2 class="text-lg lg:text-3xl font-medium text-secondary uppercase">shop by category</h2>
+  </div>
+  <swiper-container
+    mousewheel-force-to-axis="true"
+    slides-per-view="2"
+    loop="true"
+    navigation="true"
+    autoplay-delay="2500"
+    [spaceBetween]="25"
+    [breakpoints]="breakpoints"
+  >
+    <!-- single product -->
+    @for (item of categories(); track $index) {
+      <swiper-slide
+        ><div class="h-full">
+          <a
+            [routerLink]="['/shop']"
+            [queryParams]="{ category: item.name }"
+            class="relative rounded-sm overflow-hidden group"
+          >
+            <img
+              [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
+              width="300"
+              height="300"
+              loading="lazy"
+              decoding="async"
+              class="w-full hover:scale-125 duration-200"
+              alt="category-{{ $index + 1 }}"
+            />
+            <a
+              href="#"
+              class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
+              >{{ item?.name }}</a
+            >
+          </a>
+        </div></swiper-slide
+      >
+    }
+    <!-- single product end -->
+  </swiper-container>
+  <!-- <div class="grid grid-cols-4 gap-3">
+    @for (item of categories(); track $index) {
+      <a
+        [routerLink]="['/shop']"
+        [queryParams]="{ category: item.name }"
+        class="relative rounded-sm overflow-hidden group"
+      >
+        <img
+          src="images/category/category-{{ $index + 1 }}.jpg"
+          class="w-full hover:scale-125 duration-200"
+          alt="category-{{ $index + 1 }}"
+        />
+        <a
+          href="#"
+          class="absolute inset-0 bg-black/40 flex items-center justify-center text-xl text-gray-50 font-roboto font-medium group-hover:bg-opacity-50 transition"
+          >{{ item?.name }}</a
+        >
+      </a>
+    }
+  </div> -->
+</div>
+<!-- categories end -->
