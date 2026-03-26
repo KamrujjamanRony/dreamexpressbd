@@ -1,112 +1,91 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { UserOrderDetails } from '../../shared/user-order-details/user-order-details';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { SOrder } from '../../../services/s-order';
+import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
-  imports: [CommonModule, BdtPipe, FontAwesomeModule, UserOrderDetails],
+  imports: [CommonModule, FontAwesomeModule, BdtPipe],
   templateUrl: './orders.html',
   styleUrl: './orders.css',
 })
 export class Orders {
   faEye = faEye;
+  faBoxOpen = faBoxOpen;
+
   private orderService = inject(SOrder);
-  // private auth = inject(Auth);
+  private authCookie = inject(SAuthCookie);
+  private router = inject(Router);
 
-  userId: string | null = null;
   orders = signal<any[]>([]);
-  selectedOrder = signal<any>(null);
-  showModal = false;
-  isLoading = false;
-  error = '';
+  loading = signal(false);
+  error = signal('');
 
-  // ngOnInit(): void {
-  //   this.auth.onAuthStateChanged((user) => {
-  //     this.userId = user?.uid ?? null;
-  //     if (this.userId) {
-  //       this.loadOrders();
-  //     }
-  //   });
-  // }
+  ngOnInit(): void {
+    this.loadOrders();
+  }
 
   loadOrders(): void {
-    this.isLoading = true;
-    this.error = '';
-    if (!this.userId) {
-      this.error = 'User not authenticated';
-      this.isLoading = false;
+    const user = this.authCookie.getUserData();
+    if (!user?.phone) {
+      this.error.set('Please login to view your orders');
       return;
     }
 
-    this.orderService.search(this.userId).subscribe({
-      next: (response: any) => {
-        // Transform the response to handle $values and status
-        const orders = (response.$values || []).map((order: any) => ({
-          ...order,
-          orderItems: order.OrderItems?.$values || [],
-          orderStatus: this.getStatusText(order.OrderStatus),
-          shippingAddress: order.ShippingAddress
-        }));
+    this.loading.set(true);
+    this.error.set('');
 
-        this.orders.set(orders);
-        this.isLoading = false;
+    this.orderService.search().subscribe({
+      next: (response: any) => {
+        const allOrders = response?.$values || response || [];
+        // Filter orders by the logged-in user's phone
+        const userOrders = allOrders.filter(
+          (o: any) => o.userPhone === user.phone || o.UserPhone === user.phone
+        );
+        this.orders.set(userOrders);
+        this.loading.set(false);
       },
-      error: (err) => {
-        this.error = 'Failed to load orders. Please try again later.';
-        this.isLoading = false;
-        console.error('Error loading orders:', err);
-        // this.toastService.showMessage('error', 'Error', 'Failed to load orders');
-      }
+      error: () => {
+        this.error.set('Failed to load orders. Please try again later.');
+        this.loading.set(false);
+      },
     });
   }
 
-  private getStatusText(statusCode: number): string {
-    const statusMap: Record<number, string> = {
-      0: 'Pending',
-      1: 'Processing',
-      2: 'Shipped',
-      3: 'Delivered',
-      4: 'Cancelled'
+  getStatusClass(status: string | number): string {
+    const statusMap: Record<string, string> = {
+      'Pending': 'bg-amber-100 text-amber-700',
+      'Processing': 'bg-blue-100 text-blue-700',
+      'Shipped': 'bg-indigo-100 text-indigo-700',
+      'Delivered': 'bg-green-100 text-green-700',
+      'Cancelled': 'bg-red-100 text-red-700',
+      '0': 'bg-amber-100 text-amber-700',
+      '1': 'bg-blue-100 text-blue-700',
+      '2': 'bg-indigo-100 text-indigo-700',
+      '3': 'bg-green-100 text-green-700',
+      '4': 'bg-red-100 text-red-700',
     };
-    return statusMap[statusCode] || 'Unknown';
+    return statusMap[String(status)] || 'bg-gray-100 text-gray-700';
   }
 
-  viewOrderDetails(order: any) {
-    // Transform the order data to match what OrderDetailsComponent expects
-    const transformedOrder = {
-      id: order.Id,
-      userId: order.UserId,
-      userEmail: order.UserEmail,
-      userName: order.UserName,
-      userPhone: order.UserPhone,
-      subtotal: order.Subtotal,
-      deliveryCharge: order.DeliveryCharge,
-      totalAmount: order.TotalAmount,
-      paymentMethod: order.PaymentMethod,
-      orderStatus: order.orderStatus, // Already transformed to text
-      orderDate: order.OrderDate,
-      deliveredDate: order.DeliveredDate,
-      orderItems: order.orderItems, // Already transformed
-      shippingAddress: {
-        district: order.ShippingAddress?.District,
-        city: order.ShippingAddress?.City,
-        street: order.ShippingAddress?.Street,
-        contact: order.ShippingAddress?.Contact,
-        type: order.ShippingAddress?.Type
-      }
+  getStatusText(status: string | number): string {
+    const statusMap: Record<string, string> = {
+      '0': 'Pending',
+      '1': 'Processing',
+      '2': 'Shipped',
+      '3': 'Delivered',
+      '4': 'Cancelled',
     };
-
-    this.selectedOrder.set(transformedOrder);
-    this.showModal = true;
+    return statusMap[String(status)] || String(status);
   }
 
-  closeModal() {
-    this.showModal = false;
-    this.selectedOrder.set(null);
+  trackOrder(order: any): void {
+    this.router.navigate(['/account/order-tracking'], {
+      queryParams: { orderId: order.id || order.Id },
+    });
   }
-
 }
