@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { AddressModal } from '../../shared/address-modal/address-modal';
@@ -6,8 +6,9 @@ import { Router } from '@angular/router';
 import { SCart } from '../../../services/s-cart';
 import { SOrder } from '../../../services/s-order';
 import { SCustomer } from '../../../services/s-customer';
-import { SSetting } from '../../../services/s-setting';
 import { SToken } from '../../../services/s-token';
+import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SToast } from '../../../utils/toast/toast.service';
 import { TokenM } from '../../../models/TokenM';
 import { environment } from '../../../../environments/environment';
 import { OrderM } from '../../../models/OrderM';
@@ -22,16 +23,20 @@ export class Checkout {
     private router = inject(Router);
     private cartService = inject(SCart);
     private orderService = inject(SOrder);
-    private usersService = inject(SCustomer);
-    private siteSettingService = inject(SSetting);
+    private customerService = inject(SCustomer);
     private tokenService = inject(SToken);
+    private authCookie = inject(SAuthCookie);
+    private toast = inject(SToast);
+
     siteId = environment.companyCode;
+    imgBaseUrl = environment.ImageApi;
     orderData: any;
     user: any;
     userDetails: any;
-    loading = false;
-    error: string | null = null;
-    paymentMethod: string = 'Cash on Delivery';
+    loading = signal(false);
+    placingOrder = signal(false);
+    error = signal<string | null>(null);
+    paymentMethod = 'Cash on Delivery';
     deliveryCharge = signal<number>(0);
     deliveryAddress = signal<any>(null);
     userAddresses = signal<any[]>([]);
@@ -41,7 +46,7 @@ export class Checkout {
     tokenCode = '';
     tokenError = '';
     tokenApplied = signal(false);
-    tokenLoading = false;
+    tokenLoading = signal(false);
     discountToken = signal<string>('');
     discountType = signal<string>('');
     discountValue = signal<number>(0);
@@ -52,6 +57,17 @@ export class Checkout {
     addressModalEditMode = false;
     selectedAddressForEdit: any = null;
 
+    // Animation state
+    ready = signal(false);
+
+    // Step tracking
+    activeStep = signal(1);
+
+    // Computed totals
+    orderTotal = computed(() =>
+        (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount()
+    );
+
     constructor() {
         const navigation = this.router.currentNavigation();
         this.orderData = navigation?.extras.state?.['orderData'] ||
@@ -59,12 +75,22 @@ export class Checkout {
     }
 
     ngOnInit() {
-        // this.auth.onAuthStateChanged((user) => {
-        //     this.user = user;
-        //     if (user) {
-        //         this.loadUserDetails(user.uid);
-        //     }
-        // });
+        this.user = this.authCookie.getUserData();
+        if (this.user) {
+            this.loadUserDetails(this.user.id);
+        } else {
+            this.toast.warning('Please login to continue checkout', 'top-right', 3000);
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        if (!this.orderData?.products?.length) {
+            this.toast.warning('Your cart is empty', 'top-right', 3000);
+            this.router.navigate(['/cart']);
+            return;
+        }
+
+        setTimeout(() => this.ready.set(true), 50);
     }
 
     private calculateDeliveryCharge() {
@@ -75,9 +101,9 @@ export class Checkout {
 
         const district = this.deliveryAddress()?.district || '';
         if (district.toLowerCase().includes('dhaka')) {
-            this.deliveryCharge.set(60); // Inside Dhaka
-        } else {
-            this.deliveryCharge.set(120); // Outside Dhaka
+            this.deliveryCharge.set(60);
+        } else if (district) {
+            this.deliveryCharge.set(120);
         }
     }
 
@@ -88,7 +114,7 @@ export class Checkout {
             return;
         }
 
-        this.tokenLoading = true;
+        this.tokenLoading.set(true);
         this.tokenError = '';
 
         this.tokenService.search().subscribe({
@@ -99,14 +125,14 @@ export class Checkout {
 
                 if (!token) {
                     this.tokenError = 'Invalid or expired token';
-                    this.tokenLoading = false;
+                    this.tokenLoading.set(false);
                     return;
                 }
 
                 const now = new Date();
                 if (new Date(token.expireAt) < now) {
                     this.tokenError = 'This token has expired';
-                    this.tokenLoading = false;
+                    this.tokenLoading.set(false);
                     return;
                 }
 
@@ -133,11 +159,12 @@ export class Checkout {
                 }
 
                 this.tokenApplied.set(true);
-                this.tokenLoading = false;
+                this.tokenLoading.set(false);
+                this.toast.success('Discount applied!', 'top-right', 2000);
             },
             error: () => {
                 this.tokenError = 'Failed to validate token';
-                this.tokenLoading = false;
+                this.tokenLoading.set(false);
             }
         });
     }
@@ -153,36 +180,31 @@ export class Checkout {
         this.calculateDeliveryCharge();
     }
 
-    getOrderTotal(): number {
-        return (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount();
-    }
-
     loadUserDetails(userId: string) {
-        this.loading = true;
-        this.usersService.search(userId).subscribe({
+        this.loading.set(true);
+        this.customerService.search(userId).subscribe({
             next: (data) => {
                 this.userDetails = data?.[0];
                 this.userAddresses.set(Array.isArray(data?.[0]?.address) ? data[0].address : []);
                 this.setDefaultAddress();
-                this.loading = false;
+                this.loading.set(false);
                 this.calculateDeliveryCharge();
             },
-            error: (err) => {
-                console.error('Failed to load user details:', err);
-                this.error = 'Failed to load user details';
-                this.loading = false;
+            error: () => {
+                this.error.set('Failed to load user details');
+                this.loading.set(false);
             }
         });
     }
 
     private setDefaultAddress() {
-        const defaultAddress = this.userAddresses().find(addr => addr.isDefault);
+        const defaultAddress = this.userAddresses().find((addr: any) => addr.isDefault);
         if (defaultAddress) {
             this.deliveryAddress.set(defaultAddress);
             this.selectedAddressId.set(defaultAddress.id);
         } else if (this.userAddresses().length > 0) {
             this.deliveryAddress.set(this.userAddresses()[0]);
-            this.selectedAddressId?.set(this.userAddresses()[0].id);
+            this.selectedAddressId.set(this.userAddresses()[0].id);
         }
     }
 
@@ -194,87 +216,90 @@ export class Checkout {
 
     handleAddressModalSubmit(result: any) {
         this.showAddressModal = false;
-        this.loading = true;
+        this.loading.set(true);
 
         if (this.addressModalEditMode) {
-            // Update existing address
-            const updatedAddresses = this.userAddresses().map(addr =>
+            const updatedAddresses = this.userAddresses().map((addr: any) =>
                 addr.id === result.id ? result : addr
             );
-            this.updateUserAddresses(updatedAddresses, 'Address updated successfully');
+            this.updateUserAddresses(updatedAddresses, 'Address updated');
         } else {
-            // Add new address
             const newAddress = {
                 ...result,
                 id: crypto.randomUUID(),
-                userId: this.user?.uid
+                userId: this.user?.id
             };
 
             const updatedAddresses = [...this.userAddresses(), newAddress];
 
-            // If new address is default, unset others
             if (newAddress.isDefault) {
-                updatedAddresses.forEach(addr => {
+                updatedAddresses.forEach((addr: any) => {
                     addr.isDefault = addr.id === newAddress.id;
                 });
             }
 
-            this.updateUserAddresses(updatedAddresses, 'Address added successfully');
+            this.updateUserAddresses(updatedAddresses, 'Address added');
 
-            // Select the new address if it's the only one or is default
             if (updatedAddresses.length === 1 || newAddress.isDefault) {
                 this.deliveryAddress.set(newAddress);
                 this.selectedAddressId.set(newAddress.id);
-                this.calculateDeliveryCharge(); // Add this line
+                this.calculateDeliveryCharge();
             }
         }
     }
 
     private updateUserAddresses(addresses: any[], successMessage: string) {
-        this.usersService.update(this.userDetails?.id, {
+        this.customerService.update(this.userDetails?.id, {
             ...this.userDetails,
             address: addresses
         }).subscribe({
             next: () => {
                 this.userAddresses.set(addresses);
-                // this.toastService.showMessage('success', 'Success', successMessage);
-                this.loading = false;
+                this.toast.success(successMessage, 'top-right', 2000);
+                this.loading.set(false);
             },
-            error: (error) => {
-                // this.toastService.showMessage('error', 'Error', 'Failed to update address');
-                console.error('Error:', error);
-                this.loading = false;
+            error: () => {
+                this.toast.danger('Failed to update address', 'top-right', 3000);
+                this.loading.set(false);
             }
         });
     }
 
     selectAddress(addressId: string) {
-        const selected = this.userAddresses().find(addr => addr.id === addressId);
+        const selected = this.userAddresses().find((addr: any) => addr.id === addressId);
         if (selected) {
             this.deliveryAddress.set(selected);
             this.selectedAddressId.set(addressId);
-            this.calculateDeliveryCharge(); // Add this line
+            this.calculateDeliveryCharge();
         }
     }
 
-    async placeOrder() {
+    goToStep(step: number) {
+        if (step === 2 && !this.deliveryAddress()) {
+            this.toast.warning('Please select a delivery address first', 'top-right', 2000);
+            return;
+        }
+        this.activeStep.set(step);
+    }
+
+    placeOrder() {
         if (!this.user) {
-            this.error = 'Please login to place an order';
+            this.error.set('Please login to place an order');
             return;
         }
 
         if (!this.deliveryAddress()) {
-            this.error = 'Please select a delivery address';
+            this.error.set('Please select a delivery address');
             return;
         }
 
         if (!this.orderData?.products?.length) {
-            this.error = 'No products in cart';
+            this.error.set('No products in cart');
             return;
         }
 
-        this.loading = true;
-        this.error = null;
+        this.placingOrder.set(true);
+        this.error.set(null);
 
         const orderItems = this.orderData.products.map((item: any) => ({
             productId: item.productId,
@@ -287,14 +312,14 @@ export class Checkout {
         }));
 
         const order: OrderM = {
-            userId: this.user.uid || '',
-            userEmail: this.user.email || '',
-            userName: this.userDetails?.fullname || '',
-            userPhone: this.deliveryAddress().contact || '',
+            userId: this.user.id || '',
+            userEmail: '',
+            userName: this.userDetails?.fullName || '',
+            userPhone: this.userDetails?.phone || this.deliveryAddress().contact || '',
             orderItems,
             subtotal: this.orderData.subtotal || 0,
             deliveryCharge: this.deliveryCharge() || 0,
-            totalAmount: this.getOrderTotal(),
+            totalAmount: this.orderTotal(),
             paymentMethod: this.paymentMethod || 'Cash on Delivery',
             orderStatus: 'Pending',
             companyID: this.siteId,
@@ -303,30 +328,30 @@ export class Checkout {
             discountValue: this.discountValue(),
             discountAmount: this.discountAmount(),
             shippingAddress: {
-                // id: this.deliveryAddress().id,
                 district: this.deliveryAddress().district || '',
                 city: this.deliveryAddress().city || '',
                 street: this.deliveryAddress().street || '',
                 contact: this.deliveryAddress().contact || '',
                 type: this.deliveryAddress().type || '',
-                // isDefault: this.deliveryAddress().isDefault
             },
             orderDate: new Date().toISOString()
         };
 
-        try {
-            const response = await this.orderService.add(order).toPromise();
-            await this.cartService.clearCart(this.user.uid);
-            this.router.navigate(['/order-confirmation'], {
-                state: { orderId: response?.id }
-            });
-        } catch (err) {
-            console.error('Order failed:', err);
-            // this.toastService.showMessage('error', 'Error', 'Failed to place order');
-            this.error = 'Failed to place order. Please try again.';
-        } finally {
-            this.loading = false;
-        }
+        this.orderService.add(order).subscribe({
+            next: (response) => {
+                this.cartService.clearCart(this.user.id);
+                this.cartService.refreshCartCount();
+                this.toast.success('Order placed successfully!', 'top-right', 3000);
+                this.router.navigate(['/order-confirmation'], {
+                    state: { orderId: response?.id }
+                });
+            },
+            error: () => {
+                this.toast.danger('Failed to place order. Please try again.', 'top-right', 3000);
+                this.error.set('Failed to place order. Please try again.');
+                this.placingOrder.set(false);
+            }
+        });
     }
 
 }
