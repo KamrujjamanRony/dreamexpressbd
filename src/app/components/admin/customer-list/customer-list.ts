@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faXmark, faMagnifyingGlass, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { SCustomer } from '../../../services/s-customer';
 import { debounce, form, FormField, required, validate } from '@angular/forms/signals';
@@ -21,6 +21,8 @@ export class CustomerList {
     faPencil = faPencil;
     faXmark = faXmark;
     faMagnifyingGlass = faMagnifyingGlass;
+    faEye = faEye;
+    faEyeSlash = faEyeSlash;
 
     /* ---------------- DI ---------------- */
     private customerService = inject(SCustomer);
@@ -33,6 +35,11 @@ export class CustomerList {
     /* ---------------- SIGNAL STATE ---------------- */
     items = signal<CustomerM[]>([]);
     searchQuery = signal('');
+    showPassword = signal(false);
+
+    toggleShowPassword() {
+        this.showPassword.update(v => !v);
+    }
 
     filteredList = computed(() => {
         const query = this.searchQuery().toLowerCase();

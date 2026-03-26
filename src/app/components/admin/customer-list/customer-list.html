@@ -196,10 +196,10 @@
                 @let passError = form.pass().invalid() && form.pass().touched();
                 <div class="relative pb-2">
                   <input
-                    type="password"
+                    [type]="showPassword() ? 'text' : 'password'"
                     id="pass"
                     [formField]="form.pass"
-                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer pr-10"
                     placeholder=""
                     autocomplete="off"
                   />
@@ -208,6 +208,13 @@
                     class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
                     >Password</label
                   >
+                  <button
+                    type="button"
+                    (click)="toggleShowPassword()"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                  >
+                    <fa-icon [icon]="showPassword() ? faEyeSlash : faEye"></fa-icon>
+                  </button>
                 </div>
                 @if (passError) {
                   <ul class="-mt-2 mb-2">
