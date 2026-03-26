@@ -66,6 +66,12 @@ export const routes: Routes = [
         title: `Customer Login | ${companyName}`
       },
       {
+        path: 'cart',
+        loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),
+        data: { reuse: false },
+        title: `Shopping Cart | ${companyName}`
+      },
+      {
         path: 'account',
         loadComponent: () => import('./layouts/account/account').then(m => m.Account),
         // canActivate: [accountGuard],
