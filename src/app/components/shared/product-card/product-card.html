@@ -14,7 +14,7 @@
     <div class="overflow-hidden bg-gray-50 dark:bg-gray-700">
       <img
         [ngSrc]="imageBaseUrl + product()?.imageUrl"
-        [alt]="product()?.name"
+        [alt]="product()?.title"
         width="300"
         height="300"
         loading="lazy"
@@ -30,7 +30,7 @@
       <h6
         class="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 line-clamp-2 leading-snug hover:text-purple-600 transition-colors"
       >
-        {{ product()?.name }}
+        {{ product()?.title }}
       </h6>
     </a>
 
