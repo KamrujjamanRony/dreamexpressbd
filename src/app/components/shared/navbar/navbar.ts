@@ -7,6 +7,7 @@ import { SProduct } from '../../../services/s-product';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SAuthUser } from '../../../services/s-auth-user';
+import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
@@ -18,6 +19,7 @@ import { NgOptimizedImage } from '@angular/common';
 export class Navbar {
   cartService = inject(SCart);
   authService = inject(SAuthUser);
+  authCookie = inject(SAuthCookie);
   wishListService = inject(SWishlist);
   private cdr = inject(ChangeDetectorRef);
   private CategoryService = inject(SCategory);
@@ -36,17 +38,12 @@ export class Navbar {
   category: string = 'all';
 
   ngOnInit() {
-    this.authService.get((user: any) => {
-      this.user = user;
-      if (this.user?.uid) {
-        this.fetchUserCart();
-        this.fetchWishList();
-      }
-    });
+    this.user = this.authCookie.getUserData();
+    this.refreshCartCount();
 
     // Listen for cart updates
     this.cartService.cartUpdated$.subscribe(() => {
-      this.fetchUserCart();
+      this.refreshCartCount();
     });
 
     // Listen for wishlist updates
@@ -69,25 +66,25 @@ export class Navbar {
     this.setupSearch();
   }
   ngAfterViewInit() {
-  setTimeout(() => {
-    const toggleOpen = document.getElementById('toggleOpen');
-    const toggleClose = document.getElementById('toggleClose');
-    const collapseMenu = document.getElementById('collapseMenu');
+    setTimeout(() => {
+      const toggleOpen = document.getElementById('toggleOpen');
+      const toggleClose = document.getElementById('toggleClose');
+      const collapseMenu = document.getElementById('collapseMenu');
 
-    if (toggleOpen && toggleClose && collapseMenu) {
-      const handleClick = () => {
-        if (collapseMenu.style.display === 'block') {
-          collapseMenu.style.display = 'none';
-        } else {
-          collapseMenu.style.display = 'block';
-        }
-      };
+      if (toggleOpen && toggleClose && collapseMenu) {
+        const handleClick = () => {
+          if (collapseMenu.style.display === 'block') {
+            collapseMenu.style.display = 'none';
+          } else {
+            collapseMenu.style.display = 'block';
+          }
+        };
 
-      toggleOpen.addEventListener('click', handleClick);
-      toggleClose.addEventListener('click', handleClick);
-    }
-  });
-}
+        toggleOpen.addEventListener('click', handleClick);
+        toggleClose.addEventListener('click', handleClick);
+      }
+    });
+  }
 
   setupSearch() {
     this.searchControl.valueChanges
@@ -144,23 +141,20 @@ export class Navbar {
     }
   }
 
-  fetchUserCart() {
-    if (!this.user?.uid) {
-      this.totalCarts.set(0);
-      return;
-    }
-    this.cartService.search(this.user?.uid).subscribe(data => {
-      this.totalCarts.set(data?.length > 0 ? data[0].products.reduce((sum: number, p: { quantity: any; }) => sum + p.quantity, 0) : 0);
-      this.cdr.detectChanges();
-    });
+  refreshCartCount() {
+    this.user = this.authCookie.getUserData();
+    this.cartService.refreshCartCount();
+    this.totalCarts = this.cartService.cartCount;
+    this.cdr.detectChanges();
   }
 
   fetchWishList() {
-    if (!this.user?.uid) {
+    const customerId = this.authCookie.getUserData()?.id;
+    if (!customerId) {
       this.totalWishlists.set(0);
       return;
     }
-    this.wishListService.getWishlist(this.user?.uid).subscribe(data => {
+    this.wishListService.getWishlist(customerId).subscribe(data => {
       this.totalWishlists.set(data?.length > 0 ? data[0].products.length : 0);
       this.cdr.detectChanges();
     });
@@ -168,6 +162,8 @@ export class Navbar {
 
   logout() {
     this.authService.logout();
+    this.user = null;
+    this.refreshCartCount();
   }
 
 }

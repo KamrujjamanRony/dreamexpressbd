@@ -204,7 +204,7 @@
 
           <!-- Cart -->
           <a
-            routerLink="/user/shopping-cart"
+            routerLink="/cart"
             class="flex flex-col items-center justify-center gap-0.5 cursor-pointer relative group"
           >
             <div class="relative">
@@ -235,7 +235,7 @@
           @if (user) {
             <div class="relative group">
               <a
-                routerLink="/user/profile-info"
+                routerLink="/account/profile"
                 class="flex flex-col items-center justify-center gap-0.5 cursor-pointer"
               >
                 <div class="text-2xl group-hover:text-purple-600">
@@ -250,12 +250,12 @@
                 class="absolute right-0 top-full mt-2 w-48 bg-gray-50 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 dark:bg-gray-800 dark:text-gray-200"
               >
                 <a
-                  routerLink="/user/profile-info"
+                  routerLink="/account/profile"
                   class="block px-4 py-1 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
                   >My Profile</a
                 >
                 <a
-                  routerLink="/user/orders"
+                  routerLink="/account/orders"
                   class="block px-4 py-1 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
                   >My Orders</a
                 >
