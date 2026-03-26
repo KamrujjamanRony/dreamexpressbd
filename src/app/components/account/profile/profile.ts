@@ -1,73 +1,116 @@
 import { Component, inject, signal } from '@angular/core';
 import { SCustomer } from '../../../services/s-customer';
-import { FormsModule } from '@angular/forms';
+import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SToast } from '../../../utils/toast/toast.service';
+import { environment } from '../../../../environments/environment';
+import { CustomerM } from '../../../models/Customer';
+import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser, faPhone, faMapPin, faLocationDot, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-profile',
-  imports: [FormsModule],
-  templateUrl: './profile.html',
-  styleUrl: './profile.css',
+    selector: 'app-profile',
+    imports: [FormField, FontAwesomeModule],
+    templateUrl: './profile.html',
+    styleUrl: './profile.css',
 })
 export class Profile {
-    private usersService = inject(SCustomer);
-    // private auth = inject(Auth);
-    userId: any;
-    id: any;
-    loading = signal<boolean>(false);
-    model: any = {
-        userId: "",
-        email: "",
-        username: "",
-        role: "user",
-        fullname: "",
-        photoURL: "",
-        address: [],
-        gender: "",
-        dob: "",
-        phoneNumber: ""
-    };
+    private customerService = inject(SCustomer);
+    private authCookie = inject(SAuthCookie);
+    private toast = inject(SToast);
 
-    // ngOnInit() {
-    //     this.auth.onAuthStateChanged((user) => {
-    //         this.userId = user?.uid;
-    //         this.fetchUser();
-    //     });
-    // }
+    faUser = faUser;
+    faPhone = faPhone;
+    faMapPin = faMapPin;
+    faLocationDot = faLocationDot;
+    faPencil = faPencil;
 
-    fetchUser() {
-        this.usersService.search(this.userId).subscribe(data => {
-            this.model = data?.[0];
-            this.id = data?.[0]?.id;
+    loading = signal(false);
+    editMode = signal(false);
+    customerId = signal<any>(null);
+
+    model = signal<CustomerM>({
+        companyID: environment.companyCode,
+        fullName: '',
+        phone: '',
+        pass: '',
+        dist: '',
+        address: '',
+    });
+
+    form = form(this.model, (schemaPath) => {
+        required(schemaPath.fullName, { message: 'Full name is required' });
+        required(schemaPath.phone, { message: 'Phone number is required' });
+        required(schemaPath.dist, { message: 'District is required' });
+        required(schemaPath.address, { message: 'Address is required' });
+
+        validate(schemaPath.fullName, ({ value }) => {
+            if (value() && value().length < 2) {
+                return { kind: 'minLength', message: 'Full name must be at least 2 characters' };
+            }
+            return null;
         });
+
+        validate(schemaPath.phone, ({ value }) => {
+            if (value() && !/^\d{10,15}$/.test(value())) {
+                return { kind: 'complexity', message: 'Phone must be 10-15 digits' };
+            }
+            return null;
+        });
+
+        debounce(schemaPath.fullName, 300);
+        debounce(schemaPath.phone, 300);
+    });
+
+    ngOnInit(): void {
+        this.loadProfile();
     }
 
-    onFormSubmit() {
-        const { fullname, username } = this.model;
-        this.loading.set(true);
-        if (fullname && username) {
-            this.usersService.update(this.model.id || this.id, this.model).subscribe({
-                next: (response) => {
-                    // this.toastService.showMessage('success', 'Success', 'Profile Update successfully');
-                    this.id = null;
-                    setTimeout(() => {
-                        this.loading.set(false);
-                    }, 1500);
-                },
-                error: (error) => {
-                    // this.toastService.showMessage('error', 'Error', error.error.message);
-                    console.error('Error Update Profile:', error.error);
-                    setTimeout(() => {
-                        this.loading.set(false);
-                    }, 1500);
-                }
+    loadProfile(): void {
+        const userData = this.authCookie.getUserData();
+        if (userData?.id) {
+            this.customerId.set(userData.id);
+            this.model.set({
+                companyID: environment.companyCode,
+                fullName: userData.fullName || '',
+                phone: userData.phone || '',
+                pass: userData.pass || '',
+                dist: userData.dist || '',
+                address: userData.address || '',
             });
-        } else {
-            // this.toastService.showMessage('warn', 'Warning', 'All Fields are required!');
-            setTimeout(() => {
-                this.loading.set(false);
-            }, 1500);
+        }
+    }
+
+    toggleEdit(): void {
+        this.editMode.update(v => !v);
+    }
+
+    onSubmit(event: Event): void {
+        event.preventDefault();
+
+        if (!this.form().valid()) {
+            this.toast.warning('Please fill all required fields!', 'top-right', 3000);
+            return;
         }
 
-    }
+        this.loading.set(true);
+        const formData = this.form().value();
 
+        this.customerService.update(this.customerId(), {
+            ...formData,
+            companyID: environment.companyCode,
+        }).subscribe({
+            next: (response) => {
+                this.toast.success('Profile updated successfully!', 'top-right', 3000);
+                // Update the cookie with new data
+                this.authCookie.login({ ...response, id: this.customerId() });
+                this.editMode.set(false);
+                this.loading.set(false);
+            },
+            error: (error) => {
+                this.toast.warning(error?.error?.message || 'Failed to update profile', 'top-right', 3000);
+                this.loading.set(false);
+            },
+        });
+    }
 }

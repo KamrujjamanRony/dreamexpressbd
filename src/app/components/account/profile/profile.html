@@ -1,103 +1,233 @@
-<!-- profile info -->
-<div class="col-span-9 shadow rounded px-6 pt-5 pb-7">
-  <h4 class="text-lg font-medium capitalize mb-4">Profile Information</h4>
+<!-- Profile Header -->
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-xl font-bold text-gray-800 dark:text-white">My Profile</h2>
+  <button
+    (click)="toggleEdit()"
+    class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer"
+    [class]="
+      editMode()
+        ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+        : 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50'
+    "
+  >
+    <fa-icon [icon]="faPencil"></fa-icon>
+    {{ editMode() ? 'Cancel' : 'Edit Profile' }}
+  </button>
+</div>
+
+@if (!editMode()) {
+  <!-- Profile View Mode -->
   <div class="space-y-4">
-    <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()" class="w-full">
-      <!-- fullname -->
-      <div class="grid grid-cols-1 gap-4">
-        <div class="w-full">
-          <label for="" class="text-gray-800 mb-2 block">Full name</label>
-          <input autocomplete="off"
-            type="text"
-            id="fullname"
-            name="fullname"
-            [(ngModel)]="model.fullname"
-            class="w-full"
-            placeholder="Enter Full Name"
-          />
-        </div>
+    <!-- Full Name -->
+    <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-teal-100 dark:bg-teal-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faUser" class="text-teal-600 dark:text-teal-400"></fa-icon>
       </div>
-      <!-- fullname end -->
-      <!-- form row -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- username -->
-        <div class="grid grid-cols-1 gap-4">
-          <div class="w-full">
-            <label for="" class="text-gray-800 mb-2 block">Username</label>
-            <input autocomplete="off"
-              type="text"
-              id="username"
-              name="username"
-              [(ngModel)]="model.username"
-              class="w-full"
-              placeholder="Enter Full Name"
-            />
-          </div>
-        </div>
-        <!-- username end -->
-        <!-- gender -->
-        <div>
-          <label for="" class="text-gray-800 mb-2 block">Gender</label>
-          <select autocomplete="off"
-            id="gender"
-            name="gender"
-            [(ngModel)]="model.gender"
-            class="w-full"
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-        <!-- gender end -->
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
+          Full Name
+        </p>
+        <p class="text-gray-800 dark:text-gray-100 font-semibold mt-0.5">
+          {{ model().fullName || '—' }}
+        </p>
       </div>
-      <!-- form row end -->
-      <!-- form row -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- email -->
-        <div>
-          <label for="" class="text-gray-800 mb-2 block">Email address</label>
-          <input autocomplete="off"
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="model.email"
-            class="w-full"
-            placeholder="Enter email address"
-            disabled
-          />
-        </div>
-        <!-- Email end -->
-        <!-- phoneNumber -->
-        <div>
-          <label for="" class="text-gray-800 mb-2 block">Phone number</label>
-          <input autocomplete="off"
-            type="text"
-            id="phoneNumber"
-            name="phoneNumber"
-            [(ngModel)]="model.phoneNumber"
-            class="w-full"
-            placeholder="Enter phone number"
-          />
-        </div>
-        <!-- Phone end -->
+    </div>
+
+    <!-- Phone -->
+    <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faPhone" class="text-cyan-600 dark:text-cyan-400"></fa-icon>
       </div>
-      <!-- form row end -->
-      <div class="mt-4">
-        @if (loading()) {
-        <button [disabled]="loading()" class="btn btn-error text-gray-50">
-          Processing...
-        </button>
-        } @else {
-        <button
-          class="px-4 py-2 text-center text-gray-50 bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
-          type="submit"
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
+          Phone
+        </p>
+        <p class="text-gray-800 dark:text-gray-100 font-semibold mt-0.5">
+          {{ model().phone || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- District -->
+    <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faLocationDot" class="text-indigo-600 dark:text-indigo-400"></fa-icon>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
+          District
+        </p>
+        <p class="text-gray-800 dark:text-gray-100 font-semibold mt-0.5">
+          {{ model().dist || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faMapPin" class="text-amber-600 dark:text-amber-400"></fa-icon>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
+          Address
+        </p>
+        <p class="text-gray-800 dark:text-gray-100 font-semibold mt-0.5">
+          {{ model().address || '—' }}
+        </p>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- Profile Edit Mode -->
+  <form autocomplete="off" class="space-y-5" (submit)="onSubmit($event)">
+    <!-- Full Name -->
+    <div>
+      @let fullName = form.fullName();
+      @let fullNameError = form.fullName().invalid() && form.fullName().touched();
+      <label
+        for="fullName"
+        class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+        >Full Name</label
+      >
+      <input
+        type="text"
+        id="fullName"
+        [formField]="form.fullName"
+        class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+        [class]="fullNameError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
+        placeholder="Enter your full name"
+        autocomplete="off"
+      />
+      @if (fullNameError) {
+        <ul class="mt-1">
+          @for (error of fullName.errors(); track error) {
+            <li class="text-sm text-red-500">{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <!-- Phone -->
+    <div>
+      @let phone = form.phone();
+      @let phoneError = form.phone().invalid() && form.phone().touched();
+      <label for="phone" class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+        >Phone Number</label
+      >
+      <input
+        type="tel"
+        id="phone"
+        [formField]="form.phone"
+        class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+        [class]="phoneError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
+        placeholder="Enter your phone number"
+        autocomplete="off"
+      />
+      @if (phoneError) {
+        <ul class="mt-1">
+          @for (error of phone.errors(); track error) {
+            <li class="text-sm text-red-500">{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- District -->
+      <div>
+        @let dist = form.dist();
+        @let distError = form.dist().invalid() && form.dist().touched();
+        <label for="dist" class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+          >District</label
         >
-          Save changes
-        </button>
+        <input
+          type="text"
+          id="dist"
+          [formField]="form.dist"
+          class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+          [class]="distError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
+          placeholder="Your district"
+          autocomplete="off"
+        />
+        @if (distError) {
+          <ul class="mt-1">
+            @for (error of dist.errors(); track error) {
+              <li class="text-sm text-red-500">{{ error.message }}</li>
+            }
+          </ul>
         }
       </div>
-    </form>
-  </div>
-</div>
-<!-- profile info end -->
+
+      <!-- Address -->
+      <div>
+        @let address = form.address();
+        @let addressError = form.address().invalid() && form.address().touched();
+        <label
+          for="address"
+          class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+          >Address</label
+        >
+        <input
+          type="text"
+          id="address"
+          [formField]="form.address"
+          class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+          [class]="addressError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
+          placeholder="Your full address"
+          autocomplete="off"
+        />
+        @if (addressError) {
+          <ul class="mt-1">
+            @for (error of address.errors(); track error) {
+              <li class="text-sm text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="loading() || form().invalid()"
+      class="w-full sm:w-auto text-white bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 focus:ring-4 focus:outline-none focus:ring-teal-300 font-semibold rounded-xl text-sm px-8 py-3 text-center transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-teal-500/25 cursor-pointer"
+    >
+      @if (loading()) {
+        <span class="inline-flex items-center gap-2">
+          <svg
+            class="animate-spin h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Saving...
+        </span>
+      } @else {
+        Save Changes
+      }
+    </button>
+  </form>
+}
