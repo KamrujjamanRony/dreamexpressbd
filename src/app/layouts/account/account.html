@@ -1,1 +1,101 @@
-<p>account works!</p>
+<app-navbar />
+
+<section class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-6">
+    <!-- Mobile sidebar toggle -->
+    <button
+      (click)="toggleSidebar()"
+      class="lg:hidden flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 rounded-xl shadow text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 cursor-pointer"
+    >
+      <fa-icon [icon]="sidebarOpen() ? faXmark : faBars"></fa-icon>
+      {{ sidebarOpen() ? 'Close Menu' : 'Account Menu' }}
+    </button>
+
+    <!-- Sidebar -->
+    <aside
+      class="w-full lg:w-72 shrink-0 transition-all duration-300"
+      [class.hidden]="!sidebarOpen()"
+      [class.lg:block]="true"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-24"
+      >
+        <!-- User Info Header -->
+        <div class="bg-linear-to-r from-teal-500 to-cyan-500 px-6 py-6 text-center">
+          <div
+            class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm"
+          >
+            <fa-icon [icon]="faUser" class="text-white text-2xl"></fa-icon>
+          </div>
+          @if (user) {
+            <h3 class="text-white font-bold text-lg">{{ user.fullName }}</h3>
+            <p class="text-teal-100 text-sm mt-0.5">{{ user.phone }}</p>
+          } @else {
+            <h3 class="text-white font-bold text-lg">Guest</h3>
+          }
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="p-3">
+          <ul class="space-y-1">
+            <li>
+              <a
+                routerLink="/account/profile"
+                routerLinkActive="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold"
+                (click)="closeSidebar()"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 text-sm"
+              >
+                <fa-icon [icon]="faUser" class="w-5 text-center"></fa-icon>
+                My Profile
+              </a>
+            </li>
+            <li>
+              <a
+                routerLink="/account/orders"
+                routerLinkActive="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold"
+                (click)="closeSidebar()"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 text-sm"
+              >
+                <fa-icon [icon]="faBoxOpen" class="w-5 text-center"></fa-icon>
+                My Orders
+              </a>
+            </li>
+            <li>
+              <a
+                routerLink="/account/order-tracking"
+                routerLinkActive="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold"
+                (click)="closeSidebar()"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 text-sm"
+              >
+                <fa-icon [icon]="faTruckFast" class="w-5 text-center"></fa-icon>
+                Track Order
+              </a>
+            </li>
+          </ul>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-100 dark:border-gray-700 my-3"></div>
+
+          <button
+            (click)="logout()"
+            class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 text-sm cursor-pointer"
+          >
+            <fa-icon [icon]="faLogout" class="w-5 text-center"></fa-icon>
+            Logout
+          </button>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0">
+      <div
+        class="account-content bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 lg:p-8"
+      >
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</section>
+
+<app-footer />

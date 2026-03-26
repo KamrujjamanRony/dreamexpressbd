@@ -1,11 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Navbar } from '../../components/shared/navbar/navbar';
+import { Footer } from '../../components/shared/footer/footer';
+import { SAuthCookie } from '../../services/s-auth-cookie';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  faUser,
+  faBoxOpen,
+  faTruckFast,
+  faArrowRightFromBracket,
+  faBars,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-account',
-  imports: [],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Navbar, Footer, FontAwesomeModule],
   templateUrl: './account.html',
   styleUrl: './account.css',
 })
 export class Account {
+  private authCookie = inject(SAuthCookie);
+  private router = inject(Router);
 
+  faUser = faUser;
+  faBoxOpen = faBoxOpen;
+  faTruckFast = faTruckFast;
+  faLogout = faArrowRightFromBracket;
+  faBars = faBars;
+  faXmark = faXmark;
+
+  sidebarOpen = signal(false);
+
+  get user() {
+    return this.authCookie.getUserData();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen.update(v => !v);
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen.set(false);
+  }
+
+  logout(): void {
+    this.authCookie.logout();
+    this.router.navigate(['/login']);
+  }
 }
