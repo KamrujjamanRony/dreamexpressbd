@@ -1,71 +1,136 @@
-<section class="flex justify-center items-center h-screen bg-teal-100">
-  @if (!loading()) {
-  <div
-    class="w-full max-w-sm p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8"
-  >
-    <form autocomplete="off" class="space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <h5 class="block mb-2 text-sm font-medium text-gray-950 capitalize">
-        Sign in to our platform
-      </h5>
-      <!-- userName -->
-      <div>
-        <label
-          for="userName"
-          class="block mb-2 text-sm font-medium text-gray-950"
-          >Your username</label
-        >
-        <input
-          type="userName"
-          name="userName"
-          id="userName"
-          [formControl]="getControl('userName')"
-          class="bg-gray-50 border border-gray-300 text-gray-950 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          [class.invalid]="
-            (getControl('userName').invalid &&
-              getControl('userName').touched) ||
-            isSubmitted
-          "
-          placeholder="username"
-          autocomplete="off"
-          required
-        />
-      </div>
-      <!-- password -->
-      <div>
-        <label
-          for="password"
-          class="block mb-2 text-sm font-medium text-gray-950 capitalize"
-          >Your password</label
-        >
-        <input
-          type="password"
-          name="password"
-          id="password"
-          [formControl]="getControl('password')"
-          placeholder="••••••••"
-          class="bg-gray-50 border border-gray-300 text-gray-950 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          [class.invalid]="
-            (getControl('password').invalid &&
-              getControl('password').touched) ||
-            isSubmitted
-          "
-          autocomplete="off"
-          required
-        />
-      </div>
-      <button
-        type="submit"
-        class="w-full text-gray-50 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      >
-        Login to your account
-      </button>
-    </form>
+<section
+  class="admin-login-bg relative flex items-center justify-center min-h-screen overflow-hidden"
+>
+  <!-- Animated background shapes -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
   </div>
-  } @else {
-  <div class="flex justify-center items-center h-full">
+
+  <!-- Login Card -->
+  <div class="login-card relative z-10 w-full max-w-md mx-4">
     <div
-      class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"
-    ></div>
+      class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/30 overflow-hidden"
+    >
+      <!-- Header -->
+      <div
+        class="bg-linear-to-r from-indigo-600 via-purple-600 to-indigo-700 px-8 py-8 text-center"
+      >
+        <div
+          class="shield-icon w-16 h-16 bg-white/15 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 rotate-3"
+        >
+          <fa-icon [icon]="faShieldHalved" class="text-white text-3xl"></fa-icon>
+        </div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
+        <p class="text-indigo-200 text-sm mt-1">Sign in to access the dashboard</p>
+      </div>
+
+      <!-- Form -->
+      <div class="px-8 py-8">
+        <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+          <!-- Username -->
+          <div class="form-group">
+            <label
+              for="userName"
+              class="block mb-1.5 text-sm font-semibold text-gray-700 dark:text-gray-300"
+            >
+              Username
+            </label>
+            <div class="relative">
+              <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                <fa-icon [icon]="faUser" class="text-sm"></fa-icon>
+              </div>
+              <input
+                type="text"
+                name="userName"
+                id="userName"
+                [formControl]="getControl('userName')"
+                class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all duration-300"
+                placeholder="Enter your username"
+                autocomplete="off"
+              />
+            </div>
+            @if (
+              getControl('userName').invalid && (getControl('userName').touched || isSubmitted)
+            ) {
+              <p class="mt-1 text-xs text-red-500 slide-in">Username is required</p>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label
+              for="password"
+              class="block mb-1.5 text-sm font-semibold text-gray-700 dark:text-gray-300"
+            >
+              Password
+            </label>
+            <div class="relative">
+              <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                <fa-icon [icon]="faLock" class="text-sm"></fa-icon>
+              </div>
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                name="password"
+                id="password"
+                [formControl]="getControl('password')"
+                class="w-full pl-10 pr-11 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all duration-300"
+                placeholder="Enter your password"
+                autocomplete="off"
+              />
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 transition cursor-pointer"
+              >
+                <fa-icon [icon]="showPassword() ? faEyeSlash : faEye" class="text-sm"></fa-icon>
+              </button>
+            </div>
+            @if (
+              getControl('password').invalid && (getControl('password').touched || isSubmitted)
+            ) {
+              <p class="mt-1 text-xs text-red-500 slide-in">Password is required</p>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            [disabled]="loading()"
+            class="login-btn w-full flex items-center justify-center gap-2 py-3.5 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+          >
+            @if (loading()) {
+              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  fill="none"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>Signing in...</span>
+            } @else {
+              <fa-icon [icon]="faRightToBracket"></fa-icon>
+              <span>Sign In</span>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+      &copy; {{ currentYear }} Admin Panel &middot; Secured Access
+    </p>
   </div>
-  }
 </section>
