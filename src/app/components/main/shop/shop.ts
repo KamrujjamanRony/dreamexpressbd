@@ -152,14 +152,9 @@ export class Shop {
   ngOnInit() {
     this.dataService.loadSections().subscribe();
 
-    // Handle route params and query params
-    this.route.paramMap.subscribe(() => {
-      this.loadProducts();
-    });
-
     this.route.queryParamMap.subscribe(queryParams => {
       const category = queryParams.get('category');
-      if (category) {
+      if (category && isNaN(+category)) {
         this.categoryNames.set([category]);
       } else {
         this.categoryNames.set([]);
@@ -168,27 +163,16 @@ export class Shop {
     });
   }
 
-  // ngOnInit() {
-  //   this.dataService.loadSections().subscribe();
-  //   // load only if products not cached
-  //   if (!this.products()) {
-  //     this.loadProducts();
-  //   }
-  //   this.route.queryParamMap.subscribe(params => {
-  //     const category = params.get('category');
-  //     if (category) {
-  //       this.categoryNames.set([category]);
-  //     } else {
-  //       this.categoryNames.set([]);
-  //     }
-  //   });
-  // }
-
   loadProducts() {
     const queryParams = this.route.snapshot.queryParams;
     const category = queryParams['category'] || '';
+    const search = queryParams['search'] || '';
 
-    this.productService.search('', category).subscribe(data => {
+    // If category is numeric, use it as itemId; otherwise pass as search
+    const itemId = category && !isNaN(+category) ? +category : 0;
+    const searchTerm = search || (!itemId && category ? category : '');
+
+    this.productService.search(itemId, searchTerm).subscribe(data => {
       this.products.set(data);
       this.categories.set(this.groupProductsByProperty(data, 'category'));
       this.brands.set(this.groupProductsByProperty(data, 'brand'));
