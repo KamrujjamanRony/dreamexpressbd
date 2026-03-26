@@ -1,7 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Navbar } from '../../components/shared/navbar/navbar';
-import { Footer } from '../../components/shared/footer/footer';
 import { SAuthCookie } from '../../services/s-auth-cookie';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -15,7 +13,7 @@ import {
 
 @Component({
   selector: 'app-account',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Navbar, Footer, FontAwesomeModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule],
   templateUrl: './account.html',
   styleUrl: './account.css',
 })
