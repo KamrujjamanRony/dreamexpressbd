@@ -10,30 +10,25 @@ export class SAuthUser {
   router = inject(Router);
   public currentUser: any = null;
 
-  get(data: any) {
-    // this.auth.onAuthStateChanged((user) => {
-    //   data = user;
-    // });
+  get(callback?: (user: any) => void) {
+    const user = this.authCookieService.getUserData();
+    this.currentUser = user;
+    if (callback) callback(user);
+  }
+
+  getUserData(): any {
+    return this.authCookieService.getUserData();
   }
 
   isLoggedIn(): boolean {
     const user = this.authCookieService.getUserData();
     return !!user;
-    // return !!this.auth.currentUser;
   }
 
-  register(email: any, password: any) {
-    // return createUserWithEmailAndPassword(this.auth, email, password);
-  }
-  
-  forgotPassword(email: string) {
-    // return sendPasswordResetEmail(this.auth, email);
-  }
-  
   logout() {
     this.authCookieService.logout();
+    this.currentUser = null;
     this.router.navigate(['/']);
-    // return signOut(this.auth);
   }
-  
+
 }
