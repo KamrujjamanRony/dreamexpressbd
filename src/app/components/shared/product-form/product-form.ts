@@ -290,16 +290,3 @@ export class ProductForm {
   }
 
 }
-
-onSubmit(event: Event) {
-  this.isSubmitted = true;
-  if (this.form.valid) {
-    this.submitForm.emit(this.form.value);
-  }
-}
-
-onCancel() {
-  this.cancel.emit();
-}
-
-}

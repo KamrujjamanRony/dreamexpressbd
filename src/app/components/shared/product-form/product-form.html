@@ -19,7 +19,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="nameError"
             placeholder=""
-            required
           />
         </Field>
         @if (nameError) {
@@ -43,7 +42,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="skuError"
             placeholder=""
-            required
           />
         </Field>
         @if (skuError) {
@@ -64,7 +62,6 @@
             [formField]="form.category"
             class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
             [class.border-red-400]="categoryError"
-            required
           >
             <option value="" class="capitalize">Select Category</option>
             @for (category of categories; track $index) {
@@ -88,7 +85,6 @@
             [formField]="form.brand"
             class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
             [class.border-red-400]="brandError"
-            required
           >
             <option value="" class="capitalize">Select Brand</option>
             @for (brand of brands; track $index) {
@@ -115,7 +111,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="regularPriceError"
             placeholder=""
-            required
             min="0"
             step="0.01"
           />
@@ -163,7 +158,6 @@
             [formField]="form.availability"
             class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
             [class.border-red-400]="availabilityError"
-            required
           >
             @for (status of availabilityOptions; track $index) {
               <option [value]="status" class="capitalize">
@@ -256,7 +250,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="shortDescError"
             placeholder=""
-            required
             rows="2"
           ></textarea>
         </Field>
