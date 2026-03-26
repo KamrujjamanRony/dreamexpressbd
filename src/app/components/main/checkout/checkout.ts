@@ -65,7 +65,7 @@ export class Checkout {
 
     // Computed totals
     orderTotal = computed(() =>
-        (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount()
+        Math.max(0, (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount())
     );
 
     constructor() {
@@ -119,19 +119,28 @@ export class Checkout {
 
         this.tokenService.search().subscribe({
             next: (tokens: TokenM[]) => {
-                const token = tokens.find(t =>
-                    t.code.toLowerCase() === code.toLowerCase() && t.isActive && t.usedCount < t.maxUseCount
-                );
+                const token = tokens.find(t => t.code.toLowerCase() === code.toLowerCase());
 
                 if (!token) {
-                    this.tokenError = 'Invalid or expired token';
+                    this.tokenError = 'This discount code does not exist';
                     this.tokenLoading.set(false);
                     return;
                 }
 
-                const now = new Date();
-                if (new Date(token.expireAt) < now) {
-                    this.tokenError = 'This token has expired';
+                if (!token.isActive) {
+                    this.tokenError = 'This discount code is inactive';
+                    this.tokenLoading.set(false);
+                    return;
+                }
+
+                if (new Date(token.expireAt) < new Date()) {
+                    this.tokenError = 'This discount code has expired';
+                    this.tokenLoading.set(false);
+                    return;
+                }
+
+                if (token.usedCount >= token.maxUseCount) {
+                    this.tokenError = 'This discount code has reached its usage limit';
                     this.tokenLoading.set(false);
                     return;
                 }
@@ -145,7 +154,7 @@ export class Checkout {
                     this.discountAmount.set(0);
                     this.deliveryCharge.set(0);
                 } else if (token.type === 'Percentage') {
-                    const amount = Math.round((subtotal * token.value) / 100);
+                    const amount = Math.min(Math.round((subtotal * token.value) / 100), subtotal);
                     this.discountToken.set(token.code);
                     this.discountType.set('Percentage');
                     this.discountValue.set(token.value);

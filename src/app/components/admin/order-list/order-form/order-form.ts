@@ -155,7 +155,7 @@ export class OrderForm implements OnChanges {
   /* ---------------- COMPUTED VALUES ---------------- */
   totalAmount = computed(() => {
     const m = this.model();
-    return (m.subtotal || 0) + (m.deliveryCharge || 0) - (m.discountAmount || 0);
+    return Math.max(0, (m.subtotal || 0) + (m.deliveryCharge || 0) - (m.discountAmount || 0));
   });
 
   /* ---------------- EFFECTS ---------------- */
@@ -304,30 +304,35 @@ export class OrderForm implements OnChanges {
 
     this.tokenService.search().subscribe({
       next: (tokens: TokenM[]) => {
-        const token = tokens.find(t =>
-          t.code.toLowerCase() === code.toLowerCase() && t.isActive && t.usedCount < t.maxUseCount
-        );
+        const token = tokens.find(t => t.code.toLowerCase() === code.toLowerCase());
 
         if (!token) {
-          this.tokenError = 'Invalid or expired token';
+          this.tokenError = 'This discount code does not exist';
           this.tokenLoading = false;
           return;
         }
 
-        const now = new Date();
-        if (new Date(token.expireAt) < now) {
-          this.tokenError = 'This token has expired';
+        if (!token.isActive) {
+          this.tokenError = 'This discount code is inactive';
           this.tokenLoading = false;
           return;
         }
 
-        // Apply token
+        if (new Date(token.expireAt) < new Date()) {
+          this.tokenError = 'This discount code has expired';
+          this.tokenLoading = false;
+          return;
+        }
+
+        if (token.usedCount >= token.maxUseCount) {
+          this.tokenError = 'This discount code has reached its usage limit';
+          this.tokenLoading = false;
+          return;
+        }
+
         const subtotal = this.model().subtotal;
-        let discountAmount = 0;
-        let discountType = token.type;
 
         if (token.type === 'FreeDelivery') {
-          // Free delivery
           this.model.update(m => ({
             ...m,
             deliveryCharge: 0,
@@ -337,7 +342,7 @@ export class OrderForm implements OnChanges {
             discountAmount: 0
           }));
         } else if (token.type === 'Percentage') {
-          discountAmount = Math.round((subtotal * token.value) / 100);
+          const discountAmount = Math.min(Math.round((subtotal * token.value) / 100), subtotal);
           this.model.update(m => ({
             ...m,
             discountToken: token.code,
@@ -346,8 +351,7 @@ export class OrderForm implements OnChanges {
             discountAmount
           }));
         } else {
-          // Fixed amount
-          discountAmount = Math.min(token.value, subtotal);
+          const discountAmount = Math.min(token.value, subtotal);
           this.model.update(m => ({
             ...m,
             discountToken: token.code,
