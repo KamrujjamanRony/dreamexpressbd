@@ -3,6 +3,7 @@ import { Component, EventEmitter, inject, Input, Output, signal, computed, effec
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
+import { finalize } from 'rxjs';
 import { OrderM, OrderItemM } from '../../../../models/OrderM';
 import { TokenM } from '../../../../models/TokenM';
 import { ProductM } from '../../../../models/Products';
@@ -74,9 +75,9 @@ export class OrderForm implements OnChanges {
 
   // Discount token state
   tokenCode = '';
-  tokenError = '';
+  tokenError = signal('');
   tokenApplied = signal(false);
-  tokenLoading = false;
+  tokenLoading = signal(false);
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal<OrderFormModel>({
@@ -265,7 +266,7 @@ export class OrderForm implements OnChanges {
     });
 
     this.tokenCode = '';
-    this.tokenError = '';
+    this.tokenError.set('');
     this.tokenApplied.set(false);
     this.orderItems.set([]);
     this.productSearch.set('');
@@ -295,38 +296,36 @@ export class OrderForm implements OnChanges {
   applyToken() {
     const code = this.tokenCode.trim();
     if (!code) {
-      this.tokenError = 'Please enter a token code';
+      this.tokenError.set('Please enter a token code');
       return;
     }
 
-    this.tokenLoading = true;
-    this.tokenError = '';
+    this.tokenLoading.set(true);
+    this.tokenError.set('');
 
-    this.tokenService.search().subscribe({
+    this.tokenService.search().pipe(
+      finalize(() => this.tokenLoading.set(false))
+    ).subscribe({
       next: (tokens: TokenM[]) => {
         const token = tokens.find(t => t.code.toLowerCase() === code.toLowerCase());
 
         if (!token) {
-          this.tokenError = 'This discount code does not exist';
-          this.tokenLoading = false;
+          this.tokenError.set('This discount code does not exist');
           return;
         }
 
         if (!token.isActive) {
-          this.tokenError = 'This discount code is inactive';
-          this.tokenLoading = false;
+          this.tokenError.set('This discount code is inactive');
           return;
         }
 
         if (new Date(token.expireAt) < new Date()) {
-          this.tokenError = 'This discount code has expired';
-          this.tokenLoading = false;
+          this.tokenError.set('This discount code has expired');
           return;
         }
 
         if (token.usedCount >= token.maxUseCount) {
-          this.tokenError = 'This discount code has reached its usage limit';
-          this.tokenLoading = false;
+          this.tokenError.set('This discount code has reached its usage limit');
           return;
         }
 
@@ -362,11 +361,9 @@ export class OrderForm implements OnChanges {
         }
 
         this.tokenApplied.set(true);
-        this.tokenLoading = false;
       },
       error: () => {
-        this.tokenError = 'Failed to validate token';
-        this.tokenLoading = false;
+        this.tokenError.set('Failed to validate token');
       }
     });
   }
@@ -385,7 +382,7 @@ export class OrderForm implements OnChanges {
     }));
 
     this.tokenCode = '';
-    this.tokenError = '';
+    this.tokenError.set('');
     this.tokenApplied.set(false);
   }
 

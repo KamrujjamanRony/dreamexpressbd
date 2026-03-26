@@ -261,14 +261,14 @@
               <button
                 type="button"
                 (click)="applyToken()"
-                [disabled]="tokenLoading"
+                [disabled]="tokenLoading()"
                 class="px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50"
               >
-                {{ tokenLoading ? 'Checking...' : 'Apply' }}
+                {{ tokenLoading() ? 'Checking...' : 'Apply' }}
               </button>
             </div>
-            @if (tokenError) {
-              <p class="text-xs text-red-500 mt-1">{{ tokenError }}</p>
+            @if (tokenError()) {
+              <p class="text-xs text-red-500 mt-1">{{ tokenError() }}</p>
             }
           } @else {
             <div
