@@ -1,5 +1,5 @@
 <section
-  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12"
+  class="min-h-screen flex items-center justify-center bg-linear-to-br from-teal-50 via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-12"
 >
   <div class="w-full max-w-md">
     <!-- Login Card -->
@@ -7,7 +7,7 @@
       class="login-card bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden"
     >
       <!-- Header -->
-      <div class="bg-gradient-to-r from-teal-500 to-cyan-500 px-8 py-8 text-center">
+      <div class="bg-linear-to-r from-teal-500 to-cyan-500 px-8 py-8 text-center">
         <div
           class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm"
         >
@@ -26,9 +26,11 @@
 
       <!-- Form -->
       <div class="px-8 py-8">
-        <form autocomplete="off" class="space-y-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form autocomplete="off" class="space-y-5" (submit)="onSubmit($event)">
           <!-- Phone -->
           <div>
+            @let phone = form.phone();
+            @let phoneError = form.phone().invalid() && form.phone().touched();
             <label
               for="phone"
               class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
@@ -53,26 +55,27 @@
               </div>
               <input
                 type="tel"
-                name="phone"
                 id="phone"
-                [formControl]="getControl('phone')"
+                [formField]="form.phone"
                 class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
-                [class]="
-                  getControl('phone').invalid && (getControl('phone').touched || isSubmitted)
-                    ? 'border-red-400'
-                    : 'border-gray-200 dark:border-gray-600'
-                "
+                [class]="phoneError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
                 placeholder="Enter your phone number"
                 autocomplete="off"
               />
             </div>
-            @if (getControl('phone').invalid && (getControl('phone').touched || isSubmitted)) {
-              <p class="mt-1 text-sm text-red-500">Please enter a valid phone number</p>
+            @if (phoneError) {
+              <ul class="mt-1">
+                @for (error of phone.errors(); track error) {
+                  <li class="text-sm text-red-500">{{ error.message }}</li>
+                }
+              </ul>
             }
           </div>
 
           <!-- Password -->
           <div>
+            @let password = form.password();
+            @let passwordError = form.password().invalid() && form.password().touched();
             <label
               for="password"
               class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
@@ -97,15 +100,10 @@
               </div>
               <input
                 [type]="showPassword() ? 'text' : 'password'"
-                name="password"
                 id="password"
-                [formControl]="getControl('password')"
+                [formField]="form.password"
                 class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 pr-12 p-3 transition-all duration-200"
-                [class]="
-                  getControl('password').invalid && (getControl('password').touched || isSubmitted)
-                    ? 'border-red-400'
-                    : 'border-gray-200 dark:border-gray-600'
-                "
+                [class]="passwordError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
                 placeholder="Enter your password"
                 autocomplete="off"
               />
@@ -114,45 +112,23 @@
                 (click)="togglePassword()"
                 class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
-                @if (showPassword()) {
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.879L21 21"
-                    />
-                  </svg>
-                } @else {
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                }
+                <fa-icon [icon]="showPassword() ? faEyeSlash : faEye"></fa-icon>
               </button>
             </div>
-            @if (
-              getControl('password').invalid && (getControl('password').touched || isSubmitted)
-            ) {
-              <p class="mt-1 text-sm text-red-500">Password is required</p>
+            @if (passwordError) {
+              <ul class="mt-1">
+                @for (error of password.errors(); track error) {
+                  <li class="text-sm text-red-500">{{ error.message }}</li>
+                }
+              </ul>
             }
           </div>
 
           <!-- Submit Button -->
           <button
             type="submit"
-            [disabled]="loading()"
-            class="w-full text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 focus:ring-4 focus:outline-none focus:ring-teal-300 font-semibold rounded-xl text-sm px-5 py-3.5 text-center transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-teal-500/25 cursor-pointer"
+            [disabled]="loading() || form().invalid()"
+            class="w-full text-white bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 focus:ring-4 focus:outline-none focus:ring-teal-300 font-semibold rounded-xl text-sm px-5 py-3.5 text-center transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-teal-500/25 cursor-pointer"
           >
             @if (loading()) {
               <span class="inline-flex items-center gap-2">
