@@ -14,5 +14,9 @@ export class SAdminLogin {
   login(model: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/Authentication/Login`, model)
   }
+
+  guestLogin(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/Authentication/guest-token?companyId=${environment.companyCode}`, {});
+  }
   
 }
