@@ -107,16 +107,7 @@ export class OrderForm implements OnChanges {
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (s) => {
     required(s.userName, { message: 'Customer name is required' });
-    required(s.userEmail, { message: 'Email is required' });
     required(s.userPhone, { message: 'Phone is required' });
-
-    validate(s.userEmail, ({ value }) => {
-      const v = value();
-      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
-        return { kind: 'invalid', message: 'Please enter a valid email address' };
-      }
-      return null;
-    });
 
     validate(s.userPhone, ({ value }) => {
       const v = value();
