@@ -152,7 +152,8 @@
           <input
             autocomplete="off"
             type="text"
-            [formControl]="searchControl"
+            [value]="searchValue()"
+            (input)="onSearchInput($event)"
             (focus)="onSearchFocus()"
             (blur)="onSearchBlur()"
             placeholder="Search something..."
@@ -348,7 +349,8 @@
     <input
       autocomplete="off"
       type="text"
-      [formControl]="searchControl"
+      [value]="searchValue()"
+      (input)="onSearchInput($event)"
       (focus)="onSearchFocus()"
       (blur)="onSearchBlur()"
       placeholder="Search products..."

@@ -1,22 +1,21 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
 import { SCart } from '../../../services/s-cart';
 import { SWishlist } from '../../../services/s-wishlist';
 import { Router, RouterLink } from '@angular/router';
 import { SCategory } from '../../../services/s-category';
 import { SProduct } from '../../../services/s-product';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, of, Subject, Subscription, switchMap } from 'rxjs';
 import { SAuthUser } from '../../../services/s-auth-user';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, ReactiveFormsModule, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
+export class Navbar implements OnDestroy {
   cartService = inject(SCart);
   authService = inject(SAuthUser);
   authCookie = inject(SAuthCookie);
@@ -28,7 +27,9 @@ export class Navbar {
 
   categories: any[] = [];
   productList = signal<any[]>([]);
-  searchControl = new FormControl();
+  searchValue = signal('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
   searchResults = signal<any[]>([]);
   showSearchResults = signal(false);
 
@@ -87,7 +88,7 @@ export class Navbar {
   }
 
   setupSearch() {
-    this.searchControl.valueChanges
+    this.searchSubscription = this.searchSubject
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -105,6 +106,12 @@ export class Navbar {
       });
   }
 
+  onSearchInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchValue.set(value);
+    this.searchSubject.next(value);
+  }
+
   filterProducts(term: string): any[] {
     const lowerTerm = term.toLowerCase();
     return this.productList().filter(product =>
@@ -115,7 +122,7 @@ export class Navbar {
   }
 
   onSearchFocus() {
-    if (this.searchControl.value && this.searchControl.value.length >= 2) {
+    if (this.searchValue() && this.searchValue().length >= 2) {
       this.showSearchResults.set(true);
     }
   }
@@ -128,15 +135,15 @@ export class Navbar {
 
   navigateToProduct(productId: number) {
     this.router.navigate(['/view', productId]);
-    this.searchControl.reset();
+    this.searchValue.set('');
     this.showSearchResults.set(false);
   }
 
   performSearch() {
-    const term = this.searchControl.value;
+    const term = this.searchValue();
     if (term && term.length >= 2) {
       this.router.navigate(['/shop'], { queryParams: { search: term } });
-      this.searchControl.reset();
+      this.searchValue.set('');
       this.showSearchResults.set(false);
     }
   }
@@ -164,6 +171,10 @@ export class Navbar {
     this.authService.logout();
     this.user = null;
     this.refreshCartCount();
+  }
+
+  ngOnDestroy() {
+    this.searchSubscription?.unsubscribe();
   }
 
 }
