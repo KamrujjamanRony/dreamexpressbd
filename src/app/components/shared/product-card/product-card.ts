@@ -105,7 +105,7 @@ export class ProductCard {
   addToCart(product: any) {
     const price = product()?.offerPrice || product()?.price || 0;
     const cartProduct = {
-      id: Math.floor(Math.random() * 1000000),
+      id: Math.floor(Math.random() * 123456789),
       productId: product()?.id,
       quantity: 1,
       selectSize: '',
