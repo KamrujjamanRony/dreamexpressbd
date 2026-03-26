@@ -1,55 +1,240 @@
-<!-- shopping-cart.component.html -->
-<section class="flex flex-col xl:flex-row gap-2">
-  <div class="gap-2 grid grid-cols-1">
-    <!-- single cart -->
-    @for(product of sortedCarts(carts); track product.id){
-    <app-card-cart
-      [product]="product"
-      [userCarts]="userCarts"
-      (cartUpdated)="updateCartAfterChange($event)"
-    ></app-card-cart>
-    } @empty {
-    <div class="text-center text-gray-800 text-xl">No products found.</div>
-    }
-    <div class="w-full h-1 bg-white rounded"></div>
-    <div class="flex flex-col items-end gap-2">
-      <h3 class="text-lg">
-        Total ({{ totalQuantity }} items):
-        <span class="font-bold" [innerHTML]="totalPrice | bdt"></span>
-      </h3>
-      <!-- <h3 class="text-lg">
-        Delivery Charge:
-        <span class="font-bold">${{ deliveryCharge | bdt }}</span>
-      </h3> -->
-      <!-- <h3 class="text-xl">
-        Total:
-        <span class="font-bold">${{ totalPriceWithDelivery | bdt }}</span>
-      </h3> -->
-    </div>
-    <!-- single cart end -->
-  </div>
-  @if (carts.length > 0) {
-  <div class="border rounded bg-white w-full md:w-96 p-5 h-fit">
-    <div class="flex flex-col gap-2 mb-4">
-      <h3 class="text-lg">
-        Total ({{ totalQuantity }} items):
-        <span class="font-bold" [innerHTML]="totalPrice | bdt"></span>
-      </h3>
-      <!-- <h3 class="text-lg">
-        Delivery Charge:
-        <span class="font-bold">${{ deliveryCharge | bdt }}</span>
-      </h3> -->
-      <!-- <h3 class="text-xl">
-        Total:
-        <span class="font-bold">${{ totalPriceWithDelivery | bdt }}</span>
-      </h3> -->
-    </div>
-    <button
-      (click)="proceedToCheckout()"
-      class="cursor-pointer px-4 py-2 text-center text-gray-50 bg-rose-500 border border-rose-500 rounded-full hover:bg-transparent hover:text-primary transition capitalize font-roboto font-medium w-full"
+<!-- Shopping Cart -->
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1
+      class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-3"
     >
-      Proceed to checkout
-    </button>
+      <fa-icon [icon]="faCartShopping" class="text-purple-600"></fa-icon>
+      Shopping Cart
+    </h1>
+    <a
+      routerLink="/shop"
+      class="flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition font-medium"
+    >
+      <fa-icon [icon]="faArrowLeft" class="text-xs"></fa-icon>
+      Continue Shopping
+    </a>
   </div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="animate-pulse space-y-4">
+      @for (_ of [1, 2, 3]; track _) {
+        <div class="flex gap-4 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+          <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg shrink-0"></div>
+          <div class="flex-1 space-y-3">
+            <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (carts().length === 0) {
+    <!-- Empty Cart -->
+    <div class="text-center py-16">
+      <div
+        class="w-24 h-24 bg-purple-50 dark:bg-purple-900/20 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
+        <fa-icon
+          [icon]="faCartShopping"
+          class="text-4xl text-purple-300 dark:text-purple-600"
+        ></fa-icon>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        Your cart is empty
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 mb-6">
+        Looks like you haven't added any items yet.
+      </p>
+      <a
+        routerLink="/shop"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all"
+      >
+        <fa-icon [icon]="faShoppingBag"></fa-icon>
+        Start Shopping
+      </a>
+    </div>
+  } @else {
+    <!-- Cart Content -->
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Cart Items -->
+      <div class="flex-1 space-y-3">
+        @for (
+          item of carts();
+          track item.productId + (item.selectSize || '') + (item.selectColor || '')
+        ) {
+          <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden"
+          >
+            <div class="flex items-center gap-4 p-4">
+              <!-- Product Image -->
+              <a
+                [routerLink]="getViewLink(item.productId)"
+                class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700 shrink-0"
+              >
+                <img
+                  [ngSrc]="item.image"
+                  [alt]="item.productName"
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform"
+                />
+              </a>
+
+              <!-- Product Details -->
+              <div class="flex-1 min-w-0">
+                <a
+                  [routerLink]="getViewLink(item.productId)"
+                  class="font-semibold text-gray-800 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition truncate block"
+                >
+                  {{ item.productName }}
+                </a>
+                <div
+                  class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400"
+                >
+                  @if (item.brand) {
+                    <span
+                      >Brand:
+                      <span class="text-gray-700 dark:text-gray-300">{{ item.brand }}</span></span
+                    >
+                  }
+                  @if (item.selectColor) {
+                    <span
+                      >Color:
+                      <span class="text-gray-700 dark:text-gray-300 uppercase">{{
+                        item.selectColor
+                      }}</span></span
+                    >
+                  }
+                  @if (item.selectSize) {
+                    <span
+                      >Size:
+                      <span class="text-gray-700 dark:text-gray-300 uppercase">{{
+                        item.selectSize
+                      }}</span></span
+                    >
+                  }
+                </div>
+                <!-- Unit Price -->
+                <div
+                  class="mt-1 text-sm text-purple-600 font-semibold"
+                  [innerHTML]="item.price | bdt"
+                ></div>
+              </div>
+
+              <!-- Quantity Controls -->
+              <div class="flex items-center gap-1">
+                <div
+                  class="inline-flex items-center border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden"
+                >
+                  <button
+                    type="button"
+                    class="w-9 h-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                    [disabled]="item.quantity <= 1"
+                    (click)="decrease(item)"
+                  >
+                    <fa-icon [icon]="faMinus" class="text-xs"></fa-icon>
+                  </button>
+                  <div
+                    class="w-10 h-9 flex items-center justify-center text-sm font-semibold text-gray-800 dark:text-gray-100 border-x border-gray-200 dark:border-gray-600"
+                  >
+                    {{ item.quantity }}
+                  </div>
+                  <button
+                    type="button"
+                    class="w-9 h-9 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+                    (click)="increase(item)"
+                  >
+                    <fa-icon [icon]="faPlus" class="text-xs"></fa-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Subtotal & Remove -->
+              <div class="text-right shrink-0 hidden sm:block">
+                <div
+                  class="font-bold text-gray-800 dark:text-gray-100"
+                  [innerHTML]="item.price * item.quantity | bdt"
+                ></div>
+                <button
+                  type="button"
+                  (click)="removeItem(item)"
+                  class="mt-1 text-xs text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1 ml-auto"
+                >
+                  <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile: subtotal & remove row -->
+            <div
+              class="sm:hidden flex items-center justify-between border-t border-gray-100 dark:border-gray-700 px-4 py-2 bg-gray-50/50 dark:bg-gray-800/80"
+            >
+              <span
+                class="font-bold text-gray-800 dark:text-gray-100"
+                [innerHTML]="item.price * item.quantity | bdt"
+              ></span>
+              <button
+                type="button"
+                (click)="removeItem(item)"
+                class="text-xs text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1"
+              >
+                <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="lg:w-80 shrink-0">
+        <div
+          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-24"
+        >
+          <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Order Summary</h2>
+
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between text-gray-600 dark:text-gray-400">
+              <span>Items ({{ totalQuantity() }})</span>
+              <span [innerHTML]="totalPrice() | bdt"></span>
+            </div>
+            <div class="flex justify-between text-gray-600 dark:text-gray-400">
+              <span>Shipping</span>
+              <span class="text-green-600 font-medium">Calculated at checkout</span>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+            <div class="flex justify-between font-bold text-lg text-gray-800 dark:text-gray-100">
+              <span>Total</span>
+              <span class="text-purple-600" [innerHTML]="totalPrice() | bdt"></span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="proceedToCheckout()"
+            class="w-full mt-5 flex items-center justify-center gap-2 px-6 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer text-base"
+          >
+            <fa-icon [icon]="faShoppingBag"></fa-icon>
+            Proceed to Checkout
+          </button>
+
+          @if (!isCustomer) {
+            <p class="text-xs text-center text-gray-500 dark:text-gray-400 mt-3">
+              You need to
+              <a routerLink="/login" class="text-purple-600 hover:underline font-medium">login</a>
+              to checkout
+            </p>
+          }
+        </div>
+      </div>
+    </div>
   }
 </section>
