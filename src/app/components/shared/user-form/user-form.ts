@@ -73,6 +73,10 @@ export class UserForm {
     this.submitForm.emit(this.form().value());
   }
 
+  setActive(value: boolean) {
+    this.model.update(m => ({ ...m, isActive: value }));
+  }
+
   onCancel() {
     this.cancel.emit();
   }

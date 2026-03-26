@@ -16,7 +16,6 @@
         class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
         [class.border-red-400]="userNameError"
         placeholder=""
-        required
       />
     </Field>
     @if (userNameError) {
@@ -58,8 +57,9 @@
       <input
         id="active-radio"
         type="radio"
-        [formField]="form.isActive"
-        [value]="true"
+        name="isActive"
+        [checked]="form.isActive().value()"
+        (change)="setActive(true)"
         class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 focus:ring-2"
       />
       <label for="active-radio" class="ms-2 text-sm font-medium text-gray-950">Activate</label>
@@ -68,8 +68,9 @@
       <input
         id="deactivate-radio"
         type="radio"
-        [formField]="form.isActive"
-        [value]="false"
+        name="isActive"
+        [checked]="!form.isActive().value()"
+        (change)="setActive(false)"
         class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
       />
       <label for="deactivate-radio" class="ms-2 text-sm font-medium text-gray-950"
