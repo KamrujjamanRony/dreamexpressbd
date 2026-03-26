@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { SAuth } from '../../../services/s-auth';
 import { SLogin } from '../../../services/s-login';
 import { Subscription } from 'rxjs';
@@ -17,7 +18,7 @@ import {
 
 @Component({
   selector: 'app-admin-login',
-  imports: [ReactiveFormsModule, FontAwesomeModule],
+  imports: [FormsModule, FormField, FontAwesomeModule],
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.css',
 })
@@ -27,7 +28,6 @@ export class AdminLogin {
   private loginSubscription?: Subscription;
   private router = inject(Router);
   private toast = inject(SToast);
-  fb = inject(NonNullableFormBuilder);
 
   faUser = faUser;
   faLock = faLock;
@@ -36,48 +36,79 @@ export class AdminLogin {
   faShieldHalved = faShieldHalved;
   faRightToBracket = faRightToBracket;
 
-  isSubmitted = false;
   loading = signal(false);
   showPassword = signal(false);
   currentYear = new Date().getFullYear();
 
-  form = this.fb.group({
-    userName: ['', [Validators.required]],
-    password: ['', Validators.required],
+  /* ---------------- FORM MODEL ---------------- */
+  model = signal({
+    userName: '',
+    password: '',
   });
 
-  getControl(controlName: string): FormControl {
-    return this.form.get(controlName) as FormControl;
-  }
+  /* ---------------- SIGNAL FORM ---------------- */
+  form = form(this.model, (schemaPath) => {
+    required(schemaPath.userName, { message: 'Username is required' });
+    required(schemaPath.password, { message: 'Password is required' });
+
+    validate(schemaPath.userName, ({ value }) => {
+      if (value() && value().length < 3) {
+        return { kind: 'minLength', message: 'Username must be at least 3 characters' };
+      }
+      if (value() && value().length > 30) {
+        return { kind: 'maxLength', message: 'Username must be less than 30 characters' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.password, ({ value }) => {
+      if (value() && value().length < 6) {
+        return { kind: 'minLength', message: 'Password must be at least 6 characters' };
+      }
+      if (value() && value().length > 50) {
+        return { kind: 'maxLength', message: 'Password must be less than 50 characters' };
+      }
+      return null;
+    });
+
+    debounce(schemaPath.userName, 300);
+    debounce(schemaPath.password, 300);
+  });
 
   togglePassword(): void {
     this.showPassword.update((v) => !v);
   }
 
   onSubmit(): void {
-    this.isSubmitted = true;
-    if (this.form.valid) {
-      this.loading.set(true);
-      this.loginSubscription = this.loginService.login(this.form.value).subscribe({
-        next: (response: any) => {
-          this.authService.setUser(response);
-          this.toast.success('Login successful!', 'top-right', 3000);
-          this.loading.set(false);
-          this.form.reset();
-          this.router.navigate(['/admin']);
-        },
-        error: (error) => {
-          this.loading.set(false);
-          this.toast.warning(
-            error?.error?.message || error?.error?.title || 'Invalid credentials!',
-            'top-right',
-            4000
-          );
-        },
-      });
-    } else {
+    if (!this.form().valid()) {
       this.toast.warning('Please fill all required fields!', 'top-right', 3000);
+      return;
     }
+
+    this.loading.set(true);
+    const formValue = this.form().value();
+    this.loginSubscription = this.loginService.login(formValue).subscribe({
+      next: (response: any) => {
+        this.authService.setUser(response);
+        this.toast.success('Login successful!', 'top-right', 3000);
+        this.loading.set(false);
+        this.formReset();
+        this.router.navigate(['/admin']);
+      },
+      error: (error) => {
+        this.loading.set(false);
+        this.toast.warning(
+          error?.error?.message || error?.error?.title || 'Invalid credentials!',
+          'top-right',
+          4000
+        );
+      },
+    });
+  }
+
+  formReset(): void {
+    this.model.set({ userName: '', password: '' });
+    this.form().reset();
   }
 
   ngOnDestroy(): void {
