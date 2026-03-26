@@ -1,5 +1,4 @@
 <div class="space-y-10 md:space-y-14">
-  <p>{{categoryWiseProducts() | json}}</p>
   @if (categoryWiseProducts()) {
     @for (category of categories(); track category) {
       @if (categoryWiseProducts()[category.itemName]) {
