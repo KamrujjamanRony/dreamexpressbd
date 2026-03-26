@@ -1,11 +1,21 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { Field } from '../field/field';
-import { CommonModule } from '@angular/common';
-import { AbstractControl, FormArray, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
+
+interface SpecItem {
+  item: string;
+  value: string;
+}
+
+interface Specification {
+  title: string;
+  content: SpecItem[];
+}
 
 @Component({
   selector: 'app-product-form',
-  imports: [CommonModule, Field, ReactiveFormsModule],
+  imports: [Field, FormsModule, FormField],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })
@@ -19,245 +29,277 @@ export class ProductForm {
   @Output() submitForm = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
-  fb = inject(NonNullableFormBuilder);
   isSubmitted = false;
   sizeOptions = ['xs', 's', 'm', 'l', 'xl'];
   colorOptions = ['red', 'green', 'blue', 'black', 'white', 'brown', 'yellow'];
   availabilityOptions = ['in stock', 'out of stock', 'pre-order'];
 
-  form = this.fb.group({
-    name: ['', [Validators.required]],
-    regularPrice: [0, [Validators.required, Validators.min(0)]],
-    offerPrice: [0, [Validators.min(0)]],
-    image: [''],
-    images: this.fb.array<FormControl<string>>([]),
-    shortDescription: ['', [Validators.required]],
-    productDetails: [''],
-    category: ['', [Validators.required]],
-    sizes: this.fb.array([]),
-    colors: this.fb.array([]),
-    brand: ['', [Validators.required]],
-    isFeatured: [false],
-    serial: [0],
-    relatedProducts: this.fb.array<FormControl<number>>([]),
-    specifications: this.fb.array([]),
-    sku: ['', [Validators.required]],
-    availability: ['in stock', [Validators.required]],
-    youtubeLink: [''],
-    facebookPost: [''],
-    twitterTweet: [''],
-    instagramPost: [''],
-    others: [''],
-    isActive: [true]
+  /* ---------------- SIGNAL ARRAYS (dynamic) ---------------- */
+  images = signal<string[]>([]);
+  sizes = signal<string[]>([]);
+  colors = signal<string[]>([]);
+  relatedProducts = signal<number[]>([]);
+  specifications = signal<Specification[]>([]);
+
+  /* ---------------- FORM MODEL (scalar fields) ---------------- */
+  model = signal({
+    name: '',
+    regularPrice: 0,
+    offerPrice: 0,
+    image: '',
+    shortDescription: '',
+    productDetails: '',
+    category: '',
+    brand: '',
+    isFeatured: false,
+    serial: 0,
+    sku: '',
+    availability: 'in stock',
+    youtubeLink: '',
+    facebookPost: '',
+    twitterTweet: '',
+    instagramPost: '',
+    others: '',
+    isActive: true,
+  });
+
+  /* ---------------- SIGNAL FORM ---------------- */
+  form = form(this.model, (schemaPath) => {
+    required(schemaPath.name, { message: 'Product name is required' });
+    required(schemaPath.shortDescription, { message: 'Short description is required' });
+    required(schemaPath.category, { message: 'Category is required' });
+    required(schemaPath.brand, { message: 'Brand is required' });
+    required(schemaPath.sku, { message: 'SKU is required' });
+    required(schemaPath.availability, { message: 'Availability is required' });
+
+    validate(schemaPath.name, ({ value }) => {
+      if (value() && value().length < 3) {
+        return { kind: 'minLength', message: 'Name must be at least 3 characters' };
+      }
+      if (value() && value().length > 200) {
+        return { kind: 'maxLength', message: 'Name must be less than 200 characters' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.regularPrice, ({ value }) => {
+      if (value() < 0) {
+        return { kind: 'min', message: 'Regular price cannot be negative' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.offerPrice, ({ value }) => {
+      if (value() < 0) {
+        return { kind: 'min', message: 'Offer price cannot be negative' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.shortDescription, ({ value }) => {
+      if (value() && value().length > 500) {
+        return { kind: 'maxLength', message: 'Short description max 500 characters' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.sku, ({ value }) => {
+      if (value() && value().length < 2) {
+        return { kind: 'minLength', message: 'SKU must be at least 2 characters' };
+      }
+      return null;
+    });
+
+    debounce(schemaPath.name, 300);
+    debounce(schemaPath.shortDescription, 300);
+    debounce(schemaPath.sku, 300);
   });
 
   ngOnChanges() {
     if (this.product) {
-      this.form.patchValue({
-        name: this.product.name,
-        regularPrice: this.product.regularPrice,
-        offerPrice: this.product.offerPrice,
-        image: this.product.image,
-        images: this.product.images,
-        shortDescription: this.product.shortDescription,
-        productDetails: this.product.productDetails,
-        category: this.product.category,
-        brand: this.product.brand,
-        isFeatured: this.product.isFeatured,
-        serial: this.product.serial,
-        sku: this.product.sku,
-        availability: this.product.availability,
-        youtubeLink: this.product.youtubeLink,
-        facebookPost: this.product.facebookPost,
-        twitterTweet: this.product.twitterTweet,
-        instagramPost: this.product.instagramPost,
-        others: this.product.others,
-        isActive: this.product.isActive
+      this.model.set({
+        name: this.product.name ?? '',
+        regularPrice: this.product.regularPrice ?? 0,
+        offerPrice: this.product.offerPrice ?? 0,
+        image: this.product.image ?? '',
+        shortDescription: this.product.shortDescription ?? '',
+        productDetails: this.product.productDetails ?? '',
+        category: this.product.category ?? '',
+        brand: this.product.brand ?? '',
+        isFeatured: this.product.isFeatured ?? false,
+        serial: this.product.serial ?? 0,
+        sku: this.product.sku ?? '',
+        availability: this.product.availability ?? 'in stock',
+        youtubeLink: this.product.youtubeLink ?? '',
+        facebookPost: this.product.facebookPost ?? '',
+        twitterTweet: this.product.twitterTweet ?? '',
+        instagramPost: this.product.instagramPost ?? '',
+        others: this.product.others ?? '',
+        isActive: this.product.isActive ?? true,
       });
 
-      // Set images
-      this.imagesArray.clear();
-      if (this.product?.images) {
-        const images = Array.isArray(this.product.images)
-          ? this.product.images
-          : this.product.images.split(',').map((img: string) => img.trim());
-
-        images.forEach((img: string) => {
-          if (img) this.addImageField(img);
-        });
+      // Set signal arrays
+      const imgs = this.product.images;
+      if (imgs) {
+        const imageList = Array.isArray(imgs)
+          ? imgs
+          : imgs.split(',').map((img: string) => img.trim());
+        this.images.set(imageList.filter((img: string) => img));
+      } else {
+        this.images.set([]);
       }
-      // Set related products
-      this.relatedProductsArray.clear();
-      if (this.product?.relatedProducts) {
-        this.product.relatedProducts.forEach((id: number) => {
-          this.addRelatedProductField(id);
-        });
+
+      this.sizes.set(this.product.sizes ?? []);
+      this.colors.set(this.product.colors ?? []);
+      this.relatedProducts.set(this.product.relatedProducts ?? []);
+
+      if (this.product.specifications) {
+        this.specifications.set(
+          this.product.specifications.map((spec: any) => ({
+            title: spec.title ?? '',
+            content: (spec.content ?? []).map((c: any) => ({
+              item: c.item ?? '',
+              value: c.value ?? '',
+            })),
+          }))
+        );
+      } else {
+        this.specifications.set([]);
       }
-      // Set sizes
-      this.sizes.clear();
-      this.product.sizes?.forEach((size: string) => {
-        this.sizes.push(this.fb.control(size));
-      });
-
-      // Set colors
-      this.colors.clear();
-      this.product.colors?.forEach((color: string) => {
-        this.colors.push(this.fb.control(color));
-      });
-
-      // Set related products
-      this.relatedProducts.clear();
-      this.product.relatedProducts?.forEach((id: number) => {
-        this.relatedProducts.push(this.fb.control(id));
-      });
-
-      // Set specifications
-      this.specifications.clear();
-      this.product.specifications?.forEach((spec: any) => {
-        this.specifications.push(this.fb.group({
-          title: [spec.title],
-          content: this.fb.array(
-            spec.content.map((item: any) => this.fb.group({
-              item: [item.item],
-              value: [item.value]
-            }))
-          )
-        }));
-      });
     }
   }
 
-  // for multiple images
-  get imagesArray(): FormArray<FormControl<string>> {
-    return this.form.get('images') as FormArray<FormControl<string>>;
-  }
-
+  // --- Image array methods ---
   addImageField(imageUrl: string = '') {
-    this.imagesArray.push(this.fb.control(imageUrl));
+    this.images.update(arr => [...arr, imageUrl]);
   }
 
   removeImageField(index: number) {
-    this.imagesArray.removeAt(index);
-  }
-  // methods for related products
-  get relatedProductsArray(): FormArray<FormControl<number>> {
-    return this.form.get('relatedProducts') as FormArray<FormControl<number>>;
+    this.images.update(arr => arr.filter((_, i) => i !== index));
   }
 
-  addRelatedProductField(productId: number | null = null) {
-    this.relatedProductsArray.push(this.fb.control(productId || 0));
+  updateImage(index: number, value: string) {
+    this.images.update(arr => arr.map((v, i) => (i === index ? value : v)));
   }
 
-  removeRelatedProductField(index: number) {
-    this.relatedProductsArray.removeAt(index);
-  }
-  // Sizes and Colors are managed as FormArrays to allow dynamic addition/removal
-  get sizes() {
-    return this.form.get('sizes') as FormArray;
-  }
-
+  // --- Size methods ---
   addSize(size: string) {
-    if (!this.sizes.value.includes(size)) {
-      this.sizes.push(this.fb.control(size));
+    if (size && !this.sizes().includes(size)) {
+      this.sizes.update(arr => [...arr, size]);
     }
   }
 
   removeSize(index: number) {
-    this.sizes.removeAt(index);
+    this.sizes.update(arr => arr.filter((_, i) => i !== index));
   }
 
-  get colors() {
-    return this.form.get('colors') as FormArray;
-  }
-
+  // --- Color methods ---
   addColor(color: string) {
-    if (!this.colors.value.includes(color)) {
-      this.colors.push(this.fb.control(color));
+    if (color && !this.colors().includes(color)) {
+      this.colors.update(arr => [...arr, color]);
     }
   }
 
   removeColor(index: number) {
-    this.colors.removeAt(index);
+    this.colors.update(arr => arr.filter((_, i) => i !== index));
   }
 
-  // Related Products are managed as FormArray to allow dynamic addition/removal
-  // and to ensure that the same product cannot be added multiple times
-  get relatedProducts() {
-    return this.form.get('relatedProducts') as FormArray;
+  // --- Related Products methods ---
+  addRelatedProductField(productId: number = 0) {
+    this.relatedProducts.update(arr => [...arr, productId]);
   }
 
-  addRelatedProduct(id: number) {
-    if (!this.relatedProducts.value.includes(id)) {
-      this.relatedProducts.push(this.fb.control(id));
-    }
+  removeRelatedProductField(index: number) {
+    this.relatedProducts.update(arr => arr.filter((_, i) => i !== index));
   }
 
-  removeRelatedProduct(index: number) {
-    this.relatedProducts.removeAt(index);
+  updateRelatedProduct(index: number, value: number) {
+    this.relatedProducts.update(arr => arr.map((v, i) => (i === index ? value : v)));
   }
 
-  // Specifications are managed as FormArray to allow dynamic addition/removal
-  // and to ensure that each specification can have multiple items with values
-  get specifications() {
-    return this.form.get('specifications') as FormArray;
-  }
-
-  getSpecTitle(spec: AbstractControl): FormControl<string> {
-    return (spec as FormGroup).controls['title'] as FormControl<string>;
-  }
-
-  getSpecContent(spec: AbstractControl): FormArray {
-    return (spec as FormGroup).controls['content'] as FormArray;
-  }
-
-  getItemControl(item: AbstractControl): FormGroup {
-    return item as FormGroup;
-  }
-
-  getItemField(item: FormGroup, field: string): FormControl {
-    return item.controls[field] as FormControl;
-  }
-
+  // --- Specification methods ---
   addSpecification() {
-    this.specifications.push(this.fb.group({
-      title: [''],
-      content: this.fb.array([
-        this.fb.group({
-          item: [''],
-          value: ['']
-        })
-      ])
-    }));
+    this.specifications.update(arr => [
+      ...arr,
+      { title: '', content: [{ item: '', value: '' }] },
+    ]);
   }
 
   removeSpecification(index: number) {
-    this.specifications.removeAt(index);
+    this.specifications.update(arr => arr.filter((_, i) => i !== index));
+  }
+
+  updateSpecTitle(specIndex: number, title: string) {
+    this.specifications.update(arr =>
+      arr.map((spec, i) => (i === specIndex ? { ...spec, title } : spec))
+    );
   }
 
   addSpecItem(specIndex: number) {
-    const specGroup = this.specifications.at(specIndex) as FormGroup;
-    const contentArray = specGroup.get('content') as FormArray;
-    contentArray.push(this.fb.group({
-      item: [''],
-      value: ['']
-    }));
+    this.specifications.update(arr =>
+      arr.map((spec, i) =>
+        i === specIndex
+          ? { ...spec, content: [...spec.content, { item: '', value: '' }] }
+          : spec
+      )
+    );
   }
 
   removeSpecItem(specIndex: number, itemIndex: number) {
-    const specGroup = this.specifications.at(specIndex) as FormGroup;
-    const contentArray = specGroup.get('content') as FormArray;
-    contentArray.removeAt(itemIndex);
+    this.specifications.update(arr =>
+      arr.map((spec, i) =>
+        i === specIndex
+          ? { ...spec, content: spec.content.filter((_, j) => j !== itemIndex) }
+          : spec
+      )
+    );
+  }
+
+  updateSpecItem(specIndex: number, itemIndex: number, field: 'item' | 'value', val: string) {
+    this.specifications.update(arr =>
+      arr.map((spec, i) =>
+        i === specIndex
+          ? {
+            ...spec,
+            content: spec.content.map((c, j) =>
+              j === itemIndex ? { ...c, [field]: val } : c
+            ),
+          }
+          : spec
+      )
+    );
   }
 
   onSubmit(event: Event) {
     this.isSubmitted = true;
-    if (this.form.valid) {
-      this.submitForm.emit(this.form.value);
+    if (this.form().valid()) {
+      const formValue = this.form().value();
+      this.submitForm.emit({
+        ...formValue,
+        images: this.images(),
+        sizes: this.sizes(),
+        colors: this.colors(),
+        relatedProducts: this.relatedProducts(),
+        specifications: this.specifications(),
+      });
     }
   }
 
   onCancel() {
     this.cancel.emit();
   }
+
+}
+
+onSubmit(event: Event) {
+  this.isSubmitted = true;
+  if (this.form.valid) {
+    this.submitForm.emit(this.form.value);
+  }
+}
+
+onCancel() {
+  this.cancel.emit();
+}
 
 }

@@ -2,127 +2,187 @@
   {{ modalTitle }}
 </h2>
 
-<form autocomplete="off"
-  [formGroup]="form"
-  (ngSubmit)="onSubmit($event)"
-  class="min-w-100 mx-auto px-2"
->
+<form autocomplete="off" (submit)="onSubmit($event)" class="min-w-100 mx-auto px-2">
   <!-- Basic Information -->
   <div class="mb-6">
     <h3 class="text-lg font-semibold text-teal-700 mb-3">Basic Information</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Name -->
-      <Field label="Product Name">
-        <input autocomplete="off"
-          type="text"
-          formControlName="name"
-          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            (form.get('name')?.invalid && form.get('name')?.touched) ||
-            isSubmitted
-          "
-          placeholder=""
-          required
-        />
-      </Field>
+      <div>
+        @let nameField = form.name();
+        @let nameError = form.name().invalid() && form.name().touched();
+        <Field label="Product Name">
+          <input
+            autocomplete="off"
+            type="text"
+            [formField]="form.name"
+            class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.border-red-400]="nameError"
+            placeholder=""
+            required
+          />
+        </Field>
+        @if (nameError) {
+          <ul class="mt-1">
+            @for (error of nameField.errors(); track error) {
+              <li class="text-xs text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
 
       <!-- SKU -->
-      <Field label="SKU">
-        <input autocomplete="off"
-          type="text"
-          formControlName="sku"
-          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            (form.get('sku')?.invalid && form.get('sku')?.touched) ||
-            isSubmitted
-          "
-          placeholder=""
-          required
-        />
-      </Field>
+      <div>
+        @let skuField = form.sku();
+        @let skuError = form.sku().invalid() && form.sku().touched();
+        <Field label="SKU">
+          <input
+            autocomplete="off"
+            type="text"
+            [formField]="form.sku"
+            class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.border-red-400]="skuError"
+            placeholder=""
+            required
+          />
+        </Field>
+        @if (skuError) {
+          <ul class="mt-1">
+            @for (error of skuField.errors(); track error) {
+              <li class="text-xs text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
 
       <!-- Category -->
-      <Field label="Category">
-        <select autocomplete="off"
-          formControlName="category"
-          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
-          required
-        >
-          <option value="" class="capitalize">Select Category</option>
-          @for(category of categories; track $index){
-          <option [value]="category" class="capitalize">
-            {{ category }}
-          </option>
-          }
-        </select>
-      </Field>
+      <div>
+        @let categoryError = form.category().invalid() && form.category().touched();
+        <Field label="Category">
+          <select
+            autocomplete="off"
+            [formField]="form.category"
+            class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+            [class.border-red-400]="categoryError"
+            required
+          >
+            <option value="" class="capitalize">Select Category</option>
+            @for (category of categories; track $index) {
+              <option [value]="category" class="capitalize">
+                {{ category }}
+              </option>
+            }
+          </select>
+        </Field>
+        @if (categoryError) {
+          <p class="text-xs text-red-500 mt-1">Category is required</p>
+        }
+      </div>
 
       <!-- Brand -->
-      <Field label="Brand">
-        <select autocomplete="off"
-          formControlName="brand"
-          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
-          required
-        >
-          <option value="" class="capitalize">Select Brand</option>
-          @for(brand of brands; track $index){
-          <option [value]="brand" class="capitalize">
-            {{ brand }}
-          </option>
-          }
-        </select>
-      </Field>
+      <div>
+        @let brandError = form.brand().invalid() && form.brand().touched();
+        <Field label="Brand">
+          <select
+            autocomplete="off"
+            [formField]="form.brand"
+            class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+            [class.border-red-400]="brandError"
+            required
+          >
+            <option value="" class="capitalize">Select Brand</option>
+            @for (brand of brands; track $index) {
+              <option [value]="brand" class="capitalize">
+                {{ brand }}
+              </option>
+            }
+          </select>
+        </Field>
+        @if (brandError) {
+          <p class="text-xs text-red-500 mt-1">Brand is required</p>
+        }
+      </div>
 
       <!-- Regular Price -->
-      <Field label="Regular Price">
-        <input autocomplete="off"
-          type="number"
-          formControlName="regularPrice"
-          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            (form.get('regularPrice')?.invalid &&
-              form.get('regularPrice')?.touched) ||
-            isSubmitted
-          "
-          placeholder=""
-          required
-          min="0"
-          step="0.01"
-        />
-      </Field>
+      <div>
+        @let regularPriceField = form.regularPrice();
+        @let regularPriceError = form.regularPrice().invalid() && form.regularPrice().touched();
+        <Field label="Regular Price">
+          <input
+            autocomplete="off"
+            type="number"
+            [formField]="form.regularPrice"
+            class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.border-red-400]="regularPriceError"
+            placeholder=""
+            required
+            min="0"
+            step="0.01"
+          />
+        </Field>
+        @if (regularPriceError) {
+          <ul class="mt-1">
+            @for (error of regularPriceField.errors(); track error) {
+              <li class="text-xs text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
 
       <!-- Offer Price -->
-      <Field label="Offer Price">
-        <input autocomplete="off"
-          type="number"
-          formControlName="offerPrice"
-          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          placeholder=""
-          min="0"
-          step="0.01"
-        />
-      </Field>
+      <div>
+        @let offerPriceField = form.offerPrice();
+        @let offerPriceError = form.offerPrice().invalid() && form.offerPrice().touched();
+        <Field label="Offer Price">
+          <input
+            autocomplete="off"
+            type="number"
+            [formField]="form.offerPrice"
+            class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.border-red-400]="offerPriceError"
+            placeholder=""
+            min="0"
+            step="0.01"
+          />
+        </Field>
+        @if (offerPriceError) {
+          <ul class="mt-1">
+            @for (error of offerPriceField.errors(); track error) {
+              <li class="text-xs text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
 
       <!-- Availability -->
-      <Field label="Availability">
-        <select autocomplete="off"
-          formControlName="availability"
-          class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
-          required
-        >
-          @for(status of availabilityOptions; track $index){
-          <option [value]="status" class="capitalize">
-            {{ status }}
-          </option>
-          }
-        </select>
-      </Field>
+      <div>
+        @let availabilityError = form.availability().invalid() && form.availability().touched();
+        <Field label="Availability">
+          <select
+            autocomplete="off"
+            [formField]="form.availability"
+            class="block py-2.5 px-2 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer capitalize"
+            [class.border-red-400]="availabilityError"
+            required
+          >
+            @for (status of availabilityOptions; track $index) {
+              <option [value]="status" class="capitalize">
+                {{ status }}
+              </option>
+            }
+          </select>
+        </Field>
+        @if (availabilityError) {
+          <p class="text-xs text-red-500 mt-1">Availability is required</p>
+        }
+      </div>
 
       <!-- Serial -->
       <Field label="Serial Number">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="number"
-          formControlName="serial"
+          [formField]="form.serial"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
           min="0"
@@ -137,35 +197,36 @@
     <div class="grid grid-cols-1 gap-4">
       <!-- Main Image -->
       <Field label="Main Image URL">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="text"
-          formControlName="image"
+          [formField]="form.image"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
         />
       </Field>
 
       <!-- Additional Images -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2"
-          >Additional Images</label
-        >
+        <label class="block text-sm font-medium text-gray-700 mb-2">Additional Images</label>
         <div class="space-y-2 grid grid-cols-1 md:grid-cols-2 gap-2">
-          @for(imageCtrl of imagesArray.controls; track $index; let i = $index){
-          <div class="flex items-center gap-2 w-full">
-            <input autocomplete="off"
-              type="text"
-              [formControl]="imageCtrl"
-              class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-              placeholder="Additional Images {{ i + 1 }}"
-            />
-            <button
-              type="button"
-              (click)="removeImageField(i)"
-              class="text-red-600 hover:text-red-900 text-xl font-bold"
-            >
-              &times;
-            </button>
-          </div>
+          @for (img of images(); track $index; let i = $index) {
+            <div class="flex items-center gap-2 w-full">
+              <input
+                autocomplete="off"
+                type="text"
+                [value]="img"
+                (input)="updateImage(i, $any($event.target).value)"
+                class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+                placeholder="Additional Images {{ i + 1 }}"
+              />
+              <button
+                type="button"
+                (click)="removeImageField(i)"
+                class="text-red-600 hover:text-red-900 text-xl font-bold"
+              >
+                &times;
+              </button>
+            </div>
           }
           <button
             type="button"
@@ -184,25 +245,35 @@
     <h3 class="text-lg font-semibold text-teal-700 mb-3">Descriptions</h3>
     <div class="grid grid-cols-1 gap-4">
       <!-- Short Description -->
-      <Field label="Short Description">
-        <textarea autocomplete="off"
-          formControlName="shortDescription"
-          class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            (form.get('shortDescription')?.invalid &&
-              form.get('shortDescription')?.touched) ||
-            isSubmitted
-          "
-          placeholder=""
-          required
-          rows="2"
-        ></textarea>
-      </Field>
+      <div>
+        @let shortDescField = form.shortDescription();
+        @let shortDescError =
+          form.shortDescription().invalid() && form.shortDescription().touched();
+        <Field label="Short Description">
+          <textarea
+            autocomplete="off"
+            [formField]="form.shortDescription"
+            class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.border-red-400]="shortDescError"
+            placeholder=""
+            required
+            rows="2"
+          ></textarea>
+        </Field>
+        @if (shortDescError) {
+          <ul class="mt-1">
+            @for (error of shortDescField.errors(); track error) {
+              <li class="text-xs text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
 
       <!-- Product Details -->
       <Field label="Full Product Details">
-        <textarea autocomplete="off"
-          formControlName="productDetails"
+        <textarea
+          autocomplete="off"
+          [formField]="form.productDetails"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
           rows="4"
@@ -217,33 +288,32 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Sizes -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1"
-          >Sizes</label
-        >
+        <label class="block text-sm font-medium text-gray-700 mb-1">Sizes</label>
         <div class="flex flex-wrap gap-2 mb-2">
-          @for(size of sizes.controls; track $index){
-          <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
-          >
-            {{ size.value }}
-            <button
-              type="button"
-              (click)="removeSize($index)"
-              class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+          @for (size of sizes(); track $index) {
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
             >
-              &times;
-            </button>
-          </span>
+              {{ size }}
+              <button
+                type="button"
+                (click)="removeSize($index)"
+                class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+              >
+                &times;
+              </button>
+            </span>
           }
         </div>
         <div class="flex gap-2">
-          <select autocomplete="off"
+          <select
+            autocomplete="off"
             #sizeSelect
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
           >
             <option value="" disabled selected>Select Size</option>
-            @for(size of sizeOptions; track $index){
-            <option [value]="size">{{ size | uppercase }}</option>
+            @for (size of sizeOptions; track $index) {
+              <option [value]="size">{{ size | uppercase }}</option>
             }
           </select>
           <button
@@ -258,33 +328,32 @@
 
       <!-- Colors -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1"
-          >Colors</label
-        >
+        <label class="block text-sm font-medium text-gray-700 mb-1">Colors</label>
         <div class="flex flex-wrap gap-2 mb-2">
-          @for(color of colors.controls; track $index){
-          <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
-          >
-            {{ color.value }}
-            <button
-              type="button"
-              (click)="removeColor($index)"
-              class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+          @for (color of colors(); track $index) {
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
             >
-              &times;
-            </button>
-          </span>
+              {{ color }}
+              <button
+                type="button"
+                (click)="removeColor($index)"
+                class="ml-1.5 inline-flex text-teal-600 hover:text-teal-900 focus:outline-none"
+              >
+                &times;
+              </button>
+            </span>
           }
         </div>
         <div class="flex gap-2">
-          <select autocomplete="off"
+          <select
+            autocomplete="off"
             #colorSelect
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
           >
             <option value="" disabled selected>Select Color</option>
-            @for(color of colorOptions; track $index){
-            <option [value]="color">{{ color | titlecase }}</option>
+            @for (color of colorOptions; track $index) {
+              <option [value]="color">{{ color | titlecase }}</option>
             }
           </select>
           <button
@@ -303,59 +372,64 @@
   <div class="mb-6">
     <h3 class="text-lg font-semibold text-teal-700 mb-3">Specifications</h3>
     <div class="space-y-4">
-      @for(spec of specifications.controls; track $index; let i = $index){
-      <div class="border rounded p-4">
-        <div class="flex justify-between items-center mb-2 gap-2">
-          <Field [label]="'Specification Group ' + (i + 1)" class="w-full">
-            <input autocomplete="off"
-              type="text"
-              [formControl]="getSpecTitle(spec)"
-              class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            />
-          </Field>
-          <button
-            type="button"
-            (click)="removeSpecification(i)"
-            class="text-red-600 hover:text-red-900 text-xl font-bold"
-          >
-            &times;
-          </button>
-        </div>
-
-        <div class="ml-4 space-y-2">
-          @for(item of getSpecContent(spec).controls; track $index; let j =
-          $index){
-          <div class="flex items-center gap-2">
-            <input autocomplete="off"
-              type="text"
-              [formControl]="getItemField(getItemControl(item), 'item')"
-              class="block py-2 px-2 w-1/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-              placeholder="Specification"
-            />
-            <input autocomplete="off"
-              type="text"
-              [formControl]="getItemField(getItemControl(item), 'value')"
-              class="block py-2 px-2 w-2/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-              placeholder="Value"
-            />
+      @for (spec of specifications(); track $index; let i = $index) {
+        <div class="border rounded p-4">
+          <div class="flex justify-between items-center mb-2 gap-2">
+            <Field [label]="'Specification Group ' + (i + 1)" class="w-full">
+              <input
+                autocomplete="off"
+                type="text"
+                [value]="spec.title"
+                (input)="updateSpecTitle(i, $any($event.target).value)"
+                class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+              />
+            </Field>
             <button
               type="button"
-              (click)="removeSpecItem(i, j)"
-              class="text-red-600 hover:text-red-900"
+              (click)="removeSpecification(i)"
+              class="text-red-600 hover:text-red-900 text-xl font-bold"
             >
               &times;
             </button>
           </div>
-          }
-          <button
-            type="button"
-            (click)="addSpecItem(i)"
-            class="mt-2 inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-teal-700 bg-teal-100 hover:bg-teal-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-          >
-            Add Item
-          </button>
+
+          <div class="ml-4 space-y-2">
+            @for (contentItem of spec.content; track $index; let j = $index) {
+              <div class="flex items-center gap-2">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  [value]="contentItem.item"
+                  (input)="updateSpecItem(i, j, 'item', $any($event.target).value)"
+                  class="block py-2 px-2 w-1/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+                  placeholder="Specification"
+                />
+                <input
+                  autocomplete="off"
+                  type="text"
+                  [value]="contentItem.value"
+                  (input)="updateSpecItem(i, j, 'value', $any($event.target).value)"
+                  class="block py-2 px-2 w-2/3 text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+                  placeholder="Value"
+                />
+                <button
+                  type="button"
+                  (click)="removeSpecItem(i, j)"
+                  class="text-red-600 hover:text-red-900"
+                >
+                  &times;
+                </button>
+              </div>
+            }
+            <button
+              type="button"
+              (click)="addSpecItem(i)"
+              class="mt-2 inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-teal-700 bg-teal-100 hover:bg-teal-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+            >
+              Add Item
+            </button>
+          </div>
         </div>
-      </div>
       }
       <button
         type="button"
@@ -371,31 +445,29 @@
   <div class="mb-6">
     <h3 class="text-lg font-semibold text-teal-700 mb-3">Related Products</h3>
     <div class="space-y-2">
-      @for(relatedProductCtrl of relatedProductsArray.controls; track $index;
-      let i = $index){
-      <div class="flex items-center gap-2">
-        <select autocomplete="off"
-          [formControl]="$any(relatedProductCtrl)"
-          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
-        >
-          <option value="0">Select Related Product</option>
-          @for(product of allProducts; track product.id){
-          <option
-            [value]="product.id"
-            [selected]="relatedProductCtrl.value === product.id"
+      @for (relatedId of relatedProducts(); track $index; let i = $index) {
+        <div class="flex items-center gap-2">
+          <select
+            autocomplete="off"
+            [value]="relatedId"
+            (change)="updateRelatedProduct(i, +$any($event.target).value)"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
           >
-            {{ product.name }} (ID: {{ product.id }})
-          </option>
-          }
-        </select>
-        <button
-          type="button"
-          (click)="removeRelatedProductField(i)"
-          class="text-red-600 hover:text-red-900 text-xl font-bold"
-        >
-          &times;
-        </button>
-      </div>
+            <option [value]="0">Select Related Product</option>
+            @for (product of allProducts; track product.id) {
+              <option [value]="product.id" [selected]="relatedId === product.id">
+                {{ product.name }} (ID: {{ product.id }})
+              </option>
+            }
+          </select>
+          <button
+            type="button"
+            (click)="removeRelatedProductField(i)"
+            class="text-red-600 hover:text-red-900 text-xl font-bold"
+          >
+            &times;
+          </button>
+        </div>
       }
       <button
         type="button"
@@ -413,9 +485,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- YouTube Link -->
       <Field label="YouTube Link">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="text"
-          formControlName="youtubeLink"
+          [formField]="form.youtubeLink"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
         />
@@ -423,9 +496,10 @@
 
       <!-- Facebook Post -->
       <Field label="Facebook Post">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="text"
-          formControlName="facebookPost"
+          [formField]="form.facebookPost"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
         />
@@ -433,9 +507,10 @@
 
       <!-- Twitter Tweet -->
       <Field label="Twitter Tweet">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="text"
-          formControlName="twitterTweet"
+          [formField]="form.twitterTweet"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
         />
@@ -443,9 +518,10 @@
 
       <!-- Instagram Post -->
       <Field label="Instagram Post">
-        <input autocomplete="off"
+        <input
+          autocomplete="off"
           type="text"
-          formControlName="instagramPost"
+          [formField]="form.instagramPost"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
         />
@@ -453,8 +529,9 @@
 
       <!-- Others -->
       <Field label="Other Information">
-        <textarea autocomplete="off"
-          formControlName="others"
+        <textarea
+          autocomplete="off"
+          [formField]="form.others"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
           rows="2"
@@ -472,13 +549,10 @@
         <input
           id="featured-checkbox"
           type="checkbox"
-          formControlName="isFeatured"
+          [formField]="form.isFeatured"
           class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
         />
-        <label
-          for="featured-checkbox"
-          class="ms-2 text-sm font-medium text-gray-900"
-        >
+        <label for="featured-checkbox" class="ms-2 text-sm font-medium text-gray-900">
           Featured Product
         </label>
       </div>
@@ -488,15 +562,10 @@
         <input
           id="active-checkbox"
           type="checkbox"
-          formControlName="isActive"
+          [formField]="form.isActive"
           class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
         />
-        <label
-          for="active-checkbox"
-          class="ms-2 text-sm font-medium text-gray-900"
-        >
-          Active
-        </label>
+        <label for="active-checkbox" class="ms-2 text-sm font-medium text-gray-900"> Active </label>
       </div>
     </div>
   </div>
@@ -515,7 +584,7 @@
       type="submit"
       class="text-gray-50 bg-linear-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
     >
-      {{ product ? "Update" : "Save" }}
+      {{ product ? 'Update' : 'Save' }}
     </button>
   </div>
 </form>
