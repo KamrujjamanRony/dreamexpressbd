@@ -12,25 +12,28 @@ export class SCustomer {
   private apiUrl = `${environment.apiUrl}/CustomerLogIn`;
 
   add(model: CustomerM): Observable<CustomerM> {
-    return this.http.post<CustomerM>(this.apiUrl, model,
-      { responseType: 'text' as 'json' })
+    return this.http.post<CustomerM>(this.apiUrl, model)
   }
 
-  search(): Observable<CustomerM[]> {
-    return this.http.get<CustomerM[]>(`${this.apiUrl}/Search`)
-  }
-
-  get(id: any): Observable<CustomerM> {
-    return this.http.get<CustomerM>(`${this.apiUrl}/${id}`);
+  search(id: any = null): Observable<CustomerM[]> {
+    const body = {
+      companyID: environment.companyCode,
+      ...(id && { id })
+    }
+    return this.http.post<CustomerM[]>(`${this.apiUrl}/Search`, body)
   }
 
   update(id: any, updateRequest: CustomerM): Observable<CustomerM> {
-    return this.http.put<CustomerM>(`${this.apiUrl}/${id}`, updateRequest,
-      { responseType: 'text' as 'json' });
+    return this.http.put<CustomerM>(`${this.apiUrl}/${id}`, updateRequest);
   }
 
   delete(id: any): Observable<CustomerM> {
     return this.http.delete<CustomerM>(`${this.apiUrl}/${id}`);
+  }
+
+  login(phone: string, pass: string): Observable<CustomerM> {
+    const body = { companyID: environment.companyCode, phone, pass };
+    return this.http.post<CustomerM>(`${this.apiUrl}/Auth`, body);
   }
   
 }

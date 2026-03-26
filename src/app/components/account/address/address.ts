@@ -34,11 +34,11 @@ export class Address {
 
   fetchUser() {
     this.loading.set(true);
-    this.usersService.get(this.userId!).subscribe({
-      next: (data: CustomerM) => {
-        this.userData.set(data);
-        this.selectedId.set(data.id);
-        this.address.set(Array.isArray(data?.address) ? data.address : []);
+    this.usersService.search(this.userId!).subscribe({
+      next: (data: CustomerM[]) => {
+        this.userData.set(data?.[0] || null);
+        this.selectedId.set(data?.[0]?.id || null);
+        this.address.set(Array.isArray(data?.[0]?.address) ? data[0].address : []);
         this.loading.set(false);
       },
       error: (error) => {

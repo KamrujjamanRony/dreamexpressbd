@@ -35,9 +35,9 @@ export class Profile {
     // }
 
     fetchUser() {
-        this.usersService.get(this.userId).subscribe(data => {
-            this.model = data;
-            this.id = data?.id;
+        this.usersService.search(this.userId).subscribe(data => {
+            this.model = data?.[0];
+            this.id = data?.[0]?.id;
         });
     }
 

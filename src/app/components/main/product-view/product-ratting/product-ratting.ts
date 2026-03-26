@@ -66,10 +66,10 @@ export class ProductRatting {
     }
 
     // Fetch user data
-    this.usersService.get(id).subscribe((data: any) => {
+    this.usersService.search(id).subscribe((data: any) => {
       this.userNames.update((users) => ({
         ...users, // Keep existing users
-        [id]: data?.fullname || "Unknown", // Add new user
+        [id]: data?.[0]?.fullname || "Unknown", // Add new user
       }));
     });
 

@@ -159,10 +159,10 @@ export class Checkout {
 
     loadUserDetails(userId: string) {
         this.loading = true;
-        this.usersService.get(userId).subscribe({
+        this.usersService.search(userId).subscribe({
             next: (data) => {
-                this.userDetails = data;
-                this.userAddresses.set(Array.isArray(data.address) ? data.address : []);
+                this.userDetails = data?.[0];
+                this.userAddresses.set(Array.isArray(data?.[0]?.address) ? data[0].address : []);
                 this.setDefaultAddress();
                 this.loading = false;
                 this.calculateDeliveryCharge();
