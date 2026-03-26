@@ -86,6 +86,11 @@ export const routes: Routes = [
             loadComponent: () => import('./components/account/orders/orders').then(m => m.Orders),
             title: `My Orders | ${companyName}`
           },
+          {
+            path: 'order-tracking',
+            loadComponent: () => import('./components/account/order-tracking/order-tracking').then(m => m.OrderTracking),
+            title: `Track Order | ${companyName}`
+          },
           // {
           //   path: 'wishlist',
           //   loadComponent: () => import('./components/account/wishlist/wishlist').then(m => m.Wishlist),
