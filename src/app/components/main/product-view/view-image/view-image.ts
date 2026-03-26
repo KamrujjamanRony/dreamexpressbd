@@ -10,6 +10,7 @@ import { environment } from '../../../../../environments/environment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faShoppingBag, faMinus, faPlus, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { SToast } from '../../../../utils/toast/toast.service';
 
 @Component({
   selector: 'app-view-image',
@@ -24,6 +25,7 @@ export class ViewImage {
   authCookieService = inject(SAuthCookie);
   renderer = inject(Renderer2);
   router = inject(Router);
+  private toast = inject(SToast);
   imgBaseUrl = environment.ImageApi;
   count: number = 1;
   viewImage: any;
@@ -150,97 +152,79 @@ export class ViewImage {
   }
 
   addToCart(product: any) {
-    const cartProduct = {
-      id: crypto.randomUUID(),
+    const price = product.offerPrice || product.regularPrice || 0;
+    const cartProduct: CartProductM = {
       productId: product.id,
-      ...(this.viewSize && { selectSize: this.viewSize }),
-      ...(this.viewColor && { selectColor: this.viewColor.colorName }),
-      quantity: this.count
+      selectSize: this.viewSize || '',
+      selectColor: this.viewColor?.colorName || '',
+      quantity: this.count,
+      price: price,
+      totalPrice: price * this.count,
     };
 
-    if (this.user?.uid) {
-      this.cartService.search(this.user.uid).subscribe({
+    const customerId = this.cartService.getCustomerId();
+
+    if (customerId) {
+      // Customer logged in → use Cart API
+      this.cartService.search(customerId).subscribe({
         next: (cart) => {
           if (cart.length > 0) {
-            // Get the first cart (assuming one cart per user)
-            let userCart: CartM = { ...cart[0] };
-
-            // Check if product exists in cart
-            const existingProductIndex = userCart.products.findIndex(
-              (p: CartProductM) => p.productId == cartProduct.productId
+            const userCart: CartM = { ...cart[0] };
+            const existIdx = userCart.products.findIndex(
+              (p: CartProductM) =>
+                p.productId == cartProduct.productId &&
+                p.selectSize === cartProduct.selectSize &&
+                p.selectColor === cartProduct.selectColor
             );
 
-            if (existingProductIndex !== -1) {
-              // Product exists - increment quantity
-              userCart.products[existingProductIndex].quantity += 1;
+            if (existIdx !== -1) {
+              userCart.products[existIdx].quantity += cartProduct.quantity;
             } else {
-              // Product doesn't exist - add new product
               userCart.products.push(cartProduct);
             }
 
-            // Update the cart
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => {
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
-                // console.log('Cart updated successfully');
-                // Optionally: this.router.navigateByUrl('user/shopping-cart');
-              },
-              error: (error) => {
-                console.error('Error updating cart:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error added to cart'}`);
-              }
+              next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+              error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
             });
           } else {
-            // No cart exists - create new cart
             const newCart: CartM = {
-              userId: this.user.uid,
+              userId: customerId,
               subtotal: 0,
               discountToken: '',
               discountType: '',
               discountValue: 0,
               discountAmount: 0,
               totalAmount: 0,
-              products: [cartProduct]
+              products: [cartProduct],
             };
-
             this.cartService.add(newCart).subscribe({
-              next: () => {
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
-                // console.log('New cart created successfully');
-              },
-              error: (error) => {
-                console.error('Error creating cart:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error added to cart'}`);
-              }
+              next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+              error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
             });
           }
         },
-        error: (error) => {
-          // Error fetching cart - create new one
+        error: () => {
           const newCart: CartM = {
-            userId: this.user.uid,
+            userId: customerId,
             subtotal: 0,
             discountToken: '',
             discountType: '',
             discountValue: 0,
             discountAmount: 0,
             totalAmount: 0,
-            products: [cartProduct]
+            products: [cartProduct],
           };
-
           this.cartService.add(newCart).subscribe({
-            next: () => {
-              // console.log('New cart created successfully');
-            },
-            error: (error) => {
-              console.error('Error creating cart:', error);
-            }
+            next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+            error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
           });
-        }
+        },
       });
     } else {
-      console.error('User not logged in');
-      // Optionally redirect to login
+      // Guest → store locally
+      this.cartService.addLocalProduct(cartProduct);
+      this.toast.success('Product added to cart!', 'top-right', 2000);
     }
   }
 
