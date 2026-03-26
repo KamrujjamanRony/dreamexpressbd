@@ -15,11 +15,12 @@ export class SOrder {
         return this.http.post<OrderM>(this.apiUrl, order);
     }
 
-    search(from: any = '', to: any = '', orderStatus: string = ''): Observable<OrderM[]> {
+    search(from: any = '', to: any = '', orderStatus: string = '', userId: any = ''): Observable<OrderM[]> {
         const reqBody = { 
             ...(from && { from }),
             ...(to && { to }),
             ...(orderStatus && { orderStatus }),
+            ...(userId && { userId }),
             companyID: environment.companyCode 
         };
         return this.http.post<OrderM[]>(`${this.apiUrl}/Search`, reqBody);

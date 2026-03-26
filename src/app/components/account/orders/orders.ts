@@ -25,6 +25,10 @@ export class Orders {
   loading = signal(false);
   error = signal('');
 
+  get user() {
+    return this.authCookie.getUserData();
+  }
+
   ngOnInit(): void {
     this.loadOrders();
   }
@@ -39,7 +43,7 @@ export class Orders {
     this.loading.set(true);
     this.error.set('');
 
-    this.orderService.search().subscribe({
+    this.orderService.search('', '', '', user.id).subscribe({
       next: (response: any) => {
         const allOrders = response?.$values || response || [];
         // Filter orders by the logged-in user's phone
