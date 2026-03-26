@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { Field } from '../field/field';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
+import { UpperCasePipe, TitleCasePipe } from '@angular/common';
 
 interface SpecItem {
   item: string;
@@ -15,7 +16,7 @@ interface Specification {
 
 @Component({
   selector: 'app-product-form',
-  imports: [Field, FormsModule, FormField],
+  imports: [Field, FormsModule, FormField, UpperCasePipe, TitleCasePipe],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })

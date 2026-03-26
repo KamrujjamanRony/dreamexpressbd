@@ -111,8 +111,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="regularPriceError"
             placeholder=""
-            min="0"
-            step="0.01"
           />
         </Field>
         @if (regularPriceError) {
@@ -136,8 +134,6 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.border-red-400]="offerPriceError"
             placeholder=""
-            min="0"
-            step="0.01"
           />
         </Field>
         @if (offerPriceError) {
@@ -179,7 +175,6 @@
           [formField]="form.serial"
           class="block py-2.5 px-0 w-full text-sm text-gray-950 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           placeholder=""
-          min="0"
         />
       </Field>
     </div>
