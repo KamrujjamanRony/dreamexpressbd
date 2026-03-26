@@ -152,6 +152,11 @@ export const routes: Routes = [
         title: `Brand List | ${companyName}`,
       },
       {
+        path: 'customer-list',
+        loadComponent: () => import('./components/admin/customer-list/customer-list').then(m => m.CustomerList),
+        title: `Customer List | ${companyName}`,
+      },
+      {
         path: 'token-list',
         loadComponent: () => import('./components/admin/token-list/token-list').then(m => m.TokenList),
         title: `Discount Tokens | ${companyName}`,
