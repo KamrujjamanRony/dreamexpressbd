@@ -1,0 +1,220 @@
+/* Footer Wrapper */
+.footer-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #1e1137 0%, #0f0a1e 50%, #1a0e30 100%);
+  padding: 3.5rem 0 0;
+}
+
+/* Animated Background Shapes */
+.footer-bg-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.footer-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.06;
+  filter: blur(60px);
+}
+
+.footer-shape-1 {
+  width: 400px;
+  height: 400px;
+  background: #a855f7;
+  top: -100px;
+  right: -100px;
+  animation: footerFloat 12s ease-in-out infinite;
+}
+
+.footer-shape-2 {
+  width: 300px;
+  height: 300px;
+  background: #ec4899;
+  bottom: -80px;
+  left: -80px;
+  animation: footerFloat 15s ease-in-out infinite reverse;
+}
+
+.footer-shape-3 {
+  width: 200px;
+  height: 200px;
+  background: #6366f1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: footerPulse 8s ease-in-out infinite;
+}
+
+@keyframes footerFloat {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(20px, -15px) scale(1.05);
+  }
+  66% {
+    transform: translate(-15px, 10px) scale(0.95);
+  }
+}
+
+@keyframes footerPulse {
+  0%,
+  100% {
+    opacity: 0.04;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.08;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Scroll Animations */
+.footer-animate {
+  opacity: 0;
+  transform: translateY(25px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.footer-animate.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Brand Glow Text */
+.footer-glow-text {
+  background: linear-gradient(135deg, #e9d5ff, #ffffff, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Social Icon Buttons */
+.social-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.social-icon-btn:hover {
+  background: rgba(139, 92, 246, 0.35);
+  border-color: #a78bfa;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
+
+/* Section Headings */
+.footer-heading {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding-bottom: 0.65rem;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, #a855f7, #ec4899);
+  border-radius: 2px;
+}
+
+/* Quick Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-link {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #c4b5fd;
+  transform: translateX(4px);
+}
+
+.footer-link-arrow {
+  font-size: 0.55rem;
+  color: #7c3aed;
+  transition: transform 0.3s ease;
+}
+
+.footer-link:hover .footer-link-arrow {
+  transform: translateX(3px);
+  color: #a78bfa;
+}
+
+/* Info Items */
+.footer-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.footer-info-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #a78bfa;
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.footer-info-item:hover .footer-info-icon {
+  background: rgba(139, 92, 246, 0.25);
+  transform: scale(1.1);
+}
+
+/* Divider */
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.25), transparent);
+}

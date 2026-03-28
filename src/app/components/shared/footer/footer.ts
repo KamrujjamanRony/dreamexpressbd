@@ -1,30 +1,52 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { SSetting } from '../../../services/s-setting';
-import { NgOptimizedImage } from '@angular/common';
+import { SAbout } from '../../../services/s-about';
+import { SContact } from '../../../services/s-contact';
+import { AboutUsM } from '../../../models/AboutUs';
+import { ContactM } from '../../../models/Contact';
 
 @Component({
-  selector: 'app-footer',
-  imports: [NgOptimizedImage],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css',
+    selector: 'app-footer',
+    imports: [CommonModule, RouterLink],
+    templateUrl: './footer.html',
+    styleUrl: './footer.css',
 })
-export class Footer {
-    private settingService = inject(SSetting);
+export class Footer implements AfterViewInit, OnDestroy {
+    private aboutService = inject(SAbout);
+    private contactService = inject(SContact);
+    private el = inject(ElementRef);
+    private observer?: IntersectionObserver;
+
     siteId = environment.companyCode;
-    siteInfo = signal<any>(null);
+    companyName = environment.companyName;
+    aboutData = signal<AboutUsM | null>(null);
+    contactData = signal<ContactM | null>(null);
+    currentYear = new Date().getFullYear();
 
     ngOnInit() {
-        // this.settingService.get(this.siteId).subscribe({
-        //     next: (data) => {
-        //         console.log(data);
-        //         this.siteInfo.set(data);
-        //     },
-        //     error: (err) => {
-        //         // this.toastService.showMessage('error', 'Error', 'Failed to load about us information.');
-        //         console.error('Failed to load about us information:', err);
-        //     }
-        // });
+        this.aboutService.get(this.siteId).subscribe({
+            next: (data) => this.aboutData.set(data),
+        });
+        this.contactService.get(this.siteId).subscribe({
+            next: (data) => this.contactData.set(data),
+        });
     }
 
+    ngAfterViewInit() {
+        this.observer = new IntersectionObserver(
+            (entries) => entries.forEach((e) => {
+                if (e.isIntersecting) e.target.classList.add('in-view');
+            }),
+            { threshold: 0.1 }
+        );
+        this.el.nativeElement.querySelectorAll('.footer-animate').forEach((el: Element) =>
+            this.observer!.observe(el)
+        );
+    }
+
+    ngOnDestroy() {
+        this.observer?.disconnect();
+    }
 }
