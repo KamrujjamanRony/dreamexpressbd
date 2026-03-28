@@ -1,154 +1,212 @@
-﻿<!-- Hero Section -->
-<section class="about-hero" [class.ready]="ready()">
-  <div class="hero-bg-pattern"></div>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
-    <span
-      class="inline-block px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold tracking-wider uppercase mb-4 hero-badge"
-    >
-      About Us
-    </span>
-    <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4 hero-title">
-      Welcome to
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">{{
-        companyName
-      }}</span>
-    </h1>
-    <p class="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto hero-subtitle">
-      Your trusted e-commerce partner in Bangladesh — delivering quality products with love since
-      day one.
-    </p>
+﻿<!-- Loading -->
+@if (loading()) {
+  <div class="flex items-center justify-center min-h-[60vh]">
+    <div class="text-center">
+      <i class="fas fa-spinner fa-spin text-4xl text-purple-500 mb-4"></i>
+      <p class="text-gray-500">Loading...</p>
+    </div>
   </div>
-</section>
-
-<!-- Stats Section -->
-<section class="py-12 sm:py-16 bg-white">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-      @for (stat of stats; track stat.label; let i = $index) {
-        <div class="animate-on-scroll stat-card" [style.transition-delay]="i * 100 + 'ms'">
-          <div class="stat-icon-wrap">
-            <i [class]="stat.icon"></i>
-          </div>
-          <div class="text-2xl sm:text-3xl font-extrabold text-gray-900">{{ stat.value }}</div>
-          <div class="text-xs sm:text-sm text-gray-500 font-medium">{{ stat.label }}</div>
-        </div>
+} @else {
+  <!-- Hero Section -->
+  <section class="about-hero" [class.ready]="ready()">
+    <div class="hero-bg-pattern"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
+      <span
+        class="inline-block px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold tracking-wider uppercase mb-4 hero-badge"
+      >
+        About Us
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4 hero-title">
+        Welcome to
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">{{
+          companyName
+        }}</span>
+      </h1>
+      @if (aboutData()?.heading) {
+        <p class="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto hero-subtitle">
+          {{ aboutData()?.heading }}
+        </p>
       }
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Our Story Section -->
-<section class="py-12 sm:py-20 bg-gray-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="grid lg:grid-cols-2 gap-10 items-center">
-      <div class="animate-on-scroll">
-        <div class="story-visual">
-          <div class="story-visual-inner">
-            <i class="fas fa-store text-5xl text-purple-600"></i>
-            <h3 class="text-lg font-bold text-gray-900 mt-3">{{ companyName }}</h3>
-            <p class="text-xs text-gray-500 mt-1">Est. 2024</p>
+  <!-- Stats Section -->
+  @if (stats().length) {
+    <section class="py-12 sm:py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          @for (stat of stats(); track stat.label; let i = $index) {
+            <div class="animate-on-scroll stat-card" [style.transition-delay]="i * 100 + 'ms'">
+              <div class="stat-icon-wrap">
+                <i [class]="stat.icon"></i>
+              </div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-gray-900">{{ stat.value }}</div>
+              <div class="text-xs sm:text-sm text-gray-500 font-medium">{{ stat.label }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Our Story Section -->
+  @if (aboutData()?.title || aboutData()?.description) {
+    <section class="py-12 sm:py-20 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div class="animate-on-scroll">
+            <div class="story-visual">
+              @if (aboutData()?.imageUrl) {
+                <img
+                  [src]="imgBase + aboutData()?.imageUrl"
+                  [alt]="companyName"
+                  class="w-full h-auto rounded-2xl shadow-lg object-cover"
+                />
+              } @else {
+                <div class="story-visual-inner">
+                  <i class="fas fa-store text-5xl text-purple-600"></i>
+                  <h3 class="text-lg font-bold text-gray-900 mt-3">{{ companyName }}</h3>
+                </div>
+                <div class="story-dots"></div>
+              }
+            </div>
           </div>
-          <div class="story-dots"></div>
-        </div>
-      </div>
-      <div class="animate-on-scroll">
-        <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider"
-          >Our Story</span
-        >
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">How It All Started</h2>
-        @if (aboutData()?.description) {
-          <p class="text-gray-600 leading-relaxed mb-4">{{ aboutData()?.description }}</p>
-        } @else {
-          <p class="text-gray-600 leading-relaxed mb-4">
-            {{ companyName }} was born from a simple idea — to bring quality products at affordable
-            prices to every corner of Bangladesh. We believe everyone deserves access to great
-            products without compromising on quality.
-          </p>
-          <p class="text-gray-600 leading-relaxed">
-            Since our founding, we've grown from a small startup into a trusted e-commerce platform,
-            serving thousands of satisfied customers across the country with fast delivery and
-            excellent customer support.
-          </p>
-        }
-        @if (aboutData()?.description2) {
-          <p class="text-gray-600 leading-relaxed mt-4">{{ aboutData()?.description2 }}</p>
-        }
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Mission & Vision -->
-<section class="py-12 sm:py-20 bg-white">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12 animate-on-scroll">
-      <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider"
-        >What Drives Us</span
-      >
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">Mission & Vision</h2>
-    </div>
-    <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
-      <div class="animate-on-scroll mission-card">
-        <div class="mission-icon bg-gradient-to-br from-purple-500 to-purple-700">
-          <i class="fas fa-bullseye text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Our Mission</h3>
-        <p class="text-gray-600 leading-relaxed">
-          {{
-            aboutData()?.description3 ||
-              'To provide an exceptional online shopping experience with the widest range of quality products, fastest delivery, and outstanding customer service to every household in Bangladesh.'
-          }}
-        </p>
-      </div>
-      <div class="animate-on-scroll mission-card" style="transition-delay: 150ms">
-        <div class="mission-icon bg-gradient-to-br from-pink-500 to-rose-700">
-          <i class="fas fa-eye text-white text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Our Vision</h3>
-        <p class="text-gray-600 leading-relaxed">
-          {{
-            aboutData()?.description4 ||
-              "To become Bangladesh's most loved and trusted e-commerce platform, empowering local businesses and connecting customers with the best products at the best prices."
-          }}
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Core Values -->
-<section class="py-12 sm:py-20 bg-gray-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-12 animate-on-scroll">
-      <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider"
-        >Why Choose Us</span
-      >
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">Our Core Values</h2>
-    </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      @for (v of values; track v.title; let i = $index) {
-        <div class="animate-on-scroll value-card" [style.transition-delay]="i * 100 + 'ms'">
-          <div class="value-icon">
-            <i [class]="v.icon"></i>
+          <div class="animate-on-scroll">
+            @if (aboutData()?.title) {
+              <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider">
+                {{ aboutData()?.title }}
+              </span>
+            }
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">
+              How It All Started
+            </h2>
+            @if (aboutData()?.description) {
+              <p class="text-gray-600 leading-relaxed">{{ aboutData()?.description }}</p>
+            }
           </div>
-          <h3 class="text-base font-bold text-gray-900 mb-1.5">{{ v.title }}</h3>
-          <p class="text-sm text-gray-500 leading-relaxed">{{ v.desc }}</p>
         </div>
-      }
-    </div>
-  </div>
-</section>
+      </div>
+    </section>
+  }
 
-<!-- CTA Section -->
-<section class="py-16 sm:py-20 cta-section">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center animate-on-scroll">
-    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
-    <p class="text-purple-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-      Discover thousands of products at unbeatable prices with fast delivery across Bangladesh.
-    </p>
-    <a routerLink="/shop" class="cta-btn">
-      <i class="fas fa-shopping-bag mr-2"></i>
-      Explore Our Shop
-    </a>
-  </div>
-</section>
+  <!-- Mission & Vision -->
+  @if (aboutData()?.title2 || aboutData()?.description2) {
+    <section class="py-12 sm:py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12 animate-on-scroll">
+          <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider"
+            >What Drives Us</span
+          >
+          @if (aboutData()?.title2) {
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">
+              {{ aboutData()?.title2 }}
+            </h2>
+          }
+        </div>
+        @if (missionVisionLines().length > 1) {
+          <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
+            @for (line of missionVisionLines(); track $index) {
+              <div
+                class="animate-on-scroll mission-card"
+                [style.transition-delay]="$index * 150 + 'ms'"
+              >
+                <div
+                  class="mission-icon bg-gradient-to-br"
+                  [class]="
+                    $index % 2 === 0 ? 'from-purple-500 to-purple-700' : 'from-pink-500 to-rose-700'
+                  "
+                >
+                  <i
+                    [class]="
+                      $index % 2 === 0
+                        ? 'fas fa-bullseye text-white text-xl'
+                        : 'fas fa-eye text-white text-xl'
+                    "
+                  ></i>
+                </div>
+                <p class="text-gray-600 leading-relaxed">{{ line }}</p>
+              </div>
+            }
+          </div>
+        } @else if (aboutData()?.description2) {
+          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
+            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
+              {{ aboutData()?.description2 }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Why Choose Us -->
+  @if (aboutData()?.title3 || aboutData()?.description3) {
+    <section class="py-12 sm:py-20 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12 animate-on-scroll">
+          @if (aboutData()?.title3) {
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ aboutData()?.title3 }}</h2>
+          }
+        </div>
+        @if (aboutData()?.description3) {
+          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
+            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
+              {{ aboutData()?.description3 }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Core Values -->
+  @if (aboutData()?.title4 || aboutData()?.description4) {
+    <section class="py-12 sm:py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12 animate-on-scroll">
+          @if (aboutData()?.title4) {
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ aboutData()?.title4 }}</h2>
+          }
+        </div>
+        @if (coreValues().length > 1) {
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            @for (v of coreValues(); track $index) {
+              <div
+                class="animate-on-scroll value-card"
+                [style.transition-delay]="$index * 100 + 'ms'"
+              >
+                <div class="value-icon">
+                  <i [class]="v.icon"></i>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1.5">{{ v.title }}</h3>
+                @if (v.desc) {
+                  <p class="text-sm text-gray-500 leading-relaxed">{{ v.desc }}</p>
+                }
+              </div>
+            }
+          </div>
+        } @else if (aboutData()?.description4) {
+          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
+            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
+              {{ aboutData()?.description4 }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- CTA Section -->
+  <section class="py-16 sm:py-20 cta-section">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center animate-on-scroll">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
+      <p class="text-purple-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
+        Discover thousands of products at unbeatable prices with fast delivery across Bangladesh.
+      </p>
+      <a routerLink="/shop" class="cta-btn">
+        <i class="fas fa-shopping-bag mr-2"></i>
+        Explore Our Shop
+      </a>
+    </div>
+  </section>
+}
