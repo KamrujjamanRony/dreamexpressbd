@@ -42,5 +42,5 @@ export class SCategory {
       imageUrl: raw.imageUrl ?? raw.ImageUrl ?? '',
     };
   }
-  
+
 }

@@ -11,8 +11,8 @@ import { environment } from '../../../../../environments/environment';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Categories {
-    categories = input<any[]>([]);
-    imgURL = environment.ImageApi;
+  categories = input<any[]>([]);
+  imgURL = environment.ImageApi;
 
   breakpoints = {
     480: { slidesPerView: 2, spaceBetween: 5 },

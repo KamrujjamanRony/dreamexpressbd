@@ -21,13 +21,13 @@ export class CategoryList {
   faPencil = faPencil;
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
-  
+
   /* ---------------- DI ---------------- */
   private categoryService = inject(SCategory);
   private permissionService = inject(SPermission);
-      private toast = inject(SToast);
-      private confirm = inject(SConfirm);
-  
+  private toast = inject(SToast);
+  private confirm = inject(SConfirm);
+
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 

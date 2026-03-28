@@ -55,7 +55,11 @@
                     >
                       <div class="mega-dropdown-item-icon">
                         @if (item?.imageUrl) {
-                          <img [src]="imageBaseUrl + item.imageUrl" alt="" class="w-full h-full object-cover rounded" />
+                          <img
+                            [src]="imageBaseUrl + item.imageUrl"
+                            alt=""
+                            class="w-full h-full object-cover rounded"
+                          />
                         } @else {
                           <i class="fas fa-tag"></i>
                         }

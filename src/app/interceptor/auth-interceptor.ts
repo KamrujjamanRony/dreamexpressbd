@@ -22,16 +22,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const guestToken = guestService.getToken();
     const isAdminArea = router.url.includes('/admin');
 
-    // Priority: admin token for admin area, customer token if logged in, else guest token
+    // Priority: admin area → admin token, customer logged in → customer token, fallback → guest token
     let token: string | null = null;
-    if (isAdminArea && adminToken) {
-        token = adminToken;
+    if (isAdminArea) {
+        token = adminToken || null;
     } else if (customerToken) {
         token = customerToken;
-    } else if (guestToken) {
-        token = guestToken;
-    } else if (adminToken) {
-        token = adminToken;
+    } else {
+        token = guestToken || null;
     }
 
     if (token) {
@@ -48,7 +46,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     router.navigate(['/admin-login']);
                 } else {
                     authCookie.logout();
-                    router.navigate(['/customer-login']);
+                    router.navigate(['/login']);
                 }
             }
             return throwError(() => error);

@@ -8,8 +8,12 @@ export class SAuthCookie {
   cookieService = inject(CookieService);
 
   login(userData: any) {
-    // Save user data in cookie with a 7-day expiration
-    this.cookieService.set('userData', JSON.stringify(userData), 7, '/');
+    // Normalize PascalCase token field from .NET API response
+    const normalized = {
+      ...userData,
+      token: userData?.token || userData?.Token || null,
+    };
+    this.cookieService.set('userData', JSON.stringify(normalized), 7, '/');
   }
 
   getUserData() {
@@ -18,8 +22,7 @@ export class SAuthCookie {
   }
 
   getToken(): string | null {
-    const data = this.getUserData();
-    return data?.token || data?.Token || null;
+    return this.getUserData()?.token || null;
   }
 
   isCustomer(): boolean {
@@ -30,5 +33,5 @@ export class SAuthCookie {
     // Delete the user data cookie
     this.cookieService.delete('userData', '/');
   }
-  
+
 }
