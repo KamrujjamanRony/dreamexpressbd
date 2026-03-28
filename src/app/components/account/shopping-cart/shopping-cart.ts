@@ -193,12 +193,6 @@ export class ShoppingCart {
       return;
     }
 
-    if (!this.isCustomer) {
-      this.toast.warning('Please login to proceed to checkout', 'top-right', 3000);
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const orderData = {
       products: this.carts(),
       subtotal: this.totalPrice(),

@@ -8,6 +8,7 @@ import { SOrder } from '../../../services/s-order';
 import { SCustomer } from '../../../services/s-customer';
 import { SToken } from '../../../services/s-token';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SGuest } from '../../../services/s-guest';
 import { SToast } from '../../../utils/toast/toast.service';
 import { TokenM } from '../../../models/TokenM';
 import { environment } from '../../../../environments/environment';
@@ -26,6 +27,7 @@ export class Checkout {
     private customerService = inject(SCustomer);
     private tokenService = inject(SToken);
     private authCookie = inject(SAuthCookie);
+    private guestService = inject(SGuest);
     private toast = inject(SToast);
 
     siteId = environment.companyCode;
@@ -33,6 +35,7 @@ export class Checkout {
     orderData: any;
     user: any;
     userDetails: any;
+    isGuest = false;
     loading = signal(false);
     placingOrder = signal(false);
     error = signal<string | null>(null);
@@ -41,6 +44,13 @@ export class Checkout {
     deliveryAddress = signal<any>(null);
     userAddresses = signal<any[]>([]);
     selectedAddressId = signal<string | null>(null);
+
+    // Guest checkout fields
+    guestName = '';
+    guestPhone = '';
+    guestDistrict = '';
+    guestCity = '';
+    guestStreet = '';
 
     // Discount token
     tokenCode = '';
@@ -77,11 +87,10 @@ export class Checkout {
     ngOnInit() {
         this.user = this.authCookie.getUserData();
         if (this.user) {
+            this.isGuest = false;
             this.loadUserDetails(this.user.id);
         } else {
-            this.toast.warning('Please login to continue checkout', 'top-right', 3000);
-            this.router.navigate(['/login']);
-            return;
+            this.isGuest = true;
         }
 
         if (!this.orderData?.products?.length) {
@@ -284,26 +293,42 @@ export class Checkout {
     }
 
     goToStep(step: number) {
-        if (step === 2 && !this.deliveryAddress()) {
-            this.toast.warning('Please select a delivery address first', 'top-right', 2000);
-            return;
+        if (step === 2) {
+            if (this.isGuest) {
+                if (!this.guestName.trim() || !this.guestPhone.trim() || !this.guestDistrict.trim() || !this.guestCity.trim() || !this.guestStreet.trim()) {
+                    this.toast.warning('Please fill in all delivery details', 'top-right', 2000);
+                    return;
+                }
+                // Set delivery address from guest form
+                this.deliveryAddress.set({
+                    street: this.guestStreet.trim(),
+                    city: this.guestCity.trim(),
+                    district: this.guestDistrict.trim(),
+                    contact: this.guestPhone.trim(),
+                    type: 'Home',
+                });
+                this.calculateDeliveryCharge();
+            } else if (!this.deliveryAddress()) {
+                this.toast.warning('Please select a delivery address first', 'top-right', 2000);
+                return;
+            }
         }
         this.activeStep.set(step);
     }
 
     placeOrder() {
-        if (!this.user) {
-            this.error.set('Please login to place an order');
-            return;
-        }
-
         if (!this.deliveryAddress()) {
-            this.error.set('Please select a delivery address');
+            this.error.set('Please provide a delivery address');
             return;
         }
 
         if (!this.orderData?.products?.length) {
             this.error.set('No products in cart');
+            return;
+        }
+
+        if (this.isGuest && (!this.guestName.trim() || !this.guestPhone.trim())) {
+            this.error.set('Please provide your name and phone number');
             return;
         }
 
@@ -321,10 +346,10 @@ export class Checkout {
         }));
 
         const order: OrderM = {
-            userId: this.user.id || '',
+            userId: this.isGuest ? (this.guestService.getGuestId() || 'guest') : (this.user.id || ''),
             userEmail: '',
-            userName: this.userDetails?.fullName || '',
-            userPhone: this.userDetails?.phone || this.deliveryAddress().contact || '',
+            userName: this.isGuest ? this.guestName.trim() : (this.userDetails?.fullName || ''),
+            userPhone: this.isGuest ? this.guestPhone.trim() : (this.userDetails?.phone || this.deliveryAddress().contact || ''),
             orderItems,
             subtotal: this.orderData.subtotal || 0,
             deliveryCharge: this.deliveryCharge() || 0,
@@ -348,7 +373,11 @@ export class Checkout {
 
         this.orderService.add(order).subscribe({
             next: (response) => {
-                this.cartService.clearCart(this.user.id);
+                if (this.isGuest) {
+                    this.cartService.clearLocalCart();
+                } else {
+                    this.cartService.clearCart(this.user.id);
+                }
                 this.cartService.refreshCartCount();
                 this.toast.success('Order placed successfully!', 'top-right', 3000);
                 this.router.navigate(['/order-confirmation'], {

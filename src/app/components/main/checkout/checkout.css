@@ -1,3 +1,30 @@
+/* ── Guest Input Fields ── */
+.guest-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #111827;
+  outline: none;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.dark .guest-input {
+  border-color: #374151;
+  background: #1f2937;
+  color: #f9fafb;
+}
+.guest-input:focus {
+  border-color: #f43f5e;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+}
+.guest-input::placeholder {
+  color: #9ca3af;
+}
+
 /* ── Animations ── */
 .checkout-page .fade-slide-in {
   opacity: 0;
