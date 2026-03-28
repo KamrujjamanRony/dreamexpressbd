@@ -10,7 +10,39 @@ import { OrderM } from '../../../../models/OrderM';
   styleUrl: './order-details.css',
 })
 export class OrderDetails {
-  @Input() order!: OrderM | null;
+  @Input() set order(value: OrderM | null) {
+    this._order = value ? this.normalizeOrder(value) : null;
+  }
+  get order(): OrderM | null {
+    return this._order;
+  }
+  private _order: OrderM | null = null;
+
+  private normalizeOrder(o: any): any {
+    let discountAmount = o.discountAmount || 0;
+    const discountToken = o.discountToken || '';
+    const discountType = o.discountType || '';
+    const discountValue = o.discountValue || 0;
+    const subtotal = o.subtotal || 0;
+    const deliveryCharge = o.deliveryCharge || 0;
+
+    if (!discountAmount && discountToken && discountValue > 0) {
+      if (discountType === 'Percentage') {
+        discountAmount = Math.round((subtotal * discountValue) / 100 * 100) / 100;
+      } else if (discountType === 'Fixed') {
+        discountAmount = Math.min(discountValue, subtotal);
+      } else if (discountType === 'FreeDelivery') {
+        discountAmount = deliveryCharge;
+      }
+    }
+
+    let totalAmount = o.totalAmount || 0;
+    if (discountAmount > 0 && totalAmount >= subtotal + deliveryCharge) {
+      totalAmount = Math.max(0, subtotal + deliveryCharge - discountAmount);
+    }
+
+    return { ...o, discountAmount, totalAmount };
+  }
 
   getStatusClass(status: string): string {
     const statusMap: { [key: string]: string } = {

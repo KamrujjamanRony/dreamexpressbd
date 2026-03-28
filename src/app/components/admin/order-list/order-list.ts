@@ -147,7 +147,7 @@ export class OrderList implements OnInit {
       this.selectedStatus()
     ).subscribe({
       next: (data) => {
-        this.orders.set(data);
+        this.orders.set(data.map(o => this.normalizeOrder(o)));
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -157,6 +157,32 @@ export class OrderList implements OnInit {
         this.toast.danger('Failed to load orders', 'bottom-right', 3000);
       }
     });
+  }
+
+  private normalizeOrder(o: any): OrderM {
+    let discountAmount = o.discountAmount || 0;
+    const discountToken = o.discountToken || '';
+    const discountType = o.discountType || '';
+    const discountValue = o.discountValue || 0;
+    const subtotal = o.subtotal || 0;
+    const deliveryCharge = o.deliveryCharge || 0;
+
+    if (!discountAmount && discountToken && discountValue > 0) {
+      if (discountType === 'Percentage') {
+        discountAmount = Math.round((subtotal * discountValue) / 100 * 100) / 100;
+      } else if (discountType === 'Fixed') {
+        discountAmount = Math.min(discountValue, subtotal);
+      } else if (discountType === 'FreeDelivery') {
+        discountAmount = deliveryCharge;
+      }
+    }
+
+    let totalAmount = o.totalAmount || 0;
+    if (discountAmount > 0 && totalAmount >= subtotal + deliveryCharge) {
+      totalAmount = Math.max(0, subtotal + deliveryCharge - discountAmount);
+    }
+
+    return { ...o, discountAmount, totalAmount };
   }
 
   refreshOrders() {
@@ -240,7 +266,7 @@ export class OrderList implements OnInit {
     this.orderService.update(order.id!, { orderStatus: newStatus }).subscribe({
       next: (updatedOrder) => {
         this.orders.update(orders =>
-          orders.map(o => o.id === order.id ? updatedOrder : o)
+          orders.map(o => o.id === order.id ? this.normalizeOrder(updatedOrder) : o)
         );
         this.toast.success(`Order status updated to ${newStatus}`, 'bottom-right', 3000);
       },
@@ -263,12 +289,12 @@ export class OrderList implements OnInit {
         if (orderData.id) {
           // Update existing order
           this.orders.update(orders =>
-            orders.map(o => o.id === savedOrder.id ? savedOrder : o)
+            orders.map(o => o.id === savedOrder.id ? this.normalizeOrder(savedOrder) : o)
           );
           this.toast.success('Order updated successfully!', 'bottom-right', 3000);
         } else {
           // Add new order
-          this.orders.update(orders => [savedOrder, ...orders]);
+          this.orders.update(orders => [this.normalizeOrder(savedOrder), ...orders]);
           this.toast.success('Order created successfully!', 'bottom-right', 3000);
         }
         this.showForm.set(false);

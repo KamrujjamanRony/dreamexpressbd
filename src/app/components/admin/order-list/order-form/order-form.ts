@@ -201,28 +201,47 @@ export class OrderForm implements OnChanges {
   loadOrderData() {
     if (!this.selectedOrder) return;
 
+    const o = this.selectedOrder;
+    const subtotal = o.subtotal || 0;
+    const deliveryCharge = o.deliveryCharge || 60;
+    const discountToken = o.discountToken || '';
+    const discountType = o.discountType || '';
+    const discountValue = o.discountValue || 0;
+    let discountAmount = o.discountAmount || 0;
+
+    // Recalculate discountAmount when backend returns 0 but discount token exists
+    if (!discountAmount && discountToken && discountValue > 0) {
+      if (discountType === 'Percentage') {
+        discountAmount = Math.min(Math.round((subtotal * discountValue) / 100), subtotal);
+      } else if (discountType === 'Fixed') {
+        discountAmount = Math.min(discountValue, subtotal);
+      } else if (discountType === 'FreeDelivery') {
+        discountAmount = 0;
+      }
+    }
+
     this.model.set({
-      companyID: this.selectedOrder.companyID || environment.companyCode,
-      userId: this.selectedOrder.userId || '',
-      userEmail: this.selectedOrder.userEmail || '',
-      userName: this.selectedOrder.userName || '',
-      userPhone: this.selectedOrder.userPhone || '',
-      subtotal: this.selectedOrder.subtotal || 0,
-      deliveryCharge: this.selectedOrder.deliveryCharge || 60,
-      discountToken: this.selectedOrder.discountToken || '',
-      discountType: this.selectedOrder.discountType || '',
-      discountValue: this.selectedOrder.discountValue || 0,
-      discountAmount: this.selectedOrder.discountAmount || 0,
-      totalAmount: this.selectedOrder.totalAmount || 0,
-      paymentMethod: this.selectedOrder.paymentMethod || 'CashOnDelivery',
-      orderStatus: this.selectedOrder.orderStatus || 'Pending',
-      orderDate: this.selectedOrder.orderDate || new Date().toISOString(),
+      companyID: o.companyID || environment.companyCode,
+      userId: o.userId || '',
+      userEmail: o.userEmail || '',
+      userName: o.userName || '',
+      userPhone: o.userPhone || '',
+      subtotal,
+      deliveryCharge: discountType === 'FreeDelivery' ? 0 : deliveryCharge,
+      discountToken,
+      discountType,
+      discountValue,
+      discountAmount,
+      totalAmount: o.totalAmount || 0,
+      paymentMethod: o.paymentMethod || 'CashOnDelivery',
+      orderStatus: o.orderStatus || 'Pending',
+      orderDate: o.orderDate || new Date().toISOString(),
       shippingAddress: {
-        district: this.selectedOrder.shippingAddress?.district || '',
-        city: this.selectedOrder.shippingAddress?.city || '',
-        street: this.selectedOrder.shippingAddress?.street || '',
-        contact: this.selectedOrder.shippingAddress?.contact || '',
-        type: this.selectedOrder.shippingAddress?.type || 'Home'
+        district: o.shippingAddress?.district || '',
+        city: o.shippingAddress?.city || '',
+        street: o.shippingAddress?.street || '',
+        contact: o.shippingAddress?.contact || '',
+        type: o.shippingAddress?.type || 'Home'
       }
     });
 
