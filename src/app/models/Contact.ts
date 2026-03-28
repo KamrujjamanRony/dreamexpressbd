@@ -1,3 +1,11 @@
+export interface DeliveryChargeM {
+  id?: number;
+  name: string;
+  amount: number;
+  isActive: boolean;
+  siteSettingId?: number;
+}
+
 export interface ContactM {
   id?: number;
   companyID: number;
@@ -10,4 +18,5 @@ export interface ContactM {
   facebookLink?: string;
   othersLink1?: string;
   othersLink2?: string;
+  deliveryCharges?: DeliveryChargeM[];
 }
