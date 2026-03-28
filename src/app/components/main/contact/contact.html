@@ -1,1 +1,290 @@
-<p>contact works!</p>
+<!-- Hero Section -->
+<section class="contact-hero" [class.ready]="ready()">
+  <div class="hero-bg-pattern"></div>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
+    <span
+      class="inline-block px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold tracking-wider uppercase mb-4 hero-badge"
+    >
+      Get In Touch
+    </span>
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4 hero-title">
+      Contact
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500"
+        >Us</span
+      >
+    </h1>
+    <p class="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto hero-subtitle">
+      Have a question or feedback? We'd love to hear from you. Reach out and we'll respond as soon
+      as we can.
+    </p>
+  </div>
+</section>
+
+<!-- Contact Cards -->
+<section class="py-12 sm:py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Phone -->
+      <div class="animate-on-scroll contact-card" style="transition-delay: 0ms">
+        <div class="contact-card-icon bg-gradient-to-br from-purple-500 to-purple-700">
+          <i class="fas fa-phone-alt text-white"></i>
+        </div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">Phone</h3>
+        <p class="text-sm text-gray-500">{{ contactInfo()?.phoneNumber1 || '+880 1234-567890' }}</p>
+        @if (contactInfo()?.phoneNumber2) {
+          <p class="text-sm text-gray-500">{{ contactInfo()?.phoneNumber2 }}</p>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="animate-on-scroll contact-card" style="transition-delay: 100ms">
+        <div class="contact-card-icon bg-gradient-to-br from-pink-500 to-rose-600">
+          <i class="fas fa-envelope text-white"></i>
+        </div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">Email</h3>
+        <p class="text-sm text-gray-500">{{ contactInfo()?.email || 'support@dreamexpress.bd' }}</p>
+      </div>
+
+      <!-- Address -->
+      <div class="animate-on-scroll contact-card" style="transition-delay: 200ms">
+        <div class="contact-card-icon bg-gradient-to-br from-violet-500 to-indigo-600">
+          <i class="fas fa-map-marker-alt text-white"></i>
+        </div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">Address</h3>
+        <p class="text-sm text-gray-500">{{ contactInfo()?.address1 || 'Dhaka, Bangladesh' }}</p>
+      </div>
+
+      <!-- Hours -->
+      <div class="animate-on-scroll contact-card" style="transition-delay: 300ms">
+        <div class="contact-card-icon bg-gradient-to-br from-fuchsia-500 to-purple-600">
+          <i class="fas fa-clock text-white"></i>
+        </div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">Working Hours</h3>
+        <p class="text-sm text-gray-500">Sat - Thu: 10AM - 8PM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Form & Info -->
+<section class="py-12 sm:py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid lg:grid-cols-5 gap-8">
+      <!-- Form -->
+      <div class="lg:col-span-3 animate-on-scroll">
+        <div class="form-card">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Send Us a Message</h2>
+          <p class="text-sm text-gray-500 mb-6">
+            Fill out the form below and we'll get back to you shortly.
+          </p>
+
+          <form (ngSubmit)="submitForm()">
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="form-label">Full Name <span class="text-red-400">*</span></label>
+                <div class="form-input-wrap">
+                  <i class="fas fa-user form-input-icon"></i>
+                  <input
+                    type="text"
+                    [(ngModel)]="formName"
+                    name="name"
+                    placeholder="Your name"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Phone <span class="text-red-400">*</span></label>
+                <div class="form-input-wrap">
+                  <i class="fas fa-phone form-input-icon"></i>
+                  <input
+                    type="tel"
+                    [(ngModel)]="formPhone"
+                    name="phone"
+                    placeholder="Your phone"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Email</label>
+              <div class="form-input-wrap">
+                <i class="fas fa-envelope form-input-icon"></i>
+                <input
+                  type="email"
+                  [(ngModel)]="formEmail"
+                  name="email"
+                  placeholder="Your email (optional)"
+                  class="form-input"
+                />
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="form-label">Message <span class="text-red-400">*</span></label>
+              <textarea
+                [(ngModel)]="formMessage"
+                name="message"
+                rows="5"
+                placeholder="How can we help you?"
+                class="form-textarea"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="sending()">
+              @if (sending()) {
+                <i class="fas fa-spinner fa-spin mr-2"></i> Sending...
+              } @else {
+                <i class="fas fa-paper-plane mr-2"></i> Send Message
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Info Side -->
+      <div class="lg:col-span-2 animate-on-scroll" style="transition-delay: 150ms">
+        <div class="info-card">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Info</h3>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fas fa-truck text-purple-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Fast Delivery</p>
+              <p class="text-xs text-gray-500">
+                Delivery within 2-5 business days across Bangladesh.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fas fa-undo text-purple-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Easy Returns</p>
+              <p class="text-xs text-gray-500">7-day easy return policy on all products.</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fas fa-shield-alt text-purple-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Secure Payment</p>
+              <p class="text-xs text-gray-500">100% secure payment with multiple options.</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fas fa-headset text-purple-600"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">24/7 Support</p>
+              <p class="text-xs text-gray-500">
+                Round the clock customer support via phone & chat.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        @if (contactInfo()?.facebookLink || contactInfo()?.othersLink1) {
+          <div class="social-card mt-5">
+            <h3 class="text-sm font-bold text-gray-900 mb-3">Follow Us</h3>
+            <div class="flex items-center gap-3">
+              @if (contactInfo()?.facebookLink) {
+                <a
+                  [href]="contactInfo()?.facebookLink"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-icon-link"
+                >
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+              }
+              @if (contactInfo()?.othersLink1) {
+                <a
+                  [href]="contactInfo()?.othersLink1"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-icon-link"
+                >
+                  <i class="fab fa-instagram"></i>
+                </a>
+              }
+              @if (contactInfo()?.othersLink2) {
+                <a
+                  [href]="contactInfo()?.othersLink2"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-icon-link"
+                >
+                  <i class="fab fa-youtube"></i>
+                </a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-12 sm:py-20 bg-white">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10 animate-on-scroll">
+      <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider">FAQ</span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">Frequently Asked Questions</h2>
+    </div>
+
+    <div class="space-y-3">
+      <details class="animate-on-scroll faq-item">
+        <summary class="faq-summary">
+          <span>How long does delivery take?</span>
+          <i class="fas fa-chevron-down faq-arrow"></i>
+        </summary>
+        <p class="faq-answer">
+          We deliver within Dhaka in 1-2 business days and outside Dhaka in 3-5 business days.
+        </p>
+      </details>
+
+      <details class="animate-on-scroll faq-item" style="transition-delay: 100ms">
+        <summary class="faq-summary">
+          <span>What is your return policy?</span>
+          <i class="fas fa-chevron-down faq-arrow"></i>
+        </summary>
+        <p class="faq-answer">
+          We offer a hassle-free 7-day return policy. Simply contact us and we'll arrange the
+          return.
+        </p>
+      </details>
+
+      <details class="animate-on-scroll faq-item" style="transition-delay: 200ms">
+        <summary class="faq-summary">
+          <span>What payment methods do you accept?</span>
+          <i class="fas fa-chevron-down faq-arrow"></i>
+        </summary>
+        <p class="faq-answer">We accept Cash on Delivery, bKash, Nagad, and bank transfers.</p>
+      </details>
+
+      <details class="animate-on-scroll faq-item" style="transition-delay: 300ms">
+        <summary class="faq-summary">
+          <span>How can I track my order?</span>
+          <i class="fas fa-chevron-down faq-arrow"></i>
+        </summary>
+        <p class="faq-answer">
+          Log into your account and visit the "My Orders" section. You can also use our order
+          tracking page with your order ID.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
