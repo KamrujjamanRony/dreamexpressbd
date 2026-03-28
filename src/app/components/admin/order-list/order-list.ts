@@ -160,12 +160,12 @@ export class OrderList implements OnInit {
   }
 
   private normalizeOrder(o: any): OrderM {
-    let discountAmount = o.discountAmount || 0;
-    const discountToken = o.discountToken || '';
-    const discountType = o.discountType || '';
-    const discountValue = o.discountValue || 0;
-    const subtotal = o.subtotal || 0;
-    const deliveryCharge = o.deliveryCharge || 0;
+    const subtotal = o.subtotal ?? o.Subtotal ?? 0;
+    const deliveryCharge = o.deliveryCharge ?? o.DeliveryCharge ?? 0;
+    const discountToken = o.discountToken ?? o.DiscountToken ?? '';
+    const discountType = o.discountType ?? o.DiscountType ?? '';
+    const discountValue = o.discountValue ?? o.DiscountValue ?? 0;
+    let discountAmount = o.discountAmount ?? o.DiscountAmount ?? 0;
 
     if (!discountAmount && discountToken && discountValue > 0) {
       if (discountType === 'Percentage') {
@@ -177,12 +177,48 @@ export class OrderList implements OnInit {
       }
     }
 
-    let totalAmount = o.totalAmount || 0;
+    let totalAmount = o.totalAmount ?? o.TotalAmount ?? 0;
     if (discountAmount > 0 && totalAmount >= subtotal + deliveryCharge) {
       totalAmount = Math.max(0, subtotal + deliveryCharge - discountAmount);
     }
 
-    return { ...o, discountAmount, totalAmount };
+    const addr = o.shippingAddress ?? o.ShippingAddress;
+    const rawItems = o.orderItems ?? o.OrderItems;
+    const items = rawItems?.$values || rawItems || [];
+
+    return {
+      ...o,
+      id: o.id ?? o.Id,
+      userName: o.userName ?? o.UserName ?? '',
+      userEmail: o.userEmail ?? o.UserEmail ?? '',
+      userPhone: o.userPhone ?? o.UserPhone ?? '',
+      subtotal,
+      deliveryCharge,
+      totalAmount,
+      discountToken,
+      discountType,
+      discountValue,
+      discountAmount,
+      paymentMethod: o.paymentMethod ?? o.PaymentMethod ?? '',
+      orderStatus: o.orderStatus ?? o.OrderStatus ?? '',
+      orderDate: o.orderDate ?? o.OrderDate ?? '',
+      shippingAddress: addr ? {
+        district: addr.district ?? addr.District ?? '',
+        city: addr.city ?? addr.City ?? '',
+        street: addr.street ?? addr.Street ?? '',
+        contact: addr.contact ?? addr.Contact ?? '',
+        type: addr.type ?? addr.Type ?? '',
+      } : undefined,
+      orderItems: items.map((item: any) => ({
+        productId: item.productId ?? item.ProductId,
+        productName: item.productName ?? item.ProductName ?? '',
+        quantity: item.quantity ?? item.Quantity ?? 1,
+        price: item.price ?? item.Price ?? 0,
+        size: item.size ?? item.Size ?? '',
+        color: item.color ?? item.Color ?? '',
+        image: item.image ?? item.Image ?? '',
+      })),
+    };
   }
 
   refreshOrders() {

@@ -1,5 +1,5 @@
 // order-form.component.ts
-import { Component, EventEmitter, inject, Input, Output, signal, computed, effect, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, computed, effect, OnChanges, SimpleChanges, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
@@ -167,13 +167,19 @@ export class OrderForm implements OnChanges {
     // Sync subtotal from orderItems
     effect(() => {
       const subtotal = this.calculatedSubtotal();
-      this.model.update(m => ({ ...m, subtotal }));
+      const current = untracked(() => this.model().subtotal);
+      if (current !== subtotal) {
+        this.model.update(m => ({ ...m, subtotal }));
+      }
     });
 
     // Sync totalAmount back to model
     effect(() => {
       const total = this.totalAmount();
-      this.model.update(m => ({ ...m, totalAmount: total }));
+      const current = untracked(() => this.model().totalAmount);
+      if (current !== total) {
+        this.model.update(m => ({ ...m, totalAmount: total }));
+      }
     });
 
     // Auto-calculate delivery charge based on district
@@ -182,9 +188,14 @@ export class OrderForm implements OnChanges {
       if (!district) return;
 
       const charge = district.includes('dhaka') ? 60 : 120;
+      const tokenApplied = this.tokenApplied();
+      const discountType = untracked(() => this.model().discountType);
       // Only update if token doesn't grant free delivery
-      if (!this.tokenApplied() || this.model().discountType !== 'FreeDelivery') {
-        this.model.update(m => ({ ...m, deliveryCharge: charge }));
+      if (!tokenApplied || discountType !== 'FreeDelivery') {
+        const currentCharge = untracked(() => this.model().deliveryCharge);
+        if (currentCharge !== charge) {
+          this.model.update(m => ({ ...m, deliveryCharge: charge }));
+        }
       }
     });
   }
@@ -251,8 +262,18 @@ export class OrderForm implements OnChanges {
     }
 
     // Load order items
-    if (this.selectedOrder.orderItems?.length) {
-      this.orderItems.set([...this.selectedOrder.orderItems]);
+    const rawItems: any = this.selectedOrder.orderItems || (this.selectedOrder as any).OrderItems;
+    const items = rawItems?.$values || rawItems || [];
+    if (items.length) {
+      this.orderItems.set(items.map((item: any) => ({
+        productId: item.productId ?? item.ProductId,
+        productName: item.productName ?? item.ProductName ?? '',
+        quantity: item.quantity ?? item.Quantity ?? 1,
+        price: item.price ?? item.Price ?? 0,
+        size: item.size ?? item.Size ?? '',
+        color: item.color ?? item.Color ?? '',
+        image: item.image ?? item.Image ?? '',
+      })));
     }
 
     this.form().reset();

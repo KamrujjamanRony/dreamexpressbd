@@ -5,9 +5,13 @@
     <h2 class="text-xl font-bold text-gray-900 dark:text-white">Order #{{ order?.id }}</h2>
     <div class="flex justify-between items-center mt-2">
       <span class="text-sm text-gray-500 dark:text-gray-400">
-        Date: {{ order?.orderDate | date : "medium" }}
+        Date: {{ order?.orderDate | date: 'medium' }}
       </span>
-      <span class="px-2 py-1 text-xs font-semibold rounded-full {{ getStatusClass(order?.orderStatus || '') }}">
+      <span
+        class="px-2 py-1 text-xs font-semibold rounded-full {{
+          getStatusClass(order?.orderStatus || '')
+        }}"
+      >
         {{ order?.orderStatus }}
       </span>
     </div>
@@ -53,10 +57,10 @@
         <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.contact }}</p>
       </div>
       @if (order?.shippingAddress?.type) {
-      <div>
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</p>
-        <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.type }}</p>
-      </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</p>
+          <p class="text-sm text-gray-900 dark:text-white">{{ order?.shippingAddress?.type }}</p>
+        </div>
       }
     </div>
   </div>
@@ -68,52 +72,69 @@
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               Product
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               Price
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               Quantity
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
               Total
             </th>
           </tr>
         </thead>
         <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
           @for (item of order?.orderItems; track item.productId) {
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex items-center">
-                <img
-                  [src]="item.image"
-                  class="h-10 w-10 rounded-md object-cover"
-                  [alt]="item.productName"
-                />
-                <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ item.productName }}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <img
+                    [src]="item.image"
+                    class="h-10 w-10 rounded-md object-cover"
+                    [alt]="item.productName"
+                  />
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                      {{ item.productName }}
+                    </div>
+                    @if (item.size || item.color) {
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                        @if (item.size) {
+                          Size: {{ item.size }}
+                        }
+                        @if (item.color) {
+                          Color: {{ item.color }}
+                        }
+                      </div>
+                    }
                   </div>
-                  @if (item.size || item.color) {
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
-                    @if (item.size) { Size: {{ item.size }} } @if (item.color) { Color: {{ item.color }} }
-                  </div>
-                  }
                 </div>
-              </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-              <span [innerHTML]="item.price | bdt"></span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-              {{ item.quantity }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-              <span [innerHTML]="item.price * item.quantity | bdt"></span>
-            </td>
-          </tr>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <span [innerHTML]="item.price | bdt"></span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                {{ item.quantity }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <span [innerHTML]="item.price * item.quantity | bdt"></span>
+              </td>
+            </tr>
           }
         </tbody>
       </table>
@@ -126,21 +147,32 @@
     <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
       <div class="flex justify-between py-2">
         <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Subtotal</span>
-        <span class="text-sm font-medium text-gray-900 dark:text-white" [innerHTML]="order?.subtotal | bdt"></span>
+        <span
+          class="text-sm font-medium text-gray-900 dark:text-white"
+          [innerHTML]="order?.subtotal | bdt"
+        ></span>
       </div>
       <div class="flex justify-between py-2">
         <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Delivery Charge</span>
-        <span class="text-sm font-medium text-gray-900 dark:text-white" [innerHTML]="order?.deliveryCharge | bdt"></span>
+        <span
+          class="text-sm font-medium text-gray-900 dark:text-white"
+          [innerHTML]="order?.deliveryCharge | bdt"
+        ></span>
       </div>
       @if (order && order.discountAmount && order.discountAmount > 0) {
-      <div class="flex justify-between py-2">
-        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</span>
-        <span class="text-sm font-medium text-green-600 dark:text-green-400" [innerHTML]="'-' + (order.discountAmount | bdt)"></span>
-      </div>
+        <div class="flex justify-between py-2">
+          <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</span>
+          <span class="text-sm font-medium text-green-600 dark:text-green-400"
+            >- <span [innerHTML]="order.discountAmount | bdt"></span
+          ></span>
+        </div>
       }
       <div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
         <span class="text-sm font-medium text-gray-900 dark:text-white">Total</span>
-        <span class="text-sm font-bold text-gray-900 dark:text-white" [innerHTML]="order?.totalAmount | bdt"></span>
+        <span
+          class="text-sm font-bold text-gray-900 dark:text-white"
+          [innerHTML]="order?.totalAmount | bdt"
+        ></span>
       </div>
     </div>
   </div>
