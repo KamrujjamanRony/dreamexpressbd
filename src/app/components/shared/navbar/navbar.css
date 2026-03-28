@@ -1,16 +1,4 @@
 /* ============================================
-   NAVBAR - Top Bar
-   ============================================ */
-.navbar-topbar {
-  background: linear-gradient(135deg, #6b21a8, #7e22ce, #9333ea);
-  color: rgba(255, 255, 255, 0.85);
-  padding: 6px 0;
-  font-size: 12px;
-  position: relative;
-  z-index: 51;
-}
-
-/* ============================================
    NAVBAR - Main Header
    ============================================ */
 .navbar-header {
@@ -603,13 +591,19 @@
 .mobile-menu-btn {
   width: 40px;
   height: 40px;
-  display: flex;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
 }
 
 .hamburger {
@@ -1123,12 +1117,5 @@
     right: 16px;
     max-width: none;
     width: auto;
-  }
-}
-
-@media (max-width: 639px) {
-  .navbar-topbar {
-    font-size: 11px;
-    padding: 4px 0;
   }
 }

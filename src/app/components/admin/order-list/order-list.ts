@@ -258,13 +258,27 @@ export class OrderList implements OnInit {
   }
 
   editOrder(order: OrderM) {
-    this.selectedOrder.set(order);
-    this.showForm.set(true);
+    this.orderService.get(order.id).subscribe({
+      next: (fullOrder) => {
+        this.selectedOrder.set(this.normalizeOrder(fullOrder));
+        this.showForm.set(true);
+      },
+      error: () => {
+        this.toast.danger('Failed to load order details', 'bottom-right', 3000);
+      }
+    });
   }
 
   viewOrder(order: OrderM) {
-    this.selectedOrder.set(order);
-    this.showDetails.set(true);
+    this.orderService.get(order.id).subscribe({
+      next: (fullOrder) => {
+        this.selectedOrder.set(this.normalizeOrder(fullOrder));
+        this.showDetails.set(true);
+      },
+      error: () => {
+        this.toast.danger('Failed to load order details', 'bottom-right', 3000);
+      }
+    });
   }
 
   closeDetails() {
