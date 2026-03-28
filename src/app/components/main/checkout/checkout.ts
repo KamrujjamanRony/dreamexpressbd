@@ -381,7 +381,13 @@ export class Checkout {
                 this.cartService.refreshCartCount();
                 this.toast.success('Order placed successfully!', 'top-right', 3000);
                 this.router.navigate(['/order-confirmation'], {
-                    state: { orderId: response?.id }
+                    state: {
+                        orderId: response?.id,
+                        discountToken: this.discountToken(),
+                        discountType: this.discountType(),
+                        discountValue: this.discountValue(),
+                        discountAmount: this.discountAmount(),
+                    }
                 });
             },
             error: () => {

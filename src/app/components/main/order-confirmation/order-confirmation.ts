@@ -1,8 +1,9 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SOrder } from '../../../services/s-order';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -14,16 +15,21 @@ export class OrderConfirmation {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private orderService = inject(SOrder);
+
   orderId: string | null = null;
   orderDetails: any = null;
   loading = true;
+  ready = signal(false);
+  companyName = environment.companyName;
+  imgBaseUrl = environment.ImageApi;
+
+  private checkoutState: any = null;
 
   ngOnInit() {
-    // Get order ID from route state or URL
-    this.orderId = history.state?.orderId || this.route.snapshot.paramMap.get('id');
+    this.checkoutState = history.state;
+    this.orderId = this.checkoutState?.orderId || this.route.snapshot.paramMap.get('id');
 
     if (!this.orderId) {
-      // this.toastService.showMessage('error', 'Error', 'No order ID provided');
       this.router.navigate(['/']);
       return;
     }
@@ -33,31 +39,108 @@ export class OrderConfirmation {
 
   loadOrderDetails() {
     this.orderService.get(this.orderId!).subscribe({
-      next: (order) => {
-        this.orderDetails = order;
+      next: (order: any) => {
+        this.orderDetails = this.normalizeOrder(order);
         this.loading = false;
+        setTimeout(() => this.ready.set(true), 50);
       },
-      error: (error) => {
-        // this.toastService.showMessage('error', 'Error', 'Failed to load order details');
+      error: (error: any) => {
         console.error('Error loading order:', error);
         this.router.navigate(['/']);
       }
     });
   }
 
-  getOrderStatusText(status: number): string {
-    switch (status) {
-      case 0: return 'Pending';
-      case 1: return 'Processing';
-      case 2: return 'Shipped';
-      case 3: return 'Delivered';
-      case 4: return 'Cancelled';
-      default: return 'Unknown';
+  private normalizeOrder(o: any): any {
+    const addr = o.shippingAddress ?? o.ShippingAddress;
+    const rawItems = (o.orderItems ?? o.OrderItems);
+    const items = rawItems?.$values || rawItems || [];
+    const state = this.checkoutState;
+
+    const subtotal = o.subtotal ?? o.Subtotal ?? 0;
+    const deliveryCharge = o.deliveryCharge ?? o.DeliveryCharge ?? 0;
+    const discountAmount = o.discountAmount ?? o.DiscountAmount ?? state?.discountAmount ?? 0;
+    const discountToken = o.discountToken ?? o.DiscountToken ?? state?.discountToken ?? '';
+    const discountType = o.discountType ?? o.DiscountType ?? state?.discountType ?? '';
+    const discountValue = o.discountValue ?? o.DiscountValue ?? state?.discountValue ?? 0;
+    let totalAmount = o.totalAmount ?? o.TotalAmount ?? 0;
+
+    // Recalculate total if discount exists but total doesn't reflect it
+    if (discountAmount > 0 && totalAmount >= subtotal + deliveryCharge) {
+      totalAmount = Math.max(0, subtotal + deliveryCharge - discountAmount);
     }
+
+    return {
+      id: o.id ?? o.Id,
+      userName: o.userName ?? o.UserName ?? '',
+      userPhone: o.userPhone ?? o.UserPhone ?? '',
+      userEmail: o.userEmail ?? o.UserEmail ?? '',
+      subtotal,
+      deliveryCharge,
+      totalAmount,
+      paymentMethod: o.paymentMethod ?? o.PaymentMethod ?? '',
+      orderStatus: o.orderStatus ?? o.OrderStatus ?? '',
+      orderDate: o.orderDate ?? o.OrderDate ?? '',
+      deliveredDate: o.deliveredDate ?? o.DeliveredDate ?? '',
+      discountToken,
+      discountType,
+      discountValue,
+      discountAmount,
+      shippingAddress: {
+        street: addr?.street ?? addr?.Street ?? '',
+        city: addr?.city ?? addr?.City ?? '',
+        district: addr?.district ?? addr?.District ?? '',
+        contact: addr?.contact ?? addr?.Contact ?? '',
+        type: addr?.type ?? addr?.Type ?? '',
+      },
+      orderItems: items.map((item: any) => ({
+        productId: item.productId ?? item.ProductId,
+        productName: item.productName ?? item.ProductName ?? '',
+        quantity: item.quantity ?? item.Quantity ?? 1,
+        price: item.price ?? item.Price ?? 0,
+        size: item.size ?? item.Size ?? '',
+        color: item.color ?? item.Color ?? '',
+        image: item.image ?? item.Image ?? '',
+      })),
+    };
+  }
+
+  getOrderStatusText(status: any): string {
+    const statusMap: Record<string, string> = {
+      '0': 'Pending', 'Pending': 'Pending',
+      '1': 'Processing', 'Processing': 'Processing',
+      '2': 'Shipped', 'Shipped': 'Shipped',
+      '3': 'Delivered', 'Delivered': 'Delivered',
+      '4': 'Cancelled', 'Cancelled': 'Cancelled',
+    };
+    return statusMap[String(status)] || String(status);
+  }
+
+  getStatusClass(status: any): string {
+    const text = this.getOrderStatusText(status);
+    switch (text) {
+      case 'Pending': return 'status-pending';
+      case 'Processing': return 'status-processing';
+      case 'Shipped': return 'status-shipped';
+      case 'Delivered': return 'status-delivered';
+      case 'Cancelled': return 'status-cancelled';
+      default: return 'status-pending';
+    }
+  }
+
+  getOrderItems(): any[] {
+    return this.orderDetails?.orderItems || [];
+  }
+
+  printVoucher() {
+    document.body.classList.add('printing-voucher');
+    setTimeout(() => {
+      window.print();
+      document.body.classList.remove('printing-voucher');
+    }, 100);
   }
 
   continueShopping() {
     this.router.navigate(['/shop']);
   }
-
 }
