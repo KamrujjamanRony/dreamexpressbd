@@ -27,6 +27,11 @@ export class ContactUpdate {
 
   /* ---------------- SIGNAL STATE ---------------- */
   contactData = signal<ContactM | null>(null);
+  deliveryCharges = signal<DeliveryChargeM[]>([]);
+
+  // New charge form
+  newChargeName = '';
+  newChargeAmount: number | null = null;
 
   isLoading = signal(false);
   hasError = signal(false);
@@ -86,6 +91,7 @@ export class ContactUpdate {
     this.contactService.get(environment.companyCode).subscribe({
       next: (data) => {
         this.contactData.set(data);
+        this.deliveryCharges.set(data.deliveryCharges || []);
         this.updateForm(data);
         this.isLoading.set(false);
       },
@@ -137,6 +143,7 @@ export class ContactUpdate {
       facebookLink: formValue.facebookLink,
       othersLink1: formValue.othersLink1,
       othersLink2: formValue.othersLink2,
+      deliveryCharges: this.deliveryCharges(),
     };
 
     const id = this.contactData()?.id?.toString() || environment.companyCode.toString();
@@ -144,6 +151,7 @@ export class ContactUpdate {
     this.contactService.update(id, payload).subscribe({
       next: (response) => {
         this.contactData.set(response);
+        this.deliveryCharges.set(response.deliveryCharges || []);
         this.updateForm(response);
         this.isSubmitted.set(false);
         this.toast.success('Contact information updated successfully!', 'bottom-right', 5000);
@@ -156,13 +164,42 @@ export class ContactUpdate {
     });
   }
 
+  /* ---------------- DELIVERY CHARGES ---------------- */
+  addDeliveryCharge() {
+    const name = this.newChargeName.trim();
+    const amount = this.newChargeAmount;
+    if (!name || amount === null || amount < 0) {
+      this.toast.warning('Please enter a valid name and amount', 'bottom-right', 3000);
+      return;
+    }
+    this.deliveryCharges.update(list => [
+      ...list,
+      { name, amount, isActive: true }
+    ]);
+    this.newChargeName = '';
+    this.newChargeAmount = null;
+  }
+
+  removeDeliveryCharge(index: number) {
+    this.deliveryCharges.update(list => list.filter((_, i) => i !== index));
+  }
+
+  toggleChargeActive(index: number) {
+    this.deliveryCharges.update(list =>
+      list.map((c, i) => i === index ? { ...c, isActive: !c.isActive } : c)
+    );
+  }
+
   /* ---------------- RESET ---------------- */
   formReset() {
     // Reset to original data
     if (this.contactData()) {
       this.updateForm(this.contactData()!);
+      this.deliveryCharges.set(this.contactData()!.deliveryCharges || []);
     }
 
+    this.newChargeName = '';
+    this.newChargeAmount = null;
     this.isSubmitted.set(false);
   }
 

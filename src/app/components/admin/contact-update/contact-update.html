@@ -236,6 +236,58 @@
       </div>
     </div>
 
+    <!-- Delivery Charges -->
+    <div class="mt-6">
+      <h2 class="text-lg font-semibold text-emerald-600 mb-3">Delivery Charges</h2>
+
+      <!-- Existing charges -->
+      @if (deliveryCharges().length) {
+      <div class="space-y-2 mb-4">
+        @for (charge of deliveryCharges(); track $index) {
+        <div class="flex items-center gap-3 p-3 rounded border border-default-medium" [class.opacity-50]="!charge.isActive">
+          <div class="flex-1">
+            <span class="text-sm font-medium text-heading">{{ charge.name }}</span>
+            <span class="text-sm text-body ml-2">— ৳{{ charge.amount }}</span>
+          </div>
+          @if (isEdit()) {
+          <button type="button" (click)="toggleChargeActive($index)"
+            class="text-xs px-2 py-1 rounded"
+            [class]="charge.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'">
+            {{ charge.isActive ? 'Active' : 'Inactive' }}
+          </button>
+          <button type="button" (click)="removeDeliveryCharge($index)"
+            class="text-red-500 hover:text-red-700 text-sm px-2 py-1">
+            ✕
+          </button>
+          }
+        </div>
+        }
+      </div>
+      } @else {
+      <p class="text-sm text-gray-400 mb-4">No delivery charges configured.</p>
+      }
+
+      <!-- Add new charge -->
+      @if (isEdit()) {
+      <div class="flex items-end gap-3">
+        <div class="flex-1">
+          <label class="block text-xs text-body mb-1">Name</label>
+          <input type="text" [(ngModel)]="newChargeName" name="newChargeName" placeholder="e.g. Inside Dhaka"
+            class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand" />
+        </div>
+        <div class="w-32">
+          <label class="block text-xs text-body mb-1">Amount (৳)</label>
+          <input type="number" [(ngModel)]="newChargeAmount" name="newChargeAmount" placeholder="0" min="0"
+            class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand" />
+        </div>
+        <button type="button" (click)="addDeliveryCharge()"
+          class="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded">
+          Add
+        </button>
+      </div>
+      }
+    </div>
+
     <!-- Action Buttons -->
     @if (isEdit()) {
     <div class="flex gap-2 pt-4">

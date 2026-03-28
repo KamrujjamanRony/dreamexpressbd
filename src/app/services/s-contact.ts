@@ -55,5 +55,5 @@ export class SContact {
       deliveryCharges: chargeList,
     };
   }
-  
+
 }
