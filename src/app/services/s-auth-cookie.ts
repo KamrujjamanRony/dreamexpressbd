@@ -17,6 +17,15 @@ export class SAuthCookie {
     return userData ? JSON.parse(userData) : null;
   }
 
+  getToken(): string | null {
+    const data = this.getUserData();
+    return data?.token || data?.Token || null;
+  }
+
+  isCustomer(): boolean {
+    return !!this.getUserData();
+  }
+
   logout() {
     // Delete the user data cookie
     this.cookieService.delete('userData', '/');

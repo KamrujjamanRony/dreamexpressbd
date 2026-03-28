@@ -27,15 +27,23 @@
           class="relative block rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
         >
           <div class="overflow-hidden">
-            <img
-              [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
-              width="300"
-              height="300"
-              loading="lazy"
-              decoding="async"
-              class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-110"
-              alt="category-{{ $index + 1 }}"
-            />
+            @if (item?.imageUrl) {
+              <img
+                [src]="imgURL + item.imageUrl"
+                class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-110"
+                [alt]="item?.itemName"
+              />
+            } @else {
+              <img
+                [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
+                width="300"
+                height="300"
+                loading="lazy"
+                decoding="async"
+                class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-110"
+                alt="category-{{ $index + 1 }}"
+              />
+            }
           </div>
           <div
             class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-4"

@@ -68,6 +68,7 @@
               >
                 <tr>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">SL</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Category Name</th>
                   @if (isEdit() || isDelete()) {
                     <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
@@ -82,6 +83,13 @@
                   >
                     <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                       {{ item?.slItem || '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                      <img
+                        [src]="item?.imageUrl ? imgURL + item.imageUrl : emptyImg"
+                        alt="{{ item?.itemName }}"
+                        class="w-12 h-12 object-cover rounded"
+                      />
                     </td>
                     <td class="px-6 py-4">{{ item?.itemName || '-' }}</td>
                     <td class="px-6 py-4">
@@ -129,6 +137,24 @@
           <!-- Form Fields -->
           <form autocomplete="off" class="space-y-6" (submit)="onSubmit($event)">
             <div class="">
+
+          <!-- Image Upload -->
+          <div class="pb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category Image</label>
+            <div class="flex items-center gap-4">
+              @if (previewUrl()) {
+                <img [src]="previewUrl()" alt="Preview" class="w-20 h-20 object-cover rounded border" />
+              }
+              <input
+                #fileInput
+                type="file"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+              />
+            </div>
+          </div>
+
           <!-- itemName -->
           <div>
             @let itemName = form.itemName();

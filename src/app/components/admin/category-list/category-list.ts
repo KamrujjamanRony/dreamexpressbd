@@ -5,7 +5,7 @@ import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-sv
 import { FormsModule } from '@angular/forms';
 import { SCategory } from '../../../services/s-category';
 import { debounce, form, FormField, required, validate } from '@angular/forms/signals';
-import { environment } from '../../../../environments/environment.production';
+import { environment } from '../../../../environments/environment';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
@@ -29,10 +29,16 @@ export class CategoryList {
       private confirm = inject(SConfirm);
   
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  imgURL = environment.ImageApi;
+  emptyImg = environment.emptyImg;
 
   /* ---------------- SIGNAL STATE ---------------- */
   items = signal<CategoryM[]>([]);
   searchQuery = signal('');
+  selectedFile = signal<File | null>(null);
+  previewUrl = signal<string | null>(null);
 
   filteredList = computed(() => {
     const query = this.searchQuery().toLowerCase();
@@ -130,15 +136,19 @@ export class CategoryList {
 
     const formValue = this.form().value();
 
-    const payload:CategoryM = {
-      companyID: Number(formValue.companyID),
-      itemName: formValue.itemName,
-      slItem: formValue.slItem ? Number(formValue.slItem) : null,
-    };
-    
+    const formData = new FormData();
+    formData.append('CompanyID', formValue.companyID);
+    formData.append('ItemName', formValue.itemName);
+    formData.append('SLItem', formValue.slItem || '0');
+    formData.append('ImageUrl', this.selected()?.imageUrl || '');
+
+    if (this.selectedFile()) {
+      formData.append('ImageFile', this.selectedFile()!);
+    }
+
     const request$ = this.selected()
-      ? this.categoryService.update(this.selected()!.id!, payload)
-      : this.categoryService.add(payload);
+      ? this.categoryService.update(this.selected()!.id!, formData)
+      : this.categoryService.add(formData);
 
     request$.subscribe({
       next: () => {
@@ -166,8 +176,30 @@ export class CategoryList {
       companyID: item.companyID.toString(),
     }));
 
+    // Show existing image preview
+    if (item.imageUrl) {
+      this.previewUrl.set(this.imgURL + item.imageUrl);
+    }
+
     this.form().reset();
     this.showList.set(false);
+  }
+
+  /* ---------------- IMAGE ---------------- */
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedFile.set(file);
+      const reader = new FileReader();
+      reader.onload = () => this.previewUrl.set(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearFileInput() {
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   /* ---------------- DELETE ---------------- */
@@ -203,7 +235,10 @@ export class CategoryList {
     });
 
     this.selected.set(null);
+    this.selectedFile.set(null);
+    this.previewUrl.set(null);
     this.isSubmitted.set(false);
+    this.clearFileInput();
     this.form().reset();
   }
 

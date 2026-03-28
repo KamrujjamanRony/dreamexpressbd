@@ -54,7 +54,11 @@
                       (click)="showCategoryDropdown.set(false)"
                     >
                       <div class="mega-dropdown-item-icon">
-                        <i class="fas fa-tag"></i>
+                        @if (item?.imageUrl) {
+                          <img [src]="imageBaseUrl + item.imageUrl" alt="" class="w-full h-full object-cover rounded" />
+                        } @else {
+                          <i class="fas fa-tag"></i>
+                        }
                       </div>
                       <span class="mega-dropdown-item-text">{{ item?.itemName }}</span>
                       <i class="fas fa-arrow-right mega-dropdown-item-arrow"></i>

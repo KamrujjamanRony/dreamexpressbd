@@ -91,6 +91,7 @@ export class CustomerLogin {
     this.customerService.login(formValue.phone, formValue.password)
       .subscribe({
         next: (response: any) => {
+          console.log('Customer login response:', response);
           this.authCookie.login(response);
           // Merge guest cart and wishlist into customer's account
           if (response?.id) {

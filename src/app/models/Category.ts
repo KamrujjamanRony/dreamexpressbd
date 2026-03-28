@@ -1,6 +1,7 @@
 export interface CategoryM {
   id?: number;
   companyID: number;
-  slItem:   number | null;
+  slItem: number | null;
   itemName: string;
+  imageUrl?: string;
 }

@@ -6,4 +6,5 @@ export interface CustomerM {
     pass: string;
     dist: string;
     address: string;
+    token?: string;
 }

@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-categories',
@@ -11,6 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class Categories {
     categories = input<any[]>([]);
+    imgURL = environment.ImageApi;
 
   breakpoints = {
     480: { slidesPerView: 2, spaceBetween: 5 },
