@@ -6,9 +6,11 @@ import { SWishlist } from '../../../services/s-wishlist';
 import { SCart } from '../../../services/s-cart';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { BdtPipe } from "../../../pipes/bdt.pipe";
-import { CartM } from '../../../models/Cart';
+import { CartM, CartProductM } from '../../../models/Cart';
 import { environment } from '../../../../environments/environment';
+import { SToast } from '../../../utils/toast/toast.service';
 
 @Component({
   selector: 'app-product-card',
@@ -19,14 +21,25 @@ import { environment } from '../../../../environments/environment';
 export class ProductCard {
   product = input<any>(null);
   faHeart = faHeart;
+  faHeartSolid = faHeartSolid;
   imageBaseUrl = environment.ImageApi;
-  authCookieService = inject(SAuthCookie);
-  wishListService = inject(SWishlist);
-  cartService = inject(SCart);
-  router = inject(Router);
-  user = this.authCookieService.getUserData();
+  private authCookieService = inject(SAuthCookie);
+  private wishListService = inject(SWishlist);
+  private cartService = inject(SCart);
+  private router = inject(Router);
+  private toast = inject(SToast);
 
-  // Function to generate an array of stars based on average rating
+  get isCustomer(): boolean {
+    return this.cartService.isCustomer();
+  }
+
+  get isInWishlist(): boolean {
+    const p = this.product();
+    if (!p) return false;
+    if (this.isCustomer) return false; // For customers, we'd need async check — skip icon toggle
+    return this.wishListService.isInLocalWishlist(p.id?.toString());
+  }
+
   getStarsArray(averageRating: number): boolean[] {
     const roundedRating = Math.round(averageRating * 2) / 2;
     return Array.from({ length: 5 }, (_, index) => index < roundedRating);
@@ -36,150 +49,69 @@ export class ProductCard {
     return `/view/${id}`;
   }
 
-
   addToWishlist(product: any) {
-    // const user = this.authCookieService.getUserData();
-
-    const favoriteProduct = {
-      id: crypto.randomUUID(),  // Generate a unique ID for the product
-      productId: product().id
-    };
-
-    if (this.user?.uid) {
-      this.wishListService.getWishlist(this.user.uid).subscribe({
-        next: (wishlist) => {
-          if (wishlist.length > 0) {
-            const restFavoriteProduct = wishlist[0];
-            // If the wishlist exists, check if the product is already in the wishlist
-            const existingProduct = restFavoriteProduct?.products?.find((p: any) => p.productId == favoriteProduct.productId);
-
-            if (existingProduct) {
-              // this.toastService.showMessage('warn', 'Warning', 'Product already in the wish list!');
-              // console.log("Product already in the wish list");
-              return;
-            } else {
-              // Add the new product to the wishlist
-              restFavoriteProduct.products.push(favoriteProduct);
-            }
-
-            // Update the wishlist
-            this.wishListService.updateWishlist(restFavoriteProduct.id, restFavoriteProduct).subscribe({
-              next: () => {
-                // console.log('wishlist updated successfully');
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to wishlist!');
-              },
-              error: (error) => {
-                console.error('Error updating wishlist:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error creating wishlist'}`);
-              }
-            });
-          } else {
-            // If no wishlist exists, create a new wishlist for the user
-            const newFavoriteProduct = {
-              userId: this.user.uid,
-              products: [favoriteProduct]
-            };
-
-            this.wishListService.addWishlist(newFavoriteProduct).subscribe({
-              next: () => {
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to wishlist!');
-                // this.router.navigateByUrl('user/shopping-wishlist');
-              },
-              error: (error) => {
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error creating wishlist'}`);
-              }
-            });
-          }
-        },
-        error: (error) => {
-          // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error fetching wishlist'}`)
-        }
-      });
-    } else {
-      // this.toastService.showMessage('warn', 'Warning', 'User not logged in!');
-      console.error('User not logged in');
-      this.router.navigateByUrl('login');
-    }
+    const p = product();
+    if (!p) return;
+    this.wishListService.toggleWishlist(p.id?.toString(), '', '');
+    this.toast.success('Wishlist updated!', 'top-right', 2000);
   }
 
   addToCart(product: any) {
-    const price = product()?.offerPrice || product()?.price || 0;
-    const cartProduct = {
-      id: Math.floor(Math.random() * 123456789),
-      productId: product()?.id,
+    const p = product();
+    if (!p) return;
+    const price = p.offerPrice || p.regularPrice || 0;
+    const cartProduct: CartProductM = {
+      productId: p.id,
       quantity: 1,
       selectSize: '',
       selectColor: '',
       price: price,
-      totalPrice: price
+      totalPrice: price,
     };
 
-    if (this.user?.uid) {
-      this.cartService.search(this.user.uid).subscribe({
+    const customerId = this.cartService.getCustomerId();
+
+    if (customerId) {
+      this.cartService.search(customerId).subscribe({
         next: (cart) => {
           if (cart.length > 0) {
-            // Get the first cart (assuming one cart per user)
-            let userCart = { ...cart[0] };
-
-            // Check if product exists in cart
-            const existingProductIndex = userCart.products.findIndex(
-              (p: any) => p.productId === cartProduct.productId
+            const userCart: CartM = { ...cart[0] };
+            const existIdx = userCart.products.findIndex(
+              (cp: CartProductM) => cp.productId === cartProduct.productId
             );
-
-            if (existingProductIndex !== -1) {
-              // Product exists - increment quantity
-              userCart.products[existingProductIndex].quantity += 1;
+            if (existIdx !== -1) {
+              userCart.products[existIdx].quantity += 1;
             } else {
-              // Product doesn't exist - add new product
               userCart.products.push(cartProduct);
             }
-
-            // Update the cart
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => {
-                // console.log('Cart updated successfully');
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
-                // Optionally: this.router.navigateByUrl('user/shopping-cart');
-              },
-              error: (error) => {
-                console.error('Error updating cart:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error added to cart'}`);
-              }
+              next: () => this.toast.success('Added to cart!', 'top-right', 2000),
+              error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
             });
           } else {
-            // No cart exists - create new cart
             const newCart: CartM = {
-              userId: this.user.uid,
+              companyID: environment.companyCode,
+              userId: customerId,
               products: [cartProduct],
-              subtotal: cartProduct.totalPrice,
+              subtotal: 0,
               discountToken: '',
               discountType: '',
               discountAmount: 0,
               discountValue: 0,
-              totalAmount: cartProduct.totalPrice
+              totalAmount: 0,
             };
-
             this.cartService.add(newCart).subscribe({
-              next: () => {
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to cart!');
-                // console.log('New cart created successfully');
-              },
-              error: (error) => {
-                console.error('Error creating cart:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error added to cart'}`);
-              }
+              next: () => this.toast.success('Added to cart!', 'top-right', 2000),
+              error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
             });
           }
         },
-        error: (error) => {
-          console.error('Error creating cart:', error);
-        }
+        error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
       });
     } else {
-      console.error('User not logged in');
-      // this.toastService.showMessage('warn', 'Warning', 'User not logged in!');
-      // Optionally redirect to login
+      // Guest → store locally
+      this.cartService.addLocalProduct(cartProduct);
+      this.toast.success('Added to cart!', 'top-right', 2000);
     }
   }
-
 }

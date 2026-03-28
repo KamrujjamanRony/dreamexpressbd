@@ -5,6 +5,7 @@ import { SCustomer } from '../../../services/s-customer';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SCart } from '../../../services/s-cart';
+import { SWishlist } from '../../../services/s-wishlist';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +21,7 @@ export class CustomerLogin {
   private authCookie = inject(SAuthCookie);
   private toast = inject(SToast);
   private cartService = inject(SCart);
+  private wishlistService = inject(SWishlist);
   private router = inject(Router);
 
   faEye = faEye;
@@ -90,9 +92,10 @@ export class CustomerLogin {
       .subscribe({
         next: (response: any) => {
           this.authCookie.login(response);
-          // Merge guest cart into customer cart
+          // Merge guest cart and wishlist into customer's account
           if (response?.id) {
             this.cartService.mergeGuestCart(response.id);
+            this.wishlistService.mergeGuestWishlist(response.id.toString());
           }
           this.toast.success('Login successful!', 'top-right', 3000);
           this.loading.set(false);

@@ -97,11 +97,11 @@ export const routes: Routes = [
             loadComponent: () => import('./components/account/order-tracking/order-tracking').then(m => m.OrderTracking),
             title: `Track Order | ${companyName}`
           },
-          // {
-          //   path: 'wishlist',
-          //   loadComponent: () => import('./components/account/wishlist/wishlist').then(m => m.Wishlist),
-          //   title: 'Wishlist'
-          // },
+          {
+            path: 'wishlist',
+            loadComponent: () => import('./components/account/wishlist/wishlist').then(m => m.Wishlist),
+            title: `Wishlist | ${companyName}`
+          },
           {
             path: 'shopping-cart',
             loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),

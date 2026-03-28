@@ -1,5 +1,6 @@
-export interface CartM{
+export interface CartM {
     id?: number;
+    companyID?: number;
     userId: any;
     subtotal: number;
     discountToken: string;
@@ -10,7 +11,7 @@ export interface CartM{
     products: CartProductM[];
 }
 
-export interface CartProductM{
+export interface CartProductM {
     id?: number;
     productId: number;
     selectSize: string;

@@ -40,12 +40,12 @@ export class CardCart {
     };
 
     this.cartService.update(this.userCarts.id, updatedCart).subscribe({
-      next: (response) => {
+      next: () => {
         this.count = newQuantity;
         this.product.quantity = newQuantity;
         this.cartUpdated.emit(updatedCart.products);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error updating cart quantity:', error);
         this.count = this.product.quantity;
       }
@@ -74,80 +74,21 @@ export class CardCart {
       };
 
       this.cartService.update(this.userCarts.id, updatedCart).subscribe({
-        next: (response) => {
+        next: () => {
           this.cartUpdated.emit(updatedCart.products);
-          // this.toastService.showMessage('success', 'Success', 'Product removed from cart');
         },
-        error: (error) => {
-          // this.toastService.showMessage('error', 'Error', 'Failed to remove product');
+        error: (error: any) => {
           console.error('Error deleting cart:', error);
         }
       });
     }
   }
 
-  async moveToWishlist(product: any) {
-    if (!this.user?.uid) {
-      // this.toastService.showMessage('warn', 'Warning', 'Please login first!');
-      return;
-    }
-
+  moveToWishlist(product: any) {
+    if (!this.user?.id) return;
     this.loading = true;
-
-    try {
-      // 1. Add to wishlist
-      await this.addToWishlist(product);
-
-      // 2. Remove from cart
-      this.deleteCart(product);
-
-      // this.toastService.showMessage('success', 'Success', 'Product moved to wishlist');
-    } catch (error) {
-      // this.toastService.showMessage('error', 'Error', 'Failed to move product to wishlist');
-      console.error('Error:', error);
-    } finally {
-      this.loading = false;
-    }
+    this.wishListService.toggleWishlist(product.productId?.toString(), '', '');
+    this.deleteCart(product);
+    this.loading = false;
   }
-
-  private async addToWishlist(product: any): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.wishListService.getWishlist(this.user.uid).subscribe({
-        next: (wishlist) => {
-          const favoriteProduct = {
-            id: crypto.randomUUID(),
-            productId: product.productId
-          };
-
-          if (wishlist.length > 0) {
-            // Update existing wishlist
-            const existingWishlist = wishlist[0];
-            const existingProduct = existingWishlist.products.find((p: any) => p.productId === product.productId);
-
-            if (!existingProduct) {
-              existingWishlist.products.push(favoriteProduct);
-              this.wishListService.updateWishlist(existingWishlist.id, existingWishlist).subscribe({
-                next: () => resolve(),
-                error: (err) => reject(err)
-              });
-            } else {
-              resolve(); // Already in wishlist
-            }
-          } else {
-            // Create new wishlist
-            const newWishlist = {
-              userId: this.user.uid,
-              products: [favoriteProduct]
-            };
-            this.wishListService.addWishlist(newWishlist).subscribe({
-              next: () => resolve(),
-              error: (err) => reject(err)
-            });
-          }
-        },
-        error: (err) => reject(err)
-      });
-    });
-  }
-
 }

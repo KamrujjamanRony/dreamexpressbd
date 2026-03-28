@@ -5,6 +5,8 @@ import { SCart } from '../../../services/s-cart';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgOptimizedImage } from '@angular/common';
 import { CartM, CartProductM } from '../../../models/Cart';
+import { WishlistM } from '../../../models/Wishlist';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-wishlist-card',
@@ -25,24 +27,14 @@ export class WishlistCard {
   loading = false;
 
   async addToCartAndRemoveFromWishlist(product: any) {
-    if (!this.user?.uid) {
-      // this.toastService.showMessage('warn', 'Warning', 'Please login first!');
-      return;
-    }
-
+    if (!this.user?.id) return;
     this.loading = true;
 
     try {
-      // 1. Add to cart
       await this.addToCart(product);
-
-      // 2. Remove from wishlist
       await this.removeFromWishlist(product);
-
-      // this.toastService.showMessage('success', 'Success', 'Product moved to cart!');
-      this.wishlistUpdated.emit(); // Notify parent to refresh wishlist
+      this.wishlistUpdated.emit();
     } catch (error) {
-      // this.toastService.showMessage('error', 'Error', 'Failed to move product to cart');
       console.error('Error:', error);
     } finally {
       this.loading = false;
@@ -50,98 +42,87 @@ export class WishlistCard {
   }
 
   private async addToCart(product: any): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const cartItem: CartProductM = {
-          productId: product.productId,
-          quantity: 1,
-          selectSize: '',
-          selectColor: '',
-          price: product.price || 0,
-          totalPrice: product.price || 0
-        };
+        productId: product.productId,
+        quantity: 1,
+        selectSize: '',
+        selectColor: '',
+        price: product.price || 0,
+        totalPrice: product.price || 0,
+      };
 
-      this.cartService.search(this.user.uid).subscribe({
+      this.cartService.search(this.user.id).subscribe({
         next: (cartData) => {
           if (cartData.length > 0) {
-            // Update existing cart
             const cart: CartM = cartData[0];
-            const existingItem = cart.products.find((p: any) => p.productId === product.productId);
-
+            const existingItem = cart.products.find((p: CartProductM) => p.productId === product.productId);
             if (existingItem) {
               existingItem.quantity += 1;
             } else {
               cart.products.push(cartItem);
             }
-
             this.cartService.update(cart.id!, cart).subscribe({
               next: () => resolve(),
-              error: (err) => reject(err)
+              error: (e: any) => reject(e),
             });
           } else {
-            // Create new cart
             const newCart: CartM = {
-              userId: this.user.uid,
+              companyID: environment.companyCode,
+              userId: this.user.id,
               products: [cartItem],
               subtotal: 0,
               discountToken: '',
               discountType: '',
               discountAmount: 0,
               discountValue: 0,
-              totalAmount: 0
+              totalAmount: 0,
             };
-
             this.cartService.add(newCart).subscribe({
               next: () => resolve(),
-              error: (err) => reject(err)
+              error: (e: any) => reject(e),
             });
           }
         },
-        error: (err) => reject(err)
+        error: (e: any) => reject(e),
       });
     });
   }
 
   private async removeFromWishlist(product: any): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.userWishlist) {
         reject('No wishlist found');
         return;
       }
 
       const updatedProducts = this.userWishlist.products.filter(
-        (p: any) => p.id !== product.id
+        (p: any) => p.productId !== product.productId
       );
 
-      const updatedWishlist = {
+      const updatedWishlist: WishlistM = {
         ...this.userWishlist,
-        products: updatedProducts
+        products: updatedProducts,
       };
 
-      this.wishListService.updateWishlist(this.userWishlist.id, updatedWishlist).subscribe({
+      this.wishListService.update(this.userWishlist.id, updatedWishlist).subscribe({
         next: () => resolve(),
-        error: (err) => reject(err)
+        error: (e: any) => reject(e),
       });
     });
   }
 
   async deleteFromWishlist(product: any) {
-    if (!this.user?.uid) {
-      // this.toastService.showMessage('warn', 'Warning', 'Please login first!');
-      return;
-    }
-
+    if (!this.user?.id) return;
     this.loading = true;
 
     try {
       await this.removeFromWishlist(product);
-      // this.toastService.showMessage('success', 'Success', 'Product removed from wishlist');
       this.wishlistUpdated.emit();
     } catch (error) {
-      // this.toastService.showMessage('error', 'Error', 'Failed to remove product');
       console.error('Error:', error);
     } finally {
       this.loading = false;
     }
   }
-
 }

@@ -55,13 +55,14 @@ export class Navbar implements OnDestroy {
   ngOnInit() {
     this.user = this.authCookie.getUserData();
     this.refreshCartCount();
+    this.refreshWishlistCount();
 
     this.cartService.cartUpdated$.subscribe(() => {
       this.refreshCartCount();
     });
 
     this.wishListService.wishlistUpdated$.subscribe(() => {
-      this.fetchWishList();
+      this.refreshWishlistCount();
     });
 
     this.CategoryService.search().subscribe(data => {
@@ -164,22 +165,17 @@ export class Navbar implements OnDestroy {
     this.cdr.detectChanges();
   }
 
-  fetchWishList() {
-    const customerId = this.authCookie.getUserData()?.id;
-    if (!customerId) {
-      this.totalWishlists.set(0);
-      return;
-    }
-    this.wishListService.getWishlist(customerId).subscribe(data => {
-      this.totalWishlists.set(data?.length > 0 ? data[0].products.length : 0);
-      this.cdr.detectChanges();
-    });
+  refreshWishlistCount() {
+    this.wishListService.refreshWishlistCount();
+    this.totalWishlists = this.wishListService.wishlistCount;
+    this.cdr.detectChanges();
   }
 
   logout() {
     this.authService.logout();
     this.user = null;
     this.refreshCartCount();
+    this.refreshWishlistCount();
   }
 
   ngOnDestroy() {

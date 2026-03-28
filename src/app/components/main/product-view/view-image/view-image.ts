@@ -3,8 +3,6 @@ import { Component, inject, input, Renderer2 } from '@angular/core';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 import { SCart } from '../../../../services/s-cart';
 import { SWishlist } from '../../../../services/s-wishlist';
-import { SAuthCookie } from '../../../../services/s-auth-cookie';
-import { Router } from '@angular/router';
 import { CartM, CartProductM } from '../../../../models/Cart';
 import { environment } from '../../../../../environments/environment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -22,9 +20,7 @@ export class ViewImage {
   product = input<any>(null);
   cartService = inject(SCart);
   wishListService = inject(SWishlist);
-  authCookieService = inject(SAuthCookie);
   renderer = inject(Renderer2);
-  router = inject(Router);
   private toast = inject(SToast);
   imgBaseUrl = environment.ImageApi;
   count: number = 1;
@@ -33,7 +29,6 @@ export class ViewImage {
   viewColor: any;
   warningMsg: any;
   zoomStyle = {};
-  user = this.authCookieService.getUserData();
 
   faHeart = faHeart;
   faShoppingBag = faShoppingBag;
@@ -229,68 +224,14 @@ export class ViewImage {
   }
 
   addToWishlist(product: any) {
-    // const user = this.authCookieService.getUserData();
-
-    const favoriteProduct = {
-      id: crypto.randomUUID(),  // Generate a unique ID for the product
-      productId: product.id
-    };
-
-    if (this.user?.uid) {
-      this.wishListService.getWishlist(this.user.uid).subscribe({
-        next: (wishlist) => {
-          if (wishlist.length > 0) {
-            const restFavoriteProduct = wishlist[0];
-            // If the wishlist exists, check if the product is already in the wishlist
-            const existingProduct = restFavoriteProduct?.products?.find((p: any) => p.productId == favoriteProduct.productId);
-
-            if (existingProduct) {
-              // this.toastService.showMessage('warn', 'Warning', 'Product already in the wish list!');
-              // console.log("Product already in the wish list");
-              return;
-            } else {
-              // Add the new product to the wishlist
-              restFavoriteProduct.products.push(favoriteProduct);
-            }
-
-            // Update the wishlist
-            this.wishListService.updateWishlist(restFavoriteProduct.id, restFavoriteProduct).subscribe({
-              next: () => {
-                // console.log('wishlist updated successfully');
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to wishlist!');
-              },
-              error: (error) => {
-                console.error('Error updating wishlist:', error);
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error creating wishlist'}`);
-              }
-            });
-          } else {
-            // If no wishlist exists, create a new wishlist for the user
-            const newFavoriteProduct = {
-              userId: this.user.uid,
-              products: [favoriteProduct]
-            };
-
-            this.wishListService.addWishlist(newFavoriteProduct).subscribe({
-              next: () => {
-                // this.toastService.showMessage('success', 'Successful', 'Product successfully added to wishlist!');
-                // this.router.navigateByUrl('user/shopping-wishlist');
-              },
-              error: (error) => {
-                // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error creating wishlist'}`);
-              }
-            });
-          }
-        },
-        error: (error) => {
-          // this.toastService.showMessage('error', 'Error', `${error.error.status || 'Error'} : ${error.error.message || error.error.title || 'Error fetching wishlist'}`);
-        }
-      });
-    } else {
-      // this.toastService.showMessage('warn', 'Warning', 'User not logged in!');
-      console.error('User not logged in');
-      this.router.navigateByUrl('login');
-    }
+    const p = product() || product;
+    if (!p) return;
+    this.wishListService.toggleWishlist(
+      p.id?.toString(),
+      this.viewSize || '',
+      this.viewColor?.colorName || ''
+    );
+    this.toast.success('Wishlist updated!', 'top-right', 2000);
   }
 
 

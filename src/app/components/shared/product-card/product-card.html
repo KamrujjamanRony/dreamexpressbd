@@ -71,10 +71,15 @@
       <button
         type="button"
         (click)="addToWishlist(product)"
-        class="w-full flex items-center justify-center gap-1.5 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 font-medium transition-colors cursor-pointer"
+        class="w-full flex items-center justify-center gap-1.5 py-1.5 text-sm font-medium transition-colors cursor-pointer"
+        [class]="
+          isInWishlist
+            ? 'text-red-500 dark:text-red-400'
+            : 'text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400'
+        "
       >
-        <fa-icon [icon]="faHeart" class="text-xs"></fa-icon>
-        <span>Wishlist</span>
+        <fa-icon [icon]="isInWishlist ? faHeartSolid : faHeart" class="text-xs"></fa-icon>
+        <span>{{ isInWishlist ? 'Wishlisted' : 'Wishlist' }}</span>
       </button>
     </div>
   </div>
