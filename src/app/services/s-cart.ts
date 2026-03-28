@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CartM, CartProductM } from '../models/Cart';
 import { SAuthCookie } from './s-auth-cookie';
@@ -40,7 +40,39 @@ export class SCart {
 
   search(userId: any): Observable<CartM[]> {
     const reqBody = { userId };
-    return this.http.post<CartM[]>(`${this.apiUrl}/Search`, reqBody);
+    return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
+      map(data => this.normalizeCartList(data))
+    );
+  }
+
+  private normalizeCartList(data: any): CartM[] {
+    const list = data?.$values || data || [];
+    return Array.isArray(list) ? list.map((c: any) => this.normalizeCart(c)) : [];
+  }
+
+  private normalizeCart(c: any): CartM {
+    const rawProducts = c.products ?? c.Products;
+    const products = rawProducts?.$values || rawProducts || [];
+    return {
+      id: c.id ?? c.Id,
+      companyID: c.companyID ?? c.CompanyID,
+      userId: c.userId ?? c.UserId,
+      subtotal: c.subtotal ?? c.Subtotal ?? 0,
+      discountToken: c.discountToken ?? c.DiscountToken ?? '',
+      discountType: c.discountType ?? c.DiscountType ?? '',
+      discountValue: c.discountValue ?? c.DiscountValue ?? 0,
+      discountAmount: c.discountAmount ?? c.DiscountAmount ?? 0,
+      totalAmount: c.totalAmount ?? c.TotalAmount ?? 0,
+      products: Array.isArray(products) ? products.map((p: any) => ({
+        id: p.id ?? p.Id,
+        productId: p.productId ?? p.ProductId,
+        selectSize: p.selectSize ?? p.SelectSize ?? '',
+        selectColor: p.selectColor ?? p.SelectColor ?? '',
+        quantity: p.quantity ?? p.Quantity ?? 1,
+        price: p.price ?? p.Price ?? 0,
+        totalPrice: p.totalPrice ?? p.TotalPrice ?? 0,
+      })) : [],
+    };
   }
 
   get(id: any): Observable<CartM> {
