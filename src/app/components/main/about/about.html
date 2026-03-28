@@ -81,7 +81,10 @@
               How It All Started
             </h2>
             @if (aboutData()?.description) {
-              <p class="text-gray-600 leading-relaxed">{{ aboutData()?.description }}</p>
+              <div
+                class="text-gray-600 leading-relaxed"
+                [innerHTML]="aboutData()?.description"
+              ></div>
             }
           </div>
         </div>
@@ -130,9 +133,10 @@
           </div>
         } @else if (aboutData()?.description2) {
           <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
-              {{ aboutData()?.description2 }}
-            </p>
+            <div
+              class="text-gray-600 leading-relaxed text-base sm:text-lg"
+              [innerHTML]="aboutData()?.description2"
+            ></div>
           </div>
         }
       </div>
@@ -150,9 +154,10 @@
         </div>
         @if (aboutData()?.description3) {
           <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
-              {{ aboutData()?.description3 }}
-            </p>
+            <div
+              class="text-gray-600 leading-relaxed text-base sm:text-lg"
+              [innerHTML]="aboutData()?.description3"
+            ></div>
           </div>
         }
       </div>
@@ -187,9 +192,10 @@
           </div>
         } @else if (aboutData()?.description4) {
           <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <p class="text-gray-600 leading-relaxed text-base sm:text-lg">
-              {{ aboutData()?.description4 }}
-            </p>
+            <div
+              class="text-gray-600 leading-relaxed text-base sm:text-lg"
+              [innerHTML]="aboutData()?.description4"
+            ></div>
           </div>
         }
       </div>

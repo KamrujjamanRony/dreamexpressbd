@@ -9,10 +9,11 @@ import { AboutUsM } from '../../../models/AboutUs';
 import { SAbout } from '../../../services/s-about';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
   selector: 'app-about-update',
-  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent],
   templateUrl: './about-update.html',
   styleUrl: './about-update.css',
 })
@@ -23,7 +24,7 @@ export class AboutUpdate {
   /* ---------------- DI ---------------- */
   private aboutService = inject(SAbout);
   private permissionService = inject(SPermission);
-    private toast = inject(SToast);
+  private toast = inject(SToast);
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -38,6 +39,22 @@ export class AboutUpdate {
 
   isView = signal(false);
   isEdit = signal(false);
+
+  /* ---------------- Rich Text Editor ---------------- */
+  editorDescription = '';
+  editorDescription2 = '';
+  editorDescription3 = '';
+  editorDescription4 = '';
+  editorDescription5 = '';
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'header': [1, 2, 3, false] }],
+      ['clean']
+    ]
+  };
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
@@ -125,6 +142,13 @@ export class AboutUpdate {
       companyID: data.companyID?.toString() || environment.companyCode.toString(),
     }));
 
+    // Sync editor properties
+    this.editorDescription = data.description || '';
+    this.editorDescription2 = data.description2 || '';
+    this.editorDescription3 = data.description3 || '';
+    this.editorDescription4 = data.description4 || '';
+    this.editorDescription5 = data.description5 || '';
+
     // Set preview image if exists
     if (data.imageUrl) {
       this.previewUrl.set(
@@ -156,6 +180,16 @@ export class AboutUpdate {
   /* ---------------- SUBMIT ---------------- */
   onSubmit(event: Event) {
     event.preventDefault();
+
+    // Sync editor values to model before validation
+    this.model.update(m => ({
+      ...m,
+      description: this.editorDescription,
+      description2: this.editorDescription2,
+      description3: this.editorDescription3,
+      description4: this.editorDescription4,
+      description5: this.editorDescription5,
+    }));
 
     if (!this.form().valid()) {
       this.toast.warning('Please fill all required fields!', 'bottom-right', 5000);
@@ -211,7 +245,7 @@ export class AboutUpdate {
         this.aboutData.set(response);
         this.updateForm(response);
         this.isSubmitted.set(false);
-        
+
         this.toast.success('Saved successfully!', 'bottom-right', 5000);
       },
       error: (error) => {
