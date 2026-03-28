@@ -109,7 +109,7 @@ export class Checkout {
                 const activeCharges = (data.deliveryCharges || []).filter(c => c.isActive);
                 this.apiDeliveryCharges.set(activeCharges);
             },
-            error: () => {} // fallback to defaults
+            error: () => { } // fallback to defaults
         });
 
         setTimeout(() => this.ready.set(true), 50);
