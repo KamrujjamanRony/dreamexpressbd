@@ -54,7 +54,7 @@
     <section class="py-12 sm:py-20 bg-gray-50">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid lg:grid-cols-2 gap-10 items-center">
-          <div class="animate-on-scroll">
+          <div class="animate-on-scroll min-w-0">
             <div class="story-visual">
               @if (aboutData()?.imageUrl) {
                 <img
@@ -71,7 +71,7 @@
               }
             </div>
           </div>
-          <div class="animate-on-scroll">
+          <div class="animate-on-scroll min-w-0">
             @if (aboutData()?.title) {
               <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider">
                 {{ aboutData()?.title }}
@@ -82,7 +82,7 @@
             </h2>
             @if (aboutData()?.description) {
               <div
-                class="text-gray-600 leading-relaxed"
+                class="text-gray-600 leading-relaxed break-words overflow-hidden"
                 [innerHTML]="aboutData()?.description"
               ></div>
             }
@@ -209,7 +209,7 @@
       <p class="text-purple-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
         Discover thousands of products at unbeatable prices with fast delivery across Bangladesh.
       </p>
-      <a routerLink="/shop" class="cta-btn">
+      <a routerLink="/shop" class="cta-btn cursor-pointer">
         <i class="fas fa-shopping-bag mr-2"></i>
         Explore Our Shop
       </a>
