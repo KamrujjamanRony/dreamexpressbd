@@ -8,7 +8,7 @@ import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SContact } from '../../../services/s-contact';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
-import { ContactM } from '../../../models/Contact';
+import { ContactM, DeliveryChargeM } from '../../../models/Contact';
 
 @Component({
   selector: 'app-contact-update',
