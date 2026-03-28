@@ -1,405 +1,445 @@
-<!-- navbar component -->
-<header
-  class="flex bg-purple-300 border-b border-purple-400 py-1 sm:px-6 px-4 min-h-18.75 tracking-wide relative z-50 dark:bg-purple-800 dark:border-purple-700"
->
-  <div class="flex max-w-8xl mx-auto w-full">
-    <div class="flex flex-wrap items-center lg:gap-y-2 gap-4 w-full">
-      <!-- logo -->
-      <a routerLink="/" class="max-sm:hidden">
+<!-- Top Bar -->
+<div class="navbar-topbar">
+  <div class="max-w-8xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+    <div class="flex items-center gap-4 text-xs">
+      <span class="flex items-center gap-1.5">
+        <i class="fas fa-phone-alt"></i>
+        <span>+880 1234-567890</span>
+      </span>
+      <span class="hidden sm:flex items-center gap-1.5">
+        <i class="fas fa-envelope"></i>
+        <span>support&#64;dreamexpress.bd</span>
+      </span>
+    </div>
+    <div class="flex items-center gap-3 text-xs">
+      <span class="hidden sm:inline">Free shipping on orders over ৳2,000</span>
+      <span class="flex items-center gap-2">
+        <a href="#" class="hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-white transition"><i class="fab fa-youtube"></i></a>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Main Navbar -->
+<header class="navbar-header" [class.scrolled]="isScrolled()">
+  <div class="max-w-8xl mx-auto px-4 sm:px-6 w-full">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a routerLink="/" class="navbar-logo">
         <img
           ngSrc="logo.png"
           width="300"
           height="300"
           loading="lazy"
           decoding="async"
-          alt="logo"
-          class="w-36"
-        />
-      </a>
-      <a routerLink="/" class="hidden max-sm:block">
-        <img
-          ngSrc="logo.png"
-          width="300"
-          height="300"
-          loading="lazy"
-          decoding="async"
-          alt="logo"
-          class="w-36"
+          alt="DreamExpress BD"
+          class="h-10 w-auto"
         />
       </a>
 
-      <!-- Mobile Menu Button & Navigation -->
-      <div
-        id="collapseMenu"
-        class="lg:ml-6 max-lg:hidden lg:block! max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50"
-      >
-        <button
-          id="toggleClose"
-          class="lg:hidden fixed top-2 right-4 z-100 rounded-full bg-purple-50 w-9 h-9 flex items-center justify-center border border-purple-200 cursor-pointer dark:bg-purple-700 dark:border-purple-600"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-3.5 h-3.5 fill-black dark:fill-white"
-            viewBox="0 0 320.591 320.591"
-          >
-            <path
-              d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
-              data-original="#000000"
-            ></path>
-            <path
-              d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
-              data-original="#000000"
-            ></path>
-          </svg>
-        </button>
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-1">
+        <a routerLink="/" class="nav-link">
+          <i class="fas fa-home nav-link-icon"></i>
+          Home
+        </a>
+        <a routerLink="/shop" class="nav-link">
+          <i class="fas fa-store nav-link-icon"></i>
+          Shop
+        </a>
 
-        <ul
-          class="lg:flex lg:gap-x-3 max-lg:space-y-3 max-lg:fixed max-lg:bg-gray-50 max-lg:w-1/2 max-lg:min-w-75 max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50 dark:max-lg:bg-gray-800"
-        >
-          <li class="mb-6 hidden max-lg:block">
-            <div class="flex items-center justify-between gap-4">
-              <a routerLink="/"
-                ><img
-                  ngSrc="logo.png"
-                  width="300"
-                  height="300"
-                  loading="lazy"
-                  decoding="async"
-                  alt="logo"
-                  class="w-36"
-              /></a>
-              @if (!user) {
-                <button
-                  routerLink="/login"
-                  class="px-4 py-2 text-sm rounded-full text-white border-2 border-purple-700 bg-purple-700 hover:bg-purple-800 cursor-pointer"
-                >
-                  Sign In
-                </button>
-              }
-            </div>
-          </li>
-          <li
-            class="max-lg:border-b max-lg:border-purple-300 max-lg:py-3 px-3 dark:max-lg:border-purple-200"
-          >
-            <a
-              routerLink="/"
-              class="text-purple-900 hover:text-purple-700 text-[15px] block font-semibold dark:text-purple-50 dark:hover:text-purple-200 cursor-pointer"
-              >Home</a
-            >
-          </li>
-          <li
-            class="max-lg:border-b max-lg:border-purple-300 max-lg:py-3 px-3 dark:max-lg:border-purple-200"
-          >
-            <a
-              routerLink="/shop"
-              class="text-purple-900 hover:text-purple-700 text-[15px] block font-semibold dark:text-purple-50 dark:hover:text-purple-200 cursor-pointer"
-              >Shop</a
-            >
-          </li>
-          <li
-            class="max-lg:border-b max-lg:border-purple-300 max-lg:py-3 px-3 dark:max-lg:border-purple-200"
-          >
-            <a
-              routerLink="/about-us"
-              class="text-purple-900 hover:text-purple-700 text-[15px] block font-semibold dark:text-purple-50 dark:hover:text-purple-200 cursor-pointer"
-              >About us</a
-            >
-          </li>
-          <!-- Categories Dropdown for Mobile -->
-          <li
-            class="max-lg:border-b max-lg:border-purple-300 max-lg:py-3 px-3 dark:max-lg:border-purple-200 lg:hidden"
-          >
-            <details class="group">
-              <summary
-                class="text-purple-900 hover:text-purple-700 text-[15px] block font-semibold dark:text-purple-50 dark:hover:text-purple-200 cursor-pointer"
-              >
-                Categories
-              </summary>
-              <div class="mt-2 space-y-2 pl-4">
-                @for (item of categories; track item?.id) {
-                  <a
-                    [routerLink]="['/shop']"
-                    [queryParams]="{ category: item.name }"
-                    class="block text-sm text-purple-600 hover:text-purple-700 py-1 dark:text-purple-100 dark:hover:text-purple-300 cursor-pointer"
-                  >
-                    {{ item?.name }}
-                  </a>
-                }
-              </div>
-            </details>
-          </li>
-          @if (user) {
-            <li
-              class="max-lg:border-b max-lg:border-purple-300 max-lg:py-3 px-3 lg:hidden dark:max-lg:border-purple-200"
-            >
-              <button
-                (click)="logout()"
-                class="text-purple-900 hover:text-purple-700 text-[15px] block font-semibold dark:text-purple-50 w-full text-left cursor-pointer"
-              >
-                Logout
-              </button>
-            </li>
-          }
-        </ul>
-      </div>
-
-      <!-- Right side icons and search -->
-      <div class="flex items-center gap-x-6 gap-y-4 ml-auto relative">
-        <!-- Search Bar - Desktop -->
-        <div
-          class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-200 focus-within:border-purple-500 rounded-full px-4 py-2 overflow-hidden max-w-52 max-lg:hidden dark:bg-purple-700 dark:border-purple-500 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-500"
-        >
-          <input
-            autocomplete="off"
-            type="text"
-            [value]="searchValue()"
-            (input)="onSearchInput($event)"
-            (focus)="onSearchFocus()"
-            (blur)="onSearchBlur()"
-            placeholder="Search something..."
-            class="w-full text-sm bg-transparent outline-0 pr-2 border-none"
-          />
-          <button (click)="performSearch()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 192.904 192.904"
-              width="16px"
-              class="cursor-pointer fill-purple-600 hover:fill-purple-800 dark:fill-purple-300 dark:hover:fill-purple-500"
-            >
-              <path
-                d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
-              ></path>
-            </svg>
+        <!-- Categories Mega Dropdown -->
+        <div class="nav-dropdown-wrapper">
+          <button class="nav-link nav-dropdown-trigger" (click)="toggleCategoryDropdown()">
+            <i class="fas fa-th-large nav-link-icon"></i>
+            Categories
+            <i
+              class="fas fa-chevron-down ml-1 text-[10px] transition-transform duration-300"
+              [class.rotate-180]="showCategoryDropdown()"
+            ></i>
           </button>
+          @if (showCategoryDropdown()) {
+            <div class="mega-dropdown" (mouseleave)="showCategoryDropdown.set(false)">
+              <div class="mega-dropdown-inner">
+                <div class="mega-dropdown-header">
+                  <h3>Browse Categories</h3>
+                  <span class="text-xs text-purple-400"
+                    >{{ categories.length }} categories available</span
+                  >
+                </div>
+                <div class="mega-dropdown-grid">
+                  @for (item of categories; track item?.id) {
+                    <a
+                      [routerLink]="['/shop']"
+                      [queryParams]="{ category: item.id }"
+                      class="mega-dropdown-item"
+                      (click)="showCategoryDropdown.set(false)"
+                    >
+                      <div class="mega-dropdown-item-icon">
+                        <i class="fas fa-tag"></i>
+                      </div>
+                      <span class="mega-dropdown-item-text">{{ item?.itemName }}</span>
+                      <i class="fas fa-arrow-right mega-dropdown-item-arrow"></i>
+                    </a>
+                  }
+                </div>
+                <div class="mega-dropdown-footer">
+                  <a
+                    routerLink="/shop"
+                    class="view-all-link"
+                    (click)="showCategoryDropdown.set(false)"
+                  >
+                    View All Products <i class="fas fa-arrow-right ml-1"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
         </div>
 
-        <div class="flex items-center sm:space-x-8 space-x-6">
-          <!-- Wishlist -->
-          <a
-            routerLink="/user/wishlist"
-            class="flex flex-col items-center justify-center gap-0.5 cursor-pointer relative group"
-          >
-            <div class="relative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="cursor-pointer fill-purple-600 group-hover:fill-purple-800 inline w-5 h-5 dark:fill-purple-100 dark:group-hover:fill-purple-200"
-                viewBox="0 0 64 64"
-              >
-                <path
-                  d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                  data-original="#000000"
-                />
-              </svg>
-              @if (totalWishlists() > 0) {
-                <span
-                  class="absolute left-auto -ml-1 top-0 rounded-full bg-red-500 px-1 py-0 text-xs text-white"
-                  >{{ totalWishlists() }}</span
-                >
-              }
-            </div>
-            <span
-              class="text-[13px] font-semibold text-purple-600 group-hover:text-purple-900 dark:text-purple-50 dark:group-hover:text-purple-200"
-              >Wishlist</span
-            >
-          </a>
+        <a routerLink="/about-us" class="nav-link">
+          <i class="fas fa-info-circle nav-link-icon"></i>
+          About
+        </a>
+        <a routerLink="/contact-us" class="nav-link">
+          <i class="fas fa-headset nav-link-icon"></i>
+          Contact
+        </a>
+      </nav>
 
-          <!-- Cart -->
-          <a
-            routerLink="/cart"
-            class="flex flex-col items-center justify-center gap-0.5 cursor-pointer relative group"
-          >
-            <div class="relative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="cursor-pointer fill-purple-600 group-hover:fill-purple-800 inline w-5 h-5 dark:fill-purple-100 dark:group-hover:fill-purple-200"
-                viewBox="0 0 512 512"
+      <!-- Right Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Desktop Search -->
+        <div class="hidden lg:block relative">
+          <div class="search-bar">
+            <i class="fas fa-search search-bar-icon"></i>
+            <input
+              autocomplete="off"
+              type="text"
+              [value]="searchValue()"
+              (input)="onSearchInput($event)"
+              (focus)="onSearchFocus()"
+              (blur)="onSearchBlur()"
+              (keydown.enter)="performSearch()"
+              placeholder="Search products..."
+              class="search-bar-input"
+            />
+            @if (searchValue()) {
+              <button
+                class="search-bar-clear"
+                (click)="searchValue.set(''); showSearchResults.set(false)"
+                type="button"
               >
-                <path
-                  d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              @if (totalCarts() > 0) {
-                <span
-                  class="absolute left-auto -ml-1 top-0 rounded-full bg-red-500 px-1 py-0 text-xs text-white"
-                  >{{ totalCarts() }}</span
-                >
-              }
-            </div>
-            <span
-              class="text-[13px] font-semibold text-purple-600 group-hover:text-purple-900 dark:text-purple-50 dark:group-hover:text-purple-200"
-              >Cart</span
-            >
-          </a>
+                <i class="fas fa-times"></i>
+              </button>
+            }
+          </div>
+        </div>
 
-          <!-- User Menu -->
-          @if (user) {
-            <div class="relative group">
-              <a
-                routerLink="/account/profile"
-                class="flex flex-col items-center justify-center gap-0.5 cursor-pointer"
-              >
-                <div class="text-2xl group-hover:text-purple-600">
+        <!-- Wishlist -->
+        <a routerLink="/user/wishlist" class="action-btn" title="Wishlist">
+          <div class="action-btn-inner">
+            <i class="far fa-heart"></i>
+            @if (totalWishlists() > 0) {
+              <span class="action-badge pulse">{{ totalWishlists() }}</span>
+            }
+          </div>
+          <span class="action-label">Wishlist</span>
+        </a>
+
+        <!-- Cart -->
+        <a routerLink="/cart" class="action-btn" title="Cart">
+          <div class="action-btn-inner">
+            <i class="fas fa-shopping-bag"></i>
+            @if (totalCarts() > 0) {
+              <span class="action-badge pulse">{{ totalCarts() }}</span>
+            }
+          </div>
+          <span class="action-label">Cart</span>
+        </a>
+
+        <!-- User / Sign In -->
+        @if (user) {
+          <div class="relative group">
+            <button class="action-btn user-btn" title="Account">
+              <div class="user-avatar">
+                <i class="fas fa-user text-sm"></i>
+              </div>
+              <span class="action-label hidden sm:block">{{
+                user.fullName?.split(' ')[0] || 'Account'
+              }}</span>
+            </button>
+            <div class="user-dropdown">
+              <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar">
                   <i class="fas fa-user"></i>
                 </div>
-                <span
-                  class="text-[13px] font-semibold text-purple-600 group-hover:text-purple-900 dark:text-purple-50 dark:group-hover:text-purple-200"
-                  >Profile</span
-                >
-              </a>
-              <div
-                class="absolute right-0 top-full mt-2 w-48 bg-gray-50 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 dark:bg-gray-800 dark:text-gray-200"
-              >
-                <a
-                  routerLink="/account/profile"
-                  class="block px-4 py-1 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
-                  >My Profile</a
-                >
-                <a
-                  routerLink="/account/orders"
-                  class="block px-4 py-1 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
-                  >My Orders</a
-                >
-                <button
-                  (click)="logout()"
-                  class="block w-full text-left px-4 py-1 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
-                >
-                  Logout
-                </button>
+                <div>
+                  <p class="font-semibold text-sm text-gray-800 dark:text-gray-100">
+                    {{ user.fullName }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.phone }}</p>
+                </div>
               </div>
+              <div class="user-dropdown-divider"></div>
+              <a routerLink="/account/profile" class="user-dropdown-item">
+                <i class="fas fa-user-circle"></i> My Profile
+              </a>
+              <a routerLink="/account/orders" class="user-dropdown-item">
+                <i class="fas fa-box"></i> My Orders
+              </a>
+              <a routerLink="/account/order-tracking" class="user-dropdown-item">
+                <i class="fas fa-shipping-fast"></i> Track Order
+              </a>
+              <div class="user-dropdown-divider"></div>
+              <button
+                (click)="logout()"
+                class="user-dropdown-item text-red-500 hover:text-red-600 w-full text-left"
+              >
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
             </div>
-          } @else {
-            <a
-              routerLink="/login"
-              class="max-lg:hidden px-5 py-2.5 text-sm font-medium rounded-full text-purple-50 bg-purple-600 hover:bg-purple-700 cursor-pointer dark:text-purple-900 dark:bg-purple-300 dark:hover:bg-purple-200"
-            >
-              Sign In
-            </a>
-          }
+          </div>
+        } @else {
+          <a routerLink="/login" class="signin-btn hidden lg:flex">
+            <i class="fas fa-sign-in-alt"></i>
+            Sign In
+          </a>
+        }
 
-          <!-- Mobile Menu Toggle -->
-          <button id="toggleOpen" class="lg:hidden cursor-pointer">
-            <svg
-              class="w-7 h-7 fill-purple-800 dark:fill-purple-100"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </button>
-        </div>
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-btn lg:hidden" (click)="toggleMobileMenu()" type="button">
+          <span class="hamburger" [class.open]="isMobileMenuOpen()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Categories Bar - Desktop -->
-<div
-  class="hidden lg:block bg-purple-100 border-b border-purple-200 dark:bg-purple-700 dark:border-purple-600"
->
+<!-- Categories Quick Bar - Desktop -->
+<div class="category-bar hidden lg:block" [class.scrolled]="isScrolled()">
   <div class="max-w-8xl mx-auto px-6">
-    <div class="flex items-center space-x-6 py-2">
-      <span class="text-sm font-semibold text-purple-700 dark:text-purple-100">Categories:</span>
-      @for (item of categories.slice(0, 8); track item?.id) {
-        <a
-          [routerLink]="['/shop']"
-          [queryParams]="{ category: item.name }"
-          class="text-sm text-purple-600 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-100 transition"
-        >
-          {{ item?.name }}
+    <div class="flex items-center gap-1 py-1 overflow-x-auto scrollbar-hide">
+      <a routerLink="/shop" class="category-chip active-chip">
+        <i class="fas fa-fire text-[10px]"></i>
+        All
+      </a>
+      @for (item of categories.slice(0, 10); track item?.id) {
+        <a [routerLink]="['/shop']" [queryParams]="{ category: item.id }" class="category-chip">
+          {{ item?.itemName }}
         </a>
       }
-      @if (categories.length > 8) {
-        <div class="relative group">
-          <button
-            class="text-sm text-purple-600 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-100 transition"
-          >
-            More <i class="fas fa-chevron-down ml-1 text-xs"></i>
-          </button>
-          <div
-            class="absolute left-0 top-full mt-1 w-48 bg-gray-50 rounded-md shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 dark:bg-gray-800 dark:text-gray-200"
-          >
-            @for (item of categories.slice(8); track item?.id) {
-              <a
-                [routerLink]="['/shop']"
-                [queryParams]="{ category: item.name }"
-                class="block px-4 py-2 text-sm text-purple-700 hover:bg-purple-100 dark:hover:bg-gray-700"
-              >
-                {{ item?.name }}
-              </a>
-            }
-          </div>
-        </div>
+      @if (categories.length > 10) {
+        <button class="category-chip more-chip" (click)="toggleCategoryDropdown()">
+          +{{ categories.length - 10 }} More
+          <i class="fas fa-chevron-down text-[10px]"></i>
+        </button>
       }
     </div>
   </div>
 </div>
 
 <!-- Mobile Search Bar -->
-<div
-  class="lg:hidden bg-purple-400 border-b border-purple-200 px-4 py-1 relative dark:bg-purple-600 dark:border-purple-500"
->
-  <div
-    class="relative flex bg-purple-50 border border-purple-300 focus-within:bg-purple-300 focus-within:border-purple-400 rounded-full px-4 py-1 overflow-hidden dark:bg-purple-500 dark:border-purple-300 dark:focus-within:bg-purple-600 dark:focus-within:border-purple-400"
-  >
-    <input
-      autocomplete="off"
-      type="text"
-      [value]="searchValue()"
-      (input)="onSearchInput($event)"
-      (focus)="onSearchFocus()"
-      (blur)="onSearchBlur()"
-      placeholder="Search products..."
-      class="w-full text-sm bg-transparent outline-0 pr-2 border-none"
-    />
-    <button (click)="performSearch()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 192.904 192.904"
-        width="16px"
-        class="cursor-pointer fill-purple-600 dark:fill-purple-300 hover:fill-purple-800 dark:hover:fill-purple-500"
-      >
-        <path
-          d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
-        ></path>
-      </svg>
-    </button>
+<div class="mobile-search-bar lg:hidden">
+  <div class="px-4 py-2">
+    <div class="mobile-search-input-wrapper">
+      <i class="fas fa-search text-purple-400 text-sm"></i>
+      <input
+        autocomplete="off"
+        type="text"
+        [value]="searchValue()"
+        (input)="onSearchInput($event)"
+        (focus)="onSearchFocus()"
+        (blur)="onSearchBlur()"
+        (keydown.enter)="performSearch()"
+        placeholder="Search for products, brands..."
+        class="mobile-search-input"
+      />
+      @if (searchValue()) {
+        <button
+          (click)="searchValue.set(''); showSearchResults.set(false)"
+          class="text-purple-400 hover:text-purple-600"
+        >
+          <i class="fas fa-times text-sm"></i>
+        </button>
+      }
+    </div>
   </div>
 </div>
 
+<!-- Mobile Menu Overlay & Drawer -->
+@if (isMobileMenuOpen()) {
+  <div class="mobile-overlay" (click)="closeMobileMenu()"></div>
+  <div class="mobile-drawer" [class.open]="isMobileMenuOpen()">
+    <!-- Drawer Header -->
+    <div class="mobile-drawer-header">
+      <a routerLink="/" (click)="closeMobileMenu()">
+        <img
+          ngSrc="logo.png"
+          width="300"
+          height="300"
+          loading="lazy"
+          decoding="async"
+          alt="logo"
+          class="h-10 w-auto"
+        />
+      </a>
+      <button (click)="closeMobileMenu()" class="mobile-close-btn" type="button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- User Info -->
+    @if (user) {
+      <div class="mobile-user-card">
+        <div class="mobile-user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-sm text-gray-800 dark:text-gray-100">{{ user.fullName }}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.phone }}</p>
+        </div>
+      </div>
+    } @else {
+      <div class="p-4">
+        <a routerLink="/login" (click)="closeMobileMenu()" class="mobile-signin-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Sign In / Register
+        </a>
+      </div>
+    }
+
+    <!-- Navigation Links -->
+    <nav class="mobile-nav">
+      <a routerLink="/" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+      </a>
+      <a routerLink="/shop" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <i class="fas fa-store"></i>
+        <span>Shop</span>
+        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+      </a>
+      <a routerLink="/about-us" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <i class="fas fa-info-circle"></i>
+        <span>About Us</span>
+        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+      </a>
+      <a routerLink="/contact-us" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <i class="fas fa-headset"></i>
+        <span>Contact</span>
+        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+      </a>
+    </nav>
+
+    <!-- Mobile Categories -->
+    <div class="mobile-categories-section">
+      <button class="mobile-categories-toggle" (click)="toggleMobileCategories()">
+        <span class="flex items-center gap-2">
+          <i class="fas fa-th-large text-purple-500"></i>
+          <span class="font-semibold text-sm">Categories</span>
+        </span>
+        <i
+          class="fas fa-chevron-down text-xs transition-transform duration-300"
+          [class.rotate-180]="showMobileCategories()"
+        ></i>
+      </button>
+      @if (showMobileCategories()) {
+        <div class="mobile-categories-grid">
+          @for (item of categories; track item?.id; let i = $index) {
+            <a
+              [routerLink]="['/shop']"
+              [queryParams]="{ category: item.id }"
+              class="mobile-category-item"
+              [style.animation-delay]="i * 50 + 'ms'"
+              (click)="closeMobileMenu()"
+            >
+              <i class="fas fa-tag text-purple-500"></i>
+              <span>{{ item?.itemName }}</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Mobile Account Links -->
+    @if (user) {
+      <div class="mobile-nav border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
+        <a routerLink="/account/profile" class="mobile-nav-link" (click)="closeMobileMenu()">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+          <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        </a>
+        <a routerLink="/account/orders" class="mobile-nav-link" (click)="closeMobileMenu()">
+          <i class="fas fa-box"></i>
+          <span>My Orders</span>
+          <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        </a>
+        <button (click)="logout(); closeMobileMenu()" class="mobile-nav-link text-red-500 w-full">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    }
+  </div>
+}
+
 <!-- Search Results Dropdown -->
 @if (showSearchResults()) {
-  <div
-    class="absolute top-30 sm:top-34 lg:top-20 right-5 z-50 w-full lg:w-125 2xl:w-175 bg-purple-200 shadow-lg rounded-md mt-1 max-h-lvh overflow-y-auto dark:bg-purple-700"
-  >
-    @for (product of searchResults(); track product.id) {
-      <div
-        (click)="navigateToProduct(product.id)"
-        class="p-3 hover:bg-purple-100 cursor-pointer flex items-center border-b last:border-b-0 dark:hover:bg-purple-600"
-      >
+  <div class="search-results-overlay" (click)="showSearchResults.set(false)"></div>
+  <div class="search-results-dropdown">
+    <div class="search-results-header">
+      <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+        Search Results ({{ searchResults().length }})
+      </span>
+      <button (click)="showSearchResults.set(false)" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+    @for (product of searchResults().slice(0, 8); track product.id) {
+      <div (click)="navigateToProduct(product.id)" class="search-result-item">
         <img
-          [ngSrc]="product.image"
+          [ngSrc]="imageBaseUrl + product.imageUrl"
           width="100"
           height="100"
           loading="lazy"
           decoding="async"
-          class="w-10 h-10 object-cover mr-3"
+          class="search-result-img"
           alt=""
         />
-        <div>
-          <div class="font-medium dark:text-purple-50">{{ product.name }}</div>
-          <div class="text-sm text-purple-600 dark:text-purple-100">
-            {{ product.brand }} - {{ product.category }}
-          </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-sm text-gray-800 dark:text-gray-100 truncate">
+            {{ product.title }}
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            {{ product.brand }} · {{ product.itemName }}
+          </p>
         </div>
+        <i class="fas fa-arrow-right text-xs text-gray-400"></i>
       </div>
     }
     @if (searchResults().length === 0) {
-      <div class="p-3 text-purple-500 dark:text-purple-100">No results found</div>
+      <div class="search-no-results">
+        <i class="fas fa-search text-2xl text-gray-300 dark:text-gray-600 mb-2"></i>
+        <p class="text-sm text-gray-500 dark:text-gray-400">No products found</p>
+      </div>
+    }
+    @if (searchResults().length > 0) {
+      <div class="search-results-footer">
+        <button
+          (click)="performSearch()"
+          class="text-sm text-purple-600 hover:text-purple-800 font-medium"
+        >
+          View all results <i class="fas fa-arrow-right ml-1 text-xs"></i>
+        </button>
+      </div>
     }
   </div>
 }

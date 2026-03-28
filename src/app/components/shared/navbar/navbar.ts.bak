@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, Renderer2, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
 import { SCart } from '../../../services/s-cart';
 import { SWishlist } from '../../../services/s-wishlist';
 import { Router, RouterLink } from '@angular/router';
@@ -8,7 +8,6 @@ import { debounceTime, distinctUntilChanged, of, Subject, Subscription, switchMa
 import { SAuthUser } from '../../../services/s-auth-user';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgOptimizedImage } from '@angular/common';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -22,13 +21,11 @@ export class Navbar implements OnDestroy {
   authCookie = inject(SAuthCookie);
   wishListService = inject(SWishlist);
   private cdr = inject(ChangeDetectorRef);
-  private renderer = inject(Renderer2);
   private CategoryService = inject(SCategory);
   private productService = inject(SProduct);
   private router = inject(Router);
 
   categories: any[] = [];
-  imageBaseUrl = environment.ImageApi;
   productList = signal<any[]>([]);
   searchValue = signal('');
   private searchSubject = new Subject<string>();
@@ -39,69 +36,57 @@ export class Navbar implements OnDestroy {
   totalCarts = signal<number>(0);
   totalWishlists = signal<number>(0);
   user: any;
-
-  // UI state signals
-  isScrolled = signal(false);
-  isMobileMenuOpen = signal(false);
-  showCategoryDropdown = signal(false);
-  showMobileCategories = signal(false);
-  searchLoading = signal(false);
-
-  @HostListener('window:scroll')
-  onWindowScroll() {
-    this.isScrolled.set(window.scrollY > 20);
-  }
+  category: string = 'all';
 
   ngOnInit() {
     this.user = this.authCookie.getUserData();
     this.refreshCartCount();
 
+    // Listen for cart updates
     this.cartService.cartUpdated$.subscribe(() => {
       this.refreshCartCount();
     });
 
+    // Listen for wishlist updates
     this.wishListService.wishlistUpdated$.subscribe(() => {
       this.fetchWishList();
     });
 
+    // Fetch categories
     this.CategoryService.search().subscribe(data => {
       this.categories = data;
     });
 
+    // Fetch product list
     this.productService.search().subscribe(data => {
       this.productList.set(data);
       this.cdr.detectChanges();
     });
 
+    // Setup search functionality
     this.setupSearch();
   }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const toggleOpen = document.getElementById('toggleOpen');
+      const toggleClose = document.getElementById('toggleClose');
+      const collapseMenu = document.getElementById('collapseMenu');
 
-  // Mobile menu
-  toggleMobileMenu() {
-    const open = !this.isMobileMenuOpen();
-    this.isMobileMenuOpen.set(open);
-    if (open) {
-      this.renderer.addClass(document.body, 'overflow-hidden');
-    } else {
-      this.renderer.removeClass(document.body, 'overflow-hidden');
-    }
+      if (toggleOpen && toggleClose && collapseMenu) {
+        const handleClick = () => {
+          if (collapseMenu.style.display === 'block') {
+            collapseMenu.style.display = 'none';
+          } else {
+            collapseMenu.style.display = 'block';
+          }
+        };
+
+        toggleOpen.addEventListener('click', handleClick);
+        toggleClose.addEventListener('click', handleClick);
+      }
+    });
   }
 
-  closeMobileMenu() {
-    this.isMobileMenuOpen.set(false);
-    this.renderer.removeClass(document.body, 'overflow-hidden');
-  }
-
-  // Category dropdown
-  toggleCategoryDropdown() {
-    this.showCategoryDropdown.set(!this.showCategoryDropdown());
-  }
-
-  toggleMobileCategories() {
-    this.showMobileCategories.set(!this.showMobileCategories());
-  }
-
-  // Search
   setupSearch() {
     this.searchSubscription = this.searchSubject
       .pipe(
@@ -110,17 +95,14 @@ export class Navbar implements OnDestroy {
         switchMap(term => {
           if (!term || term.length < 2) {
             this.showSearchResults.set(false);
-            this.searchLoading.set(false);
             return of([]);
           }
-          this.searchLoading.set(true);
-          return this.productService.search(0, term);
+          return of(this.filterProducts(term));
         })
       )
       .subscribe(results => {
         this.searchResults.set(results);
-        this.showSearchResults.set(results.length > 0 || this.searchValue().length >= 2);
-        this.searchLoading.set(false);
+        this.showSearchResults.set(results.length > 0);
       });
   }
 
@@ -128,6 +110,15 @@ export class Navbar implements OnDestroy {
     const value = (event.target as HTMLInputElement).value;
     this.searchValue.set(value);
     this.searchSubject.next(value);
+  }
+
+  filterProducts(term: string): any[] {
+    const lowerTerm = term.toLowerCase();
+    return this.productList().filter(product =>
+      product.name.toLowerCase().includes(lowerTerm) ||
+      product.category.toLowerCase().includes(lowerTerm) ||
+      product.brand.toLowerCase().includes(lowerTerm)
+    );
   }
 
   onSearchFocus() {
@@ -184,6 +175,6 @@ export class Navbar implements OnDestroy {
 
   ngOnDestroy() {
     this.searchSubscription?.unsubscribe();
-    this.renderer.removeClass(document.body, 'overflow-hidden');
   }
+
 }
