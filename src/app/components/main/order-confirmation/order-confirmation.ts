@@ -59,10 +59,22 @@ export class OrderConfirmation {
 
     const subtotal = o.subtotal ?? o.Subtotal ?? 0;
     const deliveryCharge = o.deliveryCharge ?? o.DeliveryCharge ?? 0;
-    const discountAmount = o.discountAmount ?? o.DiscountAmount ?? state?.discountAmount ?? 0;
     const discountToken = o.discountToken ?? o.DiscountToken ?? state?.discountToken ?? '';
     const discountType = o.discountType ?? o.DiscountType ?? state?.discountType ?? '';
     const discountValue = o.discountValue ?? o.DiscountValue ?? state?.discountValue ?? 0;
+    let discountAmount = o.discountAmount ?? o.DiscountAmount ?? state?.discountAmount ?? 0;
+
+    // Recalculate discountAmount when backend returns 0 but discount token exists
+    if (!discountAmount && discountToken && discountValue > 0) {
+      if (discountType === 'Percentage') {
+        discountAmount = Math.round((subtotal * discountValue) / 100 * 100) / 100;
+      } else if (discountType === 'Fixed') {
+        discountAmount = discountValue;
+      } else if (discountType === 'FreeDelivery') {
+        discountAmount = deliveryCharge;
+      }
+    }
+
     let totalAmount = o.totalAmount ?? o.TotalAmount ?? 0;
 
     // Recalculate total if discount exists but total doesn't reflect it
