@@ -13,6 +13,8 @@ import { SToast } from '../../../utils/toast/toast.service';
 import { TokenM } from '../../../models/TokenM';
 import { environment } from '../../../../environments/environment';
 import { OrderM } from '../../../models/OrderM';
+import { SContact } from '../../../services/s-contact';
+import { DeliveryChargeM } from '../../../models/Contact';
 
 @Component({
     selector: 'app-checkout',
@@ -29,6 +31,7 @@ export class Checkout {
     private authCookie = inject(SAuthCookie);
     private guestService = inject(SGuest);
     private toast = inject(SToast);
+    private contactService = inject(SContact);
 
     siteId = environment.companyCode;
     imgBaseUrl = environment.ImageApi;
@@ -44,6 +47,7 @@ export class Checkout {
     deliveryAddress = signal<any>(null);
     userAddresses = signal<any[]>([]);
     selectedAddressId = signal<string | null>(null);
+    apiDeliveryCharges = signal<DeliveryChargeM[]>([]);
 
     // Guest checkout fields
     guestName = '';
@@ -99,6 +103,15 @@ export class Checkout {
             return;
         }
 
+        // Load delivery charges from API
+        this.contactService.get(this.siteId).subscribe({
+            next: (data) => {
+                const activeCharges = (data.deliveryCharges || []).filter(c => c.isActive);
+                this.apiDeliveryCharges.set(activeCharges);
+            },
+            error: () => {} // fallback to defaults
+        });
+
         setTimeout(() => this.ready.set(true), 50);
     }
 
@@ -108,11 +121,32 @@ export class Checkout {
             return;
         }
 
-        const district = this.deliveryAddress()?.district || '';
-        if (district.toLowerCase().includes('dhaka')) {
-            this.deliveryCharge.set(60);
-        } else if (district) {
-            this.deliveryCharge.set(120);
+        const district = (this.deliveryAddress()?.district || '').toLowerCase();
+        const charges = this.apiDeliveryCharges();
+
+        if (charges.length > 0) {
+            // Try to find a matching charge by district name
+            const match = charges.find(c =>
+                district.includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(district)
+            );
+            if (match) {
+                this.deliveryCharge.set(match.amount);
+            } else if (district.includes('dhaka')) {
+                // Look for "Inside Dhaka" or similar
+                const dhakaCharge = charges.find(c => c.name.toLowerCase().includes('dhaka'));
+                this.deliveryCharge.set(dhakaCharge ? dhakaCharge.amount : charges[charges.length - 1].amount);
+            } else if (district) {
+                // Use "Outside Dhaka" or last charge as fallback
+                const outsideCharge = charges.find(c => c.name.toLowerCase().includes('outside'));
+                this.deliveryCharge.set(outsideCharge ? outsideCharge.amount : charges[charges.length - 1].amount);
+            }
+        } else {
+            // Fallback defaults if API charges not loaded
+            if (district.includes('dhaka')) {
+                this.deliveryCharge.set(60);
+            } else if (district) {
+                this.deliveryCharge.set(120);
+            }
         }
     }
 
