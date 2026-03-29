@@ -1,7 +1,7 @@
 <div class="confirmation-page min-h-screen py-6 px-4" [class.ready]="ready()">
   <!-- Loading State -->
   @if (loading) {
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-3xl mx-auto">
       <div class="loading-skeleton">
         <div class="skeleton-header">
           <div class="skeleton-circle"></div>
@@ -19,401 +19,226 @@
 
   @if (orderDetails && !loading) {
     <!-- Success Header (screen only) -->
-    <div class="max-w-4xl mx-auto mb-6 fade-slide-in no-print" style="--delay: 0">
+    <div class="max-w-3xl mx-auto mb-6 fade-slide-in no-print" style="--delay: 0">
       <div class="success-banner">
         <div class="success-icon-wrap">
           <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2.5"
-              d="M5 13l4 4L19 7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mt-4">Order Confirmed!</h1>
         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
           Thank you for your purchase{{ orderDetails.userName ? ', ' + orderDetails.userName : '' }}
         </p>
-        <div class="order-id-badge mt-3">
-          <span class="text-xs text-gray-500 dark:text-gray-400">Order ID</span>
-          <span class="text-sm font-bold text-rose-600 dark:text-rose-400">#{{ orderId }}</span>
-        </div>
       </div>
     </div>
 
     <!-- Action Buttons (screen only) -->
-    <div
-      class="max-w-4xl mx-auto mb-6 flex flex-wrap gap-3 justify-center fade-slide-in no-print"
-      style="--delay: 1"
-    >
+    <div class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print" style="--delay: 1">
       <button (click)="printVoucher()" class="action-btn print-btn">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         Print Voucher
       </button>
       <button (click)="continueShopping()" class="action-btn shop-btn">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
         Continue Shopping
       </button>
     </div>
 
-    <!-- Voucher / Order Details (printable) -->
-    <div class="max-w-4xl mx-auto print-area" id="voucher">
-      <!-- Print Header (only visible on print) -->
-      <div class="print-header print-only">
-        <h1 class="text-xl font-bold">{{ companyName }}</h1>
-        <p class="text-sm text-gray-500">Order Voucher</p>
-      </div>
+    <!-- ═══════ VOUCHER ═══════ -->
+    <div class="voucher-wrapper max-w-3xl mx-auto fade-slide-in" style="--delay: 2" id="voucher">
+      <div class="voucher-paper">
 
-      <div class="grid lg:grid-cols-5 gap-5">
-        <!-- Left Column -->
-        <div class="lg:col-span-3 space-y-5">
-          <!-- Order Info Card -->
-          <div class="detail-card fade-slide-in" style="--delay: 2">
-            <div class="card-header-bar">
-              <div class="flex items-center gap-2">
-                <div class="header-icon">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
-                </div>
-                <h2 class="font-semibold text-gray-800 dark:text-white text-sm">Order Details</h2>
-              </div>
-              <span class="status-badge" [ngClass]="getStatusClass(orderDetails.orderStatus)">
-                {{ getOrderStatusText(orderDetails.orderStatus) }}
-              </span>
-            </div>
-            <div class="card-body-section">
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="info-label">Order ID</span>
-                  <span class="info-value font-mono">#{{ orderId }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Order Date</span>
-                  <span class="info-value">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Payment</span>
-                  <span class="info-value">{{ orderDetails.paymentMethod }}</span>
-                </div>
-                @if (orderDetails.deliveredDate) {
-                  <div class="info-item">
-                    <span class="info-label">Delivered</span>
-                    <span class="info-value">{{
-                      orderDetails.deliveredDate | date: 'mediumDate'
-                    }}</span>
-                  </div>
-                }
-              </div>
-            </div>
+        <!-- ── Voucher Header ── -->
+        <div class="voucher-header">
+          <div class="voucher-brand">
+            <h1 class="voucher-company">{{ companyName }}</h1>
+            <p class="voucher-subtitle">Order Invoice</p>
           </div>
-
-          <!-- Order Items Card -->
-          <div class="detail-card fade-slide-in" style="--delay: 3">
-            <div class="card-header-bar">
-              <div class="flex items-center gap-2">
-                <div class="header-icon">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                    />
-                  </svg>
-                </div>
-                <h2 class="font-semibold text-gray-800 dark:text-white text-sm">
-                  Items ({{ getOrderItems().length }})
-                </h2>
-              </div>
+          <div class="voucher-meta">
+            <div class="voucher-id">
+              <span class="meta-label">Invoice No.</span>
+              <span class="meta-value font-mono">#{{ orderId }}</span>
             </div>
-            <div class="card-body-section p-0">
-              <div class="item-list">
-                @for (item of getOrderItems(); track item.productId || $index; let i = $index) {
-                  <div class="order-item" [style.--index]="i">
-                    <div class="item-img">
+            <div class="voucher-date">
+              <span class="meta-label">Date</span>
+              <span class="meta-value">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
+            </div>
+            <span class="status-badge" [ngClass]="getStatusClass(orderDetails.orderStatus)">
+              {{ getOrderStatusText(orderDetails.orderStatus) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="voucher-divider"></div>
+
+        <!-- ── Billing / Shipping Row ── -->
+        <div class="voucher-addresses">
+          <div class="address-block">
+            <h3 class="address-title">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Bill To
+            </h3>
+            <p class="address-name">{{ orderDetails.userName || 'Customer' }}</p>
+            @if (orderDetails.userPhone) {
+              <p class="address-detail">{{ orderDetails.userPhone }}</p>
+            }
+            @if (orderDetails.userEmail) {
+              <p class="address-detail">{{ orderDetails.userEmail }}</p>
+            }
+          </div>
+          <div class="address-block">
+            <h3 class="address-title">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Ship To
+            </h3>
+            <p class="address-name">{{ orderDetails.shippingAddress.street }}</p>
+            <p class="address-detail">
+              {{ orderDetails.shippingAddress.city }}{{ orderDetails.shippingAddress.district ? ', ' + orderDetails.shippingAddress.district : '' }}
+            </p>
+            @if (orderDetails.shippingAddress.contact) {
+              <p class="address-detail">Phone: {{ orderDetails.shippingAddress.contact }}</p>
+            }
+          </div>
+          <div class="address-block payment-block">
+            <h3 class="address-title">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Payment
+            </h3>
+            <p class="address-name">{{ orderDetails.paymentMethod }}</p>
+            @if (orderDetails.deliveredDate) {
+              <p class="address-detail">Delivered: {{ orderDetails.deliveredDate | date: 'mediumDate' }}</p>
+            }
+          </div>
+        </div>
+
+        <!-- ── Items Table ── -->
+        <div class="voucher-table-wrap">
+          <table class="voucher-table">
+            <thead>
+              <tr>
+                <th class="th-num">#</th>
+                <th class="th-item">Item</th>
+                <th class="th-qty">Qty</th>
+                <th class="th-price">Price</th>
+                <th class="th-total">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of getOrderItems(); track item.productId || $index; let i = $index) {
+                <tr class="item-row">
+                  <td class="td-num">{{ i + 1 }}</td>
+                  <td class="td-item">
+                    <div class="item-cell">
                       @if (item.image) {
-                        <img
-                          [ngSrc]="
-                            item.image.startsWith('http') ? item.image : imgBaseUrl + item.image
-                          "
-                          width="200"
-                          height="200"
-                          loading="lazy"
-                          decoding="async"
-                          alt="Product"
-                          class="w-full h-full object-cover rounded-lg"
-                        />
-                      } @else {
-                        <div
-                          class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
-                        >
-                          <svg
-                            class="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
+                        <div class="item-thumb">
+                          <img
+                            [ngSrc]="item.image.startsWith('http') ? item.image : imgBaseUrl + item.image"
+                            width="40" height="40" loading="lazy" decoding="async" alt=""
+                            class="w-full h-full object-cover rounded"
+                          />
                         </div>
                       }
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <h4 class="text-sm font-medium text-gray-800 dark:text-white truncate">
-                        {{ item.productName }}
-                      </h4>
-                      <div class="flex items-center gap-2 mt-1 flex-wrap">
-                        @if (item.size) {
-                          <span class="variant-pill">{{ item.size }}</span>
+                      <div>
+                        <span class="item-name">{{ item.productName }}</span>
+                        @if (item.size || item.color) {
+                          <span class="item-variants">
+                            @if (item.size) { <span class="variant-tag">{{ item.size }}</span> }
+                            @if (item.color) { <span class="variant-tag">{{ item.color }}</span> }
+                          </span>
                         }
-                        @if (item.color) {
-                          <span class="variant-pill">{{ item.color }}</span>
-                        }
-                        <span class="text-xs text-gray-500 dark:text-gray-400"
-                          >Qty: {{ item.quantity }}</span
-                        >
                       </div>
                     </div>
-                    <div class="text-right shrink-0">
-                      <span
-                        class="text-sm font-semibold text-gray-800 dark:text-white"
-                        [innerHTML]="item.price * item.quantity | bdt"
-                      ></span>
-                      @if (item.quantity > 1) {
-                        <p class="text-xs text-gray-400 mt-0.5">
-                          <span [innerHTML]="item.price | bdt"></span> each
-                        </p>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
+                  </td>
+                  <td class="td-qty">{{ item.quantity }}</td>
+                  <td class="td-price"><span [innerHTML]="item.price | bdt"></span></td>
+                  <td class="td-total"><span [innerHTML]="item.price * item.quantity | bdt"></span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ── Summary + QR Row ── -->
+        <div class="voucher-bottom">
+          <!-- QR Code & Tracking -->
+          <div class="voucher-qr-section">
+            @if (qrCodeUrl()) {
+              <img [src]="qrCodeUrl()" alt="QR Code" class="qr-image" width="100" height="100" />
+            }
+            <div class="qr-info">
+              <p class="qr-label">Scan to track order</p>
+              <p class="qr-order-id font-mono">#{{ orderId }}</p>
             </div>
           </div>
 
-          <!-- Shipping & Customer Card -->
-          <div class="detail-card fade-slide-in" style="--delay: 4">
-            <div class="card-header-bar">
-              <div class="flex items-center gap-2">
-                <div class="header-icon">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <h2 class="font-semibold text-gray-800 dark:text-white text-sm">
-                  Shipping Information
-                </h2>
-              </div>
+          <!-- Totals -->
+          <div class="voucher-totals">
+            <div class="total-row">
+              <span>Subtotal ({{ getTotalQuantity() }} items)</span>
+              <span [innerHTML]="orderDetails.subtotal | bdt"></span>
             </div>
-            <div class="card-body-section">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Customer -->
-                <div class="info-block">
-                  <h3 class="info-block-title">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    Customer
-                  </h3>
-                  <p class="text-sm text-gray-800 dark:text-white font-medium">
-                    {{ orderDetails.userName }}
-                  </p>
-                  @if (orderDetails.userPhone) {
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {{ orderDetails.userPhone }}
-                    </p>
+            <div class="total-row">
+              <span>Delivery Charge</span>
+              <span [innerHTML]="orderDetails.deliveryCharge | bdt"></span>
+            </div>
+            @if (orderDetails.discountAmount > 0) {
+              <div class="total-row discount-row">
+                <span class="flex items-center gap-1">
+                  Discount
+                  @if (orderDetails.discountToken) {
+                    <span class="discount-code">({{ orderDetails.discountToken }})</span>
                   }
-                  @if (orderDetails.userEmail) {
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      {{ orderDetails.userEmail }}
-                    </p>
-                  }
-                </div>
-                <!-- Address -->
-                <div class="info-block">
-                  <h3 class="info-block-title">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                    </svg>
-                    Delivery Address
-                  </h3>
-                  <p class="text-sm text-gray-800 dark:text-white">
-                    {{ orderDetails.shippingAddress.street }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {{ orderDetails.shippingAddress.city
-                    }}{{
-                      orderDetails.shippingAddress.district
-                        ? ', ' + orderDetails.shippingAddress.district
-                        : ''
-                    }}
-                  </p>
-                  @if (orderDetails.shippingAddress.contact) {
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      Phone: {{ orderDetails.shippingAddress.contact }}
-                    </p>
-                  }
-                </div>
+                </span>
+                <span>- <span [innerHTML]="orderDetails.discountAmount | bdt"></span></span>
               </div>
+            }
+            <div class="grand-total-row">
+              <span>Total Due</span>
+              <span class="grand-total-amount" [innerHTML]="orderDetails.totalAmount | bdt"></span>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: Summary -->
-        <div class="lg:col-span-2">
-          <div class="summary-card fade-slide-in" style="--delay: 3">
-            <div class="summary-header">
-              <svg
-                class="w-5 h-5 text-rose-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"
-                />
-              </svg>
-              <h2 class="font-semibold text-gray-800 dark:text-white">Payment Summary</h2>
-            </div>
-            <div class="summary-body">
-              <div class="summary-row">
-                <span class="text-gray-600 dark:text-gray-400">Subtotal</span>
-                <span
-                  class="text-gray-800 dark:text-white font-medium"
-                  [innerHTML]="orderDetails.subtotal | bdt"
-                ></span>
-              </div>
-              <div class="summary-row">
-                <span class="text-gray-600 dark:text-gray-400">Delivery</span>
-                <span
-                  class="text-gray-800 dark:text-white font-medium"
-                  [innerHTML]="orderDetails.deliveryCharge | bdt"
-                ></span>
-              </div>
-              @if (orderDetails.discountAmount > 0) {
-                <div class="summary-row discount-row">
-                  <span class="flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                      />
-                    </svg>
-                    Discount
-                    @if (orderDetails.discountToken) {
-                      <span class="discount-code">({{ orderDetails.discountToken }})</span>
-                    }
-                  </span>
-                  <span class="font-medium"
-                    >- <span [innerHTML]="orderDetails.discountAmount | bdt"></span
-                  ></span>
-                </div>
-              }
-              <div class="summary-divider"></div>
-              <div class="summary-total">
-                <span class="text-gray-800 dark:text-white font-bold text-lg">Total Paid</span>
-                <span class="total-amount" [innerHTML]="orderDetails.totalAmount | bdt"></span>
-              </div>
-
-              @if (orderDetails.discountAmount > 0) {
-                <div class="savings-badge">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  You saved <span [innerHTML]="orderDetails.discountAmount | bdt"></span> on this
-                  order!
-                </div>
-              }
-            </div>
-
-            <!-- Print / Continue buttons (screen) -->
-            <div class="summary-actions no-print">
-              <button (click)="printVoucher()" class="voucher-print-btn">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                  />
-                </svg>
-                Print Voucher
-              </button>
-              <button (click)="continueShopping()" class="voucher-shop-btn">
-                Continue Shopping
-              </button>
-            </div>
+        @if (orderDetails.discountAmount > 0) {
+          <div class="savings-strip">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            You saved <span class="font-bold" [innerHTML]="orderDetails.discountAmount | bdt"></span> on this order!
           </div>
-        </div>
-      </div>
+        }
 
-      <!-- Print Footer (only visible on print) -->
-      <div class="print-footer print-only">
-        <div class="print-divider"></div>
-        <p class="text-xs text-gray-500 text-center mt-2">
-          {{ companyName }} &mdash; Thank you for your order!
-        </p>
-        <p class="text-xs text-gray-400 text-center mt-1">
-          This is a computer generated voucher and does not require a signature.
-        </p>
+        <!-- ── Voucher Footer ── -->
+        <div class="voucher-footer">
+          <div class="footer-line"></div>
+          <p class="footer-thanks">{{ companyName }} &mdash; Thank you for your order!</p>
+          <p class="footer-note">This is a computer-generated invoice and does not require a signature.</p>
+        </div>
+
       </div>
+    </div>
+
+    <!-- Bottom actions (screen only) -->
+    <div class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print" style="--delay: 3">
+      <button (click)="printVoucher()" class="action-btn-sm print-btn">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Print
+      </button>
+      <button (click)="continueShopping()" class="action-btn-sm shop-btn">Continue Shopping</button>
     </div>
   }
 </div>

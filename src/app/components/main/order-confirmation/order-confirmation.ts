@@ -4,6 +4,7 @@ import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SOrder } from '../../../services/s-order';
 import { environment } from '../../../../environments/environment';
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -22,6 +23,7 @@ export class OrderConfirmation {
   ready = signal(false);
   companyName = environment.companyName;
   imgBaseUrl = environment.ImageApi;
+  qrCodeUrl = signal<string>('');
 
   private checkoutState: any = null;
 
@@ -42,6 +44,7 @@ export class OrderConfirmation {
       next: (order: any) => {
         this.orderDetails = this.normalizeOrder(order);
         this.loading = false;
+        this.generateQrCode();
         setTimeout(() => this.ready.set(true), 50);
       },
       error: (error: any) => {
@@ -49,6 +52,15 @@ export class OrderConfirmation {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  private generateQrCode() {
+    const trackingUrl = `${environment.webUrl}/account/order-tracking?id=${this.orderId}`;
+    QRCode.toDataURL(trackingUrl, {
+      width: 120,
+      margin: 1,
+      color: { dark: '#111827', light: '#ffffff' },
+    }).then((url: string) => this.qrCodeUrl.set(url));
   }
 
   private normalizeOrder(o: any): any {
@@ -142,6 +154,10 @@ export class OrderConfirmation {
 
   getOrderItems(): any[] {
     return this.orderDetails?.orderItems || [];
+  }
+
+  getTotalQuantity(): number {
+    return this.getOrderItems().reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
   }
 
   printVoucher() {
