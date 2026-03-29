@@ -78,8 +78,8 @@ export class Contact implements AfterViewInit, OnDestroy {
         this.formMessage = '';
         this.sending.set(false);
       },
-      error: () => {
-        this.toast.danger('Failed to send message. Please try again.', 'top-right', 3000);
+      error: (error) => {
+        this.toast.danger(error?.error || 'Failed to send message. Please try again.', 'top-right', 3000);
         this.sending.set(false);
       },
     });
