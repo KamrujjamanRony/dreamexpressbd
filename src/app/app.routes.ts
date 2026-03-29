@@ -32,7 +32,6 @@ export const routes: Routes = [
       {
         path: 'checkout',
         loadComponent: () => import('./components/main/checkout/checkout').then(m => m.Checkout),
-        data: { reuse: true },
         title: `Checkout | ${companyName}`
       },
       {
@@ -50,25 +49,21 @@ export const routes: Routes = [
       {
         path: 'order-confirmation',
         loadComponent: () => import('./components/main/order-confirmation/order-confirmation').then(m => m.OrderConfirmation),
-        data: { reuse: true },
         title: `Order Confirmation | ${companyName}`
       },
       {
         path: 'register',
         loadComponent: () => import('./components/main/customer-register/customer-register').then(m => m.CustomerRegister),
-        data: { reuse: true },
         title: `Customer Register | ${companyName}`
       },
       {
         path: 'login',
         loadComponent: () => import('./components/main/customer-login/customer-login').then(m => m.CustomerLogin),
-        data: { reuse: true },
         title: `Customer Login | ${companyName}`
       },
       {
         path: 'cart',
         loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),
-        data: { reuse: false },
         title: `Shopping Cart | ${companyName}`
       },
       {

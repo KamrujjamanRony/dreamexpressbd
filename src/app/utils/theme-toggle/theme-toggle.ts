@@ -10,7 +10,8 @@ import { STheme } from './s-theme';
 export class ThemeToggle implements OnInit, AfterViewInit {
   private themeService = inject(STheme);
   isDarkMode = false;
-  
+  isVisible = true;
+
   @ViewChild('themeCheckbox') themeCheckbox!: ElementRef;
 
   ngOnInit() {
@@ -26,6 +27,14 @@ export class ThemeToggle implements OnInit, AfterViewInit {
 
   themeModeToggle() {
     this.themeService.toggleTheme();
+  }
+
+  hideToggle() {
+    this.isVisible = false;
+  }
+
+  showToggle() {
+    this.isVisible = true;
   }
 
   private updateCheckboxState() {

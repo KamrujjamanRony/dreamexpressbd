@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
-import { AddressModal } from '../../shared/address-modal/address-modal';
 import { Router } from '@angular/router';
 import { SCart } from '../../../services/s-cart';
 import { SOrder } from '../../../services/s-order';
@@ -15,10 +14,11 @@ import { environment } from '../../../../environments/environment';
 import { OrderM } from '../../../models/OrderM';
 import { SContact } from '../../../services/s-contact';
 import { DeliveryChargeM } from '../../../models/Contact';
+import { SData } from '../../../services/s-data';
 
 @Component({
     selector: 'app-checkout',
-    imports: [FormsModule, BdtPipe, AddressModal],
+    imports: [FormsModule, BdtPipe],
     templateUrl: './checkout.html',
     styleUrl: './checkout.css',
 })
@@ -32,6 +32,7 @@ export class Checkout {
     private guestService = inject(SGuest);
     private toast = inject(SToast);
     private contactService = inject(SContact);
+    private dataService = inject(SData);
 
     siteId = environment.companyCode;
     imgBaseUrl = environment.ImageApi;
@@ -49,12 +50,18 @@ export class Checkout {
     selectedAddressId = signal<string | null>(null);
     apiDeliveryCharges = signal<DeliveryChargeM[]>([]);
 
-    // Guest checkout fields
+    // Address form fields (shared for both guest and logged-in)
     guestName = '';
     guestPhone = '';
     guestDistrict = '';
     guestCity = '';
+    guestArea = '';
     guestStreet = '';
+
+    // Dropdown data
+    regions = signal<any[]>([]);
+    cities = signal<any[]>([]);
+    areas = signal<any[]>([]);
 
     // Discount token
     tokenCode = '';
@@ -65,11 +72,6 @@ export class Checkout {
     discountType = signal<string>('');
     discountValue = signal<number>(0);
     discountAmount = signal<number>(0);
-
-    // For address modal
-    showAddressModal = false;
-    addressModalEditMode = false;
-    selectedAddressForEdit: any = null;
 
     // Animation state
     ready = signal(false);
@@ -102,6 +104,9 @@ export class Checkout {
             this.router.navigate(['/cart']);
             return;
         }
+
+        // Load regions for district dropdown
+        this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
 
         // Load delivery charges from API
         this.contactService.get(this.siteId).subscribe({
@@ -237,10 +242,7 @@ export class Checkout {
         this.customerService.search(userId).subscribe({
             next: (data) => {
                 this.userDetails = data?.[0];
-                this.userAddresses.set(Array.isArray(data?.[0]?.address) ? data[0].address : []);
-                this.setDefaultAddress();
                 this.loading.set(false);
-                this.calculateDeliveryCharge();
             },
             error: () => {
                 this.error.set('Failed to load user details');
@@ -249,80 +251,23 @@ export class Checkout {
         });
     }
 
-    private setDefaultAddress() {
-        const defaultAddress = this.userAddresses().find((addr: any) => addr.isDefault);
-        if (defaultAddress) {
-            this.deliveryAddress.set(defaultAddress);
-            this.selectedAddressId.set(defaultAddress.id);
-        } else if (this.userAddresses().length > 0) {
-            this.deliveryAddress.set(this.userAddresses()[0]);
-            this.selectedAddressId.set(this.userAddresses()[0].id);
+    onDistrictChange(district: string) {
+        this.guestDistrict = district;
+        this.guestCity = '';
+        this.guestArea = '';
+        this.cities.set([]);
+        this.areas.set([]);
+        if (district) {
+            this.dataService.getCitiesByRegion(district).subscribe(cities => this.cities.set(cities));
         }
     }
 
-    openAddressModal(isEditMode: boolean = false, address?: any) {
-        this.addressModalEditMode = isEditMode;
-        this.selectedAddressForEdit = address;
-        this.showAddressModal = true;
-    }
-
-    handleAddressModalSubmit(result: any) {
-        this.showAddressModal = false;
-        this.loading.set(true);
-
-        if (this.addressModalEditMode) {
-            const updatedAddresses = this.userAddresses().map((addr: any) =>
-                addr.id === result.id ? result : addr
-            );
-            this.updateUserAddresses(updatedAddresses, 'Address updated');
-        } else {
-            const newAddress = {
-                ...result,
-                id: crypto.randomUUID(),
-                userId: this.user?.id
-            };
-
-            const updatedAddresses = [...this.userAddresses(), newAddress];
-
-            if (newAddress.isDefault) {
-                updatedAddresses.forEach((addr: any) => {
-                    addr.isDefault = addr.id === newAddress.id;
-                });
-            }
-
-            this.updateUserAddresses(updatedAddresses, 'Address added');
-
-            if (updatedAddresses.length === 1 || newAddress.isDefault) {
-                this.deliveryAddress.set(newAddress);
-                this.selectedAddressId.set(newAddress.id);
-                this.calculateDeliveryCharge();
-            }
-        }
-    }
-
-    private updateUserAddresses(addresses: any[], successMessage: string) {
-        this.customerService.update(this.userDetails?.id, {
-            ...this.userDetails,
-            address: addresses
-        }).subscribe({
-            next: () => {
-                this.userAddresses.set(addresses);
-                this.toast.success(successMessage, 'top-right', 2000);
-                this.loading.set(false);
-            },
-            error: () => {
-                this.toast.danger('Failed to update address', 'top-right', 3000);
-                this.loading.set(false);
-            }
-        });
-    }
-
-    selectAddress(addressId: string) {
-        const selected = this.userAddresses().find((addr: any) => addr.id === addressId);
-        if (selected) {
-            this.deliveryAddress.set(selected);
-            this.selectedAddressId.set(addressId);
-            this.calculateDeliveryCharge();
+    onCityChange(city: string) {
+        this.guestCity = city;
+        this.guestArea = '';
+        this.areas.set([]);
+        if (city) {
+            this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
         }
     }
 
@@ -333,19 +278,22 @@ export class Checkout {
                     this.toast.warning('Please fill in all delivery details', 'top-right', 2000);
                     return;
                 }
-                // Set delivery address from guest form
-                this.deliveryAddress.set({
-                    street: this.guestStreet.trim(),
-                    city: this.guestCity.trim(),
-                    district: this.guestDistrict.trim(),
-                    contact: this.guestPhone.trim(),
-                    type: 'Home',
-                });
-                this.calculateDeliveryCharge();
-            } else if (!this.deliveryAddress()) {
-                this.toast.warning('Please select a delivery address first', 'top-right', 2000);
-                return;
+            } else {
+                if (!this.guestDistrict.trim() || !this.guestCity.trim() || !this.guestStreet.trim()) {
+                    this.toast.warning('Please fill in all delivery details', 'top-right', 2000);
+                    return;
+                }
             }
+            // Set delivery address from form
+            const streetParts = [this.guestStreet.trim(), this.guestArea.trim()].filter(Boolean).join(', ');
+            this.deliveryAddress.set({
+                street: streetParts,
+                city: this.guestCity.trim(),
+                district: this.guestDistrict.trim(),
+                contact: this.isGuest ? this.guestPhone.trim() : (this.userDetails?.phone || ''),
+                type: 'Home',
+            });
+            this.calculateDeliveryCharge();
         }
         this.activeStep.set(step);
     }

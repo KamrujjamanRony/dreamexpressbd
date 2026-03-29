@@ -11,11 +11,27 @@
   transition:
     border-color 0.3s,
     box-shadow 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+select.guest-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+select.guest-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .dark .guest-input {
   border-color: #374151;
   background: #1f2937;
   color: #f9fafb;
+}
+.dark select.guest-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 .guest-input:focus {
   border-color: #f43f5e;
