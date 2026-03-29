@@ -100,9 +100,9 @@ export class ShoppingCart {
         quantity: cartItem.quantity,
         selectColor: cartItem.selectColor,
         selectSize: cartItem.selectSize,
-        productName: product?.title || product?.name || 'Unknown',
+        productName: product?.title || product?.name || 'Product',
         price,
-        image: product?.imageUrl ? this.imgBaseUrl + product.imageUrl : product?.image || '',
+        image: product?.imageUrl ? this.imgBaseUrl + product.imageUrl : '',
         category: product?.itemName || product?.category || '',
         brand: product?.brand || '',
       };
@@ -202,6 +202,6 @@ export class ShoppingCart {
   }
 
   getViewLink(productId: any) {
-    return `/view/${productId}`;
+    return productId ? `/view/${productId}` : '/shop';
   }
 }

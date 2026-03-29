@@ -72,17 +72,18 @@
               <!-- Product Image -->
               <a
                 [routerLink]="getViewLink(item.productId)"
-                class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700 shrink-0"
+                class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700 shrink-0 relative"
               >
-                <img
-                  [ngSrc]="item.image"
-                  [alt]="item.productName"
-                  width="96"
-                  height="96"
-                  loading="lazy"
-                  decoding="async"
-                  class="w-full h-full object-cover hover:scale-105 transition-transform"
-                />
+                @if (item.image) {
+                  <img
+                    [ngSrc]="item.image"
+                    [alt]="item.productName"
+                    fill
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                }
               </a>
 
               <!-- Product Details -->
