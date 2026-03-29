@@ -121,13 +121,22 @@
                 </div>
               </div>
 
-              <button
-                (click)="trackOrder(order)"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 rounded-lg hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-colors cursor-pointer"
-              >
-                <fa-icon [icon]="faEye"></fa-icon>
-                Track Order
-              </button>
+              <div class="flex items-center gap-2">
+                <button
+                  (click)="printVoucher(order)"
+                  class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors cursor-pointer"
+                >
+                  <fa-icon [icon]="faPrint"></fa-icon>
+                  Print Voucher
+                </button>
+                <button
+                  (click)="trackOrder(order)"
+                  class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 rounded-lg hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-colors cursor-pointer"
+                >
+                  <fa-icon [icon]="faEye"></fa-icon>
+                  Track Order
+                </button>
+              </div>
             </div>
           </div>
         </div>

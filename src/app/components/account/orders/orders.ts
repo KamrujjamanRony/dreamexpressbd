@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEye, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faBoxOpen, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { SOrder } from '../../../services/s-order';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 export class Orders {
   faEye = faEye;
   faBoxOpen = faBoxOpen;
+  faPrint = faPrint;
 
   private orderService = inject(SOrder);
   private authCookie = inject(SAuthCookie);
@@ -90,6 +91,12 @@ export class Orders {
   trackOrder(order: any): void {
     this.router.navigate(['/account/order-tracking'], {
       queryParams: { orderId: order.id || order.Id },
+    });
+  }
+
+  printVoucher(order: any): void {
+    this.router.navigate(['/order-confirmation'], {
+      state: { orderId: order.id || order.Id },
     });
   }
 }
