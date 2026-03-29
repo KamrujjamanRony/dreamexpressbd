@@ -106,7 +106,7 @@ export class CustomerLogin {
         error: (error) => {
           this.loading.set(false);
           this.toast.danger(
-            error?.error?.message || 'Invalid phone or password!',
+            error?.error || 'Invalid phone or password!',
             'top-right',
             4000
           );
