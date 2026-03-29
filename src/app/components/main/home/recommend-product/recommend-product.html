@@ -39,10 +39,10 @@
     [breakpoints]="breakpoints"
     speed="600"
   >
-    @for (product of products(); track product.id) {
+    @for (product of products(); track product.id; let i = $index) {
       <swiper-slide>
         <div class="h-full pb-2">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [isPriority]="i < 4"></app-product-card>
         </div>
       </swiper-slide>
     }
