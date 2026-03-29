@@ -174,7 +174,7 @@ export class Shop {
 
     this.productService.search(itemId, searchTerm).subscribe(data => {
       this.products.set(data);
-      this.categories.set(this.groupProductsByProperty(data, 'category'));
+      this.categories.set(this.groupProductsByProperty(data, 'itemName'));
       this.brands.set(this.groupProductsByProperty(data, 'brand'));
       this.sizes.set(this.groupProductsByArrayProperty(data, 'sizes'));
       this.colors.set(this.groupProductsByArrayProperty(data, 'colors'));
@@ -274,7 +274,7 @@ export class Shop {
       return data;
     }
     return data.filter((product: any) =>
-      product && categories.includes(product.category.toString())
+      product && categories.includes(product.itemName?.toString())
     );
   }
 
