@@ -251,7 +251,7 @@ export class AboutUpdate {
       error: (error) => {
         console.error('Error updating about:', error);
         this.isSubmitted.set(false);
-        this.toast.danger('Failed to update about information. Please try again.', 'bottom-right', 5000);
+        this.toast.danger(error?.error || 'Failed to update about information. Please try again.', 'bottom-right', 5000);
       }
     });
   }
