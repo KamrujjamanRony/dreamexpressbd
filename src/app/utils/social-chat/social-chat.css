@@ -1,0 +1,182 @@
+/* Widget tray */
+.widget-tray {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.widget-tray--hidden {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
+/* Chat buttons (expand above) */
+.social-chat-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+.social-btn {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(16px) scale(0.6);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+}
+.social-chat-buttons--open .social-btn {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.social-btn:hover {
+  transform: translateY(0) scale(1.12);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.25);
+}
+.social-btn--whatsapp { background-color: #25d366; }
+.social-btn--whatsapp:hover { background-color: #1ebe5d; }
+.social-btn--messenger { background: linear-gradient(135deg, #00c6ff, #0078ff, #a259ff); }
+.social-btn--messenger:hover { background: linear-gradient(135deg, #00b8f0, #006ae0, #9040f0); }
+.social-btn--phone { background-color: #10b981; }
+.social-btn--phone:hover { background-color: #059669; }
+
+/* FAB row — side by side */
+.fab-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  position: relative;
+}
+
+/* Shared FAB style */
+.fab {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.fab:hover {
+  transform: scale(1.08);
+}
+
+/* Theme FAB */
+.fab--theme {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+.fab--theme:hover {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+
+/* Chat FAB */
+.fab--chat {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+.fab--chat:hover {
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+.fab--chat-open {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+/* FAB icon transitions */
+.fab__icon {
+  position: absolute;
+  transition: opacity 0.25s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: scale(1);
+}
+.fab__icon--hidden {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
+/* Hide all button */
+.hide-btn {
+  position: absolute;
+  bottom: -0.2rem;
+  right: -0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  border: none;
+  background-color: #6b7280;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+.hide-btn:hover {
+  background-color: #ef4444;
+  transform: scale(1.15);
+}
+
+/* Single reopen arrow */
+.reopen-arrow {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 0;
+  z-index: 49;
+  width: 1.75rem;
+  height: 2.5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
+  border: none;
+  background-color: rgba(107, 114, 128, 0.2);
+  backdrop-filter: blur(4px);
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(100%);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.2s ease;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+.reopen-arrow--visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.reopen-arrow:hover {
+  background-color: rgba(107, 114, 128, 0.35);
+}
+
+/* Pulse on chat FAB */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+.fab--chat:not(.fab--chat-open) {
+  animation: pulse-ring 2.5s infinite;
+}

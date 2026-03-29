@@ -3,11 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
 import { Toast } from './utils/toast/toast';
 import { Confirm } from "./utils/confirm/confirm";
-import { ThemeToggle } from "./utils/theme-toggle/theme-toggle";
+import { SocialChat } from "./utils/social-chat/social-chat";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Toast, Confirm, ThemeToggle],
+  imports: [RouterOutlet, Toast, Confirm, SocialChat],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
