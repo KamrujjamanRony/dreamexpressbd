@@ -94,16 +94,17 @@ export class ShoppingCart {
   mergeCartAndProducts(cartItems: CartProductM[]) {
     return cartItems.map((cartItem) => {
       const product = this.products().find((p) => p.id == cartItem.productId);
-      const price = cartItem.price || product?.offerPrice || product?.regularPrice || 0;
+      const price = cartItem.price > 0 ? cartItem.price
+        : (product?.offerPrice || product?.regularPrice || 0);
       return {
         productId: cartItem.productId,
         quantity: cartItem.quantity,
         selectColor: cartItem.selectColor,
         selectSize: cartItem.selectSize,
-        productName: product?.title || product?.name || 'Product',
+        productName: product?.title || 'Product',
         price,
         image: product?.imageUrl ? this.imgBaseUrl + product.imageUrl : '',
-        category: product?.itemName || product?.category || '',
+        category: product?.itemName || '',
         brand: product?.brand || '',
       };
     });
