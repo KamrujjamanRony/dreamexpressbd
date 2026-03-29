@@ -224,10 +224,9 @@ export class ViewImage {
   }
 
   addToWishlist(product: any) {
-    const p = product() || product;
-    if (!p) return;
+    if (!product) return;
     this.wishListService.toggleWishlist(
-      p.id?.toString(),
+      product.id?.toString(),
       this.viewSize || '',
       this.viewColor?.colorName || ''
     );
