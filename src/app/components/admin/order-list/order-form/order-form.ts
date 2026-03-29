@@ -402,8 +402,8 @@ export class OrderForm implements OnChanges {
 
         this.tokenApplied.set(true);
       },
-      error: () => {
-        this.tokenError.set('Failed to validate token');
+      error: (error) => {
+        this.tokenError.set(error?.error || 'Failed to validate token');
       }
     });
   }
