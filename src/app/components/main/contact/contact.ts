@@ -25,8 +25,8 @@ export class Contact implements AfterViewInit, OnDestroy {
 
   // Contact form
   formName = '';
-  formEmail = '';
   formPhone = '';
+  formSubject = '';
   formMessage = '';
   sending = signal(false);
 
@@ -62,10 +62,26 @@ export class Contact implements AfterViewInit, OnDestroy {
       this.toast.warning('Please fill in all required fields', 'top-right', 3000);
       return;
     }
-    this.toast.success('Thank you for your message! We\'ll get back to you soon.', 'top-right', 4000);
-    this.formName = '';
-    this.formEmail = '';
-    this.formPhone = '';
-    this.formMessage = '';
+    this.sending.set(true);
+    this.contactService.submitContactUs({
+      fullName: this.formName.trim(),
+      phone: this.formPhone.trim(),
+      email: '',
+      subject: this.formSubject.trim(),
+      message: this.formMessage.trim(),
+    }).subscribe({
+      next: () => {
+        this.toast.success('Thank you for your message! We\'ll get back to you soon.', 'top-right', 4000);
+        this.formName = '';
+        this.formPhone = '';
+        this.formSubject = '';
+        this.formMessage = '';
+        this.sending.set(false);
+      },
+      error: () => {
+        this.toast.danger('Failed to send message. Please try again.', 'top-right', 3000);
+        this.sending.set(false);
+      },
+    });
   }
 }

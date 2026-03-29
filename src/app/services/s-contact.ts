@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, map } from 'rxjs';
-import { ContactM, DeliveryChargeM } from '../models/Contact';
+import { ContactM, ContactUsM, DeliveryChargeM } from '../models/Contact';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +10,7 @@ import { ContactM, DeliveryChargeM } from '../models/Contact';
 export class SContact {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Address`;
+  private contactUsUrl = `${environment.apiUrl}/ContactUs`;
 
   add(model: ContactM): Observable<ContactM> {
     return this.http.post<ContactM>(this.apiUrl, model).pipe(map(this.normalize));
@@ -25,6 +26,10 @@ export class SContact {
 
   delete(id: any): Observable<ContactM> {
     return this.http.delete<ContactM>(`${this.apiUrl}/${id}`);
+  }
+
+  submitContactUs(model: ContactUsM): Observable<any> {
+    return this.http.post(this.contactUsUrl, model);
   }
 
   private normalize(data: any): ContactM {

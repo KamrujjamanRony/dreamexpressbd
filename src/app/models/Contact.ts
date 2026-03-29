@@ -6,6 +6,14 @@ export interface DeliveryChargeM {
   siteSettingId?: number;
 }
 
+export interface ContactUsM {
+  fullName: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export interface ContactM {
   id?: number;
   companyID: number;

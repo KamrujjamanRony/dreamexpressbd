@@ -8,7 +8,9 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0.75rem;
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 .widget-tray--hidden {
   opacity: 0;
@@ -36,7 +38,10 @@
   opacity: 0;
   transform: translateY(16px) scale(0.6);
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.2s ease;
 }
 .social-chat-buttons--open .social-btn {
   opacity: 1;
@@ -47,12 +52,24 @@
   transform: translateY(0) scale(1.12);
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.25);
 }
-.social-btn--whatsapp { background-color: #25d366; }
-.social-btn--whatsapp:hover { background-color: #1ebe5d; }
-.social-btn--messenger { background: linear-gradient(135deg, #00c6ff, #0078ff, #a259ff); }
-.social-btn--messenger:hover { background: linear-gradient(135deg, #00b8f0, #006ae0, #9040f0); }
-.social-btn--phone { background-color: #10b981; }
-.social-btn--phone:hover { background-color: #059669; }
+.social-btn--whatsapp {
+  background-color: #25d366;
+}
+.social-btn--whatsapp:hover {
+  background-color: #1ebe5d;
+}
+.social-btn--messenger {
+  background: linear-gradient(135deg, #00c6ff, #0078ff, #a259ff);
+}
+.social-btn--messenger:hover {
+  background: linear-gradient(135deg, #00b8f0, #006ae0, #9040f0);
+}
+.social-btn--phone {
+  background-color: #10b981;
+}
+.social-btn--phone:hover {
+  background-color: #059669;
+}
 
 /* FAB row — side by side */
 .fab-row {
@@ -74,7 +91,10 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
 .fab:hover {
   transform: scale(1.08);
@@ -105,7 +125,9 @@
 /* FAB icon transitions */
 .fab__icon {
   position: absolute;
-  transition: opacity 0.25s ease, transform 0.3s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s ease;
   opacity: 1;
   transform: scale(1);
 }
@@ -131,7 +153,9 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   z-index: 10;
 }
 .hide-btn:hover {
@@ -159,7 +183,10 @@
   opacity: 0;
   transform: translateX(100%);
   pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.2s ease;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    background-color 0.2s ease;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
 }
 .reopen-arrow--visible {
@@ -173,9 +200,15 @@
 
 /* Pulse on chat FAB */
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
 }
 .fab--chat:not(.fab--chat-open) {
   animation: pulse-ring 2.5s infinite;
