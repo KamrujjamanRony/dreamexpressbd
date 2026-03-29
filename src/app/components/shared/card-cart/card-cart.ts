@@ -61,7 +61,7 @@ export class CardCart {
   }
 
   getViewLink(id: any) {
-    return `/view/${id}`;
+    return id ? `/view/${id}` : '/shop';
   }
 
   deleteCart(selected: any) {
