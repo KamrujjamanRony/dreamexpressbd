@@ -26,7 +26,7 @@ export class Users {
   faMagnifyingGlass = faMagnifyingGlass;
   /* ---------------- DI ---------------- */
   private userS = inject(SUser);
-  private menuS = inject(SMenu);    
+  private menuS = inject(SMenu);
   private auth = inject(SAuth);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
@@ -145,36 +145,36 @@ export class Users {
       this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
       return;
     }
-      this.isSubmitted.set(true);
+    this.isSubmitted.set(true);
 
-      // Create the payload with proper types
-      const formValue = this.form().value();
+    // Create the payload with proper types
+    const formValue = this.form().value();
 
-      const payload: UserFormM = {
-        username: formValue.username,
-        password: formValue.password,
-        postBy: this.loginUser().username || '',
-        companyID: formValue.companyID,
-        isActive: formValue.isActive === 'true', // Convert string to boolean
-        menuPermissions: this.userAccessTree(),
-      };
+    const payload: UserFormM = {
+      username: formValue.username,
+      password: formValue.password,
+      postBy: this.loginUser().username || '',
+      companyID: formValue.companyID,
+      isActive: formValue.isActive === 'true', // Convert string to boolean
+      menuPermissions: this.userAccessTree(),
+    };
 
-      const request$ = this.selected()
-        ? this.userS.update(this.selected()!.id, payload)
-        : this.userS.add(payload);
+    const request$ = this.selected()
+      ? this.userS.update(this.selected()!.id, payload)
+      : this.userS.add(payload);
 
-      request$.subscribe({
-        next: () => {
-          this.loadUsers();
-          this.onToggleList();
+    request$.subscribe({
+      next: () => {
+        this.loadUsers();
+        this.onToggleList();
         this.toast.success('Saved successfully!', 'bottom-right', 5000);
-        },
-        error: (err) => {
-        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
-          console.error('Error submitting form:', err);
-          this.isSubmitted.set(false);
-        }
-      });
+      },
+      error: (err) => {
+        this.toast.danger(err?.error || 'Saved unsuccessful!', 'bottom-left', 3000);
+        console.error('Error submitting form:', err);
+        this.isSubmitted.set(false);
+      }
+    });
   }
 
   /* ---------------- UPDATE ---------------- */
@@ -215,7 +215,7 @@ export class Users {
           this.toast.success('User deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-        this.toast.danger('User deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger(error?.error || 'User deleted unsuccessful!', 'bottom-left', 3000);
           console.error('Error deleting User:', error);
         }
       });
