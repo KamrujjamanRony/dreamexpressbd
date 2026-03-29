@@ -84,8 +84,8 @@ export class OrderTracking {
                 this.buildSteps(data);
                 this.loading.set(false);
             },
-            error: () => {
-                this.error.set('Order not found or an error occurred');
+            error: (error) => {
+                this.error.set(error?.error || 'Order not found or an error occurred');
                 this.loading.set(false);
             },
         });
