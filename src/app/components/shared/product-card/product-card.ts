@@ -87,7 +87,7 @@ export class ProductCard {
             }
             this.cartService.update(userCart.id!, userCart).subscribe({
               next: () => this.toast.success('Added to cart!', 'top-right', 2000),
-              error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
+              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           } else {
             const newCart: CartM = {
@@ -103,11 +103,11 @@ export class ProductCard {
             };
             this.cartService.add(newCart).subscribe({
               next: () => this.toast.success('Added to cart!', 'top-right', 2000),
-              error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
+              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           }
         },
-        error: () => this.toast.danger('Failed to add to cart', 'top-right', 3000),
+        error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
       });
     } else {
       // Guest → store locally
