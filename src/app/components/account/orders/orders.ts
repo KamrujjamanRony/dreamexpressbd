@@ -53,8 +53,8 @@ export class Orders {
         this.orders.set(userOrders);
         this.loading.set(false);
       },
-      error: () => {
-        this.error.set('Failed to load orders. Please try again later.');
+      error: (error) => {
+        this.error.set(error?.error || 'Failed to load orders. Please try again later.');
         this.loading.set(false);
       },
     });
