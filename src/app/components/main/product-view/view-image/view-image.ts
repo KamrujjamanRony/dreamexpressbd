@@ -180,7 +180,7 @@ export class ViewImage {
 
             this.cartService.update(userCart.id!, userCart).subscribe({
               next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
-              error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
+              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           } else {
             const newCart: CartM = {
@@ -195,7 +195,7 @@ export class ViewImage {
             };
             this.cartService.add(newCart).subscribe({
               next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
-              error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
+              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           }
         },
@@ -212,7 +212,7 @@ export class ViewImage {
           };
           this.cartService.add(newCart).subscribe({
             next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
-            error: () => this.toast.warning('Failed to add to cart', 'top-right', 3000),
+            error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
           });
         },
       });
