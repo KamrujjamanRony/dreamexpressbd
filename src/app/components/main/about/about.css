@@ -212,3 +212,142 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
+
+/* ============================================
+   ABOUT PAGE - Dark Mode
+   ============================================ */
+
+/* Hero */
+:host-context(.dark) .about-hero {
+  background: linear-gradient(135deg, #0f0a1e 0%, #1a0e2e 50%, #0d0820 100%);
+}
+
+:host-context(.dark) .hero-bg-pattern {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+}
+
+:host-context(.dark) .hero-badge {
+  background: rgba(147, 51, 234, 0.2);
+  color: #c4b5fd;
+}
+
+:host-context(.dark) .hero-title {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .hero-subtitle {
+  color: #94a3b8;
+}
+
+/* Stats Section - override bg-white */
+:host-context(.dark) section:has(.stat-card) {
+  background: #0e1220;
+}
+
+:host-context(.dark) .stat-card {
+  background: #141a2e;
+  border-color: rgba(147, 51, 234, 0.12);
+}
+
+:host-context(.dark) .stat-card:hover {
+  box-shadow: 0 8px 24px rgba(147, 51, 234, 0.15);
+}
+
+:host-context(.dark) .stat-card .text-2xl,
+:host-context(.dark) .stat-card .text-3xl {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .stat-card .text-gray-500 {
+  color: #94a3b8;
+}
+
+/* Our Story Section - override bg-gray-50 */
+:host-context(.dark) section:has(.story-visual) {
+  background: #0b0f19;
+}
+
+:host-context(.dark) .story-visual-inner {
+  background: #141a2e;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(147, 51, 234, 0.12);
+}
+
+:host-context(.dark) .story-visual-inner .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .story-dots {
+  background-image: radial-gradient(circle, rgba(147, 51, 234, 0.2) 1.5px, transparent 1.5px);
+}
+
+:host-context(.dark) .text-purple-600.font-semibold {
+  color: #a78bfa;
+}
+
+:host-context(.dark) .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .text-gray-600 {
+  color: #94a3b8;
+}
+
+:host-context(.dark) .text-gray-500 {
+  color: #7c8a9e;
+}
+
+/* Mission & Vision / Why Choose Us - override bg-white */
+:host-context(.dark) section:has(.mission-card) {
+  background: #0e1220;
+}
+
+:host-context(.dark) .mission-card {
+  background: #141a2e;
+  border-color: rgba(147, 51, 234, 0.12);
+}
+
+:host-context(.dark) .mission-card:hover {
+  box-shadow: 0 8px 24px rgba(147, 51, 234, 0.15);
+}
+
+:host-context(.dark) .mission-card .text-gray-600 {
+  color: #94a3b8;
+}
+
+/* Why Choose Us - override bg-gray-50 */
+:host-context(.dark)
+  section:has(> .max-w-6xl > .text-center > .text-gray-900):not(:has(.stat-card)):not(
+    :has(.mission-card)
+  ):not(:has(.value-card)) {
+  background: #0b0f19;
+}
+
+/* Core Values - override bg-white */
+:host-context(.dark) section:has(.value-card) {
+  background: #0e1220;
+}
+
+:host-context(.dark) .value-card {
+  background: #141a2e;
+  border-color: rgba(147, 51, 234, 0.12);
+}
+
+:host-context(.dark) .value-card:hover {
+  box-shadow: 0 12px 30px rgba(147, 51, 234, 0.15);
+}
+
+:host-context(.dark) .value-card .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .value-card .text-gray-500 {
+  color: #94a3b8;
+}
+
+:host-context(.dark) .value-icon {
+  background: rgba(147, 51, 234, 0.15);
+  color: #a78bfa;
+}

@@ -18,7 +18,7 @@
       </span>
       <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4 hero-title">
         Welcome to
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">{{
+        <span class="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">{{
           companyName
         }}</span>
       </h1>
@@ -32,7 +32,7 @@
 
   <!-- Stats Section -->
   @if (stats().length) {
-    <section class="py-12 sm:py-16 bg-white">
+    <section class="py-12 sm:py-16 bg-white dark:bg-[#0e1220]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           @for (stat of stats(); track stat.label; let i = $index) {
@@ -40,8 +40,12 @@
               <div class="stat-icon-wrap">
                 <i [class]="stat.icon"></i>
               </div>
-              <div class="text-2xl sm:text-3xl font-extrabold text-gray-900">{{ stat.value }}</div>
-              <div class="text-xs sm:text-sm text-gray-500 font-medium">{{ stat.label }}</div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-50">
+                {{ stat.value }}
+              </div>
+              <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">
+                {{ stat.label }}
+              </div>
             </div>
           }
         </div>
@@ -51,7 +55,7 @@
 
   <!-- Our Story Section -->
   @if (aboutData()?.title || aboutData()?.description) {
-    <section class="py-12 sm:py-20 bg-gray-50">
+    <section class="py-12 sm:py-20 bg-gray-50 dark:bg-[#0b0f19]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid lg:grid-cols-2 gap-10 items-center">
           <div class="animate-on-scroll min-w-0">
@@ -65,7 +69,9 @@
               } @else {
                 <div class="story-visual-inner">
                   <i class="fas fa-store text-5xl text-purple-600"></i>
-                  <h3 class="text-lg font-bold text-gray-900 mt-3">{{ companyName }}</h3>
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-gray-50 mt-3">
+                    {{ companyName }}
+                  </h3>
                 </div>
                 <div class="story-dots"></div>
               }
@@ -77,12 +83,12 @@
                 {{ aboutData()?.title }}
               </span>
             }
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50 mt-2 mb-4">
               How It All Started
             </h2>
             @if (aboutData()?.description) {
               <div
-                class="text-gray-600 leading-relaxed break-words overflow-hidden"
+                class="text-gray-600 dark:text-gray-400 leading-relaxed wrap-break-word overflow-hidden"
                 [innerHTML]="aboutData()?.description"
               ></div>
             }
@@ -94,14 +100,15 @@
 
   <!-- Mission & Vision -->
   @if (aboutData()?.title2 || aboutData()?.description2) {
-    <section class="py-12 sm:py-20 bg-white">
+    <section class="py-12 sm:py-20 bg-white dark:bg-[#0e1220]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-12 animate-on-scroll">
-          <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider"
+          <span
+            class="text-purple-600 dark:text-purple-400 font-semibold text-sm uppercase tracking-wider"
             >What Drives Us</span
           >
           @if (aboutData()?.title2) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50 mt-2">
               {{ aboutData()?.title2 }}
             </h2>
           }
@@ -114,7 +121,7 @@
                 [style.transition-delay]="$index * 150 + 'ms'"
               >
                 <div
-                  class="mission-icon bg-gradient-to-br"
+                  class="mission-icon bg-linear-to-br"
                   [class]="
                     $index % 2 === 0 ? 'from-purple-500 to-purple-700' : 'from-pink-500 to-rose-700'
                   "
@@ -127,7 +134,7 @@
                     "
                   ></i>
                 </div>
-                <p class="text-gray-600 leading-relaxed">{{ line }}</p>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ line }}</p>
               </div>
             }
           </div>
@@ -145,17 +152,19 @@
 
   <!-- Why Choose Us -->
   @if (aboutData()?.title3 || aboutData()?.description3) {
-    <section class="py-12 sm:py-20 bg-gray-50">
+    <section class="py-12 sm:py-20 bg-gray-50 dark:bg-[#0b0f19]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-12 animate-on-scroll">
           @if (aboutData()?.title3) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ aboutData()?.title3 }}</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50">
+              {{ aboutData()?.title3 }}
+            </h2>
           }
         </div>
         @if (aboutData()?.description3) {
           <div class="max-w-3xl mx-auto text-center animate-on-scroll">
             <div
-              class="text-gray-600 leading-relaxed text-base sm:text-lg"
+              class="text-gray-600 dark:text-gray-400 leading-relaxed text-base sm:text-lg"
               [innerHTML]="aboutData()?.description3"
             ></div>
           </div>
@@ -166,11 +175,13 @@
 
   <!-- Core Values -->
   @if (aboutData()?.title4 || aboutData()?.description4) {
-    <section class="py-12 sm:py-20 bg-white">
+    <section class="py-12 sm:py-20 bg-white dark:bg-[#0e1220]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-12 animate-on-scroll">
           @if (aboutData()?.title4) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ aboutData()?.title4 }}</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50">
+              {{ aboutData()?.title4 }}
+            </h2>
           }
         </div>
         @if (coreValues().length > 1) {
@@ -183,9 +194,13 @@
                 <div class="value-icon">
                   <i [class]="v.icon"></i>
                 </div>
-                <h3 class="text-base font-bold text-gray-900 mb-1.5">{{ v.title }}</h3>
+                <h3 class="text-base font-bold text-gray-900 dark:text-gray-50 mb-1.5">
+                  {{ v.title }}
+                </h3>
                 @if (v.desc) {
-                  <p class="text-sm text-gray-500 leading-relaxed">{{ v.desc }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    {{ v.desc }}
+                  </p>
                 }
               </div>
             }

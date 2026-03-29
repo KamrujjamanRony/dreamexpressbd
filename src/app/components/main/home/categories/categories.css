@@ -16,6 +16,20 @@ swiper-container::part(button-next):hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+:host-context(.dark) swiper-container::part(button-prev),
+:host-context(.dark) swiper-container::part(button-next) {
+  background: rgba(30, 16, 51, 0.9);
+  color: #d8b4fe;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(.dark) swiper-container::part(button-prev):hover,
+:host-context(.dark) swiper-container::part(button-next):hover {
+  background: rgba(124, 58, 237, 0.3);
+  color: #f3e8ff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 @media (max-width: 768px) {
   swiper-container::part(button-prev),
   swiper-container::part(button-next) {

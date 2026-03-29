@@ -7,6 +7,31 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* ── Dark Mode Scrollbar ── */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0f0f1a;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #2a2a40;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3a3a55;
+}
+
+/* ── Dark Mode Selection ── */
+.dark ::selection {
+  background: rgba(147, 51, 234, 0.35);
+  color: #f0f0ff;
 }
 
 /* ── Global Print Styles ── */

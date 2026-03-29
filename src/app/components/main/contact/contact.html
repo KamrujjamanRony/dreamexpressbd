@@ -9,7 +9,7 @@
     </span>
     <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4 hero-title">
       Contact
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500"
+      <span class="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500"
         >Us</span
       >
     </h1>
@@ -21,16 +21,18 @@
 </section>
 
 <!-- Contact Cards -->
-<section class="py-12 sm:py-16 bg-white">
+<section class="py-12 sm:py-16 bg-white dark:bg-[#0e1220]">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <!-- Phone -->
       <div class="animate-on-scroll contact-card" style="transition-delay: 0ms">
-        <div class="contact-card-icon bg-gradient-to-br from-purple-500 to-purple-700">
+        <div class="contact-card-icon bg-linear-to-br from-purple-500 to-purple-700">
           <i class="fas fa-phone-alt text-white"></i>
         </div>
-        <h3 class="text-sm font-bold text-gray-900 mb-1">Phone</h3>
-        <p class="text-sm text-gray-500">{{ contactInfo()?.phoneNumber1 || '+880 1234-567890' }}</p>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-50 mb-1">Phone</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          {{ contactInfo()?.phoneNumber1 || '+880 1234-567890' }}
+        </p>
         @if (contactInfo()?.phoneNumber2) {
           <p class="text-sm text-gray-500">{{ contactInfo()?.phoneNumber2 }}</p>
         }
@@ -38,43 +40,49 @@
 
       <!-- Email -->
       <div class="animate-on-scroll contact-card" style="transition-delay: 100ms">
-        <div class="contact-card-icon bg-gradient-to-br from-pink-500 to-rose-600">
+        <div class="contact-card-icon bg-linear-to-br from-pink-500 to-rose-600">
           <i class="fas fa-envelope text-white"></i>
         </div>
-        <h3 class="text-sm font-bold text-gray-900 mb-1">Email</h3>
-        <p class="text-sm text-gray-500">{{ contactInfo()?.email || 'support@dreamexpress.bd' }}</p>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-50 mb-1">Email</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          {{ contactInfo()?.email || 'support@dreamexpress.bd' }}
+        </p>
       </div>
 
       <!-- Address -->
       <div class="animate-on-scroll contact-card" style="transition-delay: 200ms">
-        <div class="contact-card-icon bg-gradient-to-br from-violet-500 to-indigo-600">
+        <div class="contact-card-icon bg-linear-to-br from-violet-500 to-indigo-600">
           <i class="fas fa-map-marker-alt text-white"></i>
         </div>
-        <h3 class="text-sm font-bold text-gray-900 mb-1">Address</h3>
-        <p class="text-sm text-gray-500">{{ contactInfo()?.address1 || 'Dhaka, Bangladesh' }}</p>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-50 mb-1">Address</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          {{ contactInfo()?.address1 || 'Dhaka, Bangladesh' }}
+        </p>
       </div>
 
       <!-- Hours -->
       <div class="animate-on-scroll contact-card" style="transition-delay: 300ms">
-        <div class="contact-card-icon bg-gradient-to-br from-fuchsia-500 to-purple-600">
+        <div class="contact-card-icon bg-linear-to-br from-fuchsia-500 to-purple-600">
           <i class="fas fa-clock text-white"></i>
         </div>
-        <h3 class="text-sm font-bold text-gray-900 mb-1">Working Hours</h3>
-        <p class="text-sm text-gray-500">Sat - Thu: 10AM - 8PM</p>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-50 mb-1">Working Hours</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Sat - Thu: 10AM - 8PM</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Contact Form & Info -->
-<section class="py-12 sm:py-20 bg-gray-50">
+<section class="py-12 sm:py-20 bg-gray-50 dark:bg-[#0b0f19]">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid lg:grid-cols-5 gap-8">
       <!-- Form -->
       <div class="lg:col-span-3 animate-on-scroll">
         <div class="form-card">
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Send Us a Message</h2>
-          <p class="text-sm text-gray-500 mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-50 mb-1">
+            Send Us a Message
+          </h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Fill out the form below and we'll get back to you shortly.
           </p>
 
@@ -238,11 +246,16 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="py-12 sm:py-20 bg-white">
+<section class="py-12 sm:py-20 bg-white dark:bg-[#0e1220]">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-10 animate-on-scroll">
-      <span class="text-purple-600 font-semibold text-sm uppercase tracking-wider">FAQ</span>
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">Frequently Asked Questions</h2>
+      <span
+        class="text-purple-600 dark:text-purple-400 font-semibold text-sm uppercase tracking-wider"
+        >FAQ</span
+      >
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50 mt-2">
+        Frequently Asked Questions
+      </h2>
     </div>
 
     <div class="space-y-3">

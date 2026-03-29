@@ -285,3 +285,155 @@
   color: #6b7280;
   line-height: 1.6;
 }
+
+/* ============================================
+   CONTACT PAGE - Dark Mode
+   ============================================ */
+
+/* Hero */
+:host-context(.dark) .contact-hero {
+  background: linear-gradient(135deg, #0f0a1e 0%, #1a0e2e 50%, #0d0820 100%);
+}
+
+:host-context(.dark) .hero-bg-pattern {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+}
+
+:host-context(.dark) .hero-badge {
+  background: rgba(147, 51, 234, 0.2);
+  color: #c4b5fd;
+}
+
+:host-context(.dark) .hero-title {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .hero-subtitle {
+  color: #94a3b8;
+}
+
+/* Contact cards */
+:host-context(.dark) .contact-card {
+  background: #141a2e;
+  border-color: rgba(147, 51, 234, 0.12);
+}
+
+:host-context(.dark) .contact-card:hover {
+  box-shadow: 0 8px 24px rgba(147, 51, 234, 0.15);
+}
+
+:host-context(.dark) .contact-card .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .contact-card .text-gray-500 {
+  color: #94a3b8;
+}
+
+/* Form card */
+:host-context(.dark) .form-card {
+  background: #111827;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(147, 51, 234, 0.1);
+}
+
+:host-context(.dark) .form-card .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .form-card .text-gray-500 {
+  color: #94a3b8;
+}
+
+:host-context(.dark) .form-label {
+  color: #d1d5db;
+}
+
+:host-context(.dark) .form-input {
+  background: rgba(124, 58, 237, 0.06);
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+:host-context(.dark) .form-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+:host-context(.dark) .form-input::placeholder {
+  color: #6b7280;
+}
+
+:host-context(.dark) .form-textarea {
+  background: rgba(124, 58, 237, 0.06);
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+:host-context(.dark) .form-textarea:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+:host-context(.dark) .form-textarea::placeholder {
+  color: #6b7280;
+}
+
+/* Info card */
+:host-context(.dark) .info-card {
+  background: #111827;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(147, 51, 234, 0.1);
+}
+
+:host-context(.dark) .info-card .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .info-card .text-gray-500 {
+  color: #94a3b8;
+}
+
+:host-context(.dark) .info-item {
+  border-bottom-color: #1f2937;
+}
+
+:host-context(.dark) .info-item-icon {
+  background: rgba(147, 51, 234, 0.12);
+}
+
+/* Social card */
+:host-context(.dark) .social-card {
+  background: #111827;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(147, 51, 234, 0.1);
+}
+
+:host-context(.dark) .social-card .text-gray-900 {
+  color: #f1f5f9;
+}
+
+:host-context(.dark) .social-icon-link {
+  background: rgba(147, 51, 234, 0.12);
+  color: #a78bfa;
+}
+
+/* FAQ */
+:host-context(.dark) .faq-item {
+  background: #141a2e;
+  border-color: rgba(147, 51, 234, 0.1);
+}
+
+:host-context(.dark) .faq-item[open] {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark) .faq-summary {
+  color: #e5e7eb;
+}
+
+:host-context(.dark) .faq-answer {
+  color: #94a3b8;
+}

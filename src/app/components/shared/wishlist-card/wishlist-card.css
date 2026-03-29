@@ -1,0 +1,19 @@
+/* ── Dark Mode ── */
+:host-context(.dark) .flex.flex-col.md\:flex-row {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+:host-context(.dark) .text-gray-800 {
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .bg-red-500 {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+:host-context(.dark) .bg-red-100 {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.25);
+}
