@@ -1,10 +1,29 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { SAuth } from '../services/s-auth';
 import { SGuest } from '../services/s-guest';
 import { SAuthCookie } from '../services/s-auth-cookie';
+
+/**
+ * Checks if a response body is the new API wrapper format: { success, message, data }
+ */
+function isApiWrapper(body: any): boolean {
+    return body != null && typeof body === 'object' && 'success' in body && 'data' in body;
+}
+
+/**
+ * Formats an API error body ({ success, message, errorCode, details }) into a readable string.
+ */
+function formatApiError(errorBody: any): string {
+    if (errorBody != null && typeof errorBody === 'object' && errorBody.message) {
+        return errorBody.details
+            ? `${errorBody.message} : ${errorBody.details}`
+            : errorBody.message;
+    }
+    return 'An unexpected error occurred';
+}
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(SAuth);
@@ -39,6 +58,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     }
 
     return next(req).pipe(
+        // Unwrap { success, message, data } → data
+        map(event => {
+            if (event instanceof HttpResponse && isApiWrapper(event.body)) {
+                return event.clone({ body: (event.body as any).data });
+            }
+            return event;
+        }),
         catchError((error: HttpErrorResponse) => {
             if (error.status === 401) {
                 if (isAdminArea) {
@@ -49,7 +75,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     router.navigate(['/login']);
                 }
             }
-            return throwError(() => error);
+
+            // Format API error body into readable message
+            const apiMessage = formatApiError(error.error);
+            const formattedError = new HttpErrorResponse({
+                error: apiMessage,
+                headers: error.headers,
+                status: error.status,
+                statusText: error.statusText,
+                url: error.url ?? undefined,
+            });
+            return throwError(() => formattedError);
         })
     );
 };
