@@ -55,8 +55,26 @@ export class OrderConfirmation {
   }
 
   private generateQrCode() {
-    const trackingUrl = `${environment.webUrl}/account/order-tracking?id=${this.orderId}`;
-    QRCode.toDataURL(trackingUrl, {
+    const o = this.orderDetails;
+    const items = this.getOrderItems()
+      .map((i: any) => `${i.productName} x${i.quantity} @${i.price}`)
+      .join('\n');
+    const qrText = [
+      `Order: #${this.orderId}`,
+      `Date: ${new Date(o.orderDate).toLocaleDateString()}`,
+      `Customer: ${o.userName}`,
+      o.userPhone ? `Phone: ${o.userPhone}` : '',
+      `---`,
+      items,
+      `---`,
+      `Subtotal: ${o.subtotal}`,
+      `Delivery: ${o.deliveryCharge}`,
+      o.discountAmount > 0 ? `Discount: -${o.discountAmount}` : '',
+      `Total: ${o.totalAmount}`,
+      `Payment: ${o.paymentMethod}`,
+    ].filter(Boolean).join('\n');
+
+    QRCode.toDataURL(qrText, {
       width: 120,
       margin: 1,
       color: { dark: '#111827', light: '#ffffff' },
