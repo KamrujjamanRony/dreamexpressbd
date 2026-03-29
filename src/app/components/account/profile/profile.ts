@@ -108,7 +108,7 @@ export class Profile {
                 this.loading.set(false);
             },
             error: (error) => {
-                this.toast.warning(error?.error?.message || 'Failed to update profile', 'top-right', 3000);
+                this.toast.warning(error?.error || 'Failed to update profile', 'top-right', 3000);
                 this.loading.set(false);
             },
         });
