@@ -5,7 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEye, faPencil, faTrash, faSearch,
   faFilter, faDownload, faSync, faCheckCircle,
-  faTimesCircle, faTruck, faClock
+  faTimesCircle, faTruck, faClock, faPrint
 } from '@fortawesome/free-solid-svg-icons';
 import { DatePipe } from '@angular/common';
 import { OrderForm } from './order-form/order-form';
@@ -17,6 +17,7 @@ import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { SPermission } from '../../../services/s-permission';
 import { OrderM } from '../../../models/OrderM';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-list',
@@ -37,11 +38,13 @@ export class OrderList implements OnInit {
   faTimesCircle = faTimesCircle;
   faTruck = faTruck;
   faClock = faClock;
+  faPrint = faPrint;
 
   private orderService = inject(SOrder);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
   private permissionService = inject(SPermission);
+  private router = inject(Router);
 
   // State
   orders = signal<OrderM[]>([]);
@@ -369,6 +372,12 @@ export class OrderList implements OnInit {
 
   getStatusColor(status: string): string {
     return this.statusColors[status] || 'bg-gray-100 text-gray-800';
+  }
+
+  printVoucher(order: OrderM) {
+    this.router.navigate(['/order-confirmation'], {
+      state: { orderId: order.id },
+    });
   }
 
   // Export to CSV
