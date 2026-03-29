@@ -219,8 +219,8 @@ export class Checkout {
                 this.tokenLoading.set(false);
                 this.toast.success('Discount applied!', 'top-right', 2000);
             },
-            error: () => {
-                this.tokenError = 'Failed to validate token';
+            error: (error) => {
+                this.tokenError = error?.error || 'Failed to validate token';
                 this.tokenLoading.set(false);
             }
         });
@@ -244,8 +244,8 @@ export class Checkout {
                 this.userDetails = data?.[0];
                 this.loading.set(false);
             },
-            error: () => {
-                this.error.set('Failed to load user details');
+            error: (error) => {
+                this.error.set(error?.error || 'Failed to load user details');
                 this.loading.set(false);
             }
         });
@@ -374,9 +374,9 @@ export class Checkout {
                     }
                 });
             },
-            error: () => {
-                this.toast.danger('Failed to place order. Please try again.', 'top-right', 3000);
-                this.error.set('Failed to place order. Please try again.');
+            error: (error) => {
+                this.toast.danger(error?.error || 'Failed to place order. Please try again.', 'top-right', 3000);
+                this.error.set(error?.error || 'Failed to place order. Please try again.');
                 this.placingOrder.set(false);
             }
         });
