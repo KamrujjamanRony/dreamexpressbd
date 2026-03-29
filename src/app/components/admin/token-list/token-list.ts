@@ -159,9 +159,9 @@ export class TokenList {
         this.closeForm();
         this.toast.success('Token saved successfully!', 'bottom-right', 3000);
       },
-      error: () => {
+      error: (error) => {
         this.isSubmitted.set(false);
-        this.toast.danger('Failed to save token', 'bottom-right', 3000);
+        this.toast.danger(error?.error || 'Failed to save token', 'bottom-right', 3000);
       }
     });
   }
@@ -180,8 +180,8 @@ export class TokenList {
           this.items.update(list => list.filter(i => i.id !== id));
           this.toast.success('Token deleted!', 'bottom-right', 3000);
         },
-        error: () => {
-          this.toast.danger('Failed to delete token', 'bottom-right', 3000);
+        error: (error) => {
+          this.toast.danger(error?.error || 'Failed to delete token', 'bottom-right', 3000);
         }
       });
     }
