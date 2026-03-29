@@ -184,8 +184,8 @@ export class CustomerList {
             },
             error: (error) => {
                 this.isSubmitted.set(false);
-                console.error(error?.message || error?.error?.message || 'An error occurred during submission.');
-                this.toast.danger('Save unsuccessful!', 'bottom-left', 3000);
+                console.error('Error:', error);
+                this.toast.danger(error?.error || 'Save unsuccessful!', 'bottom-left', 3000);
             }
         });
     }
@@ -224,7 +224,7 @@ export class CustomerList {
                     this.toast.success('Customer deleted successfully!', 'bottom-right', 5000);
                 },
                 error: (error) => {
-                    this.toast.danger('Customer delete unsuccessful!', 'bottom-left', 3000);
+                    this.toast.danger(error?.error || 'Customer delete unsuccessful!', 'bottom-left', 3000);
                     console.error('Error deleting customer:', error);
                 }
             });
