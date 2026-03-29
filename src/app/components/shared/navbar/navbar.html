@@ -6,10 +6,9 @@
       <a routerLink="/" class="navbar-logo">
         <img
           ngSrc="logo.png"
-          width="300"
-          height="300"
-          loading="lazy"
-          decoding="async"
+          width="157"
+          height="54"
+          priority
           alt="DreamExpress BD"
           class="h-10 w-auto"
         />
@@ -264,8 +263,8 @@
       <a routerLink="/" (click)="closeMobileMenu()">
         <img
           ngSrc="logo.png"
-          width="300"
-          height="300"
+          width="157"
+          height="54"
           loading="lazy"
           decoding="async"
           alt="logo"
@@ -389,7 +388,7 @@
       <div (click)="navigateToProduct(product.id)" class="search-result-item">
         <img
           [ngSrc]="imageBaseUrl + product.imageUrl"
-          width="100"
+          width="75"
           height="100"
           loading="lazy"
           decoding="async"
