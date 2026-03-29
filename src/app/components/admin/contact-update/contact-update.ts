@@ -159,7 +159,7 @@ export class ContactUpdate {
       error: (error) => {
         console.error('Error updating contact:', error);
         this.isSubmitted.set(false);
-        this.toast.danger('Failed to update contact information. Please try again.', 'bottom-right', 5000);
+        this.toast.danger(error?.error || 'Failed to update contact information. Please try again.', 'bottom-right', 5000);
       }
     });
   }
