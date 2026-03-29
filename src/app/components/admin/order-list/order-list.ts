@@ -154,7 +154,7 @@ export class OrderList implements OnInit {
         console.error('Error loading orders:', error);
         this.hasError.set(true);
         this.isLoading.set(false);
-        this.toast.danger('Failed to load orders', 'bottom-right', 3000);
+        this.toast.danger(error?.error || 'Failed to load orders', 'bottom-right', 3000);
       }
     });
   }
@@ -263,8 +263,8 @@ export class OrderList implements OnInit {
         this.selectedOrder.set(this.normalizeOrder(fullOrder));
         this.showForm.set(true);
       },
-      error: () => {
-        this.toast.danger('Failed to load order details', 'bottom-right', 3000);
+      error: (error) => {
+        this.toast.danger(error?.error || 'Failed to load order details', 'bottom-right', 3000);
       }
     });
   }
@@ -275,8 +275,8 @@ export class OrderList implements OnInit {
         this.selectedOrder.set(this.normalizeOrder(fullOrder));
         this.showDetails.set(true);
       },
-      error: () => {
-        this.toast.danger('Failed to load order details', 'bottom-right', 3000);
+      error: (error) => {
+        this.toast.danger(error?.error || 'Failed to load order details', 'bottom-right', 3000);
       }
     });
   }
@@ -306,7 +306,7 @@ export class OrderList implements OnInit {
         },
         error: (error) => {
           console.error('Error deleting order:', error);
-          this.toast.danger('Failed to delete order', 'bottom-right', 3000);
+          this.toast.danger(error?.error || 'Failed to delete order', 'bottom-right', 3000);
         }
       });
     }
@@ -322,7 +322,7 @@ export class OrderList implements OnInit {
       },
       error: (error) => {
         console.error('Error updating order status:', error);
-        this.toast.danger('Failed to update order status', 'bottom-right', 3000);
+        this.toast.danger(error?.error || 'Failed to update order status', 'bottom-right', 3000);
       }
     });
   }
@@ -353,7 +353,7 @@ export class OrderList implements OnInit {
       error: (error) => {
         console.error('Error saving order:', error);
         this.toast.danger(
-          error?.error?.message || 'Failed to save order',
+          error?.error || 'Failed to save order',
           'bottom-right',
           3000
         );
