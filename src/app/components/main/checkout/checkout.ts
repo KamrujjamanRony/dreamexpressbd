@@ -285,11 +285,11 @@ export class Checkout {
                 }
             }
             // Set delivery address from form
-            const streetParts = [this.guestStreet.trim(), this.guestArea.trim()].filter(Boolean).join(', ');
             this.deliveryAddress.set({
-                street: streetParts,
+                street: this.guestStreet.trim(),
                 city: this.guestCity.trim(),
                 district: this.guestDistrict.trim(),
+                area: this.guestArea.trim(),
                 contact: this.isGuest ? this.guestPhone.trim() : (this.userDetails?.phone || ''),
                 type: 'Home',
             });
@@ -343,12 +343,14 @@ export class Checkout {
             discountType: this.discountType(),
             discountValue: this.discountValue(),
             discountAmount: this.discountAmount(),
+            area: this.deliveryAddress().area || '',
             shippingAddress: {
                 district: this.deliveryAddress().district || '',
                 city: this.deliveryAddress().city || '',
                 street: this.deliveryAddress().street || '',
                 contact: this.deliveryAddress().contact || '',
                 type: this.deliveryAddress().type || '',
+                area: this.deliveryAddress().area || '',
             },
             orderDate: new Date().toISOString()
         };

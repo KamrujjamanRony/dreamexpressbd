@@ -8,6 +8,7 @@ export interface OrderM {
     userPhone: string;
     subtotal: number;
     deliveryCharge: number;
+    area?: string;
     discountToken?: string;
     discountType?: string;
     discountValue?: number;
@@ -26,6 +27,7 @@ export interface ShippingAddressM {
     street: string;
     contact: string;
     type?: string;
+    area?: string;
 }
 
 export interface OrderItemM {
