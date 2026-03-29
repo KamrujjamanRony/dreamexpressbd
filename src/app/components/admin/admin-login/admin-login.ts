@@ -98,7 +98,7 @@ export class AdminLogin {
       error: (error) => {
         this.loading.set(false);
         this.toast.warning(
-          error?.error?.message || error?.error?.title || 'Invalid credentials!',
+          error?.error || 'Invalid credentials!',
           'top-right',
           4000
         );
