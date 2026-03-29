@@ -23,7 +23,12 @@
       <div class="success-banner">
         <div class="success-icon-wrap">
           <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mt-4">Order Confirmed!</h1>
@@ -34,16 +39,29 @@
     </div>
 
     <!-- Action Buttons (screen only) -->
-    <div class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print" style="--delay: 1">
+    <div
+      class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print"
+      style="--delay: 1"
+    >
       <button (click)="printVoucher()" class="action-btn print-btn">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+          />
         </svg>
         Print Voucher
       </button>
       <button (click)="continueShopping()" class="action-btn shop-btn">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
         </svg>
         Continue Shopping
       </button>
@@ -52,7 +70,6 @@
     <!-- ═══════ VOUCHER ═══════ -->
     <div class="voucher-wrapper max-w-3xl mx-auto fade-slide-in" style="--delay: 2" id="voucher">
       <div class="voucher-paper">
-
         <!-- ── Voucher Header ── -->
         <div class="voucher-header">
           <div class="voucher-brand">
@@ -81,7 +98,12 @@
           <div class="address-block">
             <h3 class="address-title">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
               </svg>
               Bill To
             </h3>
@@ -96,14 +118,29 @@
           <div class="address-block">
             <h3 class="address-title">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               Ship To
             </h3>
             <p class="address-name">{{ orderDetails.shippingAddress.street }}</p>
             <p class="address-detail">
-              {{ orderDetails.shippingAddress.city }}{{ orderDetails.shippingAddress.district ? ', ' + orderDetails.shippingAddress.district : '' }}
+              {{ orderDetails.shippingAddress.city
+              }}{{
+                orderDetails.shippingAddress.district
+                  ? ', ' + orderDetails.shippingAddress.district
+                  : ''
+              }}
             </p>
             @if (orderDetails.shippingAddress.contact) {
               <p class="address-detail">Phone: {{ orderDetails.shippingAddress.contact }}</p>
@@ -112,13 +149,20 @@
           <div class="address-block payment-block">
             <h3 class="address-title">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                />
               </svg>
               Payment
             </h3>
             <p class="address-name">{{ orderDetails.paymentMethod }}</p>
             @if (orderDetails.deliveredDate) {
-              <p class="address-detail">Delivered: {{ orderDetails.deliveredDate | date: 'mediumDate' }}</p>
+              <p class="address-detail">
+                Delivered: {{ orderDetails.deliveredDate | date: 'mediumDate' }}
+              </p>
             }
           </div>
         </div>
@@ -144,8 +188,14 @@
                       @if (item.image) {
                         <div class="item-thumb">
                           <img
-                            [ngSrc]="item.image.startsWith('http') ? item.image : imgBaseUrl + item.image"
-                            width="40" height="40" loading="lazy" decoding="async" alt=""
+                            [ngSrc]="
+                              item.image.startsWith('http') ? item.image : imgBaseUrl + item.image
+                            "
+                            width="40"
+                            height="40"
+                            loading="lazy"
+                            decoding="async"
+                            alt=""
                             class="w-full h-full object-cover rounded"
                           />
                         </div>
@@ -154,8 +204,12 @@
                         <span class="item-name">{{ item.productName }}</span>
                         @if (item.size || item.color) {
                           <span class="item-variants">
-                            @if (item.size) { <span class="variant-tag">{{ item.size }}</span> }
-                            @if (item.color) { <span class="variant-tag">{{ item.color }}</span> }
+                            @if (item.size) {
+                              <span class="variant-tag">{{ item.size }}</span>
+                            }
+                            @if (item.color) {
+                              <span class="variant-tag">{{ item.color }}</span>
+                            }
                           </span>
                         }
                       </div>
@@ -163,7 +217,9 @@
                   </td>
                   <td class="td-qty">{{ item.quantity }}</td>
                   <td class="td-price"><span [innerHTML]="item.price | bdt"></span></td>
-                  <td class="td-total"><span [innerHTML]="item.price * item.quantity | bdt"></span></td>
+                  <td class="td-total">
+                    <span [innerHTML]="item.price * item.quantity | bdt"></span>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -214,9 +270,16 @@
         @if (orderDetails.discountAmount > 0) {
           <div class="savings-strip">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            You saved <span class="font-bold" [innerHTML]="orderDetails.discountAmount | bdt"></span> on this order!
+            You saved
+            <span class="font-bold" [innerHTML]="orderDetails.discountAmount | bdt"></span> on this
+            order!
           </div>
         }
 
@@ -224,17 +287,26 @@
         <div class="voucher-footer">
           <div class="footer-line"></div>
           <p class="footer-thanks">{{ companyName }} &mdash; Thank you for your order!</p>
-          <p class="footer-note">This is a computer-generated invoice and does not require a signature.</p>
+          <p class="footer-note">
+            This is a computer-generated invoice and does not require a signature.
+          </p>
         </div>
-
       </div>
     </div>
 
     <!-- Bottom actions (screen only) -->
-    <div class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print" style="--delay: 3">
+    <div
+      class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print"
+      style="--delay: 3"
+    >
       <button (click)="printVoucher()" class="action-btn-sm print-btn">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+          />
         </svg>
         Print
       </button>
