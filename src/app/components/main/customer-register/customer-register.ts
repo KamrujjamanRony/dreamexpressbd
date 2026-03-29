@@ -117,7 +117,7 @@ export class CustomerRegister {
       error: (error) => {
         this.loading.set(false);
         this.toast.danger(
-          error?.error?.message || 'Registration failed. Please try again.',
+          error?.error || 'Registration failed. Please try again.',
           'top-right',
           4000
         );
