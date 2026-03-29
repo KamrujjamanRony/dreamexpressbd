@@ -20,6 +20,7 @@ import { SToast } from '../../../utils/toast/toast.service';
 })
 export class ProductCard {
   product = input<any>(null);
+  isPriority = input(false);
   faHeart = faHeart;
   faHeartSolid = faHeartSolid;
   imageBaseUrl = environment.ImageApi;

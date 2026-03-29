@@ -12,15 +12,25 @@
     }
     <!-- Product Image -->
     <div class="overflow-hidden bg-gray-50 dark:bg-gray-700">
-      <img
-        [ngSrc]="imageBaseUrl + product()?.imageUrl"
-        [alt]="product()?.title"
-        width="300"
-        height="300"
-        loading="lazy"
-        decoding="async"
-        class="w-full aspect-square object-cover object-top transition-transform duration-500 group-hover:scale-110"
-      />
+      @if (isPriority()) {
+        <img
+          [ngSrc]="imageBaseUrl + product()?.imageUrl"
+          [alt]="product()?.title"
+          width="300"
+          height="400"
+          priority
+          class="w-full aspect-square object-cover object-top transition-transform duration-500 group-hover:scale-110"
+        />
+      } @else {
+        <img
+          [ngSrc]="imageBaseUrl + product()?.imageUrl"
+          [alt]="product()?.title"
+          width="300"
+          height="400"
+          loading="lazy"
+          class="w-full aspect-square object-cover object-top transition-transform duration-500 group-hover:scale-110"
+        />
+      }
     </div>
   </a>
 
