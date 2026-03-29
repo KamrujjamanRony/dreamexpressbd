@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -22,7 +22,10 @@ export class SGuest {
                 `${this.apiUrl}/Authentication/guest-token?companyId=${environment.companyCode}`,
                 {}
             )
-            .pipe(tap((response) => sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(response))));
+            .pipe(
+                map((response) => response?.data ?? response),
+                tap((data) => sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(data)))
+            );
     }
 
     getToken(): string | null {
