@@ -7,9 +7,7 @@ export const environment = {
     apiUrl: 'http://localhost:1005/p',
     ImageApi: 'http://localhost:1005/uploads/',
     webUrl: 'http://localhost:4200',
+    siteDescription: 'Dream Express BD - Your trusted online shop for quality products in Bangladesh. Fast delivery, secure payment, and great deals.',
     emptyImg: 'https://www.mykite.in/kb/NoImageFound.jpg.png',
     keywords: ['medical equipment', 'healthcare products', 'x-ray', 'triupdx-ray', 'printer', 'medical printer', 'triupd', 'medical imaging', 'diagnostic equipment', 'radiology', 'healthcare technology'],
 };
-
-
-

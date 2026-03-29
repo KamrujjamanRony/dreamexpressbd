@@ -14,62 +14,68 @@ export const routes: Routes = [
       {
         path: 'home',
         loadComponent: () => import('./components/main/home/home').then(m => m.Home),
-        data: { reuse: true },
+        data: { reuse: true, seo: { title: 'Home', description: `Welcome to ${companyName} - Shop quality products online with fast delivery across Bangladesh.` } },
         title: `Home | ${companyName}`
       },
       {
         path: 'shop',
         loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
-        data: { reuse: true },
+        data: { reuse: true, seo: { title: 'Shop', description: `Browse our wide collection of products at ${companyName}. Best prices and fast delivery in Bangladesh.` } },
         title: `Shop | ${companyName}`
       },
       {
         path: 'about-us',
         loadComponent: () => import('./components/main/about/about').then(m => m.About),
-        data: { reuse: true },
+        data: { reuse: true, seo: { title: 'About Us', description: `Learn about ${companyName} - our mission, vision, and commitment to quality products and customer satisfaction.` } },
         title: `About Us | ${companyName}`
       },
       {
         path: 'checkout',
         loadComponent: () => import('./components/main/checkout/checkout').then(m => m.Checkout),
+        data: { seo: { noIndex: true } },
         title: `Checkout | ${companyName}`
       },
       {
         path: 'contact-us',
         loadComponent: () => import('./components/main/contact/contact').then(m => m.Contact),
-        data: { reuse: true },
+        data: { reuse: true, seo: { title: 'Contact Us', description: `Get in touch with ${companyName}. We are here to help with your orders, questions, and feedback.` } },
         title: `Contact Us | ${companyName}`
       },
       {
         path: 'view/:id',
         loadComponent: () => import('./components/main/product-view/product-view').then(m => m.ProductView),
-        data: { reuse: true },
+        data: { reuse: true, seo: { ogType: 'product' } },
         title: `Product View | ${companyName}`
       },
       {
         path: 'order-confirmation',
         loadComponent: () => import('./components/main/order-confirmation/order-confirmation').then(m => m.OrderConfirmation),
+        data: { seo: { noIndex: true } },
         title: `Order Confirmation | ${companyName}`
       },
       {
         path: 'register',
         loadComponent: () => import('./components/main/customer-register/customer-register').then(m => m.CustomerRegister),
+        data: { seo: { title: 'Register', description: `Create your ${companyName} account to start shopping and track your orders.` } },
         title: `Customer Register | ${companyName}`
       },
       {
         path: 'login',
         loadComponent: () => import('./components/main/customer-login/customer-login').then(m => m.CustomerLogin),
+        data: { seo: { title: 'Login', description: `Sign in to your ${companyName} account.`, noIndex: true } },
         title: `Customer Login | ${companyName}`
       },
       {
         path: 'cart',
         loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),
+        data: { seo: { noIndex: true } },
         title: `Shopping Cart | ${companyName}`
       },
       {
         path: 'account',
         loadComponent: () => import('./layouts/account/account').then(m => m.Account),
         // canActivate: [accountGuard],
+        data: { seo: { noIndex: true } },
         children: [
           { path: '', redirectTo: 'profile', pathMatch: 'full' },
           {
@@ -110,6 +116,7 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () => import('./layouts/admin/admin').then(m => m.Admin),
     canActivate: [authGuard],
+    data: { seo: { noIndex: true } },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
@@ -194,6 +201,7 @@ export const routes: Routes = [
   {
     path: 'admin-login',
     loadComponent: () => import('./components/admin/admin-login/admin-login').then(m => m.AdminLogin),
+    data: { seo: { noIndex: true } },
     title: 'Admin Login'
   }
 ];
