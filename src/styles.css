@@ -38,6 +38,8 @@ body {
 @media print {
   body.printing-voucher app-navbar,
   body.printing-voucher app-footer,
+  body.printing-voucher app-bottom-nav,
+  body.printing-voucher app-social-chat,
   body.printing-voucher .no-print {
     display: none !important;
   }
