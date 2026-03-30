@@ -16,18 +16,16 @@
         <span class="btm-label">Shop</span>
       </a>
 
-      <!-- Search (navigates to shop with focus) -->
-      <a
-        routerLink="/shop"
-        [queryParams]="{ search: true }"
-        class="btm-tab group"
-        [class.btm-active]="false"
-      >
+      <!-- Search -->
+      <button class="btm-tab group" (click)="openSearch()" type="button">
         <div class="btm-icon-wrap">
           <i class="fas fa-search"></i>
         </div>
         <span class="btm-label">Search</span>
-      </a>
+      </button>
+
+      <!-- Search Overlay -->
+      <app-search-overlay #searchOverlay></app-search-overlay>
 
       <!-- Home (center, elevated) -->
       <a

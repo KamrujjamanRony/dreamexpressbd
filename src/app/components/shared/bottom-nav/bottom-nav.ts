@@ -1,13 +1,14 @@
-import { Component, inject, signal, DestroyRef } from '@angular/core';
+import { Component, inject, signal, DestroyRef, ViewChild } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { SCart } from '../../../services/s-cart';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SearchOverlay } from '../search-overlay/search-overlay';
 
 @Component({
     selector: 'app-bottom-nav',
-    imports: [RouterLink],
+    imports: [RouterLink, SearchOverlay],
     templateUrl: './bottom-nav.html',
     styleUrl: './bottom-nav.css',
 })
@@ -16,6 +17,8 @@ export class BottomNav {
     private authCookie = inject(SAuthCookie);
     private router = inject(Router);
     private destroyRef = inject(DestroyRef);
+
+    @ViewChild('searchOverlay') searchOverlay!: SearchOverlay;
 
     totalCarts = signal(0);
     activeTab = signal('home');
@@ -49,5 +52,9 @@ export class BottomNav {
 
     get accountRoute(): string {
         return this.authCookie.isCustomer() ? '/account/profile' : '/login';
+    }
+
+    openSearch() {
+        this.searchOverlay?.open();
     }
 }
