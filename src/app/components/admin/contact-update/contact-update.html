@@ -1,5 +1,5 @@
 @if (isView()) {
-  <div class="max-w-4xl mx-auto p-4 dark:bg-neutral-950 rounded-lg shadow-md">
+  <div class="max-w-5xl mx-auto p-4 dark:bg-neutral-950 rounded-lg shadow-md">
     <h1 class="text-2xl md:text-3xl font-bold text-emerald-600 text-center mb-6">
       Update Contact Information
     </h1>
@@ -20,301 +20,451 @@
 
     <!-- Form -->
     @else {
+      <!-- Tabs -->
+      <div class="border-b border-neutral-200 mb-6">
+        <nav class="flex -mb-px space-x-6 overflow-x-auto">
+          @for (
+            tab of [
+              { key: 'general', label: 'General' },
+              { key: 'contactCards', label: 'Contact Cards' },
+              { key: 'quickInfo', label: 'Quick Info' },
+              { key: 'faqs', label: 'FAQs' },
+              { key: 'delivery', label: 'Delivery Charges' },
+            ];
+            track tab.key
+          ) {
+            <button
+              type="button"
+              (click)="activeTab.set($any(tab.key))"
+              class="py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap"
+              [class.border-emerald-500]="activeTab() === tab.key"
+              [class.text-emerald-600]="activeTab() === tab.key"
+              [class.border-transparent]="activeTab() !== tab.key"
+              [class.text-neutral-500]="activeTab() !== tab.key"
+            >
+              {{ tab.label }}
+            </button>
+          }
+        </nav>
+      </div>
+
       <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-4">
-        <!-- Address 1 -->
-        <div>
-          @let address1 = form.address1();
-          @let address1Error = form.address1().invalid() && form.address1().touched();
-          <div class="relative pb-2">
-            <input
-              type="text"
-              [formField]="form.address1"
-              id="address1"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-              placeholder=" "
-              [class.bg-neutral-100]="!isEdit()"
-              [class.cursor-not-allowed]="!isEdit()"
-            />
-            <label
-              for="address1"
-              class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-              >Address 1</label
-            >
-          </div>
-          @if (address1Error) {
-            <ul class="-mt-2 mb-2">
-              @for (error of address1.errors(); track error) {
-                <li class="text-sm text-red-600">{{ error.message }}</li>
-              }
-            </ul>
-          }
-        </div>
-
-        <!-- Address 2 -->
-        <div>
-          <div class="relative pb-2">
-            <input
-              type="text"
-              [formField]="form.address2"
-              id="address2"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-              placeholder=" "
-              [class.bg-neutral-100]="!isEdit()"
-              [class.cursor-not-allowed]="!isEdit()"
-            />
-            <label
-              for="address2"
-              class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-              >Address 2</label
-            >
-          </div>
-        </div>
-
-        <!-- Phone Numbers -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            @let phoneNumber1 = form.phoneNumber1();
-            @let phoneNumber1Error = form.phoneNumber1().invalid() && form.phoneNumber1().touched();
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.phoneNumber1"
-                id="phoneNumber1"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="phoneNumber1"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Phone Number 1</label
-              >
-            </div>
-            @if (phoneNumber1Error) {
-              <ul class="-mt-2 mb-2">
-                @for (error of phoneNumber1.errors(); track error) {
-                  <li class="text-sm text-red-600">{{ error.message }}</li>
-                }
-              </ul>
-            }
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.phoneNumber2"
-                id="phoneNumber2"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="phoneNumber2"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Phone Number 2</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.phoneNumber3"
-                id="phoneNumber3"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="phoneNumber3"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Phone Number 3</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div>
-          @let email = form.email();
-          @let emailError = form.email().invalid() && form.email().touched();
-          <div class="relative pb-2">
-            <input
-              type="email"
-              [formField]="form.email"
-              id="email"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-              placeholder=" "
-              [class.bg-neutral-100]="!isEdit()"
-              [class.cursor-not-allowed]="!isEdit()"
-            />
-            <label
-              for="email"
-              class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-              >Email Address</label
-            >
-          </div>
-          @if (emailError) {
-            <ul class="-mt-2 mb-2">
-              @for (error of email.errors(); track error) {
-                <li class="text-sm text-red-600">{{ error.message }}</li>
-              }
-            </ul>
-          }
-        </div>
-
-        <!-- Social Links -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.facebookLink"
-                id="facebookLink"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="facebookLink"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Facebook Link</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.othersLink1"
-                id="othersLink1"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="othersLink1"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >WeChat</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.othersLink2"
-                id="othersLink2"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="othersLink2"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Other Link</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Delivery Charges -->
-        <div class="mt-6">
-          <h2 class="text-lg font-semibold text-emerald-600 mb-3">Delivery Charges</h2>
-
-          <!-- Existing charges -->
-          @if (deliveryCharges().length) {
-            <div class="space-y-2 mb-4">
-              @for (charge of deliveryCharges(); track $index) {
-                <div
-                  class="flex items-center gap-3 p-3 rounded border border-default-medium"
-                  [class.opacity-50]="!charge.isActive"
+        <!-- Tab: General -->
+        @if (activeTab() === 'general') {
+          <div class="space-y-4">
+            <!-- Social Links -->
+            <h2 class="text-lg font-semibold text-emerald-600">Social & Contact Links</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Facebook -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.facebookLink"
+                  id="facebookLink"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="facebookLink"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Facebook Link</label
                 >
-                  <div class="flex-1">
-                    <span class="text-sm font-medium text-heading">{{ charge.name }}</span>
-                    <span class="text-sm text-body ml-2">— ৳{{ charge.amount }}</span>
-                  </div>
+              </div>
+
+              <!-- Instagram -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.iLink"
+                  id="iLink"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="iLink"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Instagram Link</label
+                >
+              </div>
+
+              <!-- YouTube -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.yLink"
+                  id="yLink"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="yLink"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >YouTube Link</label
+                >
+              </div>
+
+              <!-- WhatsApp -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.wNum"
+                  id="wNum"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="wNum"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >WhatsApp Number</label
+                >
+              </div>
+
+              <!-- Others Link 1 -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.othersLink1"
+                  id="othersLink1"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="othersLink1"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Other Link 1</label
+                >
+              </div>
+
+              <!-- Others Link 2 -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.othersLink2"
+                  id="othersLink2"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="othersLink2"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Other Link 2</label
+                >
+              </div>
+            </div>
+
+            <!-- Map Settings -->
+            <h2 class="text-lg font-semibold text-emerald-600 mt-4">Map Settings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.mapUrl"
+                  id="mapUrl"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="mapUrl"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Map URL</label
+                >
+              </div>
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.lat"
+                  id="lat"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="lat"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Latitude</label
+                >
+              </div>
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [formField]="form.lng"
+                  id="lng"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="lng"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 inset-s-1"
+                  >Longitude</label
+                >
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Tab: Contact Cards -->
+        @if (activeTab() === 'contactCards') {
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-emerald-600">Contact Cards</h2>
+              @if (isEdit()) {
+                <button
+                  type="button"
+                  (click)="addContactCard()"
+                  class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded"
+                >
+                  <fa-icon [icon]="faPlus" class="text-xs"></fa-icon> Add Card
+                </button>
+              }
+            </div>
+
+            @if (contactCardsList().length === 0) {
+              <p class="text-sm text-neutral-400">No contact cards configured.</p>
+            }
+
+            @for (card of contactCardsList(); track $index) {
+              <div class="p-4 rounded border border-default-medium space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-heading">Card {{ $index + 1 }}</span>
                   @if (isEdit()) {
                     <button
                       type="button"
-                      (click)="toggleChargeActive($index)"
-                      class="text-xs px-2 py-1 rounded"
-                      [class]="
-                        charge.isActive
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-neutral-100 text-neutral-500'
-                      "
-                    >
-                      {{ charge.isActive ? 'Active' : 'Inactive' }}
-                    </button>
-                    <button
-                      type="button"
-                      (click)="removeDeliveryCharge($index)"
+                      (click)="removeContactCard($index)"
                       class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
                     >
-                      ✕
+                      <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
                   }
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    [value]="card.type"
+                    (input)="updateContactCard($index, 'type', $any($event.target).value)"
+                    placeholder="Type (e.g. phone, email)"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                  <input
+                    type="text"
+                    [value]="card.title"
+                    (input)="updateContactCard($index, 'title', $any($event.target).value)"
+                    placeholder="Title"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                  <input
+                    type="text"
+                    [value]="card.value"
+                    (input)="updateContactCard($index, 'value', $any($event.target).value)"
+                    placeholder="Value"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Tab: Quick Info -->
+        @if (activeTab() === 'quickInfo') {
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-emerald-600">Quick Info</h2>
+              @if (isEdit()) {
+                <button
+                  type="button"
+                  (click)="addQuickInfo()"
+                  class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded"
+                >
+                  <fa-icon [icon]="faPlus" class="text-xs"></fa-icon> Add Info
+                </button>
               }
             </div>
-          } @else {
-            <p class="text-sm text-neutral-400 mb-4">No delivery charges configured.</p>
-          }
 
-          <!-- Add new charge -->
-          @if (isEdit()) {
-            <div class="flex items-end gap-3">
-              <div class="flex-1">
-                <label class="block text-xs text-body mb-1">Name</label>
+            @if (quickInfoList().length === 0) {
+              <p class="text-sm text-neutral-400">No quick info items configured.</p>
+            }
+
+            @for (info of quickInfoList(); track $index) {
+              <div class="p-4 rounded border border-default-medium space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-heading">Item {{ $index + 1 }}</span>
+                  @if (isEdit()) {
+                    <button
+                      type="button"
+                      (click)="removeQuickInfo($index)"
+                      class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                    >
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  }
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    [value]="info.icon"
+                    (input)="updateQuickInfo($index, 'icon', $any($event.target).value)"
+                    placeholder="Icon (e.g. fas fa-truck)"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                  <input
+                    type="text"
+                    [value]="info.title"
+                    (input)="updateQuickInfo($index, 'title', $any($event.target).value)"
+                    placeholder="Title"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                  <input
+                    type="text"
+                    [value]="info.description"
+                    (input)="updateQuickInfo($index, 'description', $any($event.target).value)"
+                    placeholder="Description"
+                    class="px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Tab: FAQs -->
+        @if (activeTab() === 'faqs') {
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-emerald-600">Frequently Asked Questions</h2>
+              @if (isEdit()) {
+                <button
+                  type="button"
+                  (click)="addFaq()"
+                  class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded"
+                >
+                  <fa-icon [icon]="faPlus" class="text-xs"></fa-icon> Add FAQ
+                </button>
+              }
+            </div>
+
+            @if (faqsList().length === 0) {
+              <p class="text-sm text-neutral-400">No FAQs configured.</p>
+            }
+
+            @for (faq of faqsList(); track $index) {
+              <div class="p-4 rounded border border-default-medium space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-heading">FAQ {{ $index + 1 }}</span>
+                  @if (isEdit()) {
+                    <button
+                      type="button"
+                      (click)="removeFaq($index)"
+                      class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                    >
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  }
+                </div>
                 <input
                   type="text"
-                  [(ngModel)]="newChargeName"
-                  name="newChargeName"
-                  placeholder="e.g. Inside Dhaka"
-                  class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  [value]="faq.question"
+                  (input)="updateFaq($index, 'question', $any($event.target).value)"
+                  placeholder="Question"
+                  class="w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
                 />
+                <textarea
+                  [value]="faq.answer"
+                  (input)="updateFaq($index, 'answer', $any($event.target).value)"
+                  placeholder="Answer"
+                  rows="3"
+                  class="w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand resize-y"
+                ></textarea>
               </div>
-              <div class="w-32">
-                <label class="block text-xs text-body mb-1">Amount (৳)</label>
-                <input
-                  type="number"
-                  [(ngModel)]="newChargeAmount"
-                  name="newChargeAmount"
-                  placeholder="0"
-                  min="0"
-                  class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
-                />
+            }
+          </div>
+        }
+
+        <!-- Tab: Delivery Charges -->
+        @if (activeTab() === 'delivery') {
+          <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-emerald-600">Delivery Charges</h2>
+
+            @if (deliveryCharges().length) {
+              <div class="space-y-2 mb-4">
+                @for (charge of deliveryCharges(); track $index) {
+                  <div
+                    class="flex items-center gap-3 p-3 rounded border border-default-medium"
+                    [class.opacity-50]="!charge.isActive"
+                  >
+                    <div class="flex-1">
+                      <span class="text-sm font-medium text-heading">{{ charge.name }}</span>
+                      <span class="text-sm text-body ml-2">— ৳{{ charge.amount }}</span>
+                    </div>
+                    @if (isEdit()) {
+                      <button
+                        type="button"
+                        (click)="toggleChargeActive($index)"
+                        class="text-xs px-2 py-1 rounded"
+                        [class]="
+                          charge.isActive
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-neutral-100 text-neutral-500'
+                        "
+                      >
+                        {{ charge.isActive ? 'Active' : 'Inactive' }}
+                      </button>
+                      <button
+                        type="button"
+                        (click)="removeDeliveryCharge($index)"
+                        class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                      >
+                        ✕
+                      </button>
+                    }
+                  </div>
+                }
               </div>
-              <button
-                type="button"
-                (click)="addDeliveryCharge()"
-                class="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded"
-              >
-                Add
-              </button>
-            </div>
-          }
-        </div>
+            } @else {
+              <p class="text-sm text-neutral-400 mb-4">No delivery charges configured.</p>
+            }
+
+            @if (isEdit()) {
+              <div class="flex items-end gap-3">
+                <div class="flex-1">
+                  <label class="block text-xs text-body mb-1">Name</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="newChargeName"
+                    name="newChargeName"
+                    placeholder="e.g. Inside Dhaka"
+                    class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                </div>
+                <div class="w-32">
+                  <label class="block text-xs text-body mb-1">Amount (৳)</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="newChargeAmount"
+                    name="newChargeAmount"
+                    placeholder="0"
+                    min="0"
+                    class="block w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                  />
+                </div>
+                <button
+                  type="button"
+                  (click)="addDeliveryCharge()"
+                  class="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded"
+                >
+                  Add
+                </button>
+              </div>
+            }
+          </div>
+        }
 
         <!-- Action Buttons -->
         @if (isEdit()) {
@@ -327,7 +477,6 @@
               <fa-icon [icon]="faSave"></fa-icon>
               {{ isSubmitted() ? 'Updating...' : 'Update Contact' }}
             </button>
-
             <button
               type="button"
               (click)="formReset()"

@@ -1,14 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
-import { FormField, form, required, validate } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTimes, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SContact } from '../../../services/s-contact';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
-import { ContactM, DeliveryChargeM } from '../../../models/Contact';
+import { ContactM, DeliveryChargeM, QuickInfoM, FaqM, ContactCardM } from '../../../models/Contact';
 
 @Component({
   selector: 'app-contact-update',
@@ -19,6 +19,8 @@ import { ContactM, DeliveryChargeM } from '../../../models/Contact';
 export class ContactUpdate {
   faSave = faSave;
   faTimes = faTimes;
+  faPlus = faPlus;
+  faTrash = faTrash;
 
   /* ---------------- DI ---------------- */
   private contactService = inject(SContact);
@@ -28,8 +30,13 @@ export class ContactUpdate {
   /* ---------------- SIGNAL STATE ---------------- */
   contactData = signal<ContactM | null>(null);
   deliveryCharges = signal<DeliveryChargeM[]>([]);
+  quickInfoList = signal<QuickInfoM[]>([]);
+  faqsList = signal<FaqM[]>([]);
+  contactCardsList = signal<ContactCardM[]>([]);
 
-  // New charge form
+  activeTab = signal<'general' | 'quickInfo' | 'faqs' | 'contactCards' | 'delivery'>('general');
+
+  // New item forms
   newChargeName = '';
   newChargeAmount: number | null = null;
 
@@ -43,32 +50,19 @@ export class ContactUpdate {
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
     companyID: environment.companyCode.toString(),
-    address1: '',
-    address2: '',
-    phoneNumber1: '',
-    phoneNumber2: '',
-    phoneNumber3: '',
-    email: '',
     facebookLink: '',
+    iLink: '',
+    yLink: '',
+    wNum: '',
+    lat: '0',
+    lng: '0',
+    mapUrl: '',
     othersLink1: '',
     othersLink2: '',
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
-  form = form(this.model, (schemaPath) => {
-    required(schemaPath.address1, { message: 'Address 1 is required' });
-    required(schemaPath.phoneNumber1, { message: 'Phone Number 1 is required' });
-    // required(schemaPath.email, { message: 'Email is required' });
-    // validate(schemaPath.email, ({ value }) => {
-    //   if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
-    //     return {
-    //       kind: 'email',
-    //       message: 'Please enter a valid email address'
-    //     }
-    //   }
-    //   return null;
-    // });
-  });
+  form = form(this.model);
 
   /* ---------------- LIFECYCLE ---------------- */
   ngOnInit(): void {
@@ -92,6 +86,9 @@ export class ContactUpdate {
       next: (data) => {
         this.contactData.set(data);
         this.deliveryCharges.set(data.deliveryCharges || []);
+        this.quickInfoList.set(data.quickInfo || []);
+        this.faqsList.set(data.faqs || []);
+        this.contactCardsList.set(data.contactCards || []);
         this.updateForm(data);
         this.isLoading.set(false);
       },
@@ -105,13 +102,13 @@ export class ContactUpdate {
   updateForm(data: ContactM) {
     this.model.update(current => ({
       ...current,
-      address1: data.address1 || '',
-      address2: data.address2 || '',
-      phoneNumber1: data.phoneNumber1 || '',
-      phoneNumber2: data.phoneNumber2 || '',
-      phoneNumber3: data.phoneNumber3 || '',
-      email: data.email || '',
       facebookLink: data.facebookLink || '',
+      iLink: data.iLink || '',
+      yLink: data.yLink || '',
+      wNum: data.wNum || '',
+      lat: String(data.lat || 0),
+      lng: String(data.lng || 0),
+      mapUrl: data.mapUrl || '',
       othersLink1: data.othersLink1 || '',
       othersLink2: data.othersLink2 || '',
       companyID: data.companyID?.toString() || environment.companyCode.toString(),
@@ -120,7 +117,6 @@ export class ContactUpdate {
 
   /* ---------------- SUBMIT ---------------- */
   onSubmit(event: Event) {
-    console.log("clicked");
     event.preventDefault();
 
     if (!this.form().valid()) {
@@ -134,15 +130,18 @@ export class ContactUpdate {
 
     const payload = {
       companyID: Number(formValue.companyID),
-      address1: formValue.address1,
-      address2: formValue.address2,
-      phoneNumber1: formValue.phoneNumber1,
-      phoneNumber2: formValue.phoneNumber2,
-      phoneNumber3: formValue.phoneNumber3,
-      email: formValue.email,
       facebookLink: formValue.facebookLink,
+      iLink: formValue.iLink,
+      yLink: formValue.yLink,
+      wNum: formValue.wNum,
+      lat: Number(formValue.lat),
+      lng: Number(formValue.lng),
+      mapUrl: formValue.mapUrl,
       othersLink1: formValue.othersLink1,
       othersLink2: formValue.othersLink2,
+      quickInfo: this.quickInfoList(),
+      faqs: this.faqsList(),
+      contactCards: this.contactCardsList(),
       deliveryCharges: this.deliveryCharges(),
     };
 
@@ -152,6 +151,9 @@ export class ContactUpdate {
       next: (response) => {
         this.contactData.set(response);
         this.deliveryCharges.set(response.deliveryCharges || []);
+        this.quickInfoList.set(response.quickInfo || []);
+        this.faqsList.set(response.faqs || []);
+        this.contactCardsList.set(response.contactCards || []);
         this.updateForm(response);
         this.isSubmitted.set(false);
         this.toast.success('Contact information updated successfully!', 'bottom-right', 5000);
@@ -159,9 +161,54 @@ export class ContactUpdate {
       error: (error) => {
         console.error('Error updating contact:', error);
         this.isSubmitted.set(false);
-        this.toast.danger(error?.error || 'Failed to update contact information. Please try again.', 'bottom-right', 5000);
+        this.toast.danger(error?.error || 'Failed to update contact information.', 'bottom-right', 5000);
       }
     });
+  }
+
+  /* ---------------- QUICK INFO ---------------- */
+  addQuickInfo() {
+    this.quickInfoList.update(list => [...list, { title: '', description: '', icon: '' }]);
+  }
+
+  removeQuickInfo(index: number) {
+    this.quickInfoList.update(list => list.filter((_, i) => i !== index));
+  }
+
+  updateQuickInfo(index: number, field: keyof QuickInfoM, value: string) {
+    this.quickInfoList.update(list =>
+      list.map((item, i) => i === index ? { ...item, [field]: value } : item)
+    );
+  }
+
+  /* ---------------- FAQS ---------------- */
+  addFaq() {
+    this.faqsList.update(list => [...list, { question: '', answer: '' }]);
+  }
+
+  removeFaq(index: number) {
+    this.faqsList.update(list => list.filter((_, i) => i !== index));
+  }
+
+  updateFaq(index: number, field: keyof FaqM, value: string) {
+    this.faqsList.update(list =>
+      list.map((item, i) => i === index ? { ...item, [field]: value } : item)
+    );
+  }
+
+  /* ---------------- CONTACT CARDS ---------------- */
+  addContactCard() {
+    this.contactCardsList.update(list => [...list, { type: '', title: '', value: '' }]);
+  }
+
+  removeContactCard(index: number) {
+    this.contactCardsList.update(list => list.filter((_, i) => i !== index));
+  }
+
+  updateContactCard(index: number, field: keyof ContactCardM, value: string) {
+    this.contactCardsList.update(list =>
+      list.map((item, i) => i === index ? { ...item, [field]: value } : item)
+    );
   }
 
   /* ---------------- DELIVERY CHARGES ---------------- */
@@ -192,10 +239,12 @@ export class ContactUpdate {
 
   /* ---------------- RESET ---------------- */
   formReset() {
-    // Reset to original data
     if (this.contactData()) {
       this.updateForm(this.contactData()!);
       this.deliveryCharges.set(this.contactData()!.deliveryCharges || []);
+      this.quickInfoList.set(this.contactData()!.quickInfo || []);
+      this.faqsList.set(this.contactData()!.faqs || []);
+      this.contactCardsList.set(this.contactData()!.contactCards || []);
     }
 
     this.newChargeName = '';
