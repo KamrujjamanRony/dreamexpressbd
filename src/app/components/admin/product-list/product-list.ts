@@ -14,6 +14,7 @@ import { CategoryM } from '../../../models/Category';
 import { SProduct } from '../../../services/s-product';
 import { SBrand } from '../../../services/s-brand';
 import { SCategory } from '../../../services/s-category';
+import { SAuth } from '../../../services/s-auth';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 
@@ -51,6 +52,7 @@ export class ProductList {
   private brandService = inject(SBrand);
   private categoryService = inject(SCategory);
   private permissionService = inject(SPermission);
+  private auth = inject(SAuth);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
 
@@ -588,6 +590,12 @@ export class ProductList {
     formData.delete('productColors');
     formData.delete('isActive');
     formData.append('isActive', formValue.isActive ? '1' : '0');
+
+    // Append postBy from logged-in admin
+    const adminUser = this.auth.getUser();
+    if (adminUser?.username) {
+      formData.append('PostBy', adminUser.username);
+    }
 
     // Append main image
     if (this.selectedFile()) {
