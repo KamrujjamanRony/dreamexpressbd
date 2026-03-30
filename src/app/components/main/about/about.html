@@ -9,7 +9,7 @@
 } @else {
   <!-- Hero Section -->
   <section class="about-hero relative overflow-hidden bg-[linear-gradient(135deg,#f5f3ff_0%,#fdf2f8_50%,#f0e7ff_100%)] dark:bg-[linear-gradient(135deg,#0f0a1e_0%,#1a0e2e_50%,#0d0820_100%)]" [class.ready]="ready()">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(147,51,234,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.06)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_50%,rgba(147,51,234,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.1)_0%,transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_8%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.06)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_15%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.1)_0%,transparent_50%)]"></div>
     <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
       <span class="hero-badge inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-semibold tracking-wider uppercase mb-4">
         About Us
@@ -32,8 +32,8 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           @for (stat of stats(); track stat.label; let i = $index) {
-            <div class="animate-on-scroll text-center py-6 px-4 rounded-2xl bg-primary-50 dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(147,51,234,0.1)] dark:hover:shadow-[0_8px_24px_rgba(147,51,234,0.15)]" [style.transition-delay]="i * 100 + 'ms'">
-              <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-[linear-gradient(135deg,#9333ea,#a855f7)] text-white text-lg">
+            <div class="animate-on-scroll text-center py-6 px-4 rounded-2xl bg-primary-50 dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" [style.transition-delay]="i * 100 + 'ms'">
+              <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--color-primary-600),var(--color-primary-500))] text-white text-lg">
                 <i [class]="stat.icon"></i>
               </div>
               <div class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-slate-100">{{ stat.value }}</div>
@@ -55,11 +55,11 @@
               @if (aboutData()?.imageUrl) {
                 <img [src]="imgBase + aboutData()?.imageUrl" [alt]="companyName" class="w-full h-auto rounded-2xl shadow-lg object-cover" />
               } @else {
-                <div class="relative z-2 text-center p-10 rounded-3xl bg-white dark:bg-[#141a2e] shadow-[0_8px_30px_rgba(147,51,234,0.1)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-primary-500/8 dark:border-primary-500/12">
+                <div class="relative z-2 text-center p-10 rounded-3xl bg-white dark:bg-[#141a2e] shadow-[0_8px_30px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-primary-500/8 dark:border-primary-500/12">
                   <i class="fas fa-store text-5xl text-primary-600"></i>
                   <h3 class="text-lg font-bold text-gray-900 dark:text-slate-100 mt-3">{{ companyName }}</h3>
                 </div>
-                <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(147,51,234,0.12)_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(circle,rgba(147,51,234,0.2)_1.5px,transparent_1.5px)] bg-size-[20px_20px] rounded-3xl"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-primary-600)_12%,transparent)_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-primary-600)_20%,transparent)_1.5px,transparent_1.5px)] bg-size-[20px_20px] rounded-3xl"></div>
               }
             </div>
           </div>
@@ -90,7 +90,7 @@
         @if (missionVisionLines().length > 1) {
           <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
             @for (line of missionVisionLines(); track $index) {
-              <div class="animate-on-scroll p-8 rounded-2xl bg-primary-50 dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(147,51,234,0.1)] dark:hover:shadow-[0_8px_24px_rgba(147,51,234,0.15)]" [style.transition-delay]="$index * 150 + 'ms'">
+              <div class="animate-on-scroll p-8 rounded-2xl bg-primary-50 dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" [style.transition-delay]="$index * 150 + 'ms'">
                 <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 bg-linear-to-br" [class]="$index % 2 === 0 ? 'from-primary-500 to-primary-700' : 'from-pink-500 to-rose-700'">
                   <i [class]="$index % 2 === 0 ? 'fas fa-bullseye text-white text-xl' : 'fas fa-eye text-white text-xl'"></i>
                 </div>
@@ -137,7 +137,7 @@
         @if (coreValues().length > 1) {
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @for (v of coreValues(); track $index) {
-              <div class="animate-on-scroll value-card text-center py-7 px-5 rounded-2xl bg-white dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(147,51,234,0.12)] dark:hover:shadow-[0_12px_30px_rgba(147,51,234,0.15)]" [style.transition-delay]="$index * 100 + 'ms'">
+              <div class="animate-on-scroll value-card text-center py-7 px-5 rounded-2xl bg-white dark:bg-[#141a2e] border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_color-mix(in_srgb,var(--color-primary-600)_12%,transparent)] dark:hover:shadow-[0_12px_30px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" [style.transition-delay]="$index * 100 + 'ms'">
                 <div class="value-icon w-11 h-11 mx-auto mb-3.5 flex items-center justify-center rounded-xl bg-primary-500/8 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400 text-base transition-all duration-300">
                   <i [class]="v.icon"></i>
                 </div>
@@ -158,7 +158,7 @@
   }
 
   <!-- CTA Section -->
-  <section class="cta-section py-16 sm:py-20 bg-[linear-gradient(135deg,#7c3aed,#9333ea,#a855f7)] relative overflow-hidden">
+  <section class="cta-section py-16 sm:py-20 bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600),var(--color-primary-500))] relative overflow-hidden">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center animate-on-scroll relative z-10">
       <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
       <p class="text-primary-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
