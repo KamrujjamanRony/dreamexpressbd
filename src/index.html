@@ -76,11 +76,11 @@
           --l-sub: #6b7280;
           --l-accent: var(--color-primary-700);
           --l-accent2: var(--color-primary-500);
-          --l-glow: rgba(99, 102, 241, 0.15);
-          --l-ring: rgba(99, 102, 241, 0.12);
-          --l-dot: rgba(99, 102, 241, 0.5);
+          --l-glow: color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+          --l-ring: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+          --l-dot: color-mix(in srgb, var(--color-primary-600) 50%, transparent);
           --l-bar-bg: #e5e7eb;
-          --l-particle: rgba(99, 102, 241, 0.08);
+          --l-particle: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
         }
         @media (prefers-color-scheme: dark) {
           :root {
@@ -89,11 +89,11 @@
             --l-sub: #94a3b8;
             --l-accent: var(--color-primary-400);
             --l-accent2: var(--color-primary-400);
-            --l-glow: rgba(129, 140, 248, 0.2);
-            --l-ring: rgba(129, 140, 248, 0.15);
-            --l-dot: rgba(129, 140, 248, 0.6);
+            --l-glow: color-mix(in srgb, var(--color-primary-400) 20%, transparent);
+            --l-ring: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
+            --l-dot: color-mix(in srgb, var(--color-primary-400) 60%, transparent);
             --l-bar-bg: #1e293b;
-            --l-particle: rgba(129, 140, 248, 0.06);
+            --l-particle: color-mix(in srgb, var(--color-primary-400) 6%, transparent);
           }
         }
 
