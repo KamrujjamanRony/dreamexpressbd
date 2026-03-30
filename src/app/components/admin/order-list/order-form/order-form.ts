@@ -60,6 +60,7 @@ export class OrderForm implements OnChanges {
   private dataService = inject(SData);
 
   siteId = environment.companyCode;
+  imgBaseUrl = environment.ImageApi;
   apiDeliveryCharges = signal<DeliveryChargeM[]>([]);
 
   // Selected product for size/color picking
@@ -484,7 +485,7 @@ export class OrderForm implements OnChanges {
   /* ---------------- PRODUCT SELECTION ---------------- */
   addProduct(product: ProductM) {
     const hasSizes = product.sizes && product.sizes.trim().length > 0;
-    const hasColors = product.productsColors && product.productsColors.length > 0;
+    const hasColors = this.getProductColors(product).length > 0;
 
     if (hasSizes || hasColors) {
       // Show size/color picker
@@ -520,8 +521,41 @@ export class OrderForm implements OnChanges {
   }
 
   getProductColors(product: ProductM): string[] {
-    if (!product.productsColors || !product.productsColors.length) return [];
-    return product.productsColors.map(c => c.colorName).filter(c => c);
+    // Check productsColors array first
+    if (product.productsColors && product.productsColors.length > 0) {
+      return product.productsColors.map(c => c.colorName).filter(c => c);
+    }
+    // Fallback to colors field (can be string or array)
+    if (product.colors) {
+      if (Array.isArray(product.colors)) {
+        return product.colors.filter((c: any) => c);
+      }
+      if (typeof product.colors === 'string' && product.colors.trim()) {
+        return product.colors.split(',').map((c: string) => c.trim()).filter((c: string) => c);
+      }
+    }
+    return [];
+  }
+
+  getProductColorsWithImage(product: ProductM): { colorName: string; image: string }[] {
+    if (product.productsColors && product.productsColors.length > 0) {
+      return product.productsColors.filter(c => c.colorName);
+    }
+    // Fallback to colors field without images
+    const colors = this.getProductColors(product);
+    return colors.map(c => ({ colorName: c, image: '' }));
+  }
+
+  getProductImageUrl(product: ProductM): string {
+    return product.imageUrl || product.image || '';
+  }
+
+  getColorImage(product: ProductM, colorName: string): string {
+    if (product.productsColors && product.productsColors.length > 0) {
+      const match = product.productsColors.find(c => c.colorName === colorName);
+      return match?.image || '';
+    }
+    return '';
   }
 
   private addProductToItems(product: ProductM, size: string, color: string) {
@@ -534,6 +568,12 @@ export class OrderForm implements OnChanges {
           ? { ...i, quantity: i.quantity + 1 } : i)
       );
     } else {
+      // Use color variant image if a color is selected, otherwise use product image
+      let itemImage = product.imageUrl || product.image || '';
+      if (color) {
+        const colorImage = this.getColorImage(product, color);
+        if (colorImage) itemImage = colorImage;
+      }
       const item: OrderItemM = {
         productId: product.id!,
         productName: product.title,
@@ -541,7 +581,7 @@ export class OrderForm implements OnChanges {
         price: product.offerPrice || product.regularPrice || 0,
         size: size || '',
         color: color || '',
-        image: product.image || ''
+        image: itemImage
       };
       this.orderItems.update(items => [...items, item]);
     }

@@ -102,28 +102,77 @@
 
       <!-- Product Search -->
       <div class="relative mb-4">
-        <input
-          type="text"
-          [value]="productSearch()"
-          (input)="onProductSearch($event)"
-          (focus)="showProductDropdown.set(true)"
-          placeholder="Search products to add..."
-          autocomplete="off"
-          class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
-        />
+        <div class="relative">
+          <svg
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            [value]="productSearch()"
+            (input)="onProductSearch($event)"
+            (focus)="showProductDropdown.set(true)"
+            placeholder="Search products to add..."
+            autocomplete="off"
+            class="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-xl bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+          />
+        </div>
         @if (showProductDropdown() && filteredProducts().length > 0) {
           <div
-            class="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+            class="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-xl max-h-60 overflow-y-auto"
           >
             @for (product of filteredProducts(); track product.id) {
               <button
                 type="button"
                 (click)="addProduct(product)"
-                class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm flex justify-between items-center"
+                class="w-full text-left px-3 py-2.5 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-sm flex items-center gap-3 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
               >
-                <span class="text-gray-900 dark:text-white">{{ product.title }}</span>
+                <div
+                  class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700"
+                >
+                  @if (getProductImageUrl(product)) {
+                    <img
+                      [src]="imgBaseUrl + getProductImageUrl(product)"
+                      [alt]="product.title"
+                      class="w-full h-full object-cover"
+                    />
+                  } @else {
+                    <div class="w-full h-full flex items-center justify-center text-gray-400">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                  }
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-gray-900 dark:text-white truncate font-medium">
+                    {{ product.title }}
+                  </p>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    @if (product.sizes) {
+                      <span class="text-[0.65rem] text-gray-400">Sizes available</span>
+                    }
+                    @if (getProductColors(product).length > 0) {
+                      <span class="text-[0.65rem] text-gray-400">Colors available</span>
+                    }
+                  </div>
+                </div>
                 <span
-                  class="text-emerald-600 dark:text-emerald-400 font-medium"
+                  class="text-emerald-600 dark:text-emerald-400 font-semibold text-sm whitespace-nowrap"
                   [innerHTML]="product.offerPrice || product.regularPrice || 0 | bdt"
                 ></span>
               </button>
@@ -135,168 +184,248 @@
       <!-- Size/Color Picker -->
       @if (pendingProduct()) {
         <div
-          class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+          class="mb-4 rounded-xl border-2 border-emerald-200 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10 overflow-hidden"
         >
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-sm font-medium text-gray-800 dark:text-white">{{
-              pendingProduct()!.title
-            }}</span>
+          <div
+            class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border-b border-emerald-100 dark:border-emerald-800"
+          >
+            <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700">
+              @if (getProductImageUrl(pendingProduct()!)) {
+                <img
+                  [src]="imgBaseUrl + getProductImageUrl(pendingProduct()!)"
+                  [alt]="pendingProduct()!.title"
+                  class="w-full h-full object-cover"
+                />
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">
+                {{ pendingProduct()!.title }}
+              </p>
+              <p
+                class="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
+                [innerHTML]="
+                  pendingProduct()!.offerPrice || pendingProduct()!.regularPrice || 0 | bdt
+                "
+              ></p>
+            </div>
             <button
               type="button"
               (click)="cancelAddProduct()"
-              class="text-gray-400 hover:text-gray-600 text-sm"
+              class="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
             >
-              &times;
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            @if (getProductSizes(pendingProduct()!).length > 0) {
-              <div>
-                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
-                  >Size</label
-                >
-                <select
-                  [ngModel]="selectedSize()"
-                  (ngModelChange)="selectedSize.set($event)"
-                  name="pendingSize"
-                  [ngModelOptions]="{ standalone: true }"
-                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
-                >
-                  <option value="">Select Size</option>
-                  @for (size of getProductSizes(pendingProduct()!); track size) {
-                    <option [value]="size">{{ size }}</option>
-                  }
-                </select>
-              </div>
-            }
-            @if (getProductColors(pendingProduct()!).length > 0) {
-              <div>
-                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
-                  >Color</label
-                >
-                <select
-                  [ngModel]="selectedColor()"
-                  (ngModelChange)="selectedColor.set($event)"
-                  name="pendingColor"
-                  [ngModelOptions]="{ standalone: true }"
-                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
-                >
-                  <option value="">Select Color</option>
-                  @for (color of getProductColors(pendingProduct()!); track color) {
-                    <option [value]="color">{{ color }}</option>
-                  }
-                </select>
-              </div>
-            }
-          </div>
-          <div class="flex justify-end mt-3">
-            <button
-              type="button"
-              (click)="confirmAddProduct()"
-              class="px-4 py-1.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+          <div class="p-4">
+            <p
+              class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider"
             >
-              Add to Order
-            </button>
+              Select Variant
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              @if (getProductSizes(pendingProduct()!).length > 0) {
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5"
+                    >Size</label
+                  >
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (size of getProductSizes(pendingProduct()!); track size) {
+                      <button
+                        type="button"
+                        (click)="selectedSize.set(size)"
+                        class="px-3 py-1.5 text-xs font-medium rounded-lg border-2 transition-all"
+                        [class]="
+                          selectedSize() === size
+                            ? 'border-emerald-500 bg-emerald-500 text-white'
+                            : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-emerald-300'
+                        "
+                      >
+                        {{ size }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+              @if (getProductColors(pendingProduct()!).length > 0) {
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5"
+                    >Color</label
+                  >
+                  <div class="flex flex-wrap gap-2">
+                    @for (
+                      colorObj of getProductColorsWithImage(pendingProduct()!);
+                      track colorObj.colorName
+                    ) {
+                      <button
+                        type="button"
+                        (click)="selectedColor.set(colorObj.colorName)"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all"
+                        [class]="
+                          selectedColor() === colorObj.colorName
+                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                            : 'border-gray-200 dark:border-gray-600 hover:border-emerald-300'
+                        "
+                      >
+                        @if (colorObj.image) {
+                          <img
+                            [src]="imgBaseUrl + colorObj.image"
+                            [alt]="colorObj.colorName"
+                            class="w-7 h-7 rounded-md object-cover"
+                          />
+                        }
+                        <span
+                          class="text-xs font-medium"
+                          [class]="
+                            selectedColor() === colorObj.colorName
+                              ? 'text-emerald-700 dark:text-emerald-400'
+                              : 'text-gray-600 dark:text-gray-300'
+                          "
+                          >{{ colorObj.colorName }}</span
+                        >
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+            <div class="flex justify-end mt-4">
+              <button
+                type="button"
+                (click)="confirmAddProduct()"
+                class="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add to Order
+              </button>
+            </div>
           </div>
         </div>
       }
 
-      <!-- Selected Items Table -->
+      <!-- Selected Items - Product Cards -->
       @if (orderItems().length > 0) {
-        <div class="overflow-x-auto mb-4">
-          <table class="w-full text-sm">
-            <thead class="bg-gray-100 dark:bg-gray-700">
-              <tr>
-                <th class="px-3 py-2 text-left text-gray-700 dark:text-gray-300">Product</th>
-                <th class="px-3 py-2 text-center text-gray-700 dark:text-gray-300">Size/Color</th>
-                <th class="px-3 py-2 text-center text-gray-700 dark:text-gray-300">Qty</th>
-                <th class="px-3 py-2 text-right text-gray-700 dark:text-gray-300">Price</th>
-                <th class="px-3 py-2 text-right text-gray-700 dark:text-gray-300">Total</th>
-                <th class="px-3 py-2 text-center text-gray-700 dark:text-gray-300"></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (
-                item of orderItems();
-                track item.productId + (item.size || '') + (item.color || '')
-              ) {
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <td class="px-3 py-2 text-gray-900 dark:text-white">{{ item.productName }}</td>
-                  <td class="px-3 py-2 text-center text-xs text-gray-500 dark:text-gray-400">
-                    @if (item.size) {
-                      <span
-                        class="inline-block bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded mr-1"
-                        >{{ item.size }}</span
-                      >
-                    }
-                    @if (item.color) {
-                      <span
-                        class="inline-block bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded"
-                        >{{ item.color }}</span
-                      >
-                    }
-                  </td>
-                  <td class="px-3 py-2 text-center">
-                    <div class="flex items-center justify-center gap-1">
-                      <button
-                        type="button"
-                        (click)="
-                          updateItemQuantity(
-                            item.productId,
-                            item.quantity - 1,
-                            item.size,
-                            item.color
-                          )
-                        "
-                        class="w-6 h-6 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs hover:bg-gray-300 dark:hover:bg-gray-500"
-                      >
-                        -
-                      </button>
-                      <span class="w-8 text-center text-gray-900 dark:text-white">{{
-                        item.quantity
-                      }}</span>
-                      <button
-                        type="button"
-                        (click)="
-                          updateItemQuantity(
-                            item.productId,
-                            item.quantity + 1,
-                            item.size,
-                            item.color
-                          )
-                        "
-                        class="w-6 h-6 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs hover:bg-gray-300 dark:hover:bg-gray-500"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td
-                    class="px-3 py-2 text-right text-gray-600 dark:text-gray-400"
-                    [innerHTML]="item.price | bdt"
-                  ></td>
-                  <td
-                    class="px-3 py-2 text-right font-medium text-gray-900 dark:text-white"
-                    [innerHTML]="item.price * item.quantity | bdt"
-                  ></td>
-                  <td class="px-3 py-2 text-center">
-                    <button
-                      type="button"
-                      (click)="removeItem(item.productId, item.size, item.color)"
-                      class="text-red-500 hover:text-red-700 text-xs"
+        <div class="space-y-2.5 mb-4">
+          @for (
+            item of orderItems();
+            track item.productId + (item.size || '') + (item.color || '')
+          ) {
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors shadow-sm"
+            >
+              <!-- Product Image -->
+              <div
+                class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700"
+              >
+                @if (item.image) {
+                  <img
+                    [src]="imgBaseUrl + item.image"
+                    [alt]="item.productName"
+                    class="w-full h-full object-cover"
+                  />
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                }
+              </div>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-800 dark:text-white truncate">
+                  {{ item.productName }}
+                </p>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  @if (item.size) {
+                    <span
+                      class="text-[0.65rem] font-medium py-0.5 px-2 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                      >{{ item.size }}</span
                     >
-                      &times;
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+                  }
+                  @if (item.color) {
+                    <span
+                      class="text-[0.65rem] font-medium py-0.5 px-2 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                      >{{ item.color }}</span
+                    >
+                  }
+                  <span class="text-xs text-gray-400" [innerHTML]="item.price | bdt"></span>
+                </div>
+              </div>
+              <!-- Quantity Controls -->
+              <div class="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5">
+                <button
+                  type="button"
+                  (click)="
+                    updateItemQuantity(item.productId, item.quantity - 1, item.size, item.color)
+                  "
+                  class="w-7 h-7 rounded-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 transition-colors text-sm font-medium"
+                >
+                  −
+                </button>
+                <span class="w-8 text-center text-sm font-semibold text-gray-800 dark:text-white">{{
+                  item.quantity
+                }}</span>
+                <button
+                  type="button"
+                  (click)="
+                    updateItemQuantity(item.productId, item.quantity + 1, item.size, item.color)
+                  "
+                  class="w-7 h-7 rounded-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 transition-colors text-sm font-medium"
+                >
+                  +
+                </button>
+              </div>
+              <!-- Total -->
+              <div class="text-right min-w-16">
+                <span
+                  class="text-sm font-bold text-gray-800 dark:text-white"
+                  [innerHTML]="item.price * item.quantity | bdt"
+                ></span>
+              </div>
+              <!-- Remove -->
+              <button
+                type="button"
+                (click)="removeItem(item.productId, item.size, item.color)"
+                class="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all shrink-0"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          }
         </div>
         <div
-          class="flex justify-between items-center px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg"
+          class="flex justify-between items-center px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800"
         >
-          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Subtotal:</span>
+          <span class="text-sm font-medium text-gray-600 dark:text-gray-300"
+            >Subtotal ({{ orderItems().length }} items)</span
+          >
           <span
             class="text-sm font-bold text-emerald-600 dark:text-emerald-400"
             [innerHTML]="calculatedSubtotal() | bdt"
