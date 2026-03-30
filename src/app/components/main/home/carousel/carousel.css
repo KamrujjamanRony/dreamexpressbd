@@ -19,20 +19,36 @@
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
 .carousel-bg {
   animation: kenBurns 6s ease-out forwards;
 }
 
+.carousel-accent {
+  transform-origin: left;
+  animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
 .carousel-title {
-  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  animation: slideInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
 .carousel-desc {
-  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  animation: slideInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
 }
 
 .carousel-btn {
-  animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  animation: slideInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
 }
 
 /* Navigation buttons */
@@ -55,14 +71,15 @@ swiper-container::part(button-next):hover {
 
 /* Pagination dots */
 swiper-container::part(bullet) {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(107, 33, 168, 0.35);
   opacity: 1;
   width: 10px;
   height: 10px;
+  transition: all 0.3s ease;
 }
 
 swiper-container::part(bullet-active) {
-  background: white;
+  background: rgb(147, 51, 234);
   width: 28px;
   border-radius: 5px;
 }
