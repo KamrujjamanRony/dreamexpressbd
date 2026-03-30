@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { SCustomer } from '../../../services/s-customer';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SData } from '../../../services/s-data';
 import { SToast } from '../../../utils/toast/toast.service';
 import { environment } from '../../../../environments/environment';
 import { CustomerM } from '../../../models/Customer';
@@ -17,6 +18,7 @@ import { faUser, faPhone, faMapPin, faLocationDot, faPencil } from '@fortawesome
 export class Profile {
     private customerService = inject(SCustomer);
     private authCookie = inject(SAuthCookie);
+    private dataService = inject(SData);
     private toast = inject(SToast);
 
     faUser = faUser;
@@ -28,6 +30,9 @@ export class Profile {
     loading = signal(false);
     editMode = signal(false);
     customerId = signal<any>(null);
+    regions = signal<any[]>([]);
+    cities = signal<any[]>([]);
+    areas = signal<any[]>([]);
 
     model = signal<CustomerM>({
         companyID: environment.companyCode,
@@ -41,7 +46,7 @@ export class Profile {
     form = form(this.model, (schemaPath) => {
         required(schemaPath.fullName, { message: 'Full name is required' });
         required(schemaPath.phone, { message: 'Phone number is required' });
-        required(schemaPath.dist, { message: 'District is required' });
+        required(schemaPath.dist, { message: 'Division is required' });
         required(schemaPath.address, { message: 'Address is required' });
 
         validate(schemaPath.fullName, ({ value }) => {
@@ -63,6 +68,7 @@ export class Profile {
     });
 
     ngOnInit(): void {
+        this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
         this.loadProfile();
     }
 
@@ -78,11 +84,31 @@ export class Profile {
                 dist: userData.dist || '',
                 address: userData.address || '',
             });
+            // Pre-load cities for the saved division
+            if (userData.dist) {
+                this.dataService.getCitiesByRegion(userData.dist).subscribe(cities => this.cities.set(cities));
+            }
         }
     }
 
     toggleEdit(): void {
         this.editMode.update(v => !v);
+    }
+
+    onDistrictChange(division: string): void {
+        this.model.update(m => ({ ...m, dist: division }));
+        this.cities.set([]);
+        this.areas.set([]);
+        if (division) {
+            this.dataService.getCitiesByRegion(division).subscribe(cities => this.cities.set(cities));
+        }
+    }
+
+    onCityChange(city: string): void {
+        this.areas.set([]);
+        if (city) {
+            this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
+        }
     }
 
     onSubmit(event: Event): void {

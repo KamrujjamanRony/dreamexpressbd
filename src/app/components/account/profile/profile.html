@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <!-- District -->
+    <!-- Division -->
     <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
       <div
         class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-full flex items-center justify-center shrink-0"
@@ -61,7 +61,7 @@
       </div>
       <div>
         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
-          District
+          Division
         </p>
         <p class="text-gray-800 dark:text-gray-100 font-semibold mt-0.5">
           {{ model().dist || '—' }}
@@ -142,29 +142,68 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <!-- District -->
+      <!-- Division -->
       <div>
-        @let dist = form.dist();
         @let distError = form.dist().invalid() && form.dist().touched();
         <label for="dist" class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
-          >District</label
+          >Division</label
         >
-        <input
-          type="text"
+        <select
           id="dist"
-          [formField]="form.dist"
-          class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+          [value]="form.dist().value()"
+          (change)="onDistrictChange($any($event.target).value)"
+          class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
           [class]="distError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
-          placeholder="Your district"
-          autocomplete="off"
-        />
+        >
+          <option value="" disabled>Select Division</option>
+          @for (region of regions(); track region.name) {
+            <option [value]="region.name">{{ region.name }}</option>
+          }
+        </select>
         @if (distError) {
           <ul class="mt-1">
-            @for (error of dist.errors(); track error) {
+            @for (error of form.dist().errors(); track error) {
               <li class="text-sm text-red-500">{{ error.message }}</li>
             }
           </ul>
         }
+      </div>
+
+      <!-- City -->
+      <div>
+        <label for="city" class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+          >City</label
+        >
+        <select
+          id="city"
+          (change)="onCityChange($any($event.target).value)"
+          [disabled]="!form.dist().value()"
+          class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <option value="" disabled selected>Select City</option>
+          @for (city of cities(); track city.name) {
+            <option [value]="city.name">{{ city.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Area -->
+      <div>
+        <label for="area" class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+          >Area</label
+        >
+        <select
+          id="area"
+          [disabled]="cities().length === 0"
+          class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <option value="">Select Area</option>
+          @for (area of areas(); track area.name) {
+            <option [value]="area.name">{{ area.name }}</option>
+          }
+        </select>
       </div>
 
       <!-- Address -->
