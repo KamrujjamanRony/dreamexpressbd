@@ -68,7 +68,7 @@
     </button>
 
     <!-- Hide all button -->
-    <button class="absolute -bottom-[0.2rem] -right-[0.2rem] w-[1.1rem] h-[1.1rem] rounded-full border-none bg-gray-500 text-white cursor-pointer flex items-center justify-center shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-all duration-200 hover:bg-red-500 hover:scale-[1.15] z-10"
+    <button class="absolute -bottom-[0.2rem] -right-[0.2rem] w-[1.1rem] h-[1.1rem] rounded-full border-none bg-neutral-500 text-white cursor-pointer flex items-center justify-center shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-all duration-200 hover:bg-red-500 hover:scale-[1.15] z-10"
       (click)="hide()" aria-label="Hide widgets">
       <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -79,7 +79,7 @@
 </div>
 
 <!-- Single reopen arrow button -->
-<button class="reopen-arrow fixed bottom-6 right-0 z-[49] w-[1.75rem] h-10 rounded-l-lg border-none bg-gray-500/20 backdrop-blur-sm text-gray-500 cursor-pointer flex items-center justify-center shadow-[-2px_0_8px_rgba(0,0,0,0.1)] hover:bg-gray-500/35"
+<button class="reopen-arrow fixed bottom-6 right-0 z-[49] w-[1.75rem] h-10 rounded-l-lg border-none bg-neutral-500/20 backdrop-blur-sm text-neutral-500 cursor-pointer flex items-center justify-center shadow-[-2px_0_8px_rgba(0,0,0,0.1)] hover:bg-neutral-500/35"
   [class.reopen-arrow--visible]="!isVisible" (click)="show()" aria-label="Show widgets">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="15 18 9 12 15 6"></polyline>
