@@ -1,7 +1,7 @@
 <!-- single card -->
 <div class="shadow rounded bg-white px-4 pt-6 pb-8">
   <div class="flex justify-between items-center mb-4">
-    <h3 class="font-medium text-gray-800 text-lg">{{ data?.type }}</h3>
+    <h3 class="font-medium text-neutral-800 text-lg">{{ data?.type }}</h3>
     <div class="flex items-center gap-2">
       @if (data?.isDefault) {
       <span
@@ -12,7 +12,7 @@
       } @else {
       <button
         (click)="onSetDefault()"
-        class="text-gray-400 hover:text-yellow-500 transition-colors"
+        class="text-neutral-400 hover:text-yellow-500 transition-colors"
         title="Set as default"
       >
         <fa-icon [icon]="faStar"></fa-icon>
@@ -42,11 +42,11 @@
   </div>
 
   <div class="space-y-1">
-    <h4 class="text-gray-800 font-bold">{{ data?.city }}</h4>
-    <p class="text-gray-800">{{ data?.street }}</p>
-    <p class="text-gray-800">{{ data?.district }}, {{ data?.division }}</p>
-    <p class="text-gray-800">{{ data?.contact }}</p>
-    <p class="text-gray-800">{{ data?.email }}</p>
+    <h4 class="text-neutral-800 font-bold">{{ data?.city }}</h4>
+    <p class="text-neutral-800">{{ data?.street }}</p>
+    <p class="text-neutral-800">{{ data?.district }}, {{ data?.division }}</p>
+    <p class="text-neutral-800">{{ data?.contact }}</p>
+    <p class="text-neutral-800">{{ data?.email }}</p>
   </div>
 </div>
 <!-- single card end -->
