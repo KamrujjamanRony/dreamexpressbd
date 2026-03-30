@@ -6,7 +6,7 @@ import { FormField, form, required, validate, debounce } from '@angular/forms/si
 import { finalize } from 'rxjs';
 import { OrderM, OrderItemM } from '../../../../models/OrderM';
 import { TokenM } from '../../../../models/TokenM';
-import { ProductM } from '../../../../models/Products';
+import { ProductM, ProductColorsM } from '../../../../models/Products';
 import { SToken } from '../../../../services/s-token';
 import { SProduct } from '../../../../services/s-product';
 import { SContact } from '../../../../services/s-contact';
@@ -520,26 +520,36 @@ export class OrderForm implements OnChanges {
     return product.sizes.split(',').map(s => s.trim()).filter(s => s);
   }
 
+  /** Extract productsColors array handling both property names and $values wrapping */
+  private getColorsArray(product: any): ProductColorsM[] {
+    const raw = product.productColors || product.productsColors;
+    if (!raw) return [];
+    const arr = raw.$values || raw;
+    return Array.isArray(arr) ? arr : [];
+  }
+
   getProductColors(product: ProductM): string[] {
-    // Check productsColors array first
-    if (product.productsColors && product.productsColors.length > 0) {
-      return product.productsColors.map(c => c.colorName).filter(c => c);
+    const colorsArr = this.getColorsArray(product);
+    if (colorsArr.length > 0) {
+      return colorsArr.map(c => c.colorName).filter(c => c);
     }
     // Fallback to colors field (can be string or array)
     if (product.colors) {
-      if (Array.isArray(product.colors)) {
-        return product.colors.filter((c: any) => c);
+      const raw = product.colors.$values || product.colors;
+      if (Array.isArray(raw)) {
+        return raw.filter((c: any) => c);
       }
-      if (typeof product.colors === 'string' && product.colors.trim()) {
-        return product.colors.split(',').map((c: string) => c.trim()).filter((c: string) => c);
+      if (typeof raw === 'string' && raw.trim()) {
+        return raw.split(',').map((c: string) => c.trim()).filter((c: string) => c);
       }
     }
     return [];
   }
 
   getProductColorsWithImage(product: ProductM): { colorName: string; image: string }[] {
-    if (product.productsColors && product.productsColors.length > 0) {
-      return product.productsColors.filter(c => c.colorName);
+    const colorsArr = this.getColorsArray(product);
+    if (colorsArr.length > 0) {
+      return colorsArr.filter(c => c.colorName);
     }
     // Fallback to colors field without images
     const colors = this.getProductColors(product);
@@ -551,8 +561,9 @@ export class OrderForm implements OnChanges {
   }
 
   getColorImage(product: ProductM, colorName: string): string {
-    if (product.productsColors && product.productsColors.length > 0) {
-      const match = product.productsColors.find(c => c.colorName === colorName);
+    const colorsArr = this.getColorsArray(product);
+    if (colorsArr.length > 0) {
+      const match = colorsArr.find(c => c.colorName === colorName);
       return match?.image || '';
     }
     return '';
