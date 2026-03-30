@@ -3,5 +3,6 @@ export interface CarouselM {
   companyID: any;
   title: string;
   description: string;
+  bLink: string;
   imageUrl: string;
 }
