@@ -2,7 +2,7 @@
 /* Scrollbar styling */
 .overflow-y-auto {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
+  scrollbar-color: var(--color-neutral-300) var(--color-surface);
 }
 
 .overflow-y-auto::-webkit-scrollbar {
@@ -10,11 +10,11 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  background: #f7fafc;
+  background: var(--color-surface);
   border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
+  background-color: var(--color-neutral-300);
   border-radius: 3px;
 }
