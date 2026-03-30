@@ -25,13 +25,13 @@
 }
 .skeleton-circle,
 .skeleton-line {
-  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-200) 50%, var(--color-neutral-100) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 :host-context(.dark) .skeleton-circle,
 :host-context(.dark) .skeleton-line {
-  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background: linear-gradient(90deg, var(--color-neutral-800) 25%, var(--color-neutral-700) 50%, var(--color-neutral-800) 75%);
   background-size: 200% 100%;
 }
 
@@ -83,18 +83,18 @@
   .voucher-paper,
   .voucher-paper *,
   .address-block {
-    color: #000 !important;
-    background: #fff !important;
-    -webkit-text-fill-color: #000 !important;
+    color: var(--color-black) !important;
+    background: var(--color-white) !important;
+    -webkit-text-fill-color: var(--color-black) !important;
   }
   .grand-total-amount {
-    color: #000 !important;
-    -webkit-text-fill-color: #000 !important;
+    color: var(--color-black) !important;
+    -webkit-text-fill-color: var(--color-black) !important;
   }
   .savings-strip {
     background: #ecfdf5 !important;
-    color: #000 !important;
-    -webkit-text-fill-color: #000 !important;
+    color: var(--color-black) !important;
+    -webkit-text-fill-color: var(--color-black) !important;
   }
   .qr-image {
     filter: none !important;
@@ -103,13 +103,13 @@
     border: 1px solid currentColor;
   }
   .address-block {
-    border: 1px solid #e5e7eb !important;
+    border: 1px solid var(--color-neutral-200) !important;
   }
   .voucher-divider {
-    background: #d1d5db !important;
+    background: var(--color-neutral-300) !important;
   }
   .grand-total-row {
-    border-color: #111827 !important;
+    border-color: var(--color-neutral-900) !important;
   }
   .fade-slide-in {
     opacity: 1 !important;
