@@ -63,6 +63,11 @@ export class OrderForm implements OnChanges {
   imgBaseUrl = environment.ImageApi;
   apiDeliveryCharges = signal<DeliveryChargeM[]>([]);
 
+  // Address dropdown data
+  regions = signal<any[]>([]);
+  cities = signal<any[]>([]);
+  areas = signal<any[]>([]);
+
   // Selected product for size/color picking
   pendingProduct = signal<ProductM | null>(null);
   selectedSize = signal<string>('');
@@ -141,7 +146,7 @@ export class OrderForm implements OnChanges {
       return null;
     });
 
-    required(s.shippingAddress.district, { message: 'District is required' });
+    required(s.shippingAddress.district, { message: 'Division is required' });
     required(s.shippingAddress.city, { message: 'City is required' });
     required(s.shippingAddress.street, { message: 'Street is required' });
     required(s.shippingAddress.contact, { message: 'Contact number is required' });
@@ -177,6 +182,9 @@ export class OrderForm implements OnChanges {
   constructor() {
     // Load products
     this.productService.search().subscribe(products => this.products.set(products));
+
+    // Load regions for division dropdown
+    this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
 
     // Load delivery charges from API & set default to outside Dhaka
     this.contactService.get(this.siteId).subscribe({
@@ -225,6 +233,34 @@ export class OrderForm implements OnChanges {
         }
       }
     });
+  }
+
+  onDistrictChange(district: string) {
+    this.model.update(m => ({
+      ...m,
+      shippingAddress: { ...m.shippingAddress, district, city: '', street: m.shippingAddress.street, contact: m.shippingAddress.contact, type: m.shippingAddress.type }
+    }));
+    this.cities.set([]);
+    this.areas.set([]);
+    if (district) {
+      this.dataService.getCitiesByRegion(district).subscribe(cities => this.cities.set(cities));
+    }
+  }
+
+  onCityChange(city: string) {
+    this.model.update(m => ({
+      ...m,
+      shippingAddress: { ...m.shippingAddress, city }
+    }));
+    this.areas.set([]);
+    if (city) {
+      this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
+    }
+  }
+
+  onAreaChange(area: string) {
+    // Append area to street if needed or store separately
+    // For now just update street prefix
   }
 
   private setDefaultDeliveryCharge() {
@@ -315,6 +351,16 @@ export class OrderForm implements OnChanges {
     if (this.selectedOrder.discountToken) {
       this.tokenCode = this.selectedOrder.discountToken;
       this.tokenApplied.set(true);
+    }
+
+    // Load cities/areas for existing order address
+    const district = o.shippingAddress?.district || '';
+    const city = o.shippingAddress?.city || '';
+    if (district) {
+      this.dataService.getCitiesByRegion(district).subscribe(cities => this.cities.set(cities));
+    }
+    if (city) {
+      this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
     }
 
     // Load order items

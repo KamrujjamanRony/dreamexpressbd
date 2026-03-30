@@ -563,30 +563,28 @@
     <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Shipping Address</h3>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- District -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Division -->
         <div>
-          @let district = form.shippingAddress.district();
-          @let districtError =
-            form.shippingAddress.district().invalid() && form.shippingAddress.district().touched();
-          <div class="relative pb-1">
-            <input
-              type="text"
-              [formField]="form.shippingAddress.district"
-              id="district"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 dark:text-white bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
-              placeholder=" "
-            />
-            <label
-              for="district"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >Division *</label
-            >
-          </div>
-          @if (districtError) {
-            <ul class="-mt-1 mb-1">
-              @for (error of district.errors(); track error) {
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+            >Division *</label
+          >
+          <select
+            [ngModel]="model().shippingAddress.district"
+            (ngModelChange)="onDistrictChange($event)"
+            name="district"
+            class="w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)]"
+          >
+            <option value="" disabled>Select Division</option>
+            @for (region of regions(); track region.name) {
+              <option [value]="region.name">{{ region.name }}</option>
+            }
+          </select>
+          @if (
+            form.shippingAddress.district().invalid() && form.shippingAddress.district().touched()
+          ) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.district().errors(); track error) {
                 <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
               }
             </ul>
@@ -595,90 +593,92 @@
 
         <!-- City -->
         <div>
-          @let city = form.shippingAddress.city();
-          @let cityError =
-            form.shippingAddress.city().invalid() && form.shippingAddress.city().touched();
-          <div class="relative pb-1">
-            <input
-              type="text"
-              [formField]="form.shippingAddress.city"
-              id="city"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 dark:text-white bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
-              placeholder=" "
-            />
-            <label
-              for="city"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >City *</label
-            >
-          </div>
-          @if (cityError) {
-            <ul class="-mt-1 mb-1">
-              @for (error of city.errors(); track error) {
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+            >City *</label
+          >
+          <select
+            [ngModel]="model().shippingAddress.city"
+            (ngModelChange)="onCityChange($event)"
+            name="city"
+            [disabled]="!model().shippingAddress.district"
+            class="w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="" disabled>Select City</option>
+            @for (city of cities(); track city.name) {
+              <option [value]="city.name">{{ city.name }}</option>
+            }
+          </select>
+          @if (form.shippingAddress.city().invalid() && form.shippingAddress.city().touched()) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.city().errors(); track error) {
                 <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
               }
             </ul>
           }
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <!-- Area -->
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+            >Area</label
+          >
+          <select
+            (ngModelChange)="onAreaChange($event)"
+            [ngModel]="''"
+            name="area"
+            [disabled]="!model().shippingAddress.city"
+            class="w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select Area</option>
+            @for (area of areas(); track area.name) {
+              <option [value]="area.name">{{ area.name }}</option>
+            }
+          </select>
         </div>
 
-        <!-- Street -->
-        <div class="md:col-span-2">
-          @let street = form.shippingAddress.street();
-          @let streetError =
-            form.shippingAddress.street().invalid() && form.shippingAddress.street().touched();
-          <div class="relative pb-1">
-            <input
-              type="text"
-              [formField]="form.shippingAddress.street"
-              id="street"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 dark:text-white bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
-              placeholder=" "
-            />
-            <label
-              for="street"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >Street Address *</label
-            >
-          </div>
-          @if (streetError) {
-            <ul class="-mt-1 mb-1">
-              @for (error of street.errors(); track error) {
+        <!-- Street Address -->
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+            >Street Address *</label
+          >
+          <input
+            type="text"
+            [formField]="form.shippingAddress.street"
+            placeholder="House no, Road, Area"
+            autocomplete="street-address"
+            class="w-full py-2.5 px-3.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] placeholder:text-gray-400"
+          />
+          @if (form.shippingAddress.street().invalid() && form.shippingAddress.street().touched()) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.street().errors(); track error) {
                 <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
               }
             </ul>
           }
         </div>
+      </div>
 
-        <!-- Contact -->
-        <div class="md:col-span-2">
-          @let contact = form.shippingAddress.contact();
-          @let contactError =
-            form.shippingAddress.contact().invalid() && form.shippingAddress.contact().touched();
-          <div class="relative pb-1">
-            <input
-              type="tel"
-              [formField]="form.shippingAddress.contact"
-              id="shippingContact"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 dark:text-white bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
-              placeholder=" "
-            />
-            <label
-              for="shippingContact"
-              class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >Contact Number *</label
-            >
-          </div>
-          @if (contactError) {
-            <ul class="-mt-1 mb-1">
-              @for (error of contact.errors(); track error) {
-                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
-              }
-            </ul>
-          }
-        </div>
+      <!-- Contact Number (full width) -->
+      <div class="mt-4">
+        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+          >Contact Number *</label
+        >
+        <input
+          type="tel"
+          [formField]="form.shippingAddress.contact"
+          placeholder="01XXXXXXXXX"
+          autocomplete="tel"
+          class="w-full py-2.5 px-3.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] placeholder:text-gray-400"
+        />
+        @if (form.shippingAddress.contact().invalid() && form.shippingAddress.contact().touched()) {
+          <ul class="mt-1">
+            @for (error of form.shippingAddress.contact().errors(); track error) {
+              <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+            }
+          </ul>
+        }
       </div>
     </div>
 
