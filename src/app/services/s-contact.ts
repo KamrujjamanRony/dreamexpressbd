@@ -2,26 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, map } from 'rxjs';
-import { ContactM, ContactUsM, DeliveryChargeM } from '../models/Contact';
+import { ContactM, ContactUsM } from '../models/Contact';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SContact {
   private readonly http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/Address`;
-  private contactUsUrl = `${environment.apiUrl}/ContactUs`;
+  private apiUrl = `${environment.apiUrl}/ContactUs`;
 
   add(model: ContactM): Observable<ContactM> {
-    return this.http.post<ContactM>(this.apiUrl, model).pipe(map(this.normalize));
+    return this.http.post<any>(this.apiUrl, model).pipe(map(this.normalize));
   }
 
   get(id: any): Observable<ContactM> {
-    return this.http.get<ContactM>(`${this.apiUrl}/${id}`).pipe(map(this.normalize));
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(map(this.normalize));
   }
 
   update(id: any, updateRequest: any): Observable<ContactM> {
-    return this.http.put<ContactM>(`${this.apiUrl}/${id}`, updateRequest).pipe(map(this.normalize));
+    return this.http.put<any>(`${this.apiUrl}/${id}`, updateRequest).pipe(map(this.normalize));
   }
 
   delete(id: any): Observable<ContactM> {
@@ -29,35 +28,27 @@ export class SContact {
   }
 
   submitContactUs(model: ContactUsM): Observable<any> {
-    return this.http.post(this.contactUsUrl, model);
+    return this.http.post(`${this.apiUrl}/message`, model);
   }
 
-  private normalize(data: any): ContactM {
-    const raw = data || {};
-    const charges = raw.deliveryCharges ?? raw.DeliveryCharges;
-    const chargeList: DeliveryChargeM[] = (
-      Array.isArray(charges) ? charges : charges?.$values || []
-    ).map((c: any) => ({
-      id: c.id ?? c.Id,
-      name: c.name ?? c.Name ?? '',
-      amount: c.amount ?? c.Amount ?? 0,
-      isActive: c.isActive ?? c.IsActive ?? true,
-      siteSettingId: c.siteSettingId ?? c.SiteSettingId,
-    }));
-
+  private normalize(raw: any): ContactM {
+    const data = raw?.data || raw || {};
     return {
-      id: raw.id ?? raw.Id,
-      companyID: raw.companyID ?? raw.CompanyID ?? raw.companyId ?? raw.CompanyId,
-      address1: raw.address1 ?? raw.Address1 ?? '',
-      address2: raw.address2 ?? raw.Address2 ?? '',
-      email: raw.email ?? raw.Email ?? '',
-      phoneNumber1: raw.phoneNumber1 ?? raw.PhoneNumber1 ?? '',
-      phoneNumber2: raw.phoneNumber2 ?? raw.PhoneNumber2 ?? '',
-      phoneNumber3: raw.phoneNumber3 ?? raw.PhoneNumber3 ?? '',
-      facebookLink: raw.facebookLink ?? raw.FacebookLink ?? '',
-      othersLink1: raw.othersLink1 ?? raw.OthersLink1 ?? '',
-      othersLink2: raw.othersLink2 ?? raw.OthersLink2 ?? '',
-      deliveryCharges: chargeList,
+      id: data.id,
+      companyID: data.companyID,
+      facebookLink: data.facebookLink || '',
+      iLink: data.iLink || '',
+      yLink: data.yLink || '',
+      wNum: data.wNum || '',
+      lat: data.lat || 0,
+      lng: data.lng || 0,
+      mapUrl: data.mapUrl || '',
+      othersLink1: data.othersLink1 || '',
+      othersLink2: data.othersLink2 || '',
+      quickInfo: data.quickInfo || [],
+      faqs: data.faqs || [],
+      contactCards: data.contactCards || [],
+      deliveryCharges: data.deliveryCharges || [],
     };
   }
 
