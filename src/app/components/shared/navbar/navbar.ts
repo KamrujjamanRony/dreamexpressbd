@@ -7,12 +7,12 @@ import { SProduct } from '../../../services/s-product';
 import { debounceTime, distinctUntilChanged, of, Subject, Subscription, switchMap } from 'rxjs';
 import { SAuthUser } from '../../../services/s-auth-user';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
-import { NgOptimizedImage } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage, NgClass],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
