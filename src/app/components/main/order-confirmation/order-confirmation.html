@@ -2,16 +2,16 @@
   <!-- Loading State -->
   @if (loading) {
     <div class="max-w-3xl mx-auto">
-      <div class="loading-skeleton">
-        <div class="skeleton-header">
-          <div class="skeleton-circle"></div>
-          <div class="skeleton-line w-48 h-6 mx-auto mt-4"></div>
-          <div class="skeleton-line w-64 h-4 mx-auto mt-2"></div>
+      <div class="bg-white dark:bg-gray-900 rounded-xl p-8 border border-gray-200 dark:border-gray-800">
+        <div class="text-center">
+          <div class="skeleton-circle w-14 h-14 rounded-full mx-auto"></div>
+          <div class="skeleton-line w-48 h-6 mx-auto mt-4 rounded-md"></div>
+          <div class="skeleton-line w-64 h-4 mx-auto mt-2 rounded-md"></div>
         </div>
-        <div class="skeleton-body mt-8">
-          <div class="skeleton-line w-full h-16 mt-3"></div>
-          <div class="skeleton-line w-full h-16 mt-3"></div>
-          <div class="skeleton-line w-full h-16 mt-3"></div>
+        <div class="mt-8">
+          <div class="skeleton-line w-full h-16 mt-3 rounded-md"></div>
+          <div class="skeleton-line w-full h-16 mt-3 rounded-md"></div>
+          <div class="skeleton-line w-full h-16 mt-3 rounded-md"></div>
         </div>
       </div>
     </div>
@@ -20,15 +20,10 @@
   @if (orderDetails && !loading) {
     <!-- Success Header (screen only) -->
     <div class="max-w-3xl mx-auto mb-6 fade-slide-in no-print" style="--delay: 0">
-      <div class="success-banner">
-        <div class="success-icon-wrap">
+      <div class="text-center py-6 px-4">
+        <div class="success-icon-wrap w-16 h-16 rounded-full flex items-center justify-center bg-linear-to-br from-emerald-600 to-emerald-500 mx-auto shadow-[0_6px_20px_rgba(5,150,105,0.3)]">
           <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2.5"
-              d="M5 13l4 4L19 7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mt-4">Order Confirmed!</h1>
@@ -39,278 +34,206 @@
     </div>
 
     <!-- Action Buttons (screen only) -->
-    <div
-      class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print"
-      style="--delay: 1"
-    >
-      <button (click)="printVoucher()" class="action-btn print-btn">
+    <div class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print" style="--delay: 1">
+      <button (click)="printVoucher()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         Print Voucher
       </button>
-      <button (click)="continueShopping()" class="action-btn shop-btn">
+      <button (click)="continueShopping()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
         Continue Shopping
       </button>
     </div>
 
-    <!-- ═══════ VOUCHER ═══════ -->
+    <!-- VOUCHER -->
     <div class="voucher-wrapper max-w-3xl mx-auto fade-slide-in" style="--delay: 2" id="voucher">
-      <div class="voucher-paper">
-        <!-- ── Voucher Header ── -->
-        <div class="voucher-header">
-          <div class="voucher-brand">
-            <h1 class="voucher-company">{{ companyName }}</h1>
-            <p class="voucher-subtitle">Order Invoice</p>
+      <div class="voucher-paper bg-white dark:bg-slate-900 rounded-[14px] border border-gray-200 dark:border-slate-800 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_10px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2),0_10px_30px_rgba(0,0,0,0.3)] overflow-hidden relative">
+        <!-- Voucher Header -->
+        <div class="voucher-header flex justify-between items-start py-7 px-8 pb-5 flex-wrap gap-4">
+          <div class="shrink-0">
+            <h1 class="text-2xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">{{ companyName }}</h1>
+            <p class="text-[0.75rem] uppercase tracking-[0.12em] text-gray-400 mt-0.5 font-semibold">Order Invoice</p>
           </div>
-          <div class="voucher-meta">
-            <div class="voucher-id">
-              <span class="meta-label">Invoice No.</span>
-              <span class="meta-value font-mono">#{{ orderId }}</span>
+          <div class="voucher-meta text-right flex flex-col items-end gap-1">
+            <div class="flex flex-col items-end">
+              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-gray-400 font-semibold">Invoice No.</span>
+              <span class="text-sm font-bold text-gray-900 dark:text-slate-200 font-mono">#{{ orderId }}</span>
             </div>
-            <div class="voucher-date">
-              <span class="meta-label">Date</span>
-              <span class="meta-value">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
+            <div class="flex flex-col items-end">
+              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-gray-400 font-semibold">Date</span>
+              <span class="text-sm font-bold text-gray-900 dark:text-slate-200">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
             </div>
-            <span class="status-badge" [ngClass]="getStatusClass(orderDetails.orderStatus)">
+            <span class="status-badge text-[0.65rem] font-bold py-0.75 px-2.5 rounded-full uppercase tracking-[0.04em] mt-1" [ngClass]="getStatusClass(orderDetails.orderStatus)">
               {{ getOrderStatusText(orderDetails.orderStatus) }}
             </span>
           </div>
         </div>
 
-        <div class="voucher-divider"></div>
+        <div class="voucher-divider h-px bg-linear-to-r from-transparent via-gray-300 dark:via-slate-600 to-transparent mx-8"></div>
 
-        <!-- ── Billing / Shipping Row ── -->
-        <div class="voucher-addresses">
-          <div class="address-block">
-            <h3 class="address-title">
+        <!-- Billing / Shipping Row -->
+        <div class="voucher-addresses grid grid-cols-3 gap-5 py-5 px-8">
+          <div class="address-block p-3.5 rounded-[10px] bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+            <h3 class="flex items-center gap-1.25 text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 mb-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               Bill To
             </h3>
-            <p class="address-name">{{ orderDetails.userName || 'Customer' }}</p>
+            <p class="text-[0.82rem] font-semibold text-slate-800 dark:text-slate-200 leading-tight">{{ orderDetails.userName || 'Customer' }}</p>
             @if (orderDetails.userPhone) {
-              <p class="address-detail">{{ orderDetails.userPhone }}</p>
+              <p class="text-[0.75rem] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{{ orderDetails.userPhone }}</p>
             }
             @if (orderDetails.userEmail) {
-              <p class="address-detail">{{ orderDetails.userEmail }}</p>
+              <p class="text-[0.75rem] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{{ orderDetails.userEmail }}</p>
             }
           </div>
-          <div class="address-block">
-            <h3 class="address-title">
+          <div class="address-block p-3.5 rounded-[10px] bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+            <h3 class="flex items-center gap-1.25 text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 mb-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               Ship To
             </h3>
-            <p class="address-name">{{ orderDetails.shippingAddress.street }}</p>
-            <p class="address-detail">
-              {{ orderDetails.shippingAddress.city
-              }}{{
-                orderDetails.shippingAddress.district
-                  ? ', ' + orderDetails.shippingAddress.district
-                  : ''
-              }}
+            <p class="text-[0.82rem] font-semibold text-slate-800 dark:text-slate-200 leading-tight">{{ orderDetails.shippingAddress.street }}</p>
+            <p class="text-[0.75rem] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+              {{ orderDetails.shippingAddress.city }}{{ orderDetails.shippingAddress.district ? ', ' + orderDetails.shippingAddress.district : '' }}
             </p>
             @if (orderDetails.shippingAddress.contact) {
-              <p class="address-detail">Phone: {{ orderDetails.shippingAddress.contact }}</p>
+              <p class="text-[0.75rem] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">Phone: {{ orderDetails.shippingAddress.contact }}</p>
             }
           </div>
-          <div class="address-block payment-block">
-            <h3 class="address-title">
+          <div class="address-block p-3.5 rounded-[10px] bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+            <h3 class="flex items-center gap-1.25 text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 mb-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Payment
             </h3>
-            <p class="address-name">{{ orderDetails.paymentMethod }}</p>
+            <p class="text-[0.82rem] font-semibold text-slate-800 dark:text-slate-200 leading-tight">{{ orderDetails.paymentMethod }}</p>
             @if (orderDetails.deliveredDate) {
-              <p class="address-detail">
-                Delivered: {{ orderDetails.deliveredDate | date: 'mediumDate' }}
-              </p>
+              <p class="text-[0.75rem] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">Delivered: {{ orderDetails.deliveredDate | date: 'mediumDate' }}</p>
             }
           </div>
         </div>
 
-        <!-- ── Items Table ── -->
-        <div class="voucher-table-wrap">
-          <table class="voucher-table">
+        <!-- Items Table -->
+        <div class="voucher-table-wrap px-8 overflow-x-auto">
+          <table class="w-full border-collapse text-[0.82rem]">
             <thead>
-              <tr>
-                <th class="th-num">#</th>
-                <th class="th-item">Item</th>
-                <th class="th-qty">Qty</th>
-                <th class="th-price">Price</th>
-                <th class="th-total">Total</th>
+              <tr class="border-b-2 border-slate-200 dark:border-slate-700">
+                <th class="text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 py-2.5 px-2 text-center w-8">No</th>
+                <th class="text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 py-2.5 px-2 text-left">Item</th>
+                <th class="text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 py-2.5 px-2 text-right whitespace-nowrap">Qty</th>
+                <th class="text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 py-2.5 px-2 text-right whitespace-nowrap">Price</th>
+                <th class="text-[0.62rem] font-bold uppercase tracking-[0.06em] text-slate-400 py-2.5 px-2 text-right pr-0 whitespace-nowrap">Total</th>
               </tr>
             </thead>
             <tbody>
               @for (item of getOrderItems(); track item.productId || $index; let i = $index) {
-                <tr class="item-row">
-                  <td class="td-num">{{ i + 1 }}</td>
-                  <td class="td-item">
-                    <div class="item-cell">
+                <tr class="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
+                  <td class="py-[0.7rem] px-2 align-middle text-center text-slate-400 text-[0.75rem]">{{ i + 1 }}</td>
+                  <td class="py-[0.7rem] px-2 align-middle text-slate-600 dark:text-slate-300">
+                    <div class="flex items-center gap-2.5">
                       @if (item.image) {
-                        <div class="item-thumb">
-                          <img
-                            [ngSrc]="
-                              item.image.startsWith('http') ? item.image : imgBaseUrl + item.image
-                            "
-                            width="40"
-                            height="40"
-                            loading="lazy"
-                            decoding="async"
-                            alt=""
-                            class="w-full h-full object-cover rounded"
-                          />
+                        <div class="item-thumb w-10 h-10 rounded-md overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                          <img [ngSrc]="item.image.startsWith('http') ? item.image : imgBaseUrl + item.image" width="40" height="40" loading="lazy" decoding="async" alt="" class="w-full h-full object-cover rounded" />
                         </div>
                       }
                       <div>
-                        <span class="item-name">{{ item.productName }}</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-100 block leading-tight">{{ item.productName }}</span>
                         @if (item.size || item.color) {
-                          <span class="item-variants">
+                          <span class="flex gap-1 mt-0.5">
                             @if (item.size) {
-                              <span class="variant-tag">{{ item.size }}</span>
+                              <span class="text-[0.6rem] font-medium py-px px-1.5 rounded-[3px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">{{ item.size }}</span>
                             }
                             @if (item.color) {
-                              <span class="variant-tag">{{ item.color }}</span>
+                              <span class="text-[0.6rem] font-medium py-px px-1.5 rounded-[3px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">{{ item.color }}</span>
                             }
                           </span>
                         }
                       </div>
                     </div>
                   </td>
-                  <td class="td-qty">{{ item.quantity }}</td>
-                  <td class="td-price"><span [innerHTML]="item.price | bdt"></span></td>
-                  <td class="td-total">
-                    <span [innerHTML]="item.price * item.quantity | bdt"></span>
-                  </td>
+                  <td class="py-[0.7rem] px-2 align-middle text-right whitespace-nowrap text-slate-600 dark:text-slate-300">{{ item.quantity }}</td>
+                  <td class="py-[0.7rem] px-2 align-middle text-right whitespace-nowrap text-slate-600 dark:text-slate-300"><span [innerHTML]="item.price | bdt"></span></td>
+                  <td class="py-[0.7rem] px-2 align-middle text-right whitespace-nowrap font-semibold text-slate-800 dark:text-slate-100 pr-0"><span [innerHTML]="item.price * item.quantity | bdt"></span></td>
                 </tr>
               }
             </tbody>
           </table>
         </div>
 
-        <!-- ── Summary + QR Row ── -->
-        <div class="voucher-bottom">
-          <!-- QR Code & Tracking -->
-          <div class="voucher-qr-section">
+        <!-- Summary + QR Row -->
+        <div class="voucher-bottom flex justify-between items-end py-6 px-8 gap-6 flex-wrap">
+          <div class="voucher-qr-section flex items-center gap-3">
             @if (qrCodeUrl()) {
-              <img [src]="qrCodeUrl()" alt="QR Code" class="qr-image" width="100" height="100" />
+              <img [src]="qrCodeUrl()" alt="QR Code" class="qr-image rounded-lg border border-slate-200 dark:border-slate-700 dark:invert dark:hue-rotate-180" width="100" height="100" />
             }
-            <div class="qr-info">
-              <p class="qr-label">Scan for order details</p>
-              <p class="qr-order-id font-mono">#{{ orderId }}</p>
+            <div class="flex flex-col">
+              <p class="text-[0.7rem] text-slate-400 font-medium">Scan for order details</p>
+              <p class="text-[0.82rem] font-bold text-slate-500 dark:text-slate-400 mt-0.5 font-mono">#{{ orderId }}</p>
             </div>
           </div>
-
-          <!-- Totals -->
-          <div class="voucher-totals">
-            <div class="total-row">
+          <div class="voucher-totals min-w-62.5">
+            <div class="flex justify-between py-[0.3rem] text-[0.82rem] text-slate-500 dark:text-slate-400">
               <span>Subtotal ({{ getTotalQuantity() }} items)</span>
               <span [innerHTML]="orderDetails.subtotal | bdt"></span>
             </div>
-            <div class="total-row">
+            <div class="flex justify-between py-[0.3rem] text-[0.82rem] text-slate-500 dark:text-slate-400">
               <span>Delivery Charge</span>
               <span [innerHTML]="orderDetails.deliveryCharge | bdt"></span>
             </div>
             @if (orderDetails.discountAmount > 0) {
-              <div class="total-row discount-row">
+              <div class="flex justify-between py-[0.3rem] text-[0.82rem] text-emerald-600 dark:text-emerald-400">
                 <span class="flex items-center gap-1">
                   Discount
                   @if (orderDetails.discountToken) {
-                    <span class="discount-code">({{ orderDetails.discountToken }})</span>
+                    <span class="text-[0.68rem] opacity-70 ml-0.5">({{ orderDetails.discountToken }})</span>
                   }
                 </span>
                 <span>- <span [innerHTML]="orderDetails.discountAmount | bdt"></span></span>
               </div>
             }
-            <div class="grand-total-row">
+            <div class="grand-total-row flex justify-between items-center pt-2.5 mt-2 border-t-2 border-gray-900 dark:border-slate-200 text-[0.95rem] font-bold text-gray-900 dark:text-slate-100">
               <span>Total Due</span>
-              <span class="grand-total-amount" [innerHTML]="orderDetails.totalAmount | bdt"></span>
+              <span class="grand-total-amount text-lg font-extrabold text-rose-600 dark:text-rose-400" [innerHTML]="orderDetails.totalAmount | bdt"></span>
             </div>
           </div>
         </div>
 
         @if (orderDetails.discountAmount > 0) {
-          <div class="savings-strip">
+          <div class="savings-strip flex items-center justify-center gap-1.5 py-2.5 px-8 text-[0.75rem] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-600/8">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            You saved
-            <span class="font-bold" [innerHTML]="orderDetails.discountAmount | bdt"></span> on this
-            order!
+            You saved <span class="font-bold" [innerHTML]="orderDetails.discountAmount | bdt"></span> on this order!
           </div>
         }
 
-        <!-- ── Voucher Footer ── -->
-        <div class="voucher-footer">
-          <div class="footer-line"></div>
-          <p class="footer-thanks">{{ companyName }} &mdash; Thank you for your order!</p>
-          <p class="footer-note">
-            This is a computer-generated invoice and does not require a signature.
-          </p>
+        <!-- Voucher Footer -->
+        <div class="voucher-footer py-4 px-8 pb-5">
+          <div class="h-px bg-linear-to-r from-transparent via-gray-300 dark:via-slate-600 to-transparent mb-3"></div>
+          <p class="text-center text-[0.78rem] font-semibold text-slate-500 dark:text-slate-400">{{ companyName }} &mdash; Thank you for your order!</p>
+          <p class="text-center text-[0.65rem] text-slate-400 mt-0.5">This is a computer-generated invoice and does not require a signature.</p>
         </div>
       </div>
     </div>
 
     <!-- Bottom actions (screen only) -->
-    <div
-      class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print"
-      style="--delay: 3"
-    >
-      <button (click)="printVoucher()" class="action-btn-sm print-btn">
+    <div class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print" style="--delay: 3">
+      <button (click)="printVoucher()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         Print
       </button>
-      <button (click)="continueShopping()" class="action-btn-sm shop-btn">Continue Shopping</button>
+      <button (click)="continueShopping()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">Continue Shopping</button>
     </div>
   }
 </div>
