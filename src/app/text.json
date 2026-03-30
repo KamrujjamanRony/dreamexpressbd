@@ -1,0 +1,76 @@
+{
+  "id": 1,
+  "companyId": 1,
+  "headerTitle": "Contact Us",
+  "headerSubtitle": "Have a question or feedback? We'd love to hear from you.",
+  "headerTag": "GET IN TOUCH",
+  "contactCards": [
+    {
+      "type": "phone",
+      "title": "Phone",
+      "value": "+880123456789"
+    },
+    {
+      "type": "email",
+      "title": "Email",
+      "value": "support@dreamexpressbd.com"
+    },
+    {
+      "type": "address",
+      "title": "Address",
+      "value": "Dhaka, Bangladesh"
+    },
+    {
+      "type": "hours",
+      "title": "Working Hours",
+      "value": "Sat - Thu: 10AM - 8PM"
+    }
+  ],
+  "quickInfo": [
+    {
+      "title": "Fast Delivery",
+      "description": "Delivery within 2-5 business days across Bangladesh.",
+      "icon": "truck"
+    },
+    {
+      "title": "Easy Returns",
+      "description": "7-day return policy.",
+      "icon": "refresh"
+    },
+    {
+      "title": "Secure Payment",
+      "description": "Multiple secure payment options.",
+      "icon": "shield"
+    },
+    {
+      "title": "24/7 Support",
+      "description": "Customer support anytime.",
+      "icon": "support"
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How long does delivery take?",
+      "answer": "2-5 business days inside Bangladesh."
+    },
+    {
+      "question": "What is your return policy?",
+      "answer": "7-day easy return."
+    },
+    {
+      "question": "What payment methods do you accept?",
+      "answer": "bKash, Nagad, Card, COD."
+    },
+    {
+      "question": "How can I track my order?",
+      "answer": "From your dashboard."
+    }
+  ],
+  "facebookLink": "https://facebook.com/xxx",
+  "instagramLink": "https://instagram.com/xxx",
+  "youtubeLink": "https://youtube.com/xxx",
+  "whatsappNumber": "+8801XXXXXXXXX",
+  "mapLat": 23.8103,
+  "mapLng": 90.4125,
+  "mapEmbedUrl": "https://maps.google.com/"
+}
