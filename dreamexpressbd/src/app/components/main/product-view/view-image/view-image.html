@@ -2,7 +2,7 @@
   <!-- product image -->
   <div class="w-full">
     <div
-      class="image-container w-full mb-5"
+      class="relative overflow-hidden w-full mb-5"
       (mousemove)="onMouseMove($event)"
       (mouseleave)="onMouseLeave()"
     >
@@ -15,7 +15,7 @@
         loading="lazy"
         decoding="async"
       />
-      <div class="zoom w-full h-full" [ngStyle]="zoomStyle"></div>
+      <div class="absolute border-2 border-black pointer-events-none bg-no-repeat hidden w-full h-full" [ngStyle]="zoomStyle"></div>
     </div>
     <div class="grid grid-cols-5 gap-4 mt-4">
       <img
