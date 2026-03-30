@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, Renderer2, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, Renderer2, signal, ViewChild } from '@angular/core';
 import { SCart } from '../../../services/s-cart';
 import { SWishlist } from '../../../services/s-wishlist';
 import { Router, RouterLink } from '@angular/router';
@@ -9,10 +9,11 @@ import { SAuthUser } from '../../../services/s-auth-user';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgClass, NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { SearchOverlay } from '../search-overlay/search-overlay';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, NgOptimizedImage, NgClass],
+  imports: [RouterLink, NgOptimizedImage, NgClass, SearchOverlay],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -47,9 +48,23 @@ export class Navbar implements OnDestroy {
   showMobileCategories = signal(false);
   searchLoading = signal(false);
 
+  @ViewChild('searchOverlay') searchOverlay!: SearchOverlay;
+
+  openSearch() {
+    this.searchOverlay?.open();
+  }
+
   @HostListener('window:scroll')
   onWindowScroll() {
     this.isScrolled.set(window.scrollY > 20);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      event.preventDefault();
+      this.openSearch();
+    }
   }
 
   ngOnInit() {
