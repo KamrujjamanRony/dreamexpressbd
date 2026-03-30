@@ -22,13 +22,46 @@
   --color-primary-900: #1e3a8a;
   --color-primary-950: #172554;
 
+  /* ── Neutral (text, backgrounds, borders) ── */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  --color-neutral-950: #030712;
+
+  /* ── Dark Surfaces (dark mode backgrounds) ── */
+  --color-dark-surface: #0f172a;
+  --color-dark-card: #1e293b;
+  --color-dark-muted: #334155;
+  --color-dark-deep: #0f0a1e;
+  --color-dark-elevated: #1e1137;
+  --color-dark-scroll-track: #0f0f1a;
+  --color-dark-scroll-thumb: #2a2a40;
+  --color-dark-scroll-hover: #3a3a55;
+
+  /* ── Accent (secondary highlights) ── */
+  --color-accent: #ec4899;
+  --color-accent-light: #f472b6;
+
+  /* ── Black & White ── */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
   /* ── Semantic Colors ── */
-  --color-brand: #0f172a; /* dark navy — navbar, footer, headings */
-  --color-success: #10b981; /* order confirmed, in-stock */
-  --color-warning: #f59e0b; /* low stock, attention */
-  --color-danger: #ef4444; /* errors, out-of-stock */
-  --color-surface: #f8fafc; /* page/card backgrounds */
-  --color-border: #e2e8f0; /* dividers, separators */
+  --color-brand: #0f172a;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-surface: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-info: #007bff;
 }
 
 body {
@@ -44,20 +77,20 @@ body {
   height: 8px;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #0f0f1a;
+  background: var(--color-dark-scroll-track);
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #2a2a40;
+  background: var(--color-dark-scroll-thumb);
   border-radius: 4px;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a55;
+  background: var(--color-dark-scroll-hover);
 }
 
 /* ── Dark Mode Selection ── */
 .dark ::selection {
   background: color-mix(in srgb, var(--color-primary-600) 35%, transparent);
-  color: #f0f0ff;
+  color: var(--color-neutral-50);
 }
 
 /* ── Global Print Styles ── */
@@ -70,7 +103,7 @@ body {
     display: none !important;
   }
   body.printing-voucher {
-    background: #fff !important;
+    background: var(--color-white) !important;
   }
   body.printing-voucher app-order-confirmation {
     display: block;
