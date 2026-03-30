@@ -9,6 +9,9 @@ import { TokenM } from '../../../../models/TokenM';
 import { ProductM } from '../../../../models/Products';
 import { SToken } from '../../../../services/s-token';
 import { SProduct } from '../../../../services/s-product';
+import { SContact } from '../../../../services/s-contact';
+import { SData } from '../../../../services/s-data';
+import { DeliveryChargeM } from '../../../../models/Contact';
 import { environment } from '../../../../../environments/environment';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 
@@ -53,6 +56,16 @@ export class OrderForm implements OnChanges {
 
   private tokenService = inject(SToken);
   private productService = inject(SProduct);
+  private contactService = inject(SContact);
+  private dataService = inject(SData);
+
+  siteId = environment.companyCode;
+  apiDeliveryCharges = signal<DeliveryChargeM[]>([]);
+
+  // Selected product for size/color picking
+  pendingProduct = signal<ProductM | null>(null);
+  selectedSize = signal<string>('');
+  selectedColor = signal<string>('');
 
   // Product selection state
   products = signal<ProductM[]>([]);
@@ -87,7 +100,7 @@ export class OrderForm implements OnChanges {
     userName: '',
     userPhone: '',
     subtotal: 0,
-    deliveryCharge: 60,
+    deliveryCharge: 120,
     discountToken: '',
     discountType: '',
     discountValue: 0,
@@ -164,6 +177,19 @@ export class OrderForm implements OnChanges {
     // Load products
     this.productService.search().subscribe(products => this.products.set(products));
 
+    // Load delivery charges from API & set default to outside Dhaka
+    this.contactService.get(this.siteId).subscribe({
+      next: (data) => {
+        const activeCharges = (data.deliveryCharges || []).filter(c => c.isActive);
+        this.apiDeliveryCharges.set(activeCharges);
+        this.setDefaultDeliveryCharge();
+      },
+      error: () => {
+        // fallback default: outside Dhaka
+        this.model.update(m => ({ ...m, deliveryCharge: 120 }));
+      }
+    });
+
     // Sync subtotal from orderItems
     effect(() => {
       const subtotal = this.calculatedSubtotal();
@@ -182,22 +208,51 @@ export class OrderForm implements OnChanges {
       }
     });
 
-    // Auto-calculate delivery charge based on district
+    // Auto-calculate delivery charge based on city
     effect(() => {
-      const district = this.form.shippingAddress.district().value().toLowerCase();
-      if (!district) return;
+      const city = this.form.shippingAddress.city().value().toLowerCase();
+      if (!city) return;
 
-      const charge = district.includes('dhaka') ? 60 : 120;
       const tokenApplied = this.tokenApplied();
       const discountType = untracked(() => this.model().discountType);
       // Only update if token doesn't grant free delivery
       if (!tokenApplied || discountType !== 'FreeDelivery') {
+        const charge = this.getDeliveryChargeForCity(city);
         const currentCharge = untracked(() => this.model().deliveryCharge);
         if (currentCharge !== charge) {
           this.model.update(m => ({ ...m, deliveryCharge: charge }));
         }
       }
     });
+  }
+
+  private setDefaultDeliveryCharge() {
+    const charges = this.apiDeliveryCharges();
+    if (charges.length > 0) {
+      const outsideCharge = charges.find(c => c.name.toLowerCase().includes('outside'));
+      this.model.update(m => ({ ...m, deliveryCharge: outsideCharge ? outsideCharge.amount : charges[charges.length - 1].amount }));
+    } else {
+      this.model.update(m => ({ ...m, deliveryCharge: 120 }));
+    }
+  }
+
+  private getDeliveryChargeForCity(city: string): number {
+    city = (city || '').toLowerCase();
+    const charges = this.apiDeliveryCharges();
+
+    if (charges.length > 0) {
+      const match = charges.find(c =>
+        city.includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(city)
+      );
+      if (match) return match.amount;
+      if (city.includes('dhaka')) {
+        const dhakaCharge = charges.find(c => c.name.toLowerCase().includes('dhaka'));
+        return dhakaCharge ? dhakaCharge.amount : charges[charges.length - 1].amount;
+      }
+      const outsideCharge = charges.find(c => c.name.toLowerCase().includes('outside'));
+      return outsideCharge ? outsideCharge.amount : charges[charges.length - 1].amount;
+    }
+    return city.includes('dhaka') ? 60 : 120;
   }
 
   /* ---------------- LIFECYCLE ---------------- */
@@ -214,7 +269,7 @@ export class OrderForm implements OnChanges {
 
     const o = this.selectedOrder;
     const subtotal = o.subtotal || 0;
-    const deliveryCharge = o.deliveryCharge || 60;
+    const deliveryCharge = o.deliveryCharge || 120;
     const discountToken = o.discountToken || '';
     const discountType = o.discountType || '';
     const discountValue = o.discountValue || 0;
@@ -287,7 +342,7 @@ export class OrderForm implements OnChanges {
       userName: '',
       userPhone: '',
       subtotal: 0,
-      deliveryCharge: 60,
+      deliveryCharge: 120,
       discountToken: '',
       discountType: '',
       discountValue: 0,
@@ -409,8 +464,8 @@ export class OrderForm implements OnChanges {
   }
 
   removeToken() {
-    const district = this.form.shippingAddress.district().value().toLowerCase();
-    const charge = district.includes('dhaka') ? 60 : 120;
+    const city = this.form.shippingAddress.city().value().toLowerCase();
+    const charge = this.getDeliveryChargeForCity(city);
 
     this.model.update(m => ({
       ...m,
@@ -428,10 +483,55 @@ export class OrderForm implements OnChanges {
 
   /* ---------------- PRODUCT SELECTION ---------------- */
   addProduct(product: ProductM) {
-    const existing = this.orderItems().find(i => i.productId === product.id);
+    const hasSizes = product.sizes && product.sizes.trim().length > 0;
+    const hasColors = product.productsColors && product.productsColors.length > 0;
+
+    if (hasSizes || hasColors) {
+      // Show size/color picker
+      this.pendingProduct.set(product);
+      this.selectedSize.set('');
+      this.selectedColor.set('');
+      this.productSearch.set('');
+      this.showProductDropdown.set(false);
+      return;
+    }
+
+    this.addProductToItems(product, '', '');
+  }
+
+  confirmAddProduct() {
+    const product = this.pendingProduct();
+    if (!product) return;
+    this.addProductToItems(product, this.selectedSize(), this.selectedColor());
+    this.pendingProduct.set(null);
+    this.selectedSize.set('');
+    this.selectedColor.set('');
+  }
+
+  cancelAddProduct() {
+    this.pendingProduct.set(null);
+    this.selectedSize.set('');
+    this.selectedColor.set('');
+  }
+
+  getProductSizes(product: ProductM): string[] {
+    if (!product.sizes) return [];
+    return product.sizes.split(',').map(s => s.trim()).filter(s => s);
+  }
+
+  getProductColors(product: ProductM): string[] {
+    if (!product.productsColors || !product.productsColors.length) return [];
+    return product.productsColors.map(c => c.colorName).filter(c => c);
+  }
+
+  private addProductToItems(product: ProductM, size: string, color: string) {
+    const existing = this.orderItems().find(i =>
+      i.productId === product.id && (i.size || '') === size && (i.color || '') === color
+    );
     if (existing) {
       this.orderItems.update(items =>
-        items.map(i => i.productId === product.id ? { ...i, quantity: i.quantity + 1 } : i)
+        items.map(i => i.productId === product.id && (i.size || '') === size && (i.color || '') === color
+          ? { ...i, quantity: i.quantity + 1 } : i)
       );
     } else {
       const item: OrderItemM = {
@@ -439,6 +539,8 @@ export class OrderForm implements OnChanges {
         productName: product.title,
         quantity: 1,
         price: product.offerPrice || product.regularPrice || 0,
+        size: size || '',
+        color: color || '',
         image: product.image || ''
       };
       this.orderItems.update(items => [...items, item]);
@@ -447,14 +549,17 @@ export class OrderForm implements OnChanges {
     this.showProductDropdown.set(false);
   }
 
-  removeItem(productId: number) {
-    this.orderItems.update(items => items.filter(i => i.productId !== productId));
+  removeItem(productId: number, size?: string, color?: string) {
+    this.orderItems.update(items => items.filter(i =>
+      !(i.productId === productId && (i.size || '') === (size || '') && (i.color || '') === (color || ''))
+    ));
   }
 
-  updateItemQuantity(productId: number, qty: number) {
+  updateItemQuantity(productId: number, qty: number, size?: string, color?: string) {
     if (qty < 1) return;
     this.orderItems.update(items =>
-      items.map(i => i.productId === productId ? { ...i, quantity: qty } : i)
+      items.map(i => i.productId === productId && (i.size || '') === (size || '') && (i.color || '') === (color || '')
+        ? { ...i, quantity: qty } : i)
     );
   }
 

@@ -132,6 +132,75 @@
         }
       </div>
 
+      <!-- Size/Color Picker -->
+      @if (pendingProduct()) {
+        <div
+          class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-medium text-gray-800 dark:text-white">{{
+              pendingProduct()!.title
+            }}</span>
+            <button
+              type="button"
+              (click)="cancelAddProduct()"
+              class="text-gray-400 hover:text-gray-600 text-sm"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            @if (getProductSizes(pendingProduct()!).length > 0) {
+              <div>
+                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  >Size</label
+                >
+                <select
+                  [ngModel]="selectedSize()"
+                  (ngModelChange)="selectedSize.set($event)"
+                  name="pendingSize"
+                  [ngModelOptions]="{ standalone: true }"
+                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+                >
+                  <option value="">Select Size</option>
+                  @for (size of getProductSizes(pendingProduct()!); track size) {
+                    <option [value]="size">{{ size }}</option>
+                  }
+                </select>
+              </div>
+            }
+            @if (getProductColors(pendingProduct()!).length > 0) {
+              <div>
+                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  >Color</label
+                >
+                <select
+                  [ngModel]="selectedColor()"
+                  (ngModelChange)="selectedColor.set($event)"
+                  name="pendingColor"
+                  [ngModelOptions]="{ standalone: true }"
+                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+                >
+                  <option value="">Select Color</option>
+                  @for (color of getProductColors(pendingProduct()!); track color) {
+                    <option [value]="color">{{ color }}</option>
+                  }
+                </select>
+              </div>
+            }
+          </div>
+          <div class="flex justify-end mt-3">
+            <button
+              type="button"
+              (click)="confirmAddProduct()"
+              class="px-4 py-1.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Add to Order
+            </button>
+          </div>
+        </div>
+      }
+
       <!-- Selected Items Table -->
       @if (orderItems().length > 0) {
         <div class="overflow-x-auto mb-4">
@@ -139,6 +208,7 @@
             <thead class="bg-gray-100 dark:bg-gray-700">
               <tr>
                 <th class="px-3 py-2 text-left text-gray-700 dark:text-gray-300">Product</th>
+                <th class="px-3 py-2 text-center text-gray-700 dark:text-gray-300">Size/Color</th>
                 <th class="px-3 py-2 text-center text-gray-700 dark:text-gray-300">Qty</th>
                 <th class="px-3 py-2 text-right text-gray-700 dark:text-gray-300">Price</th>
                 <th class="px-3 py-2 text-right text-gray-700 dark:text-gray-300">Total</th>
@@ -146,14 +216,38 @@
               </tr>
             </thead>
             <tbody>
-              @for (item of orderItems(); track item.productId) {
+              @for (
+                item of orderItems();
+                track item.productId + (item.size || '') + (item.color || '')
+              ) {
                 <tr class="border-b border-gray-200 dark:border-gray-700">
                   <td class="px-3 py-2 text-gray-900 dark:text-white">{{ item.productName }}</td>
+                  <td class="px-3 py-2 text-center text-xs text-gray-500 dark:text-gray-400">
+                    @if (item.size) {
+                      <span
+                        class="inline-block bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded mr-1"
+                        >{{ item.size }}</span
+                      >
+                    }
+                    @if (item.color) {
+                      <span
+                        class="inline-block bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded"
+                        >{{ item.color }}</span
+                      >
+                    }
+                  </td>
                   <td class="px-3 py-2 text-center">
                     <div class="flex items-center justify-center gap-1">
                       <button
                         type="button"
-                        (click)="updateItemQuantity(item.productId, item.quantity - 1)"
+                        (click)="
+                          updateItemQuantity(
+                            item.productId,
+                            item.quantity - 1,
+                            item.size,
+                            item.color
+                          )
+                        "
                         class="w-6 h-6 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs hover:bg-gray-300 dark:hover:bg-gray-500"
                       >
                         -
@@ -163,7 +257,14 @@
                       }}</span>
                       <button
                         type="button"
-                        (click)="updateItemQuantity(item.productId, item.quantity + 1)"
+                        (click)="
+                          updateItemQuantity(
+                            item.productId,
+                            item.quantity + 1,
+                            item.size,
+                            item.color
+                          )
+                        "
                         class="w-6 h-6 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs hover:bg-gray-300 dark:hover:bg-gray-500"
                       >
                         +
@@ -181,7 +282,7 @@
                   <td class="px-3 py-2 text-center">
                     <button
                       type="button"
-                      (click)="removeItem(item.productId)"
+                      (click)="removeItem(item.productId, item.size, item.color)"
                       class="text-red-500 hover:text-red-700 text-xs"
                     >
                       &times;
@@ -351,7 +452,7 @@
             <label
               for="district"
               class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >District *</label
+              >Division *</label
             >
           </div>
           @if (districtError) {
