@@ -14,7 +14,7 @@
           />
         </svg>
       </div>
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Checkout</h1>
+      <h1 class="text-2xl font-bold text-neutral-800 dark:text-white">Checkout</h1>
     </div>
 
     <!-- Progress Steps -->
@@ -37,7 +37,7 @@
               [ngClass]="
                 activeStep() >= step.n
                   ? 'bg-linear-to-br from-rose-500 to-rose-600 text-white border-rose-500 shadow-[0_0_0_4px_rgba(244,63,94,0.15)]'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700'
+                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700'
               "
               [class.animate-step-bounce]="activeStep() === step.n"
               >{{ step.n }}</span
@@ -47,14 +47,14 @@
               [ngClass]="
                 activeStep() >= step.n
                   ? 'text-rose-500 dark:text-rose-400'
-                  : 'text-gray-400 dark:text-gray-500'
+                  : 'text-neutral-400 dark:text-neutral-500'
               "
               >{{ step.label }}</span
             >
           </button>
         }
         <div
-          class="absolute top-4.5 left-9 right-9 h-0.75 bg-gray-200 dark:bg-gray-700 rounded-sm z-0"
+          class="absolute top-4.5 left-9 right-9 h-0.75 bg-neutral-200 dark:bg-neutral-700 rounded-sm z-0"
         >
           <div
             class="h-full bg-linear-to-r from-rose-500 to-rose-400 rounded-sm transition-[width] duration-500 ease-in-out"
@@ -91,14 +91,14 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 1"
         [ngClass]="{
-          'bg-white dark:bg-gray-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 1,
-          'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 shadow-sm':
+          'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 1,
         }"
       >
         <div
-          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-[#1a2332]"
+          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-dark-hover"
           [ngClass]="activeStep() === 1 ? 'py-4' : 'py-3.5'"
           (click)="goToStep(1)"
         >
@@ -138,9 +138,9 @@
               }
             </div>
             <div>
-              <h2 class="font-semibold text-gray-800 dark:text-white">Delivery Address</h2>
+              <h2 class="font-semibold text-neutral-800 dark:text-white">Delivery Address</h2>
               @if (activeStep() > 1 && deliveryAddress()) {
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
                   {{ deliveryAddress().street }}, {{ deliveryAddress().city }}
                 </p>
               }
@@ -155,14 +155,14 @@
 
         @if (activeStep() === 1) {
           <div class="px-5 pb-5 animate-card-expand">
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
               Enter your delivery details to continue
             </p>
             <div class="space-y-4">
               @if (isGuest) {
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                    <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                       >Full Name *</label
                     >
                     <input
@@ -171,11 +171,11 @@
                       name="guestName"
                       placeholder="Your full name"
                       autocomplete="name"
-                      class="w-full py-2.5 px-3.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-gray-400"
+                      class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
                     />
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                    <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                       >Phone Number *</label
                     >
                     <input
@@ -184,21 +184,21 @@
                       name="guestPhone"
                       placeholder="01XXXXXXXXX"
                       autocomplete="tel"
-                      class="w-full py-2.5 px-3.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-gray-400"
+                      class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
                     />
                   </div>
                 </div>
               }
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Division *</label
                   >
                   <select
                     [ngModel]="guestDistrict"
                     (ngModelChange)="onDistrictChange($event)"
                     name="guestDistrict"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)]"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)]"
                   >
                     <option value="" disabled>Select Division</option>
                     @for (region of regions(); track region.name) {
@@ -207,7 +207,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >City *</label
                   >
                   <select
@@ -215,7 +215,7 @@
                     (ngModelChange)="onCityChange($event)"
                     name="guestCity"
                     [disabled]="!guestDistrict"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="" disabled>Select City</option>
                     @for (city of cities(); track city.name) {
@@ -226,14 +226,14 @@
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Area</label
                   >
                   <select
                     [(ngModel)]="guestArea"
                     name="guestArea"
                     [disabled]="!guestCity"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Select Area</option>
                     @for (area of areas(); track area.name) {
@@ -242,7 +242,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1"
+                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Street Address *</label
                   >
                   <input
@@ -251,7 +251,7 @@
                     name="guestStreet"
                     placeholder="House no, Road, Area"
                     autocomplete="street-address"
-                    class="w-full py-2.5 px-3.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-neutral-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-gray-400"
+                    class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
                   />
                 </div>
               </div>
@@ -281,15 +281,15 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 2"
         [ngClass]="{
-          'bg-white dark:bg-gray-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 2,
-          'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 shadow-sm':
+          'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 2,
           'opacity-50 pointer-events-none': activeStep() < 2,
         }"
       >
         <div
-          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-[#1a2332]"
+          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-dark-hover"
           [ngClass]="activeStep() === 2 ? 'py-4' : 'py-3.5'"
           (click)="goToStep(2)"
         >
@@ -323,9 +323,9 @@
               }
             </div>
             <div>
-              <h2 class="font-semibold text-gray-800 dark:text-white">Payment & Discount</h2>
+              <h2 class="font-semibold text-neutral-800 dark:text-white">Payment & Discount</h2>
               @if (activeStep() > 2) {
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
                   {{ paymentMethod }}
                   @if (tokenApplied()) {
                     &middot; Token: {{ discountToken() }}
@@ -344,7 +344,7 @@
         @if (activeStep() === 2) {
           <div class="px-5 pb-5 animate-card-expand">
             <!-- Payment Options -->
-            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            <h3 class="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
               Select Payment Method
             </h3>
             <div class="flex flex-col gap-2">
@@ -364,7 +364,7 @@
                   [ngClass]="
                     paymentMethod === 'Cash on Delivery'
                       ? 'border-rose-500 bg-rose-50 dark:bg-rose-500/5 shadow-[0_0_0_3px_rgba(244,63,94,0.1)]'
-                      : 'border-gray-200 dark:border-gray-700 bg-neutral-50 dark:bg-gray-800'
+                      : 'border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800'
                   "
                 >
                   <div
@@ -372,7 +372,7 @@
                     [ngClass]="
                       paymentMethod === 'Cash on Delivery'
                         ? 'bg-linear-to-br from-emerald-50 to-emerald-100 dark:bg-emerald-600/15 text-emerald-600 dark:text-emerald-400'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                        : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400'
                     "
                   >
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,10 +385,10 @@
                     </svg>
                   </div>
                   <div>
-                    <span class="font-medium text-sm text-gray-800 dark:text-white"
+                    <span class="font-medium text-sm text-neutral-800 dark:text-white"
                       >Cash on Delivery</span
                     >
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Pay when you receive</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Pay when you receive</p>
                   </div>
                   <div
                     class="ml-auto w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
@@ -414,7 +414,7 @@
             <div class="flex justify-between mt-6">
               <button
                 (click)="goToStep(1)"
-                class="flex items-center gap-1 py-2.5 px-5 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                class="flex items-center gap-1 py-2.5 px-5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-all duration-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -450,15 +450,15 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 3"
         [ngClass]="{
-          'bg-white dark:bg-gray-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 3,
-          'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 shadow-sm':
+          'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 3,
           'opacity-50 pointer-events-none': activeStep() < 3,
         }"
       >
         <div
-          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-[#1a2332]"
+          class="flex items-center justify-between px-5 cursor-pointer transition-colors duration-200 hover:bg-neutral-50 dark:hover:bg-dark-hover"
           [ngClass]="activeStep() === 3 ? 'py-4' : 'py-3.5'"
           (click)="goToStep(3)"
         >
@@ -475,7 +475,7 @@
                 />
               </svg>
             </div>
-            <h2 class="font-semibold text-gray-800 dark:text-white">Review & Place Order</h2>
+            <h2 class="font-semibold text-neutral-800 dark:text-white">Review & Place Order</h2>
           </div>
         </div>
 
@@ -485,7 +485,7 @@
             <div class="flex flex-col gap-3">
               @for (item of orderData?.products; track item.productId; let i = $index) {
                 <div
-                  class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 animate-item-slide"
+                  class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 animate-item-slide"
                   [style.--index]="i"
                 >
                   <div class="w-14 h-14 rounded-[10px] overflow-hidden shrink-0">
@@ -497,10 +497,10 @@
                       />
                     } @else {
                       <div
-                        class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                        class="w-full h-full bg-neutral-100 dark:bg-neutral-700 rounded-lg flex items-center justify-center"
                       >
                         <svg
-                          class="w-6 h-6 text-gray-400"
+                          class="w-6 h-6 text-neutral-400"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -516,30 +516,30 @@
                     }
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-sm font-medium text-gray-800 dark:text-white truncate">
+                    <h4 class="text-sm font-medium text-neutral-800 dark:text-white truncate">
                       {{ item.productName }}
                     </h4>
                     <div class="flex items-center gap-2 mt-1">
                       @if (item.selectSize) {
                         <span
-                          class="text-[0.65rem] font-medium py-px px-1.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                          class="text-[0.65rem] font-medium py-px px-1.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
                           >{{ item.selectSize }}</span
                         >
                       }
                       @if (item.selectColor) {
                         <span
-                          class="text-[0.65rem] font-medium py-px px-1.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                          class="text-[0.65rem] font-medium py-px px-1.5 rounded bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
                           >{{ item.selectColor }}</span
                         >
                       }
-                      <span class="text-xs text-gray-500 dark:text-gray-400"
+                      <span class="text-xs text-neutral-500 dark:text-neutral-400"
                         >Qty: {{ item.quantity }}</span
                       >
                     </div>
                   </div>
                   <div class="text-right">
                     <span
-                      class="text-sm font-semibold text-gray-800 dark:text-white"
+                      class="text-sm font-semibold text-neutral-800 dark:text-white"
                       [innerHTML]="item.price * item.quantity | bdt"
                     ></span>
                   </div>
@@ -549,12 +549,12 @@
 
             <!-- Delivery Info Summary -->
             <div
-              class="p-3 rounded-[10px] bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 mt-4"
+              class="p-3 rounded-[10px] bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 mt-4"
             >
               @if (isGuest) {
                 <div class="flex items-start gap-3 mb-3">
                   <svg
-                    class="w-4 h-4 mt-0.5 text-gray-400"
+                    class="w-4 h-4 mt-0.5 text-neutral-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -567,15 +567,15 @@
                     />
                   </svg>
                   <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Customer</p>
-                    <p class="text-sm text-gray-800 dark:text-white">{{ guestName }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ guestPhone }}</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Customer</p>
+                    <p class="text-sm text-neutral-800 dark:text-white">{{ guestName }}</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{{ guestPhone }}</p>
                   </div>
                 </div>
               }
               <div class="flex items-start gap-3">
                 <svg
-                  class="w-4 h-4 mt-0.5 text-gray-400"
+                  class="w-4 h-4 mt-0.5 text-neutral-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -588,8 +588,8 @@
                   />
                 </svg>
                 <div>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Delivering to</p>
-                  <p class="text-sm text-gray-800 dark:text-white">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">Delivering to</p>
+                  <p class="text-sm text-neutral-800 dark:text-white">
                     {{ deliveryAddress()?.street }}, {{ deliveryAddress()?.city }},
                     {{ deliveryAddress()?.district }}
                   </p>
@@ -600,7 +600,7 @@
             <div class="flex justify-between mt-6">
               <button
                 (click)="goToStep(2)"
-                class="flex items-center gap-1 py-2.5 px-5 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                class="flex items-center gap-1 py-2.5 px-5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-all duration-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -643,11 +643,11 @@
     <!-- Right Column: Order Summary (sticky) -->
     <div class="lg:col-span-2">
       <div
-        class="sticky top-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm fade-slide-in"
+        class="sticky top-4 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 overflow-hidden shadow-sm fade-slide-in"
         style="--delay: 2"
       >
         <div
-          class="flex items-center gap-2.5 px-5 py-4 border-b border-gray-100 dark:border-gray-800"
+          class="flex items-center gap-2.5 px-5 py-4 border-b border-neutral-100 dark:border-neutral-800"
         >
           <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -657,28 +657,28 @@
               d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
             />
           </svg>
-          <h2 class="font-semibold text-gray-800 dark:text-white">Order Summary</h2>
+          <h2 class="font-semibold text-neutral-800 dark:text-white">Order Summary</h2>
         </div>
 
         <div class="p-5">
           <!-- Items count -->
           <div class="flex justify-between items-center py-1.5 text-sm">
-            <span class="text-gray-600 dark:text-gray-400"
+            <span class="text-neutral-600 dark:text-neutral-400"
               >Items ({{ orderData?.quantity || 0 }})</span
             >
             <span
-              class="text-gray-800 dark:text-white font-medium"
+              class="text-neutral-800 dark:text-white font-medium"
               [innerHTML]="orderData?.subtotal | bdt"
             ></span>
           </div>
 
           <!-- Delivery -->
           <div class="flex justify-between items-center py-1.5 text-sm">
-            <span class="text-gray-600 dark:text-gray-400">Delivery</span>
+            <span class="text-neutral-600 dark:text-neutral-400">Delivery</span>
             <span
-              class="text-gray-800 dark:text-white font-medium"
+              class="text-neutral-800 dark:text-white font-medium"
               [class.line-through]="tokenApplied() && discountType() === 'FreeDelivery'"
-              [class.text-gray-400]="tokenApplied() && discountType() === 'FreeDelivery'"
+              [class.text-neutral-400]="tokenApplied() && discountType() === 'FreeDelivery'"
             >
               <span [innerHTML]="deliveryCharge() | bdt"></span>
             </span>
@@ -725,16 +725,16 @@
 
           <!-- Divider -->
           <div
-            class="h-px my-3 bg-linear-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"
+            class="h-px my-3 bg-linear-to-r from-transparent via-neutral-200 dark:via-neutral-700 to-transparent"
           ></div>
 
           <!-- Coupon Code -->
           <div class="mb-3">
             @if (!tokenApplied()) {
               <div
-                class="flex items-center border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-[border-color] duration-300 bg-neutral-50 dark:bg-gray-800 focus-within:border-rose-500"
+                class="flex items-center border-2 border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden transition-[border-color] duration-300 bg-neutral-50 dark:bg-neutral-800 focus-within:border-rose-500"
               >
-                <div class="flex items-center justify-center pl-3 text-gray-400">
+                <div class="flex items-center justify-center pl-3 text-neutral-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
@@ -750,7 +750,7 @@
                   name="tokenCodeSummary"
                   placeholder="Coupon code"
                   autocomplete="off"
-                  class="flex-1 py-2 px-2.5 text-sm border-none outline-none bg-transparent text-gray-900 dark:text-gray-50 placeholder:text-gray-400"
+                  class="flex-1 py-2 px-2.5 text-sm border-none outline-none bg-transparent text-neutral-900 dark:text-neutral-50 placeholder:text-neutral-400"
                 />
                 <button
                   (click)="applyToken()"
@@ -832,12 +832,12 @@
 
           <!-- Divider -->
           <div
-            class="h-px my-3 bg-linear-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"
+            class="h-px my-3 bg-linear-to-r from-transparent via-neutral-200 dark:via-neutral-700 to-transparent"
           ></div>
 
           <!-- Total -->
           <div class="flex justify-between items-center py-1">
-            <span class="text-gray-800 dark:text-white font-bold text-lg">Total</span>
+            <span class="text-neutral-800 dark:text-white font-bold text-lg">Total</span>
             <span
               class="text-xl font-extrabold bg-linear-to-br from-rose-500 to-rose-600 bg-clip-text text-transparent"
               [innerHTML]="orderTotal() | bdt"
