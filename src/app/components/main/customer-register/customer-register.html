@@ -170,18 +170,19 @@
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- District -->
+            <!-- Division -->
             <div>
-              @let dist = form.dist();
               @let distError = form.dist().invalid() && form.dist().touched();
               <label
                 for="dist"
                 class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
               >
-                District
+                Division
               </label>
               <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
+                >
                   <svg
                     class="w-5 h-5 text-gray-400"
                     fill="none"
@@ -202,23 +203,108 @@
                     />
                   </svg>
                 </div>
-                <input
-                  type="text"
+                <select
                   id="dist"
-                  [formField]="form.dist"
-                  class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                  [value]="form.dist().value()"
+                  (change)="onDistrictChange($any($event.target).value)"
+                  class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer"
                   [class]="distError ? 'border-red-400' : 'border-gray-200 dark:border-gray-600'"
-                  placeholder="Your district"
-                  autocomplete="off"
-                />
+                >
+                  <option value="" disabled>Select Division</option>
+                  @for (region of regions(); track region.name) {
+                    <option [value]="region.name">{{ region.name }}</option>
+                  }
+                </select>
               </div>
               @if (distError) {
                 <ul class="mt-1">
-                  @for (error of dist.errors(); track error) {
+                  @for (error of form.dist().errors(); track error) {
                     <li class="text-sm text-red-500">{{ error.message }}</li>
                   }
                 </ul>
               }
+            </div>
+
+            <!-- City -->
+            <div>
+              <label
+                for="city"
+                class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+              >
+                City
+              </label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
+                >
+                  <svg
+                    class="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                </div>
+                <select
+                  id="city"
+                  (change)="onCityChange($any($event.target).value)"
+                  [disabled]="!form.dist().value()"
+                  class="bg-gray-50 dark:bg-gray-700 border text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  [class]="'border-gray-200 dark:border-gray-600'"
+                >
+                  <option value="" disabled selected>Select City</option>
+                  @for (city of cities(); track city.name) {
+                    <option [value]="city.name">{{ city.name }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Area -->
+            <div>
+              <label
+                for="area"
+                class="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+              >
+                Area
+              </label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
+                >
+                  <svg
+                    class="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    />
+                  </svg>
+                </div>
+                <select
+                  id="area"
+                  [disabled]="cities().length === 0"
+                  class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">Select Area</option>
+                  @for (area of areas(); track area.name) {
+                    <option [value]="area.name">{{ area.name }}</option>
+                  }
+                </select>
+              </div>
             </div>
 
             <!-- Address -->

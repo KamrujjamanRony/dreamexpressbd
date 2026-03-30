@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SCustomer } from '../../../services/s-customer';
+import { SData } from '../../../services/s-data';
 import { SToast } from '../../../utils/toast/toast.service';
 import { environment } from '../../../../environments/environment';
 import { CustomerM } from '../../../models/Customer';
@@ -17,6 +18,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 })
 export class CustomerRegister {
   private customerService = inject(SCustomer);
+  private dataService = inject(SData);
   private toast = inject(SToast);
   private router = inject(Router);
 
@@ -25,6 +27,9 @@ export class CustomerRegister {
 
   loading = signal(false);
   showPassword = signal(false);
+  regions = signal<any[]>([]);
+  cities = signal<any[]>([]);
+  areas = signal<any[]>([]);
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
@@ -40,7 +45,7 @@ export class CustomerRegister {
     required(schemaPath.fullName, { message: 'Full name is required' });
     required(schemaPath.phone, { message: 'Phone number is required' });
     required(schemaPath.pass, { message: 'Password is required' });
-    required(schemaPath.dist, { message: 'District is required' });
+    required(schemaPath.dist, { message: 'Division is required' });
     required(schemaPath.address, { message: 'Address is required' });
 
     validate(schemaPath.fullName, ({ value }) => {
@@ -84,8 +89,28 @@ export class CustomerRegister {
     debounce(schemaPath.pass, 300);
   });
 
+  ngOnInit(): void {
+    this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
+  }
+
   togglePassword(): void {
     this.showPassword.update(v => !v);
+  }
+
+  onDistrictChange(division: string): void {
+    this.model.update(m => ({ ...m, dist: division }));
+    this.cities.set([]);
+    this.areas.set([]);
+    if (division) {
+      this.dataService.getCitiesByRegion(division).subscribe(cities => this.cities.set(cities));
+    }
+  }
+
+  onCityChange(city: string): void {
+    this.areas.set([]);
+    if (city) {
+      this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
+    }
   }
 
   onSubmit(event: Event): void {
