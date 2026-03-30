@@ -1,7 +1,8 @@
+@reference "../../../styles.css";
+
 /* Add bottom padding on mobile so content is not hidden behind the fixed bottom nav */
 @media (max-width: 1023px) {
   :host {
-    display: block;
-    padding-bottom: 72px;
+    @apply block pb-[72px];
   }
 }

@@ -1,8 +1,9 @@
+@reference "../../../../styles.css";
+
 .invalid {
-  border-color: var(--color-danger) !important;
+  @apply !border-danger;
 }
 
 .highlighted {
-  background-color: var(--color-info) !important;
-  color: var(--color-white);
+  @apply !bg-info text-white;
 }

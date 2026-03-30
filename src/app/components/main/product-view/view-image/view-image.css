@@ -1,29 +1,24 @@
+@reference "../../../../../styles.css";
+
 .image-container {
-  position: relative;
-  overflow: hidden;
-  cursor: crosshair;
+  @apply relative overflow-hidden cursor-crosshair;
 }
 
 .zoom {
-  position: absolute;
-  pointer-events: none;
-  background-repeat: no-repeat;
-  display: none;
+  @apply absolute pointer-events-none bg-no-repeat hidden rounded-lg;
   border: 2px solid rgba(from var(--color-primary-600) r g b / 0.3);
-  border-radius: 8px;
 }
 
 /* Thumbnail scrollbar */
 ::-webkit-scrollbar {
-  height: 4px;
+  @apply h-1;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-300);
-  border-radius: 4px;
+  @apply bg-neutral-300 rounded;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-neutral-400);
+  @apply bg-neutral-400;
 }

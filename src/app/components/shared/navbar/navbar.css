@@ -1,12 +1,13 @@
+@reference "../../../../styles.css";
+
 /* Navbar - Animations & pseudo-elements only */
 
 /* Nav link underline animation */
 .nav-link::after {
+  @apply absolute w-0;
   content: '';
-  position: absolute;
   bottom: 2px;
   left: 50%;
-  width: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-700));
   border-radius: 2px;
@@ -19,11 +20,9 @@
 
 /* Hamburger animation */
 .hamburger span {
-  display: block;
-  width: 100%;
+  @apply block w-full rounded-sm;
   height: 2px;
   background: var(--color-primary-800);
-  border-radius: 2px;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
 }
@@ -34,7 +33,7 @@
   transform: translateY(7px) rotate(45deg);
 }
 .hamburger.open span:nth-child(2) {
-  opacity: 0;
+  @apply opacity-0;
   transform: scaleX(0);
 }
 .hamburger.open span:nth-child(3) {
@@ -42,37 +41,79 @@
 }
 
 /* Scrollbar hiding */
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar {
+  @apply hidden;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 /* Keyframes */
 @keyframes dropdownSlideIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 @keyframes slideInLeft {
-  from { transform: translateX(-100%); opacity: 0.5; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(-100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes categoryFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes badgePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 /* Animation utilities */
-.animate-dropdown-slide-in { animation: dropdownSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-.animate-slide-in-left { animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-.animate-fade-in { animation: fadeIn 0.3s ease; }
-.animate-category-fade-in { animation: categoryFadeIn 0.3s ease forwards; }
-.animate-badge-pulse { animation: badgePulse 2s ease-in-out infinite; }
+.animate-dropdown-slide-in {
+  animation: dropdownSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.animate-slide-in-left {
+  animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease;
+}
+.animate-category-fade-in {
+  animation: categoryFadeIn 0.3s ease forwards;
+}
+.animate-badge-pulse {
+  animation: badgePulse 2s ease-in-out infinite;
+}
 
 /* Responsive search results */
 @media (max-width: 1023px) {

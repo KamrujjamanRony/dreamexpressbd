@@ -1,24 +1,28 @@
+@reference "../../../styles.css";
+
 /* Widget tray visibility */
 .widget-tray {
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 .widget-tray--hidden {
-  opacity: 0;
+  @apply opacity-0 pointer-events-none;
   transform: scale(0.5);
-  pointer-events: none;
 }
 
 /* Social button reveal animation */
 .social-btn {
-  opacity: 0;
+  @apply opacity-0 pointer-events-none;
   transform: translateY(16px) scale(0.6);
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.2s ease;
 }
 .social-chat-buttons--open .social-btn {
-  opacity: 1;
+  @apply opacity-100 pointer-events-auto;
   transform: translateY(0) scale(1);
-  pointer-events: auto;
 }
 .social-btn:hover {
   transform: translateY(0) scale(1.12);
@@ -26,26 +30,27 @@
 
 /* FAB icon transitions */
 .fab__icon {
-  position: absolute;
-  transition: opacity 0.25s ease, transform 0.3s ease;
-  opacity: 1;
+  @apply absolute opacity-100;
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s ease;
   transform: scale(1);
 }
 .fab__icon--hidden {
-  opacity: 0;
+  @apply opacity-0 pointer-events-none;
   transform: scale(0.5);
-  pointer-events: none;
 }
 
 /* Reopen arrow */
 .reopen-arrow {
-  opacity: 0;
+  @apply opacity-0 pointer-events-none;
   transform: translateX(100%);
-  pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.2s ease;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    background-color 0.2s ease;
 }
 .reopen-arrow--visible {
-  opacity: 1;
+  @apply opacity-100 pointer-events-auto;
   transform: translateX(0);
-  pointer-events: auto;
 }

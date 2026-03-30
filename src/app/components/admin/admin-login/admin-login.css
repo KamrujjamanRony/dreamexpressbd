@@ -1,3 +1,5 @@
+@reference "../../../../styles.css";
+
 /* Background gradient */
 .admin-login-bg {
   background: linear-gradient(
@@ -11,15 +13,13 @@
 
 /* Floating shapes */
 .shape {
-  position: absolute;
-  border-radius: 50%;
+  @apply absolute rounded-full;
   opacity: 0.08;
   filter: blur(1px);
 }
 
 .shape-1 {
-  width: 400px;
-  height: 400px;
+  @apply size-[400px];
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-400));
   top: -100px;
   right: -80px;
@@ -27,8 +27,7 @@
 }
 
 .shape-2 {
-  width: 300px;
-  height: 300px;
+  @apply size-[300px];
   background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-500));
   bottom: -60px;
   left: -60px;
@@ -36,8 +35,7 @@
 }
 
 .shape-3 {
-  width: 200px;
-  height: 200px;
+  @apply size-[200px];
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-400));
   top: 50%;
   left: 10%;
@@ -45,8 +43,7 @@
 }
 
 .shape-4 {
-  width: 150px;
-  height: 150px;
+  @apply size-[150px];
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-700));
   top: 20%;
   right: 15%;

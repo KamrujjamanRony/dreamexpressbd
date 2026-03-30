@@ -1,23 +1,47 @@
+@reference "../../../../styles.css";
+
 /* Hero entrance animations */
 .contact-hero .hero-badge,
 .contact-hero .hero-title,
 .contact-hero .hero-subtitle {
-  opacity: 0;
+  @apply opacity-0;
   transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
-.contact-hero.ready .hero-badge { opacity: 1; transform: none; }
-.contact-hero.ready .hero-title { opacity: 1; transform: none; transition-delay: 0.15s; }
-.contact-hero.ready .hero-subtitle { opacity: 1; transform: none; transition-delay: 0.3s; }
+.contact-hero.ready .hero-badge {
+  @apply opacity-100;
+  transform: none;
+}
+.contact-hero.ready .hero-title {
+  @apply opacity-100;
+  transform: none;
+  transition-delay: 0.15s;
+}
+.contact-hero.ready .hero-subtitle {
+  @apply opacity-100;
+  transform: none;
+  transition-delay: 0.3s;
+}
 
 /* Scroll animations */
 .animate-on-scroll {
-  opacity: 0;
+  @apply opacity-0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
-.animate-on-scroll.in-view { opacity: 1; transform: none; }
+.animate-on-scroll.in-view {
+  @apply opacity-100;
+  transform: none;
+}
 
 /* FAQ details marker removal */
-details summary::-webkit-details-marker { display: none; }
-details summary { list-style: none; }
+details summary::-webkit-details-marker {
+  @apply hidden;
+}
+details summary {
+  @apply list-none;
+}

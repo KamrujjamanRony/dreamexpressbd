@@ -1,3 +1,5 @@
+@reference "../../../../../styles.css";
+
 /* === Ken Burns zoom on background === */
 @keyframes kenBurns {
   0% {
@@ -82,12 +84,9 @@
 /* Navigation buttons */
 swiper-container::part(button-prev),
 swiper-container::part(button-next) {
-  width: 44px;
-  height: 44px;
+  @apply size-[44px] rounded-full text-white;
   background: color-mix(in srgb, var(--color-white) 12%, transparent);
   backdrop-filter: blur(10px);
-  border-radius: 50%;
-  color: var(--color-white);
   --swiper-navigation-size: 20px;
   transition: all 0.3s ease;
 }
@@ -100,24 +99,20 @@ swiper-container::part(button-next):hover {
 
 /* Pagination dots */
 swiper-container::part(bullet) {
+  @apply size-[8px] opacity-100;
   background: color-mix(in srgb, var(--color-white) 40%, transparent);
-  opacity: 1;
-  width: 8px;
-  height: 8px;
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 swiper-container::part(bullet-active) {
+  @apply w-[28px] rounded-[5px];
   background: var(--color-primary-500);
-  width: 28px;
-  border-radius: 5px;
 }
 
 @media (max-width: 768px) {
   swiper-container::part(button-prev),
   swiper-container::part(button-next) {
-    width: 32px;
-    height: 32px;
+    @apply size-[32px];
     --swiper-navigation-size: 14px;
   }
 }

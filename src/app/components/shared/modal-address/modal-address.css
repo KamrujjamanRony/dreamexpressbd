@@ -1,17 +1,19 @@
+@reference "../../../../styles.css";
+
 /* Custom dialog header style */
 .p-dialog .p-dialog-header {
+  @apply border-b border-neutral-200;
   padding: 0.1rem;
-  border-bottom: 1px solid var(--color-neutral-200);
 }
 
 /* Close button style */
 .p-dialog-header-icon {
-  color: var(--color-neutral-500);
+  @apply text-neutral-500;
   transition: color 0.2s;
 }
 
 .p-dialog-header-icon:hover {
-  color: var(--color-neutral-800);
+  @apply text-neutral-800;
 }
 
 /* Form field spacing */
@@ -21,6 +23,5 @@
 
 /* Input field styling */
 .p-inputtext {
-  width: 100%;
-  padding: 0.5rem;
+  @apply w-full p-2;
 }

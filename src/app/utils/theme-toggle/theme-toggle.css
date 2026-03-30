@@ -1,30 +1,28 @@
+@reference "../../../styles.css";
+
 /* Panel animation */
 .theme-panel {
+  @apply opacity-100;
   transition:
     opacity 0.35s ease,
     transform 0.35s ease;
   transform: translateX(0);
-  opacity: 1;
 }
 .theme-panel--hidden {
-  opacity: 0;
+  @apply opacity-0 pointer-events-none;
   transform: translateX(-30px);
-  pointer-events: none;
 }
 
 /* Reopen button */
 .reopen-btn {
+  @apply rounded-full border-none opacity-0 pointer-events-none;
   right: 0.75rem;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 50%;
-  border: none;
   background-color: color-mix(in srgb, var(--color-neutral-500) 15%, transparent);
   backdrop-filter: blur(4px);
   color: var(--color-neutral-500);
-  opacity: 0;
   transform: scale(0.5);
-  pointer-events: none;
   transition:
     opacity 0.35s ease,
     transform 0.35s ease,
@@ -32,9 +30,8 @@
   box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 10%, transparent);
 }
 .reopen-btn--visible {
-  opacity: 1;
+  @apply opacity-100 pointer-events-auto;
   transform: scale(1);
-  pointer-events: auto;
 }
 .reopen-btn:hover {
   background-color: color-mix(in srgb, var(--color-neutral-500) 30%, transparent);
@@ -43,8 +40,7 @@
 
 /* Theme toggle core */
 .theme {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   -webkit-tap-highlight-color: transparent;
 }
 .theme__fill,
@@ -52,12 +48,9 @@
   transition: transform 0.8s ease-in-out;
 }
 .theme__fill {
+  @apply block fixed inset-0 h-full;
   background-color: var(--bg);
-  display: block;
   mix-blend-mode: difference;
-  position: fixed;
-  inset: 0;
-  height: 100%;
   transform: translateX(-100%);
 }
 .theme__icon,
@@ -66,10 +59,10 @@
 }
 .theme__icon,
 .theme__icon-part {
-  position: absolute;
+  @apply absolute;
 }
 .theme__icon {
-  display: block;
+  @apply block;
   top: 0.75em;
   left: 0.75em;
   width: 1em;
@@ -123,11 +116,11 @@
 .theme__label,
 .theme__toggle,
 .theme__toggle-wrap {
-  position: relative;
+  @apply relative;
 }
 .theme__toggle,
 .theme__toggle:before {
-  display: block;
+  @apply block;
 }
 .theme__toggle {
   background-color: hsl(48, 90%, 85%);

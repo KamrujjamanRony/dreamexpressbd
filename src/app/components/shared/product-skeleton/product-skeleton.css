@@ -1,5 +1,5 @@
+@reference "../../../../styles.css";
+
 :host {
-  display: block;
-  width: 100%;
-  height: 100%;
+  @apply block w-full h-full;
 }

@@ -1,3 +1,5 @@
+@reference "../../../styles.css";
+
 .toast-item {
   animation: toast-in 200ms ease-out;
 }
@@ -14,8 +16,7 @@
 }
 
 .toast-progress {
-  height: 100%;
-  background: currentColor;
+  @apply h-full bg-current;
   animation: shrink linear forwards;
 }
 
@@ -24,6 +25,10 @@
 }
 
 @keyframes shrink {
-  from { width: 100%; }
-  to { width: 0%; }
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }

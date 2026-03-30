@@ -1,7 +1,8 @@
+@reference "../../../../styles.css";
+
 /* Footer Wrapper */
 .footer-wrapper {
-  position: relative;
-  overflow: hidden;
+  @apply relative overflow-hidden;
   background: linear-gradient(
     145deg,
     var(--color-dark-elevated) 0%,
@@ -13,22 +14,17 @@
 
 /* Animated Background Shapes */
 .footer-bg-shapes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
+  @apply absolute inset-0 pointer-events-none overflow-hidden;
 }
 
 .footer-shape {
-  position: absolute;
-  border-radius: 50%;
+  @apply absolute rounded-full;
   opacity: 0.06;
   filter: blur(60px);
 }
 
 .footer-shape-1 {
-  width: 400px;
-  height: 400px;
+  @apply size-[400px];
   background: var(--color-primary-500);
   top: -100px;
   right: -100px;
@@ -36,16 +32,14 @@
 }
 
 .footer-shape-2 {
-  width: 300px;
-  height: 300px;
+  @apply size-[300px];
   background: var(--color-accent);
   left: -80px;
   animation: footerFloat 15s ease-in-out infinite reverse;
 }
 
 .footer-shape-3 {
-  width: 200px;
-  height: 200px;
+  @apply size-[200px];
   background: var(--color-primary-700);
   top: 50%;
   left: 50%;
@@ -80,7 +74,7 @@
 
 /* Scroll Animations */
 .footer-animate {
-  opacity: 0;
+  @apply opacity-0;
   transform: translateY(25px);
   transition:
     opacity 0.6s ease-out,
@@ -88,7 +82,7 @@
 }
 
 .footer-animate.in-view {
-  opacity: 1;
+  @apply opacity-100;
   transform: translateY(0);
 }
 
@@ -107,41 +101,31 @@
 
 /* Social Icon Buttons */
 .social-icon-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  @apply flex items-center justify-center size-[36px] rounded-full text-primary-300;
   background: rgba(from var(--color-primary-500) r g b / 0.15);
   border: 1px solid rgba(from var(--color-primary-500) r g b / 0.25);
-  color: var(--color-primary-300);
   font-size: 0.85rem;
   transition: all 0.3s ease;
 }
 
 .social-icon-btn:hover {
+  @apply text-white;
   background: rgba(from var(--color-primary-500) r g b / 0.35);
   border-color: var(--color-primary-400);
-  color: var(--color-white);
   box-shadow: 0 6px 20px rgba(from var(--color-primary-500) r g b / 0.3);
 }
 
 /* Section Headings */
 .footer-heading {
+  @apply relative text-white font-bold;
   font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-white);
   margin-bottom: 1.25rem;
-  position: relative;
   padding-bottom: 0.65rem;
 }
 
 .footer-heading::after {
+  @apply absolute bottom-0 left-0;
   content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 28px;
   height: 2px;
   background: linear-gradient(90deg, var(--color-primary-500), var(--color-accent));
@@ -150,20 +134,13 @@
 
 /* Quick Links */
 .footer-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+  @apply list-none p-0 m-0 flex flex-col;
   gap: 0.6rem;
 }
 
 .footer-link {
-  color: var(--color-neutral-400);
+  @apply text-neutral-400 no-underline flex items-center;
   font-size: 0.85rem;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
   transition:
     color 0.3s ease,
@@ -171,47 +148,35 @@
 }
 
 .footer-link:hover {
-  color: var(--color-primary-300);
+  @apply text-primary-300;
   transform: translateX(4px);
 }
 
 .footer-link-arrow {
+  @apply text-primary-700;
   font-size: 0.55rem;
-  color: var(--color-primary-700);
   transition: transform 0.3s ease;
 }
 
 .footer-link:hover .footer-link-arrow {
+  @apply text-primary-400;
   transform: translateX(3px);
-  color: var(--color-primary-400);
 }
 
 /* Info Items */
 .footer-info-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+  @apply list-none p-0 m-0 flex flex-col;
   gap: 1rem;
 }
 
 .footer-info-item {
-  display: flex;
-  align-items: flex-start;
+  @apply flex items-start;
   gap: 0.75rem;
 }
 
 .footer-info-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  @apply flex items-center justify-center shrink-0 text-primary-400 rounded-lg size-[32px];
   background: rgba(from var(--color-primary-500) r g b / 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--color-primary-400);
   font-size: 0.75rem;
   transition: all 0.3s ease;
 }

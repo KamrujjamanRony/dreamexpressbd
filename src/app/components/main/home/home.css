@@ -1,3 +1,5 @@
+@reference "../../../../styles.css";
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -10,7 +12,7 @@
 }
 
 :host {
-  display: block;
+  @apply block;
 }
 
 app-carousel,
@@ -19,7 +21,7 @@ app-categories,
 app-product-wrapper,
 app-add-section,
 app-recommend-product {
-  display: block;
+  @apply block;
   animation: fadeInUp 0.6s ease-out both;
 }
 
