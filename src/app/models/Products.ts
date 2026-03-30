@@ -2,6 +2,7 @@ export interface ProductM {
   id: any;
   companyID: any;
   title: string;
+  postBy: string;
   description: string;
   imageUrl: string;
   itemId: number;
