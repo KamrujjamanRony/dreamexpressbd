@@ -55,7 +55,7 @@ export class Dashboard implements OnInit {
         return [
             { label: 'Pending', count: this.pendingOrders(), color: '#EAB308', pct: Math.round((this.pendingOrders() / total) * 100) },
             { label: 'Processing', count: this.processingOrders(), color: '#3B82F6', pct: Math.round((this.processingOrders() / total) * 100) },
-            { label: 'Shipped', count: this.shippedOrders(), color: '#A855F7', pct: Math.round((this.shippedOrders() / total) * 100) },
+            { label: 'Shipped', count: this.shippedOrders(), color: '#a855f7', /* primary-500 */ pct: Math.round((this.shippedOrders() / total) * 100) },
             { label: 'Delivered', count: this.deliveredOrders(), color: '#22C55E', pct: Math.round((this.deliveredOrders() / total) * 100) },
             { label: 'Cancelled', count: this.cancelledOrders(), color: '#EF4444', pct: Math.round((this.cancelledOrders() / total) * 100) },
         ];
@@ -124,7 +124,7 @@ export class Dashboard implements OnInit {
         const colors: { [key: string]: string } = {
             'Pending': 'bg-yellow-100 text-yellow-800',
             'Processing': 'bg-blue-100 text-blue-800',
-            'Shipped': 'bg-purple-100 text-purple-800',
+            'Shipped': 'bg-primary-100 text-primary-800',
             'Delivered': 'bg-green-100 text-green-800',
             'Cancelled': 'bg-red-100 text-red-800'
         };
