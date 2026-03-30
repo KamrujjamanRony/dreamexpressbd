@@ -150,10 +150,11 @@ export class OrderConfirmation {
   getOrderStatusText(status: any): string {
     const statusMap: Record<string, string> = {
       '0': 'Pending', 'Pending': 'Pending',
-      '1': 'Processing', 'Processing': 'Processing',
-      '2': 'Shipped', 'Shipped': 'Shipped',
-      '3': 'Delivered', 'Delivered': 'Delivered',
-      '4': 'Cancelled', 'Cancelled': 'Cancelled',
+      '1': 'Confirm', 'Confirm': 'Confirm',
+      '2': 'Processing', 'Processing': 'Processing',
+      '3': 'Shipped', 'Shipped': 'Shipped',
+      '4': 'Delivered', 'Delivered': 'Delivered',
+      '5': 'Cancelled', 'Cancelled': 'Cancelled',
     };
     return statusMap[String(status)] || String(status);
   }
@@ -162,6 +163,7 @@ export class OrderConfirmation {
     const text = this.getOrderStatusText(status);
     switch (text) {
       case 'Pending': return 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400';
+      case 'Confirm': return 'bg-teal-100 text-teal-800 dark:bg-teal-500/15 dark:text-teal-400';
       case 'Processing': return 'bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-400';
       case 'Shipped': return 'bg-primary-100 text-primary-800 dark:bg-primary-500/15 dark:text-primary-400';
       case 'Delivered': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-400';
