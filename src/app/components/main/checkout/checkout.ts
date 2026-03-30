@@ -139,8 +139,8 @@ export class Checkout {
     }
 
     private calculateDeliveryCharge() {
-        const district = (this.deliveryAddress()?.district || '').toLowerCase();
-        this.updateDeliveryChargeByDistrict(district);
+        const city = (this.deliveryAddress()?.city || '').toLowerCase();
+        this.updateDeliveryChargeByDistrict(city);
     }
 
     private updateDeliveryChargeByDistrict(district: string) {
@@ -272,8 +272,6 @@ export class Checkout {
         this.areas.set([]);
         if (district) {
             this.dataService.getCitiesByRegion(district).subscribe(cities => this.cities.set(cities));
-            // Update delivery charge based on selected district
-            this.updateDeliveryChargeByDistrict(district);
         }
     }
 
@@ -283,6 +281,8 @@ export class Checkout {
         this.areas.set([]);
         if (city) {
             this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
+            // Update delivery charge based on selected city
+            this.updateDeliveryChargeByDistrict(city);
         }
     }
 
