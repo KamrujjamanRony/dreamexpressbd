@@ -1,6 +1,6 @@
 <!-- Main Navbar -->
 <header
-  class="bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-[20px] border-b border-primary-500/10 dark:border-primary-500/15 sticky top-0 z-50 transition-all duration-300"
+  class="bg-white/95 dark:bg-dark-surface/95 backdrop-blur-[20px] border-b border-primary-500/10 dark:border-primary-500/15 sticky top-0 z-50 transition-all duration-300"
   [ngClass]="isScrolled() ? 'shadow-[0_4px_20px_color-mix(in_srgb,var(--color-primary-600)_12%,transparent)]' : ''"
 >
   <div class="max-w-8xl mx-auto px-4 sm:px-6 w-full">
@@ -56,7 +56,7 @@
               (mouseleave)="showCategoryDropdown.set(false)"
             >
               <div
-                class="bg-white dark:bg-gray-900 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] overflow-hidden"
+                class="bg-white dark:bg-neutral-900 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] overflow-hidden"
               >
                 <div
                   class="px-5 py-4 border-b border-primary-500/8 dark:border-primary-500/15 flex justify-between items-center"
@@ -73,7 +73,7 @@
                     <a
                       [routerLink]="['/shop']"
                       [queryParams]="{ category: item.id }"
-                      class="group flex items-center gap-2.5 py-2.5 px-3 rounded-[10px] no-underline text-gray-700 dark:text-gray-300 text-[13px] font-medium transition-all duration-200 cursor-pointer hover:bg-linear-to-br hover:from-primary-500/6 hover:to-primary-500/10 dark:hover:bg-primary-500/15 hover:translate-x-1"
+                      class="group flex items-center gap-2.5 py-2.5 px-3 rounded-[10px] no-underline text-neutral-700 dark:text-neutral-300 text-[13px] font-medium transition-all duration-200 cursor-pointer hover:bg-linear-to-br hover:from-primary-500/6 hover:to-primary-500/10 dark:hover:bg-primary-500/15 hover:translate-x-1"
                       (click)="showCategoryDropdown.set(false)"
                     >
                       <div
@@ -91,7 +91,7 @@
                       </div>
                       <span class="flex-1">{{ item?.itemName }}</span>
                       <i
-                        class="fas fa-arrow-right text-2xs text-gray-400 opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                        class="fas fa-arrow-right text-2xs text-neutral-400 opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                       ></i>
                     </a>
                   }
@@ -137,13 +137,13 @@
           type="button"
         >
           <i
-            class="fas fa-search text-gray-400 text-[13px] transition-colors duration-200 group-hover:text-primary-500"
+            class="fas fa-search text-neutral-400 text-[13px] transition-colors duration-200 group-hover:text-primary-500"
           ></i>
-          <span class="text-[13px] text-gray-400 dark:text-gray-500 font-medium"
+          <span class="text-[13px] text-neutral-400 dark:text-neutral-500 font-medium"
             >Search products...</span
           >
           <kbd
-            class="ml-auto text-[10px] font-semibold text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-1.5 py-0.5 shadow-sm"
+            class="ml-auto text-[10px] font-semibold text-neutral-400 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded px-1.5 py-0.5 shadow-sm"
             >⌘K</kbd
           >
         </button>
@@ -204,7 +204,7 @@
               >
             </button>
             <div
-              class="absolute right-0 top-[calc(100%+8px)] w-60 bg-white dark:bg-gray-900 rounded-[14px] shadow-[0_15px_50px_rgba(0,0,0,0.12),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_15px_50px_rgba(0,0,0,0.5),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] p-1.5 opacity-0 invisible -translate-y-1 transition-all duration-250 z-100 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0"
+              class="absolute right-0 top-[calc(100%+8px)] w-60 bg-white dark:bg-neutral-900 rounded-[14px] shadow-[0_15px_50px_rgba(0,0,0,0.12),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_15px_50px_rgba(0,0,0,0.5),0_0_0_1px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] p-1.5 opacity-0 invisible -translate-y-1 transition-all duration-250 z-100 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0"
             >
               <div class="flex items-center gap-2.5 p-2.5">
                 <div
@@ -213,28 +213,28 @@
                   <i class="fas fa-user"></i>
                 </div>
                 <div>
-                  <p class="font-semibold text-sm text-gray-800 dark:text-gray-100">
+                  <p class="font-semibold text-sm text-neutral-800 dark:text-neutral-100">
                     {{ user.fullName }}
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.phone }}</p>
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ user.phone }}</p>
                 </div>
               </div>
               <div class="h-px bg-primary-500/8 dark:bg-primary-500/15 mx-2 my-1"></div>
               <a
                 routerLink="/account/profile"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-neutral-600 dark:text-neutral-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-user-circle w-4 text-center text-[13px]"></i> My Profile
               </a>
               <a
                 routerLink="/account/orders"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-neutral-600 dark:text-neutral-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-box w-4 text-center text-[13px]"></i> My Orders
               </a>
               <a
                 routerLink="/account/order-tracking"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-neutral-600 dark:text-neutral-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-shipping-fast w-4 text-center text-[13px]"></i> Track Order
               </a>
@@ -279,7 +279,7 @@
 
 <!-- Categories Quick Bar - Desktop -->
 <div
-  class="hidden lg:block bg-linear-to-br from-primary-50 to-primary-100 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-primary-500/8 dark:border-primary-500/10 transition-all duration-300"
+  class="hidden lg:block bg-linear-to-br from-primary-50 to-primary-100 dark:from-dark-page dark:to-dark-panel border-b border-primary-500/8 dark:border-primary-500/10 transition-all duration-300"
   [ngClass]="isScrolled() ? 'shadow-[0_2px_8px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)]' : ''"
 >
   <div class="max-w-8xl mx-auto px-6">
@@ -315,7 +315,7 @@
 
 <!-- Mobile/Tablet Search Trigger Bar -->
 <div
-  class="lg:hidden bg-linear-to-br from-primary-100 to-primary-50 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-primary-500/10"
+  class="lg:hidden bg-linear-to-br from-primary-100 to-primary-50 dark:from-dark-page dark:to-dark-panel border-b border-primary-500/10"
 >
   <div class="px-4 py-2">
     <button
@@ -326,7 +326,7 @@
       <i
         class="fas fa-search text-primary-400 text-sm transition-colors group-hover:text-primary-500"
       ></i>
-      <span class="text-sm text-gray-400 dark:text-gray-500 font-medium text-left flex-1"
+      <span class="text-sm text-neutral-400 dark:text-neutral-500 font-medium text-left flex-1"
         >Search for products, brands...</span
       >
     </button>
@@ -340,7 +340,7 @@
     (click)="closeMobileMenu()"
   ></div>
   <div
-    class="fixed top-0 left-0 w-75 max-w-[85vw] h-dvh bg-white dark:bg-[#0b0f19] z-100 overflow-y-auto animate-slide-in-left shadow-[10px_0_40px_rgba(0,0,0,0.15)]"
+    class="fixed top-0 left-0 w-75 max-w-[85vw] h-dvh bg-white dark:bg-dark-surface z-100 overflow-y-auto animate-slide-in-left shadow-[10px_0_40px_rgba(0,0,0,0.15)]"
     [class.open]="isMobileMenuOpen()"
   >
     <!-- Drawer Header -->
@@ -378,8 +378,8 @@
           <i class="fas fa-user"></i>
         </div>
         <div>
-          <p class="font-semibold text-sm text-gray-800 dark:text-gray-100">{{ user.fullName }}</p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.phone }}</p>
+          <p class="font-semibold text-sm text-neutral-800 dark:text-neutral-100">{{ user.fullName }}</p>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ user.phone }}</p>
         </div>
       </div>
     } @else {
@@ -399,46 +399,46 @@
     <nav class="py-2 px-3">
       <a
         routerLink="/"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
-        <i class="fas fa-home w-4.5 text-center text-[15px] text-gray-400"></i>
+        <i class="fas fa-home w-4.5 text-center text-[15px] text-neutral-400"></i>
         <span>Home</span>
-        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
       </a>
       <a
         routerLink="/shop"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
-        <i class="fas fa-store w-4.5 text-center text-[15px] text-gray-400"></i>
+        <i class="fas fa-store w-4.5 text-center text-[15px] text-neutral-400"></i>
         <span>Shop</span>
-        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
       </a>
       <a
         routerLink="/about-us"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
-        <i class="fas fa-info-circle w-4.5 text-center text-[15px] text-gray-400"></i>
+        <i class="fas fa-info-circle w-4.5 text-center text-[15px] text-neutral-400"></i>
         <span>About Us</span>
-        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
       </a>
       <a
         routerLink="/contact-us"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
-        <i class="fas fa-headset w-4.5 text-center text-[15px] text-gray-400"></i>
+        <i class="fas fa-headset w-4.5 text-center text-[15px] text-neutral-400"></i>
         <span>Contact</span>
-        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+        <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
       </a>
     </nav>
 
     <!-- Mobile Categories -->
     <div class="py-1 px-3">
       <button
-        class="flex items-center justify-between w-full p-3 bg-primary-500/4 dark:bg-primary-500/8 border-none rounded-[10px] cursor-pointer transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-primary-500/8"
+        class="flex items-center justify-between w-full p-3 bg-primary-500/4 dark:bg-primary-500/8 border-none rounded-[10px] cursor-pointer transition-all duration-200 text-neutral-700 dark:text-neutral-300 hover:bg-primary-500/8"
         (click)="toggleMobileCategories()"
       >
         <span class="flex items-center gap-2">
@@ -456,7 +456,7 @@
             <a
               [routerLink]="['/shop']"
               [queryParams]="{ category: item.id }"
-              class="flex items-center gap-2 p-2.5 text-[13px] font-medium text-gray-600 dark:text-gray-300 rounded-lg no-underline transition-all duration-200 animate-category-fade-in opacity-0 hover:bg-primary-500/6 hover:text-primary-600"
+              class="flex items-center gap-2 p-2.5 text-[13px] font-medium text-neutral-600 dark:text-neutral-300 rounded-lg no-underline transition-all duration-200 animate-category-fade-in opacity-0 hover:bg-primary-500/6 hover:text-primary-600"
               [style.animation-delay]="i * 50 + 'ms'"
               (click)="closeMobileMenu()"
             >
@@ -470,24 +470,24 @@
 
     <!-- Mobile Account Links -->
     @if (user) {
-      <div class="py-2 px-3 border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
+      <div class="py-2 px-3 border-t border-neutral-100 dark:border-neutral-700 mt-2 pt-2">
         <a
           routerLink="/account/profile"
-          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+          class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
           (click)="closeMobileMenu()"
         >
-          <i class="fas fa-user-circle w-4.5 text-center text-[15px] text-gray-400"></i>
+          <i class="fas fa-user-circle w-4.5 text-center text-[15px] text-neutral-400"></i>
           <span>My Profile</span>
-          <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+          <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
         </a>
         <a
           routerLink="/account/orders"
-          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+          class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
           (click)="closeMobileMenu()"
         >
-          <i class="fas fa-box w-4.5 text-center text-[15px] text-gray-400"></i>
+          <i class="fas fa-box w-4.5 text-center text-[15px] text-neutral-400"></i>
           <span>My Orders</span>
-          <i class="fas fa-chevron-right ml-auto text-xs text-gray-400"></i>
+          <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
         </a>
         <button
           (click)="logout(); closeMobileMenu()"
