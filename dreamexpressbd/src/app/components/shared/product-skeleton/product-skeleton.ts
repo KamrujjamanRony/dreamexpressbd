@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './product-skeleton.html',
   styleUrl: './product-skeleton.css',
+  host: { class: 'block w-full h-full' },
 })
 export class ProductSkeleton {
 
