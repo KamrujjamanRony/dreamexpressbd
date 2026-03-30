@@ -17,15 +17,14 @@
   height: 2.5rem;
   border-radius: 50%;
   border: none;
-  background-color: rgba(107, 114, 128, 0.15);
+  background-color: color-mix(in srgb, var(--color-neutral-500) 15%, transparent);
   backdrop-filter: blur(4px);
-  color: #6b7280;
-  cursor: pointer;
+  color: var(--color-neutral-500);
   opacity: 0;
   transform: scale(0.5);
   pointer-events: none;
   transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 10%, transparent);
 }
 .reopen-btn--visible {
   opacity: 1;
@@ -33,7 +32,7 @@
   pointer-events: auto;
 }
 .reopen-btn:hover {
-  background-color: rgba(107, 114, 128, 0.3);
+  background-color: color-mix(in srgb, var(--color-neutral-500) 30%, transparent);
   transform: scale(1.1);
 }
 
