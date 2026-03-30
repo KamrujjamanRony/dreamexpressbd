@@ -1,0 +1,74 @@
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+  <!-- Glassmorphism bar -->
+  <div
+    class="bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-xl border-t border-gray-200/60 dark:border-purple-500/15 shadow-[0_-4px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.3)]"
+  >
+    <div class="flex items-center justify-around px-2 py-1 max-w-lg mx-auto">
+      <!-- Shop -->
+      <a routerLink="/shop" class="btm-tab group" [class.btm-active]="activeTab() === 'shop'">
+        <div class="btm-icon-wrap">
+          <i class="fas fa-store"></i>
+          @if (activeTab() === 'shop') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Shop</span>
+      </a>
+
+      <!-- Search (navigates to shop with focus) -->
+      <a
+        routerLink="/shop"
+        [queryParams]="{ search: true }"
+        class="btm-tab group"
+        [class.btm-active]="false"
+      >
+        <div class="btm-icon-wrap">
+          <i class="fas fa-search"></i>
+        </div>
+        <span class="btm-label">Search</span>
+      </a>
+
+      <!-- Home (center, elevated) -->
+      <a
+        routerLink="/home"
+        class="btm-tab btm-center group"
+        [class.btm-active]="activeTab() === 'home'"
+      >
+        <div class="btm-center-btn" [class.btm-center-active]="activeTab() === 'home'">
+          <i class="fas fa-home text-lg"></i>
+        </div>
+        <span class="btm-label mt-1">Home</span>
+      </a>
+
+      <!-- Cart -->
+      <a routerLink="/cart" class="btm-tab group" [class.btm-active]="activeTab() === 'cart'">
+        <div class="btm-icon-wrap relative">
+          <i class="fas fa-shopping-bag"></i>
+          @if (totalCarts() > 0) {
+            <span class="btm-badge">{{ totalCarts() }}</span>
+          }
+          @if (activeTab() === 'cart') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Cart</span>
+      </a>
+
+      <!-- Account -->
+      <a
+        [routerLink]="accountRoute"
+        class="btm-tab group"
+        [class.btm-active]="activeTab() === 'account'"
+      >
+        <div class="btm-icon-wrap">
+          <i class="fas fa-user"></i>
+          @if (activeTab() === 'account') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Account</span>
+      </a>
+    </div>
+  </div>
+</nav>
