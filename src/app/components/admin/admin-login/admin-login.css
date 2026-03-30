@@ -1,6 +1,6 @@
 /* Background gradient */
 .admin-login-bg {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #1e1b4b 100%);
+  background: linear-gradient(135deg, var(--color-dark-surface) 0%, var(--color-primary-950) 40%, var(--color-primary-900) 70%, var(--color-primary-950) 100%);
 }
 
 /* Floating shapes */
