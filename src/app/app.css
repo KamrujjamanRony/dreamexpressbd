@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(249, 250, 251, 0.6);
+  background: color-mix(in srgb, var(--color-neutral-50) 60%, transparent);
   backdrop-filter: blur(6px);
   animation: overlayIn 0.25s ease-out;
 }
@@ -31,7 +31,7 @@
   height: 100%;
   width: 0;
   border-radius: 0 2px 2px 0;
-  background: linear-gradient(90deg, var(--color-primary-700), var(--color-primary-500), #ec4899, var(--color-primary-700));
+  background: linear-gradient(90deg, var(--color-primary-700), var(--color-primary-500), var(--color-accent), var(--color-primary-700));
   background-size: 300% 100%;
   animation:
     rtProgress 2s ease-in-out forwards,
@@ -67,8 +67,8 @@
 }
 .route-ring-3 {
   inset: 12px;
-  border-top-color: #ec4899;
-  border-right-color: rgba(236, 72, 153, 0.2);
+  border-top-color: var(--color-accent);
+  border-right-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
   animation: ringSpin 1.6s linear infinite;
 }
 
@@ -105,14 +105,14 @@
   border-left-color: rgba(from var(--color-primary-400) r g b / 0.3);
 }
 .dark .route-ring-3 {
-  border-top-color: #f472b6;
-  border-right-color: rgba(244, 114, 182, 0.2);
+  border-top-color: var(--color-accent-light);
+  border-right-color: color-mix(in srgb, var(--color-accent-light) 20%, transparent);
 }
 .dark .route-dots span {
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-400));
 }
 .dark .route-topbar-fill {
-  background: linear-gradient(90deg, var(--color-primary-400), var(--color-primary-400), #f472b6, var(--color-primary-400));
+  background: linear-gradient(90deg, var(--color-primary-400), var(--color-primary-400), var(--color-accent-light), var(--color-primary-400));
   box-shadow: 0 0 12px rgba(from var(--color-primary-400) r g b / 0.5);
 }
 
