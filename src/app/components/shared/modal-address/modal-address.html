@@ -8,16 +8,16 @@
   <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <!-- Modal Container -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+      class="bg-white dark:bg-neutral-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
     >
       <!-- Modal Header -->
-      <div class="flex justify-between items-center border-b dark:border-gray-700 p-4">
-        <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+      <div class="flex justify-between items-center border-b dark:border-neutral-700 p-4">
+        <h3 class="text-xl font-bold text-neutral-800 dark:text-white">
           {{ isEditMode ? 'Edit Address' : 'Add New Address' }}
         </h3>
         <button
           (click)="onClose()"
-          class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+          class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 focus:outline-none"
           aria-label="Close"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,13 +33,13 @@
       <!-- Modal Body -->
       <div class="p-6 space-y-4">
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
             >Address Type</label
           >
           <select
             autocomplete="off"
             [(ngModel)]="formData.type"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
           >
             @for (type of addressTypes; track type) {
               <option [value]="type.value">
@@ -50,14 +50,14 @@
         </div>
         <!-- Region (Division) Selection -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
             >Division*</label
           >
           <select
             autocomplete="off"
             [(ngModel)]="formData.region"
             (change)="onRegionChange(formData.region)"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
             required
           >
             <option value="">Select Division</option>
@@ -70,14 +70,14 @@
         </div>
         <!-- City (District) Selection -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
             >District*</label
           >
           <select
             autocomplete="off"
             [(ngModel)]="formData.city"
             (change)="onCityChange(formData.city)"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
             [disabled]="!formData.region"
             required
           >
@@ -91,11 +91,11 @@
         </div>
         <!-- Area Selection -->
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Area</label>
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Area</label>
           <select
             autocomplete="off"
             [(ngModel)]="formData.area"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
             [disabled]="!formData.city"
           >
             <option value="">Select Area (Optional)</option>
@@ -107,7 +107,7 @@
           </select>
         </div>
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
             >Street Address*</label
           >
           <input
@@ -115,12 +115,12 @@
             type="text"
             [(ngModel)]="formData.street"
             placeholder="Enter street address"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
             required
           />
         </div>
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
             >Contact Number*</label
           >
           <input
@@ -128,7 +128,7 @@
             type="tel"
             [(ngModel)]="formData.contact"
             placeholder="Enter contact number"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
             required
           />
         </div>
@@ -137,19 +137,19 @@
             type="checkbox"
             [(ngModel)]="formData.isDefault"
             id="defaultAddress"
-            class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 dark:border-gray-600 rounded"
+            class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-neutral-300 dark:border-neutral-600 rounded"
           />
-          <label for="defaultAddress" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+          <label for="defaultAddress" class="ml-2 block text-sm text-neutral-700 dark:text-neutral-300">
             Set as default address
           </label>
         </div>
       </div>
       <!-- Modal Footer -->
-      <div class="flex justify-end gap-2 border-t dark:border-gray-700 p-4">
+      <div class="flex justify-end gap-2 border-t dark:border-neutral-700 p-4">
         <button
           type="button"
           (click)="onClose()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+          class="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
         >
           Cancel
         </button>
