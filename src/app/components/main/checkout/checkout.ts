@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { Router } from '@angular/router';
@@ -18,7 +19,7 @@ import { SData } from '../../../services/s-data';
 
 @Component({
     selector: 'app-checkout',
-    imports: [FormsModule, BdtPipe],
+    imports: [FormsModule, BdtPipe, NgClass],
     templateUrl: './checkout.html',
     styleUrl: './checkout.css',
 })
