@@ -1,5 +1,5 @@
 <div
-  class="group h-full flex flex-col bg-white dark:bg-gray-900 border border-black/6 dark:border-primary-500/8 dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] dark:hover:border-primary-500/20 transition-all duration-300 hover:-translate-y-1 relative"
+  class="group h-full flex flex-col bg-white dark:bg-neutral-900 border border-black/6 dark:border-primary-500/8 dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] dark:hover:border-primary-500/20 transition-all duration-300 hover:-translate-y-1 relative"
 >
   <a [routerLink]="getViewLink(product()?.id)" class="block relative">
     <!-- Discount Badge -->
@@ -11,7 +11,7 @@
       </span>
     }
     <!-- Product Image -->
-    <div class="overflow-hidden bg-gray-50 dark:bg-gray-700">
+    <div class="overflow-hidden bg-neutral-50 dark:bg-neutral-700">
       @if (isPriority()) {
         <img
           [ngSrc]="imageBaseUrl + product()?.imageUrl"
@@ -38,7 +38,7 @@
   <div class="flex flex-col flex-1 p-3 md:p-4">
     <a [routerLink]="getViewLink(product()?.id)" class="block">
       <h6
-        class="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 line-clamp-2 leading-snug hover:text-primary-600 transition-colors"
+        class="text-sm md:text-base font-semibold text-neutral-800 dark:text-neutral-100 line-clamp-2 leading-snug hover:text-primary-600 transition-colors"
       >
         {{ product()?.title }}
       </h6>
@@ -52,7 +52,7 @@
       ></span>
       @if (product()?.regularPrice > product()?.offerPrice) {
         <span
-          class="text-xs md:text-sm text-gray-400 line-through"
+          class="text-xs md:text-sm text-neutral-400 line-through"
           [innerHTML]="product()?.regularPrice | bdt"
         ></span>
       }
@@ -85,7 +85,7 @@
         [class]="
           isInWishlist
             ? 'text-red-500 dark:text-red-400'
-            : 'text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400'
+            : 'text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400'
         "
       >
         <fa-icon [icon]="isInWishlist ? faHeartSolid : faHeart" class="text-xs"></fa-icon>
