@@ -3,14 +3,14 @@
     <div class="max-w-8xl mx-auto relative mt-5">
       <div class="w-full mb-10 px-3">
         <div
-          class="relative overflow-x-auto bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-gray-950 dark:border-gray-700"
+          class="relative overflow-x-auto bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-neutral-950 dark:border-neutral-700"
         >
           <div class="flex justify-between p-4">
             <div class="w-full">
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
                 <div
-                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-gray-600 dark:text-gray-400"
+                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-600 dark:text-neutral-400"
                 >
                   <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
                 </div>
@@ -20,7 +20,7 @@
                   (input)="onSearch($event)"
                   type="text"
                   id="search"
-                  class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:placeholder:text-gray-400"
+                  class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-400"
                   placeholder="Search by Name"
                 />
               </div>
@@ -78,7 +78,7 @@
               <tbody>
                 @for (item of filteredList(); track item?.id || $index) {
                   <tr
-                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-gray-950 dark:border-gray-700 dark:hover:bg-gray-800"
+                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-neutral-950 dark:border-neutral-700 dark:hover:bg-neutral-800"
                     [class.bg-blue-300]="selected()?.id === item.id"
                   >
                     <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
@@ -122,12 +122,12 @@
     <div class="max-w-8xl mx-auto relative">
       <!-- Menu Registration Form -->
       <div
-        class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-gray-700"
+        class="bg-white rounded-lg shadow-md border border-neutral-200 transition-all dark:bg-neutral-950 dark:border-neutral-700"
       >
         <!-- Form Header -->
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 transition-all dark:text-gray-50">
+            <h2 class="text-2xl font-bold text-neutral-800 transition-all dark:text-neutral-50">
               Category Form
             </h2>
             <button
@@ -143,7 +143,7 @@
             <div class="">
               <!-- Image Upload -->
               <div class="pb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
                   >Category Image</label
                 >
                 <div class="flex items-center gap-4">
@@ -159,7 +159,7 @@
                     type="file"
                     accept="image/*"
                     (change)="onFileSelected($event)"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                    class="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
                   />
                 </div>
               </div>
@@ -226,13 +226,13 @@
                   type="submit"
                   [value]="isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save'"
                   [disabled]="form().invalid() || isSubmitted()"
-                  class="text-gray-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50invalid:opacity-50"
+                  class="text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50invalid:opacity-50"
                 />
 
                 <button
                   type="button"
                   (click)="onToggleList()"
-                  class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+                  class="text-neutral-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
                 >
                   Close
                 </button>
