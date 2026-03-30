@@ -77,7 +77,7 @@ export class Orders {
       '4': 'bg-green-100 text-green-700',
       '5': 'bg-red-100 text-red-700',
     };
-    return statusMap[String(status)] || 'bg-gray-100 text-gray-700';
+    return statusMap[String(status)] || 'bg-neutral-100 text-neutral-700';
   }
 
   getStatusText(status: string | number): string {
