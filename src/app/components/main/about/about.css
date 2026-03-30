@@ -4,30 +4,52 @@
 .about-hero .hero-subtitle {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
-.about-hero.ready .hero-badge { opacity: 1; transform: none; }
-.about-hero.ready .hero-title { opacity: 1; transform: none; transition-delay: 0.15s; }
-.about-hero.ready .hero-subtitle { opacity: 1; transform: none; transition-delay: 0.3s; }
+.about-hero.ready .hero-badge {
+  opacity: 1;
+  transform: none;
+}
+.about-hero.ready .hero-title {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.15s;
+}
+.about-hero.ready .hero-subtitle {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.3s;
+}
 
 /* Scroll animations */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
-.animate-on-scroll.in-view { opacity: 1; transform: none; }
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: none;
+}
 
 /* CTA background pattern (pseudo-element) */
 .cta-section::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+  background-image: radial-gradient(
+    circle at 30% 50%,
+    color-mix(in srgb, var(--color-white) 8%, transparent) 0%,
+    transparent 50%
+  );
 }
 
 /* Value card icon hover (parent-child) */
 .value-card:hover .value-icon {
   background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
-  color: white;
+  color: var(--color-white);
 }
