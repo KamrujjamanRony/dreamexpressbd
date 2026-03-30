@@ -2,8 +2,8 @@
   <!-- shop wrapper -->
   <div class="max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
-    <div class="hidden md:block bg-white dark:bg-gray-900 px-4 pb-6 shadow dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] rounded overflow-hidden min-w-64">
-      <div class="divide-y divide-gray-300 dark:divide-gray-800">
+    <div class="hidden md:block bg-white dark:bg-neutral-900 px-4 pb-6 shadow dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] rounded overflow-hidden min-w-64">
+      <div class="divide-y divide-neutral-300 dark:divide-neutral-800">
         <!-- Header -->
         <div class="flex items-center py-4">
           <h3 class="text-slate-900 dark:text-slate-100 text-lg font-semibold">Filter</h3>
@@ -22,7 +22,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Categories</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -30,12 +30,12 @@
                 [ngModel]="categorySearch()"
                 (ngModelChange)="categorySearch.set($event)"
                 placeholder="Search category"
-                class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 192.904 192.904"
-                class="w-3 fill-gray-600 dark:fill-gray-500"
+                class="w-3 fill-neutral-600 dark:fill-neutral-500"
               >
                 <path
                   d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -48,7 +48,7 @@
                   <input
                     type="checkbox"
                     [id]="'desk-cat-' + data.title"
-                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                     [checked]="categoryNames().includes(data.title)"
                     (change)="toggleCategoryName(data.title, $event)"
                   />
@@ -58,7 +58,7 @@
                   >
                     {{ data.title }}
                   </label>
-                  <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                  <span class="text-neutral-500 text-xs">({{ data.quantity }})</span>
                 </li>
               }
             </ul>
@@ -70,7 +70,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Brand</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -78,12 +78,12 @@
                 [ngModel]="brandSearch()"
                 (ngModelChange)="brandSearch.set($event)"
                 placeholder="Search brand"
-                class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 192.904 192.904"
-                class="w-3 fill-gray-600 dark:fill-gray-500"
+                class="w-3 fill-neutral-600 dark:fill-neutral-500"
               >
                 <path
                   d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -96,7 +96,7 @@
                   <input
                     type="checkbox"
                     [id]="'desk-brand-' + data.title"
-                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                     [checked]="brandNames().includes(data.title)"
                     (change)="toggleBrandName(data.title, $event)"
                   />
@@ -106,7 +106,7 @@
                   >
                     {{ data.title }}
                   </label>
-                  <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                  <span class="text-neutral-500 text-xs">({{ data.quantity }})</span>
                 </li>
               }
             </ul>
@@ -117,7 +117,7 @@
         <div class="py-6">
           <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Price</h6>
           <div class="relative mt-4">
-            <div class="h-1.5 bg-gray-300 dark:bg-gray-700 relative rounded-md">
+            <div class="h-1.5 bg-neutral-300 dark:bg-neutral-700 relative rounded-md">
               <div
                 class="absolute h-1.5 bg-primary-500 rounded-full"
                 [style.width]="activeTrackWidth()"
@@ -157,7 +157,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Color</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -165,12 +165,12 @@
                 [ngModel]="colorSearch()"
                 (ngModelChange)="colorSearch.set($event)"
                 placeholder="Search color"
-                class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 192.904 192.904"
-                class="w-3 fill-gray-600 dark:fill-gray-500"
+                class="w-3 fill-neutral-600 dark:fill-neutral-500"
               >
                 <path
                   d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -183,7 +183,7 @@
                   <input
                     type="checkbox"
                     [id]="'desk-color-' + data.title"
-                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                    class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                     [checked]="colorName() === data.title"
                     (change)="toggleColorName(data.title, $event)"
                   />
@@ -192,12 +192,12 @@
                     class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
                   >
                     <span
-                      class="block rounded-full w-4 h-4 border border-gray-300 dark:border-gray-700"
+                      class="block rounded-full w-4 h-4 border border-neutral-300 dark:border-neutral-700"
                       [style.backgroundColor]="data.title.toLowerCase()"
                     ></span>
                     {{ data.title }}
                   </label>
-                  <span class="text-gray-500 text-xs ml-auto">({{ data.quantity }})</span>
+                  <span class="text-neutral-500 text-xs ml-auto">({{ data.quantity }})</span>
                 </li>
               }
             </ul>
@@ -220,7 +220,7 @@
                   />
                   <label
                     [for]="'desk-size-' + data.title"
-                    class="text-xs border border-gray-200 dark:border-gray-700 rounded-sm h-8 w-full min-w-8 px-1 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 dark:text-gray-300 hover:border-primary-500 dark:hover:text-primary-200 transition-colors"
+                    class="text-xs border border-neutral-200 dark:border-neutral-700 rounded-sm h-8 w-full min-w-8 px-1 flex items-center justify-center cursor-pointer shadow-sm text-neutral-800 dark:text-neutral-300 hover:border-primary-500 dark:hover:text-primary-200 transition-colors"
                     [class.bg-primary-500]="sizeName() === data.title"
                     [class.text-white]="sizeName() === data.title"
                     [class.border-pink-500]="sizeName() === data.title"
@@ -242,7 +242,7 @@
                 type="radio"
                 id="desk-discount-10"
                 name="discount"
-                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                 [checked]="discountValues().includes('10')"
                 (change)="toggleDiscount('10', $event)"
               />
@@ -257,7 +257,7 @@
                 type="radio"
                 id="desk-discount-20"
                 name="discount"
-                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                 [checked]="discountValues().includes('20')"
                 (change)="toggleDiscount('20', $event)"
               />
@@ -272,7 +272,7 @@
                 type="radio"
                 id="desk-discount-30"
                 name="discount"
-                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                 [checked]="discountValues().includes('30')"
                 (change)="toggleDiscount('30', $event)"
               />
@@ -287,7 +287,7 @@
                 type="radio"
                 id="desk-discount-40"
                 name="discount"
-                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                 [checked]="discountValues().includes('40')"
                 (change)="toggleDiscount('40', $event)"
               />
@@ -302,7 +302,7 @@
                 type="radio"
                 id="desk-discount-50"
                 name="discount"
-                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                 [checked]="discountValues().includes('50')"
                 (change)="toggleDiscount('50', $event)"
               />
@@ -325,7 +325,7 @@
           autocomplete="off"
           [ngModel]="sortValue()"
           (ngModelChange)="sortValue.set($event)"
-          class="w-44 text-sm px-4 py-3 border-2 border-gray-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-gray-700 dark:shadow-none dark:bg-gray-900 dark:text-gray-200"
+          class="w-44 text-sm px-4 py-3 border-2 border-neutral-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-neutral-700 dark:shadow-none dark:bg-neutral-900 dark:text-neutral-200"
         >
           <option value="">Default sorting</option>
           <option value="low-high">Price low-high</option>
@@ -369,13 +369,13 @@
 
           <!-- Drawer -->
           <div
-            class="absolute right-0 top-0 h-full w-full max-w-87.5 bg-white dark:bg-[#0f1420] shadow-lg transform transition-transform duration-300 ease-in-out overflow-hidden flex flex-col"
+            class="absolute right-0 top-0 h-full w-full max-w-87.5 bg-white dark:bg-dark-page shadow-lg transform transition-transform duration-300 ease-in-out overflow-hidden flex flex-col"
             [class.translate-x-0]="isDrawerOpen()"
             [class.translate-x-full]="!isDrawerOpen()"
             (click)="$event.stopPropagation()"
           >
             <!-- Fixed Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+            <div class="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
               <h3 class="text-slate-900 dark:text-slate-100 text-lg font-semibold">Filter</h3>
               <a
                 type="button"
@@ -389,13 +389,13 @@
 
             <!-- Scrollable Content -->
             <div class="flex-1 overflow-y-auto">
-              <div class="divide-y divide-gray-200 dark:divide-gray-800">
+              <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
                 <!-- Categories Section -->
                 @if (categories().length > 0) {
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Categories</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -403,12 +403,12 @@
                         [ngModel]="categorySearch()"
                         (ngModelChange)="categorySearch.set($event)"
                         placeholder="Search category"
-                        class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                        class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 192.904 192.904"
-                        class="w-3 fill-gray-600 dark:fill-gray-500"
+                        class="w-3 fill-neutral-600 dark:fill-neutral-500"
                       >
                         <path
                           d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -421,7 +421,7 @@
                           <input
                             type="checkbox"
                             [id]="'mobile-cat-' + data.title"
-                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                             [checked]="categoryNames().includes(data.title)"
                             (change)="toggleCategoryName(data.title, $event)"
                           />
@@ -431,7 +431,7 @@
                           >
                             {{ data.title }}
                           </label>
-                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                          <span class="text-neutral-500 text-xs">({{ data.quantity }})</span>
                         </li>
                       }
                     </ul>
@@ -443,7 +443,7 @@
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Brands</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -451,12 +451,12 @@
                         [ngModel]="brandSearch()"
                         (ngModelChange)="brandSearch.set($event)"
                         placeholder="Search brand"
-                        class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                        class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 192.904 192.904"
-                        class="w-3 fill-gray-600 dark:fill-gray-500"
+                        class="w-3 fill-neutral-600 dark:fill-neutral-500"
                       >
                         <path
                           d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -469,7 +469,7 @@
                           <input
                             type="checkbox"
                             [id]="'mobile-brand-' + data.title"
-                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                             [checked]="brandNames().includes(data.title)"
                             (change)="toggleBrandName(data.title, $event)"
                           />
@@ -479,7 +479,7 @@
                           >
                             {{ data.title }}
                           </label>
-                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                          <span class="text-neutral-500 text-xs">({{ data.quantity }})</span>
                         </li>
                       }
                     </ul>
@@ -490,7 +490,7 @@
                 <div class="p-6">
                   <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-4">Price</h6>
                   <div class="relative">
-                    <div class="h-1.5 bg-gray-200 dark:bg-gray-700 relative rounded-full">
+                    <div class="h-1.5 bg-neutral-200 dark:bg-neutral-700 relative rounded-full">
                       <div
                         class="absolute h-1.5 bg-primary rounded-full"
                         [style.width]="activeTrackWidth()"
@@ -519,8 +519,8 @@
                     />
 
                     <div class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-6">
-                      <span class="bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1 rounded-md">${{ minRangeValue() }}</span>
-                      <span class="bg-gray-100 dark:bg-gray-800 dark:text-gray-300 px-3 py-1 rounded-md">${{ maxRangeValue() }}</span>
+                      <span class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md">${{ minRangeValue() }}</span>
+                      <span class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md">${{ maxRangeValue() }}</span>
                     </div>
                   </div>
                 </div>
@@ -530,7 +530,7 @@
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Colors</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -538,12 +538,12 @@
                         [ngModel]="colorSearch()"
                         (ngModelChange)="colorSearch.set($event)"
                         placeholder="Search color"
-                        class="w-full bg-transparent outline-none text-gray-900 dark:text-gray-200 text-sm"
+                        class="w-full bg-transparent outline-none text-neutral-900 dark:text-neutral-200 text-sm"
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 192.904 192.904"
-                        class="w-3 fill-gray-600 dark:fill-gray-500"
+                        class="w-3 fill-neutral-600 dark:fill-neutral-500"
                       >
                         <path
                           d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
@@ -556,7 +556,7 @@
                           <input
                             type="checkbox"
                             [id]="'mobile-color-' + data.title"
-                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-gray-600 dark:bg-gray-800"
+                            class="w-4 h-4 cursor-pointer text-primary focus:ring-primary rounded dark:border-neutral-600 dark:bg-neutral-800"
                             [checked]="colorName() === data.title"
                             (change)="toggleColorName(data.title, $event)"
                           />
@@ -565,12 +565,12 @@
                             class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer flex-1 hover:text-slate-900 dark:hover:text-slate-200"
                           >
                             <span
-                              class="block rounded-full w-4 h-4 border border-gray-300 dark:border-gray-700"
+                              class="block rounded-full w-4 h-4 border border-neutral-300 dark:border-neutral-700"
                               [style.backgroundColor]="data.title.toLowerCase()"
                             ></span>
                             {{ data.title }}
                           </label>
-                          <span class="text-gray-500 text-xs">({{ data.quantity }})</span>
+                          <span class="text-neutral-500 text-xs">({{ data.quantity }})</span>
                         </li>
                       }
                     </ul>
@@ -593,7 +593,7 @@
                           />
                           <label
                             [for]="'mobile-size-' + data.title"
-                            class="text-xs border border-gray-300 dark:border-gray-700 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer shadow-sm text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary transition-all"
+                            class="text-xs border border-neutral-300 dark:border-neutral-700 rounded-md h-9 w-9 flex items-center justify-center cursor-pointer shadow-sm text-neutral-700 dark:text-neutral-300 hover:border-primary hover:text-primary transition-all"
                             [class.bg-primary]="sizeName() === data.title"
                             [class.text-white]="sizeName() === data.title"
                             [class.border-primary]="sizeName() === data.title"
@@ -617,7 +617,7 @@
                         type="radio"
                         id="mobile-discount-10"
                         name="mobile-discount"
-                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                         [checked]="discountValues().includes('10')"
                         (change)="toggleDiscount('10', $event)"
                       />
@@ -633,7 +633,7 @@
                         type="radio"
                         id="mobile-discount-20"
                         name="mobile-discount"
-                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                         [checked]="discountValues().includes('20')"
                         (change)="toggleDiscount('20', $event)"
                       />
@@ -649,7 +649,7 @@
                         type="radio"
                         id="mobile-discount-30"
                         name="mobile-discount"
-                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                         [checked]="discountValues().includes('30')"
                         (change)="toggleDiscount('30', $event)"
                       />
@@ -665,7 +665,7 @@
                         type="radio"
                         id="mobile-discount-40"
                         name="mobile-discount"
-                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                         [checked]="discountValues().includes('40')"
                         (change)="toggleDiscount('40', $event)"
                       />
@@ -681,7 +681,7 @@
                         type="radio"
                         id="mobile-discount-50"
                         name="mobile-discount"
-                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800"
+                        class="w-4 h-4 cursor-pointer text-primary focus:ring-primary dark:border-neutral-600 dark:bg-neutral-800"
                         [checked]="discountValues().includes('50')"
                         (change)="toggleDiscount('50', $event)"
                       />
@@ -698,7 +698,7 @@
             </div>
 
             <!-- Fixed Footer Buttons -->
-            <div class="border-t border-gray-200 dark:border-gray-800 px-4 py-2 space-y-2">
+            <div class="border-t border-neutral-200 dark:border-neutral-800 px-4 py-2 space-y-2">
               <button
                 type="button"
                 (click)="applyFilters()"
@@ -709,7 +709,7 @@
               <button
                 type="button"
                 (click)="closeDrawer()"
-                class="px-4 py-3 rounded-md text-slate-700 dark:text-gray-300 text-sm w-full font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                class="px-4 py-3 rounded-md text-slate-700 dark:text-neutral-300 text-sm w-full font-medium bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
               >
                 Close
               </button>
@@ -731,7 +731,7 @@
           @for (product of filteredProducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           } @empty {
-            <div class="text-center text-xl col-span-full dark:text-gray-400">No products found.</div>
+            <div class="text-center text-xl col-span-full dark:text-neutral-400">No products found.</div>
           }
           <!-- single product end -->
         </div>
