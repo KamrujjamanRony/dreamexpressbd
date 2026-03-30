@@ -14,7 +14,7 @@
 }
 :host-context(.dark) .route-overlay,
 .dark .route-overlay {
-  background: rgba(11, 15, 25, 0.65);
+  background: color-mix(in srgb, var(--color-dark-surface) 65%, transparent);
 }
 
 /* ── Top Progress Bar ── */
