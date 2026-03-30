@@ -256,6 +256,15 @@ export class Checkout {
             next: (data) => {
                 this.userDetails = data?.[0];
                 this.loading.set(false);
+                // Pre-fill address from user profile
+                if (this.userDetails) {
+                    if (this.userDetails.dist) {
+                        this.onDistrictChange(this.userDetails.dist);
+                    }
+                    if (this.userDetails.address) {
+                        this.guestStreet = this.userDetails.address;
+                    }
+                }
             },
             error: (error) => {
                 this.error.set(error?.error || 'Failed to load user details');
