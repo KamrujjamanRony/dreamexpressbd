@@ -24,7 +24,7 @@
 .footer-shape-1 {
   width: 400px;
   height: 400px;
-  background: #a855f7;
+  background: var(--color-primary-500);
   top: -100px;
   right: -100px;
   animation: footerFloat 12s ease-in-out infinite;
@@ -42,7 +42,7 @@
 .footer-shape-3 {
   width: 200px;
   height: 200px;
-  background: #6366f1;
+  background: var(--color-primary-700);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -90,7 +90,7 @@
 
 /* Brand Glow Text */
 .footer-glow-text {
-  background: linear-gradient(135deg, #e9d5ff, #ffffff, #c4b5fd);
+  background: linear-gradient(135deg, var(--color-primary-200), #ffffff, var(--color-primary-300));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -104,19 +104,19 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.25);
-  color: #c4b5fd;
+  background: rgba(from var(--color-primary-500) r g b / 0.15);
+  border: 1px solid rgba(from var(--color-primary-500) r g b / 0.25);
+  color: var(--color-primary-300);
   font-size: 0.85rem;
   transition: all 0.3s ease;
 }
 
 .social-icon-btn:hover {
-  background: rgba(139, 92, 246, 0.35);
-  border-color: #a78bfa;
+  background: rgba(from var(--color-primary-500) r g b / 0.35);
+  border-color: var(--color-primary-400);
   color: #fff;
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 6px 20px rgba(from var(--color-primary-500) r g b / 0.3);
 }
 
 /* Section Headings */
@@ -136,7 +136,7 @@
   left: 0;
   width: 28px;
   height: 2px;
-  background: linear-gradient(90deg, #a855f7, #ec4899);
+  background: linear-gradient(90deg, var(--color-primary-500), #ec4899);
   border-radius: 2px;
 }
 
@@ -163,19 +163,19 @@
 }
 
 .footer-link:hover {
-  color: #c4b5fd;
+  color: var(--color-primary-300);
   transform: translateX(4px);
 }
 
 .footer-link-arrow {
   font-size: 0.55rem;
-  color: #7c3aed;
+  color: var(--color-primary-700);
   transition: transform 0.3s ease;
 }
 
 .footer-link:hover .footer-link-arrow {
   transform: translateX(3px);
-  color: #a78bfa;
+  color: var(--color-primary-400);
 }
 
 /* Info Items */
@@ -198,23 +198,23 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(from var(--color-primary-500) r g b / 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #a78bfa;
+  color: var(--color-primary-400);
   font-size: 0.75rem;
   transition: all 0.3s ease;
 }
 
 .footer-info-item:hover .footer-info-icon {
-  background: rgba(139, 92, 246, 0.25);
+  background: rgba(from var(--color-primary-500) r g b / 0.25);
   transform: scale(1.1);
 }
 
 /* Divider */
 .footer-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.25), transparent);
+  background: linear-gradient(90deg, transparent, rgba(from var(--color-primary-500) r g b / 0.25), transparent);
 }

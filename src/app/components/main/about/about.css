@@ -28,6 +28,6 @@
 
 /* Value card icon hover (parent-child) */
 .value-card:hover .value-icon {
-  background: linear-gradient(135deg, #9333ea, #a855f7);
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
   color: white;
 }

@@ -1,4 +1,4 @@
-﻿<section>
+<section>
   <!-- shop wrapper -->
   <div class="max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
@@ -22,7 +22,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Categories</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-purple-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -70,7 +70,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Brand</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-purple-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -119,7 +119,7 @@
           <div class="relative mt-4">
             <div class="h-1.5 bg-gray-300 dark:bg-gray-700 relative rounded-md">
               <div
-                class="absolute h-1.5 bg-purple-500 rounded-full"
+                class="absolute h-1.5 bg-primary-500 rounded-full"
                 [style.width]="activeTrackWidth()"
                 [style.left]="activeTrackLeft()"
               ></div>
@@ -132,7 +132,7 @@
               [max]="priceMax()"
               [value]="minRangeValue()"
               (input)="onMinRangeChange($event)"
-              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
             <input
@@ -142,7 +142,7 @@
               [max]="priceMax()"
               [value]="maxRangeValue()"
               (input)="onMaxRangeChange($event)"
-              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
+              class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
             <div class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-4">
@@ -157,7 +157,7 @@
           <div class="py-6">
             <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold">Color</h6>
             <div
-              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-purple-500/8 overflow-hidden mt-2"
+              class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-primary-500/8 overflow-hidden mt-2"
             >
               <input
                 autocomplete="off"
@@ -220,8 +220,8 @@
                   />
                   <label
                     [for]="'desk-size-' + data.title"
-                    class="text-xs border border-gray-200 dark:border-gray-700 rounded-sm h-8 w-full min-w-8 px-1 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 dark:text-gray-300 hover:border-purple-500 dark:hover:text-purple-200 transition-colors"
-                    [class.bg-purple-500]="sizeName() === data.title"
+                    class="text-xs border border-gray-200 dark:border-gray-700 rounded-sm h-8 w-full min-w-8 px-1 flex items-center justify-center cursor-pointer shadow-sm text-gray-800 dark:text-gray-300 hover:border-primary-500 dark:hover:text-primary-200 transition-colors"
+                    [class.bg-primary-500]="sizeName() === data.title"
                     [class.text-white]="sizeName() === data.title"
                     [class.border-pink-500]="sizeName() === data.title"
                   >
@@ -337,7 +337,7 @@
         <button
           type="button"
           (click)="openDrawer()"
-          class="md:hidden px-5 py-3 rounded-md text-white text-sm font-medium bg-purple-600 hover:bg-purple-700 flex items-center gap-2"
+          class="md:hidden px-5 py-3 rounded-md text-white text-sm font-medium bg-primary-600 hover:bg-primary-700 flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -395,7 +395,7 @@
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Categories</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-purple-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -443,7 +443,7 @@
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Brands</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-purple-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -530,7 +530,7 @@
                   <div class="p-6">
                     <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Colors</h6>
                     <div
-                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-purple-500/8 overflow-hidden mb-4"
+                      class="flex px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
                       <input
                         autocomplete="off"
@@ -702,7 +702,7 @@
               <button
                 type="button"
                 (click)="applyFilters()"
-                class="px-4 py-3 rounded-md text-white text-sm w-full font-medium bg-purple-600 hover:bg-purple-700 transition-colors cursor-pointer"
+                class="px-4 py-3 rounded-md text-white text-sm w-full font-medium bg-primary-600 hover:bg-primary-700 transition-colors cursor-pointer"
               >
                 Apply Filters
               </button>

@@ -108,7 +108,7 @@ swiper-container::part(bullet) {
 }
 
 swiper-container::part(bullet-active) {
-  background: #fff;
+  background: var(--color-primary-500);
   width: 28px;
   border-radius: 5px;
 }

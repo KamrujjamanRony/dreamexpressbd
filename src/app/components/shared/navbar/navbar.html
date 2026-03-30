@@ -1,6 +1,6 @@
 <!-- Main Navbar -->
 <header
-  class="bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-[20px] border-b border-purple-500/10 dark:border-purple-500/15 sticky top-0 z-50 transition-all duration-300"
+  class="bg-white/95 dark:bg-[#0b0f19]/95 backdrop-blur-[20px] border-b border-primary-500/10 dark:border-primary-500/15 sticky top-0 z-50 transition-all duration-300"
   [ngClass]="isScrolled() ? 'shadow-[0_4px_20px_rgba(147,51,234,0.12)]' : ''"
 >
   <div class="max-w-8xl mx-auto px-4 sm:px-6 w-full">
@@ -24,14 +24,14 @@
       <nav class="hidden lg:flex items-center gap-1">
         <a
           routerLink="/"
-          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-purple-900 dark:text-purple-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-violet-600 dark:hover:text-purple-50 hover:bg-purple-500/6 dark:hover:bg-purple-500/15"
+          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
         >
           <i class="fas fa-home text-xs opacity-70 transition-all duration-250"></i>
           Home
         </a>
         <a
           routerLink="/shop"
-          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-purple-900 dark:text-purple-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-violet-600 dark:hover:text-purple-50 hover:bg-purple-500/6 dark:hover:bg-purple-500/15"
+          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
         >
           <i class="fas fa-store text-xs opacity-70 transition-all duration-250"></i>
           Shop
@@ -40,7 +40,7 @@
         <!-- Categories Mega Dropdown -->
         <div class="relative">
           <button
-            class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-purple-900 dark:text-purple-100 rounded-lg relative transition-all duration-250 cursor-pointer hover:text-violet-600 dark:hover:text-purple-50 hover:bg-purple-500/6 dark:hover:bg-purple-500/15 bg-transparent border-none"
+            class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15 bg-transparent border-none"
             (click)="toggleCategoryDropdown()"
           >
             <i class="fas fa-th-large text-xs opacity-70 transition-all duration-250"></i>
@@ -59,12 +59,12 @@
                 class="bg-white dark:bg-gray-900 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12),0_0_0_1px_rgba(147,51,234,0.08)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(147,51,234,0.15)] overflow-hidden"
               >
                 <div
-                  class="px-5 py-4 border-b border-purple-500/8 dark:border-purple-500/15 flex justify-between items-center"
+                  class="px-5 py-4 border-b border-primary-500/8 dark:border-primary-500/15 flex justify-between items-center"
                 >
-                  <h3 class="text-sm font-bold text-purple-900 dark:text-purple-100 m-0">
+                  <h3 class="text-sm font-bold text-primary-900 dark:text-primary-100 m-0">
                     Browse Categories
                   </h3>
-                  <span class="text-xs text-purple-400"
+                  <span class="text-xs text-primary-400"
                     >{{ categories.length }} categories available</span
                   >
                 </div>
@@ -73,11 +73,11 @@
                     <a
                       [routerLink]="['/shop']"
                       [queryParams]="{ category: item.id }"
-                      class="group flex items-center gap-2.5 py-2.5 px-3 rounded-[10px] no-underline text-gray-700 dark:text-gray-300 text-[13px] font-medium transition-all duration-200 cursor-pointer hover:bg-linear-to-br hover:from-purple-500/6 hover:to-violet-500/10 dark:hover:bg-purple-500/15 hover:translate-x-1"
+                      class="group flex items-center gap-2.5 py-2.5 px-3 rounded-[10px] no-underline text-gray-700 dark:text-gray-300 text-[13px] font-medium transition-all duration-200 cursor-pointer hover:bg-linear-to-br hover:from-primary-500/6 hover:to-primary-500/10 dark:hover:bg-primary-500/15 hover:translate-x-1"
                       (click)="showCategoryDropdown.set(false)"
                     >
                       <div
-                        class="w-8 h-8 rounded-lg bg-linear-to-br from-purple-100 to-violet-100 dark:bg-violet-600/20 flex items-center justify-center text-violet-600 text-xs shrink-0 transition-all duration-200 group-hover:bg-linear-to-br group-hover:from-violet-600 group-hover:to-purple-500 group-hover:text-white group-hover:scale-110"
+                        class="w-8 h-8 rounded-lg bg-linear-to-br from-primary-100 to-primary-100 dark:bg-primary-600/20 flex items-center justify-center text-primary-600 text-xs shrink-0 transition-all duration-200 group-hover:bg-linear-to-br group-hover:from-primary-600 group-hover:to-primary-500 group-hover:text-white group-hover:scale-110"
                       >
                         @if (item?.imageUrl) {
                           <img
@@ -97,11 +97,11 @@
                   }
                 </div>
                 <div
-                  class="py-3 px-5 border-t border-purple-500/8 dark:border-purple-500/15 text-center"
+                  class="py-3 px-5 border-t border-primary-500/8 dark:border-primary-500/15 text-center"
                 >
                   <a
                     routerLink="/shop"
-                    class="text-[13px] font-semibold text-violet-600 no-underline transition-colors duration-200 hover:text-violet-700"
+                    class="text-[13px] font-semibold text-primary-600 no-underline transition-colors duration-200 hover:text-primary-700"
                     (click)="showCategoryDropdown.set(false)"
                   >
                     View All Products <i class="fas fa-arrow-right ml-1"></i>
@@ -114,14 +114,14 @@
 
         <a
           routerLink="/about-us"
-          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-purple-900 dark:text-purple-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-violet-600 dark:hover:text-purple-50 hover:bg-purple-500/6 dark:hover:bg-purple-500/15"
+          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
         >
           <i class="fas fa-info-circle text-xs opacity-70 transition-all duration-250"></i>
           About
         </a>
         <a
           routerLink="/contact-us"
-          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-purple-900 dark:text-purple-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-violet-600 dark:hover:text-purple-50 hover:bg-purple-500/6 dark:hover:bg-purple-500/15"
+          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
         >
           <i class="fas fa-headset text-xs opacity-70 transition-all duration-250"></i>
           Contact
@@ -132,12 +132,12 @@
       <div class="flex items-center gap-2 sm:gap-3">
         <!-- Desktop Search Trigger -->
         <button
-          class="hidden lg:flex items-center gap-2 bg-purple-50 dark:bg-violet-600/10 border-[1.5px] border-purple-500/15 dark:border-purple-500/20 rounded-xl py-2 px-4 min-w-55 transition-all duration-300 cursor-pointer hover:border-violet-500 hover:shadow-[0_0_0_3px_rgba(124,58,237,0.08)] dark:hover:border-purple-500 group"
+          class="hidden lg:flex items-center gap-2 bg-primary-50 dark:bg-primary-600/10 border-[1.5px] border-primary-500/15 dark:border-primary-500/20 rounded-xl py-2 px-4 min-w-55 transition-all duration-300 cursor-pointer hover:border-primary-500 hover:shadow-[0_0_0_3px_rgba(124,58,237,0.08)] dark:hover:border-primary-500 group"
           (click)="openSearch()"
           type="button"
         >
           <i
-            class="fas fa-search text-gray-400 text-[13px] transition-colors duration-200 group-hover:text-violet-500"
+            class="fas fa-search text-gray-400 text-[13px] transition-colors duration-200 group-hover:text-primary-500"
           ></i>
           <span class="text-[13px] text-gray-400 dark:text-gray-500 font-medium"
             >Search products...</span
@@ -151,11 +151,11 @@
         <!-- Wishlist -->
         <a
           routerLink="/account/wishlist"
-          class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-purple-500/6"
+          class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6"
           title="Wishlist"
         >
           <div
-            class="relative text-lg text-purple-800 dark:text-purple-300 transition-all duration-250"
+            class="relative text-lg text-primary-800 dark:text-primary-300 transition-all duration-250"
           >
             <i class="far fa-heart"></i>
             @if (totalWishlists() > 0) {
@@ -170,11 +170,11 @@
         <!-- Cart -->
         <a
           routerLink="/cart"
-          class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-purple-500/6"
+          class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6"
           title="Cart"
         >
           <div
-            class="relative text-lg text-purple-800 dark:text-purple-300 transition-all duration-250"
+            class="relative text-lg text-primary-800 dark:text-primary-300 transition-all duration-250"
           >
             <i class="fas fa-shopping-bag"></i>
             @if (totalCarts() > 0) {
@@ -190,16 +190,16 @@
         @if (user) {
           <div class="relative group">
             <button
-              class="flex flex-col items-center gap-0.5 cursor-pointer py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-purple-500/6 bg-transparent border-none"
+              class="flex flex-col items-center gap-0.5 cursor-pointer py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6 bg-transparent border-none"
               title="Account"
             >
               <div
-                class="w-8.5 h-8.5 rounded-full bg-linear-to-br from-violet-600 to-purple-500 text-white flex items-center justify-center transition-all duration-250 shadow-[0_2px_8px_rgba(124,58,237,0.3)]"
+                class="w-8.5 h-8.5 rounded-full bg-linear-to-br from-primary-600 to-primary-500 text-white flex items-center justify-center transition-all duration-250 shadow-[0_2px_8px_rgba(124,58,237,0.3)]"
               >
                 <i class="fas fa-user text-sm"></i>
               </div>
               <span
-                class="text-[11px] font-semibold text-purple-800 dark:text-purple-300 transition-colors duration-200 hidden sm:block"
+                class="text-[11px] font-semibold text-primary-800 dark:text-primary-300 transition-colors duration-200 hidden sm:block"
                 >{{ user.fullName?.split(' ')[0] || 'Account' }}</span
               >
             </button>
@@ -208,7 +208,7 @@
             >
               <div class="flex items-center gap-2.5 p-2.5">
                 <div
-                  class="w-9 h-9 rounded-full bg-linear-to-br from-purple-200 to-purple-100 dark:bg-violet-600/20 text-violet-600 flex items-center justify-center shrink-0"
+                  class="w-9 h-9 rounded-full bg-linear-to-br from-primary-200 to-primary-100 dark:bg-primary-600/20 text-primary-600 flex items-center justify-center shrink-0"
                 >
                   <i class="fas fa-user"></i>
                 </div>
@@ -219,29 +219,29 @@
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.phone }}</p>
                 </div>
               </div>
-              <div class="h-px bg-purple-500/8 dark:bg-purple-500/15 mx-2 my-1"></div>
+              <div class="h-px bg-primary-500/8 dark:bg-primary-500/15 mx-2 my-1"></div>
               <a
                 routerLink="/account/profile"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/15 dark:hover:text-purple-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-user-circle w-4 text-center text-[13px]"></i> My Profile
               </a>
               <a
                 routerLink="/account/orders"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/15 dark:hover:text-purple-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-box w-4 text-center text-[13px]"></i> My Orders
               </a>
               <a
                 routerLink="/account/order-tracking"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/15 dark:hover:text-purple-100"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-gray-600 dark:text-gray-300 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/15 dark:hover:text-primary-100"
               >
                 <i class="fas fa-shipping-fast w-4 text-center text-[13px]"></i> Track Order
               </a>
-              <div class="h-px bg-purple-500/8 dark:bg-purple-500/15 mx-2 my-1"></div>
+              <div class="h-px bg-primary-500/8 dark:bg-primary-500/15 mx-2 my-1"></div>
               <button
                 (click)="logout()"
-                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-red-500 hover:text-red-600 no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 dark:hover:bg-purple-500/15 w-full text-left bg-transparent border-none"
+                class="flex items-center gap-2.5 py-2 px-3 rounded-lg text-[13px] font-medium text-red-500 hover:text-red-600 no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 dark:hover:bg-primary-500/15 w-full text-left bg-transparent border-none"
               >
                 <i class="fas fa-sign-out-alt w-4 text-center text-[13px]"></i> Logout
               </button>
@@ -250,7 +250,7 @@
         } @else {
           <a
             routerLink="/login"
-            class="hidden lg:flex items-center gap-1.5 py-2 px-5 text-[13px] font-semibold text-white bg-linear-to-br from-violet-600 to-purple-500 rounded-full no-underline transition-all duration-300 shadow-[0_2px_10px_rgba(124,58,237,0.3)] hover:-translate-y-px hover:shadow-[0_4px_15px_rgba(124,58,237,0.4)] hover:from-violet-700 hover:to-violet-600"
+            class="hidden lg:flex items-center gap-1.5 py-2 px-5 text-[13px] font-semibold text-white bg-linear-to-br from-primary-600 to-primary-500 rounded-full no-underline transition-all duration-300 shadow-[0_2px_10px_rgba(124,58,237,0.3)] hover:-translate-y-px hover:shadow-[0_4px_15px_rgba(124,58,237,0.4)] hover:from-primary-700 hover:to-primary-600"
           >
             <i class="fas fa-sign-in-alt"></i>
             Sign In
@@ -279,14 +279,14 @@
 
 <!-- Categories Quick Bar - Desktop -->
 <div
-  class="hidden lg:block bg-linear-to-br from-purple-50 to-violet-100 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-purple-500/8 dark:border-purple-500/10 transition-all duration-300"
+  class="hidden lg:block bg-linear-to-br from-primary-50 to-primary-100 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-primary-500/8 dark:border-primary-500/10 transition-all duration-300"
   [ngClass]="isScrolled() ? 'shadow-[0_2px_8px_rgba(147,51,234,0.06)]' : ''"
 >
   <div class="max-w-8xl mx-auto px-6">
     <div class="flex items-center gap-1 py-1 overflow-x-auto scrollbar-hide">
       <a
         routerLink="/shop"
-        class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-white rounded-full whitespace-nowrap no-underline transition-all duration-250 cursor-pointer bg-linear-to-br from-violet-600 to-purple-500 shadow-[0_2px_8px_rgba(124,58,237,0.3)]"
+        class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-white rounded-full whitespace-nowrap no-underline transition-all duration-250 cursor-pointer bg-linear-to-br from-primary-600 to-primary-500 shadow-[0_2px_8px_rgba(124,58,237,0.3)]"
       >
         <i class="fas fa-fire text-2xs"></i>
         All
@@ -295,14 +295,14 @@
         <a
           [routerLink]="['/shop']"
           [queryParams]="{ category: item.id }"
-          class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-purple-800 dark:text-purple-300 rounded-full whitespace-nowrap no-underline transition-all duration-250 cursor-pointer hover:bg-purple-500/10 hover:text-violet-600 dark:hover:bg-purple-500/20 dark:hover:text-purple-100 hover:-translate-y-px"
+          class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-primary-800 dark:text-primary-300 rounded-full whitespace-nowrap no-underline transition-all duration-250 cursor-pointer hover:bg-primary-500/10 hover:text-primary-600 dark:hover:bg-primary-500/20 dark:hover:text-primary-100 hover:-translate-y-px"
         >
           {{ item?.itemName }}
         </a>
       }
       @if (categories.length > 10) {
         <button
-          class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-violet-600 rounded-full whitespace-nowrap transition-all duration-250 cursor-pointer bg-purple-500/8 border-none hover:bg-purple-500/15"
+          class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-primary-600 rounded-full whitespace-nowrap transition-all duration-250 cursor-pointer bg-primary-500/8 border-none hover:bg-primary-500/15"
           (click)="toggleCategoryDropdown()"
         >
           +{{ categories.length - 10 }} More
@@ -315,16 +315,16 @@
 
 <!-- Mobile/Tablet Search Trigger Bar -->
 <div
-  class="lg:hidden bg-linear-to-br from-violet-100 to-purple-50 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-purple-500/10"
+  class="lg:hidden bg-linear-to-br from-primary-100 to-primary-50 dark:from-[#0e1220] dark:to-[#141a2e] border-b border-primary-500/10"
 >
   <div class="px-4 py-2">
     <button
-      class="flex items-center gap-2.5 w-full bg-white dark:bg-[rgba(30,16,51,0.8)] border border-purple-500/15 dark:border-purple-500/20 rounded-xl py-2.5 px-3.5 transition-all duration-250 cursor-pointer hover:border-violet-500 hover:shadow-[0_0_0_3px_rgba(124,58,237,0.08)] group"
+      class="flex items-center gap-2.5 w-full bg-white dark:bg-[rgba(30,16,51,0.8)] border border-primary-500/15 dark:border-primary-500/20 rounded-xl py-2.5 px-3.5 transition-all duration-250 cursor-pointer hover:border-primary-500 hover:shadow-[0_0_0_3px_rgba(124,58,237,0.08)] group"
       (click)="openSearch()"
       type="button"
     >
       <i
-        class="fas fa-search text-purple-400 text-sm transition-colors group-hover:text-violet-500"
+        class="fas fa-search text-primary-400 text-sm transition-colors group-hover:text-primary-500"
       ></i>
       <span class="text-sm text-gray-400 dark:text-gray-500 font-medium text-left flex-1"
         >Search for products, brands...</span
@@ -345,7 +345,7 @@
   >
     <!-- Drawer Header -->
     <div
-      class="flex items-center justify-between p-4 border-b border-purple-500/8 dark:border-purple-500/15"
+      class="flex items-center justify-between p-4 border-b border-primary-500/8 dark:border-primary-500/15"
     >
       <a routerLink="/" (click)="closeMobileMenu()">
         <img
@@ -370,10 +370,10 @@
     <!-- User Info -->
     @if (user) {
       <div
-        class="flex items-center gap-3 p-4 mx-3 my-2 bg-linear-to-br from-purple-50 to-violet-100 dark:bg-violet-600/10 rounded-xl"
+        class="flex items-center gap-3 p-4 mx-3 my-2 bg-linear-to-br from-primary-50 to-primary-100 dark:bg-primary-600/10 rounded-xl"
       >
         <div
-          class="w-10 h-10 rounded-full bg-linear-to-br from-violet-600 to-purple-500 text-white flex items-center justify-center shrink-0"
+          class="w-10 h-10 rounded-full bg-linear-to-br from-primary-600 to-primary-500 text-white flex items-center justify-center shrink-0"
         >
           <i class="fas fa-user"></i>
         </div>
@@ -387,7 +387,7 @@
         <a
           routerLink="/login"
           (click)="closeMobileMenu()"
-          class="flex items-center justify-center gap-2 w-full p-3 text-sm font-semibold text-white bg-linear-to-br from-violet-600 to-purple-500 rounded-xl no-underline transition-all duration-250 hover:from-violet-700 hover:to-violet-600"
+          class="flex items-center justify-center gap-2 w-full p-3 text-sm font-semibold text-white bg-linear-to-br from-primary-600 to-primary-500 rounded-xl no-underline transition-all duration-250 hover:from-primary-700 hover:to-primary-600"
         >
           <i class="fas fa-sign-in-alt"></i>
           Sign In / Register
@@ -399,7 +399,7 @@
     <nav class="py-2 px-3">
       <a
         routerLink="/"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
         <i class="fas fa-home w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -408,7 +408,7 @@
       </a>
       <a
         routerLink="/shop"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
         <i class="fas fa-store w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -417,7 +417,7 @@
       </a>
       <a
         routerLink="/about-us"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
         <i class="fas fa-info-circle w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -426,7 +426,7 @@
       </a>
       <a
         routerLink="/contact-us"
-        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
         (click)="closeMobileMenu()"
       >
         <i class="fas fa-headset w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -438,11 +438,11 @@
     <!-- Mobile Categories -->
     <div class="py-1 px-3">
       <button
-        class="flex items-center justify-between w-full p-3 bg-purple-500/4 dark:bg-purple-500/8 border-none rounded-[10px] cursor-pointer transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-purple-500/8"
+        class="flex items-center justify-between w-full p-3 bg-primary-500/4 dark:bg-primary-500/8 border-none rounded-[10px] cursor-pointer transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-primary-500/8"
         (click)="toggleMobileCategories()"
       >
         <span class="flex items-center gap-2">
-          <i class="fas fa-th-large text-purple-500"></i>
+          <i class="fas fa-th-large text-primary-500"></i>
           <span class="font-semibold text-sm">Categories</span>
         </span>
         <i
@@ -456,11 +456,11 @@
             <a
               [routerLink]="['/shop']"
               [queryParams]="{ category: item.id }"
-              class="flex items-center gap-2 p-2.5 text-[13px] font-medium text-gray-600 dark:text-gray-300 rounded-lg no-underline transition-all duration-200 animate-category-fade-in opacity-0 hover:bg-purple-500/6 hover:text-violet-600"
+              class="flex items-center gap-2 p-2.5 text-[13px] font-medium text-gray-600 dark:text-gray-300 rounded-lg no-underline transition-all duration-200 animate-category-fade-in opacity-0 hover:bg-primary-500/6 hover:text-primary-600"
               [style.animation-delay]="i * 50 + 'ms'"
               (click)="closeMobileMenu()"
             >
-              <i class="fas fa-tag text-purple-500"></i>
+              <i class="fas fa-tag text-primary-500"></i>
               <span>{{ item?.itemName }}</span>
             </a>
           }
@@ -473,7 +473,7 @@
       <div class="py-2 px-3 border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
         <a
           routerLink="/account/profile"
-          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
           (click)="closeMobileMenu()"
         >
           <i class="fas fa-user-circle w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -482,7 +482,7 @@
         </a>
         <a
           routerLink="/account/orders"
-          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-purple-500/6 hover:text-violet-600 dark:hover:bg-purple-500/12 dark:hover:text-purple-100"
+          class="flex items-center gap-3 p-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
           (click)="closeMobileMenu()"
         >
           <i class="fas fa-box w-4.5 text-center text-[15px] text-gray-400"></i>
@@ -491,7 +491,7 @@
         </a>
         <button
           (click)="logout(); closeMobileMenu()"
-          class="flex items-center gap-3 p-3 text-sm font-medium text-red-500 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-purple-500/6 w-full bg-transparent border-none"
+          class="flex items-center gap-3 p-3 text-sm font-medium text-red-500 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-500/6 w-full bg-transparent border-none"
         >
           <i class="fas fa-sign-out-alt w-4.5 text-center text-[15px]"></i>
           <span>Logout</span>
