@@ -201,7 +201,12 @@
   height: 100%;
   width: 30%;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--color-primary-700), var(--color-primary-500), var(--color-accent));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-700),
+    var(--color-primary-500),
+    var(--color-accent)
+  );
   animation: loadingSlide 1.2s ease-in-out infinite;
 }
 
@@ -240,7 +245,8 @@
 }
 .search-section-count {
   font-size: 11px;
-  color: var(--color-neutral-400);(in srgb, var(--color-primary-600) 6%, transparent);
+  color: var(--color-neutral-400);
+  background: color-mix(in srgb, var(--color-primary-600) 6%, transparent);
   padding: 2px 8px;
   border-radius: 10px;
 }
@@ -433,12 +439,22 @@
   border-radius: 5px;
 }
 .skeleton-pulse {
-  background: linear-gradient(90deg, var(--color-neutral-200) 25%, var(--color-neutral-100) 50%, var(--color-neutral-200) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 75%
+  );
   background-size: 200% 100%;
   animation: skeletonShimmer 1.5s ease-in-out infinite;
 }
 :host-context(.dark) .skeleton-pulse {
-  background: linear-gradient(90deg, var(--color-dark-card) 25%, var(--color-dark-muted) 50%, var(--color-dark-card) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--color-dark-card) 25%,
+    var(--color-dark-muted) 50%,
+    var(--color-dark-card) 75%
+  );
   background-size: 200% 100%;
 }
 
