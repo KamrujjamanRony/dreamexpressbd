@@ -10,7 +10,7 @@
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
                 <div
-                  class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-gray-600"
+                  class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-neutral-600"
                 >
                   <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
                 </div>
@@ -81,7 +81,7 @@
               <tbody>
                 @for (item of filteredMenuList(); track item?.id || $index) {
                   <tr
-                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-gray-950 dark:border-gray-700 dark:hover:bg-gray-800"
+                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-neutral-950 dark:border-neutral-700 dark:hover:bg-neutral-800"
                     [class.bg-blue-50]="selected()?.id === item.id"
                   >
                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
@@ -122,13 +122,13 @@
     <div class="max-w-8xl mx-auto relative">
       <!-- Menu Registration Form -->
       <div
-        class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-gray-700"
+        class="bg-white rounded-lg shadow-md border border-neutral-200 transition-all dark:bg-neutral-950 dark:border-neutral-700"
       >
         <!-- Form Header -->
         <div class="bg-blue-300 h-2 rounded-t-lg transition-all"></div>
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 transition-all dark:text-gray-200">
+            <h2 class="text-2xl font-bold text-neutral-800 transition-all dark:text-neutral-200">
               Menu Form
             </h2>
             <button
@@ -179,7 +179,7 @@
                   <select autocomplete="off"
                     [formField]="form.parentMenuID"
                     id="parentMenuID"
-                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer dark:bg-gray-950 dark:border-gray-700"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer dark:bg-neutral-950 dark:border-neutral-700"
                   >
                     <option value="">Select Parent Menu</option>
                     @for (option of menuOptions(); track $index) {
@@ -279,7 +279,7 @@
                       type="radio"
                       [formField]="form.isActive"
                       value="true"
-                      class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      class="h-4 w-4 border-neutral-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     <span class="ml-2 text-sm">Active</span>
                   </label>
@@ -288,7 +288,7 @@
                       type="radio"
                       [formField]="form.isActive"
                       value="false"
-                      class="h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                      class="h-4 w-4 border-neutral-300 text-red-600 focus:ring-red-500"
                     />
                     <span class="ml-2 text-sm">Inactive</span>
                   </label>
@@ -301,13 +301,13 @@
                   type="submit"
                   [value]="isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save'"
                   [disabled]="form().invalid() || isSubmitted()"
-                  class="text-gray-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50invalid:opacity-50"
+                  class="text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50invalid:opacity-50"
                 />
 
                 <button
                   type="button"
                   (click)="onToggleList()"
-                  class="text-gray-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+                  class="text-neutral-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
                 >
                   Close
                 </button>
