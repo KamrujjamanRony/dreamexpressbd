@@ -31,7 +31,13 @@
   height: 100%;
   width: 0;
   border-radius: 0 2px 2px 0;
-  background: linear-gradient(90deg, var(--color-primary-700), var(--color-primary-500), var(--color-accent), var(--color-primary-700));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-700),
+    var(--color-primary-500),
+    var(--color-accent),
+    var(--color-primary-700)
+  );
   background-size: 300% 100%;
   animation:
     rtProgress 2s ease-in-out forwards,
@@ -112,7 +118,13 @@
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-400));
 }
 .dark .route-topbar-fill {
-  background: linear-gradient(90deg, var(--color-primary-400), var(--color-primary-400), var(--color-accent-light), var(--color-primary-400));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-400),
+    var(--color-primary-400),
+    var(--color-accent-light),
+    var(--color-primary-400)
+  );
   box-shadow: 0 0 12px rgba(from var(--color-primary-400) r g b / 0.5);
 }
 
