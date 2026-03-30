@@ -1,7 +1,7 @@
 <div class="p-6">
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Discount Tokens</h1>
+    <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Discount Tokens</h1>
     @if (isInsert()) {
       <button
         (click)="openForm()"
@@ -13,18 +13,18 @@
   </div>
 
   <!-- Search -->
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4">
+  <div class="bg-white dark:bg-neutral-800 rounded-lg shadow mb-6 p-4">
     <div class="relative max-w-md">
       <fa-icon
         [icon]="faMagnifyingGlass"
-        class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
       ></fa-icon>
       <input
         type="text"
         (input)="onSearch($event)"
         placeholder="Search by code or type..."
         autocomplete="off"
-        class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+        class="w-full pl-10 pr-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
       />
     </div>
   </div>
@@ -35,7 +35,7 @@
       <div
         class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"
       ></div>
-      <p class="mt-4 text-gray-600 dark:text-gray-400">Loading tokens...</p>
+      <p class="mt-4 text-neutral-600 dark:text-neutral-400">Loading tokens...</p>
     </div>
 
   } @else if (hasError()) {
@@ -50,55 +50,55 @@
     </div>
 
   } @else {
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900">
+        <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+          <thead class="bg-neutral-50 dark:bg-neutral-900">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Code
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Type
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Value
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Usage
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Expires
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Status
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
               >
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
             @for (item of filteredList(); track item.id) {
-              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <td class="px-6 py-4 text-sm font-mono font-medium text-gray-900 dark:text-white">
+              <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+                <td class="px-6 py-4 text-sm font-mono font-medium text-neutral-900 dark:text-white">
                   {{ item.code }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
                   <span
                     class="px-2 py-1 text-xs rounded-full"
                     [class]="
@@ -112,7 +112,7 @@
                     {{ item.type }}
                   </span>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                <td class="px-6 py-4 text-sm text-neutral-900 dark:text-white">
                   @if (item.type === 'Percentage') {
                     {{ item.value }}%
                   } @else if (item.type === 'FreeDelivery') {
@@ -121,10 +121,10 @@
                     ৳{{ item.value }}
                   }
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
                   {{ item.usedCount }} / {{ item.maxUseCount }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
                   {{ item.expireAt | date: 'mediumDate' }}
                 </td>
                 <td class="px-6 py-4">
@@ -160,7 +160,7 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="7" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                <td colspan="7" class="px-6 py-12 text-center text-neutral-500 dark:text-neutral-400">
                   No tokens found
                 </td>
               </tr>
@@ -174,16 +174,16 @@
   <!-- Form Modal -->
   @if (showForm()) {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-lg w-full">
+      <div class="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-lg w-full">
         <div
-          class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700"
+          class="flex justify-between items-center p-4 border-b border-neutral-200 dark:border-neutral-700"
         >
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+          <h2 class="text-xl font-bold text-neutral-900 dark:text-white">
             {{ selected() ? 'Edit Token' : 'New Token' }}
           </h2>
           <button
             (click)="closeForm()"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none"
+            class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 text-2xl leading-none"
           >
             &times;
           </button>
@@ -191,65 +191,65 @@
         <div class="p-6 space-y-4">
           <!-- Code -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
               >Token Code *</label
             >
             <input autocomplete="off"
               type="text"
               [(ngModel)]="formData.code"
               placeholder="e.g. SAVE20"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+              class="w-full px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-600"
             />
           </div>
           <!-- Type -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
               >Type *</label
             >
             <select autocomplete="off"
               [(ngModel)]="formData.type"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+              class="w-full px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-600"
             >
               @for (opt of typeOptions; track opt.value) {
-                <option [value]="opt.value" class="dark:bg-gray-900">{{ opt.label }}</option>
+                <option [value]="opt.value" class="dark:bg-neutral-900">{{ opt.label }}</option>
               }
             </select>
           </div>
           <!-- Value -->
           @if (formData.type !== 'FreeDelivery') {
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                 {{ formData.type === 'Percentage' ? 'Discount (%)' : 'Discount Amount (৳)' }} *
               </label>
               <input autocomplete="off"
                 type="number"
                 [(ngModel)]="formData.value"
                 min="0"
-                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+                class="w-full px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-600"
               />
             </div>
           }
           <!-- Max Use Count -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
               >Max Use Count *</label
             >
             <input autocomplete="off"
               type="number"
               [(ngModel)]="formData.maxUseCount"
               min="1"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+              class="w-full px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-600"
             />
           </div>
           <!-- Expire At -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
               >Expires At *</label
             >
             <input autocomplete="off"
               type="datetime-local"
               [(ngModel)]="formData.expireAt"
-              class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-emerald-600"
+              class="w-full px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-lg bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-600"
             />
           </div>
           <!-- Active -->
@@ -258,9 +258,9 @@
               type="checkbox"
               [(ngModel)]="formData.isActive"
               id="isActive"
-              class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              class="rounded border-neutral-300 text-emerald-600 focus:ring-emerald-500"
             />
-            <label for="isActive" class="text-sm text-gray-700 dark:text-gray-300">Active</label>
+            <label for="isActive" class="text-sm text-neutral-700 dark:text-neutral-300">Active</label>
           </div>
           <!-- Buttons -->
           <div class="flex gap-3 pt-2">
@@ -275,7 +275,7 @@
             <button
               type="button"
               (click)="closeForm()"
-              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
             >
               Cancel
             </button>
