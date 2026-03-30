@@ -83,6 +83,7 @@ export class CarouselList {
   model = signal({
     title: '',
     description: '',
+    bLink: '',
     companyID: environment.companyCode,
   });
 
@@ -203,10 +204,16 @@ export class CarouselList {
     formData.append('CompanyID', String(formValue.companyID));
     formData.append('Title', formValue.title || '');
     formData.append('Description', formValue.description || '');
+    formData.append('BLink', formValue.bLink || '');
 
     // Append file if selected
     if (this.selectedFile()) {
       formData.append('ImageFile', this.selectedFile() as File);
+    }
+
+    // On update, send current imageUrl
+    if (this.selected()?.imageUrl) {
+      formData.append('imageUrl', this.selected()!.imageUrl);
     }
 
     const request$ = this.selected()
@@ -240,6 +247,7 @@ export class CarouselList {
       ...current,
       title: carousel.title,
       description: carousel.description || '',
+      bLink: carousel.bLink || '',
       companyID: carousel.companyID,
     }));
 
@@ -291,6 +299,7 @@ export class CarouselList {
     this.model.set({
       title: '',
       description: '',
+      bLink: '',
       companyID: environment.companyCode,
     });
 

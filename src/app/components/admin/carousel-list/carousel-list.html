@@ -71,6 +71,7 @@
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Title</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Description</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Button Link</th>
                   @if (isEdit() || isDelete()) {
                     <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
                   }
@@ -106,6 +107,7 @@
                     </td>
                     <td class="px-6 py-4 font-medium">{{ item?.title }}</td>
                     <td class="px-6 py-4 max-w-xs truncate">{{ item?.description || '-' }}</td>
+                    <td class="px-6 py-4 max-w-xs truncate">{{ item?.bLink || '-' }}</td>
                     <td class="px-6 py-4">
                       @if (isEdit()) {
                         <button
@@ -162,7 +164,8 @@
               @let title = form.title();
               @let titleError = form.title().invalid() && form.title().touched();
               <div class="relative pb-2">
-                <input autocomplete="off"
+                <input
+                  autocomplete="off"
                   type="text"
                   [formField]="form.title"
                   id="title"
@@ -186,7 +189,8 @@
 
             <!-- Description -->
             <div class="relative pb-2">
-              <textarea autocomplete="off"
+              <textarea
+                autocomplete="off"
                 id="description"
                 [formField]="form.description"
                 rows="4"
@@ -198,6 +202,25 @@
                 class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-6 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
                 >Description *</label
               >
+            </div>
+
+            <!-- Button Link -->
+            <div>
+              <div class="relative pb-2">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  [formField]="form.bLink"
+                  id="bLink"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                />
+                <label
+                  for="bLink"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                  >Button Link</label
+                >
+              </div>
             </div>
 
             <!-- Image File Upload -->
@@ -233,7 +256,9 @@
                 (change)="onFileSelect($event)"
                 class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
               />
-              <p class="mt-1 text-xs text-neutral-500">SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)</p>
+              <p class="mt-1 text-xs text-neutral-500">
+                SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)
+              </p>
             </div>
 
             <div class="flex gap-2 pt-4">
