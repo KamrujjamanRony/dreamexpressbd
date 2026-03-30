@@ -19,6 +19,10 @@
             class="absolute inset-0 bg-cover bg-center carousel-bg"
             [style.backgroundImage]="'url(' + imageApi + item.imageUrl + ')'"
           ></div>
+          <!-- Bottom gradient for text readability -->
+          <div
+            class="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/60 via-black/25 to-transparent pointer-events-none"
+          ></div>
           <!-- Content -->
           @if (item.title || item.description) {
             <div
@@ -26,20 +30,20 @@
             >
               <div class="max-w-xl">
                 <h2
-                  class="carousel-title text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
+                  class="carousel-title text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight drop-shadow-lg"
                 >
                   {{ item.title }}
                 </h2>
                 @if (item.description) {
                   <p
-                    class="carousel-desc text-sm md:text-base lg:text-lg text-gray-700 leading-relaxed mt-3 md:mt-5"
+                    class="carousel-desc text-sm md:text-base lg:text-lg text-white/85 leading-relaxed mt-3 md:mt-5 drop-shadow-md"
                   >
                     {{ item.description }}
                   </p>
                 }
                 <a
                   routerLink="/shop"
-                  class="carousel-btn group inline-flex items-center gap-2 mt-5 md:mt-8 px-8 py-3.5 bg-purple-600 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 hover:bg-purple-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:gap-3 text-sm md:text-base"
+                  class="carousel-btn group inline-flex items-center gap-2 mt-5 md:mt-8 px-8 py-3.5 bg-white text-gray-900 font-bold rounded-full shadow-xl hover:bg-purple-600 hover:text-white transition-all duration-400 hover:shadow-2xl hover:-translate-y-0.5 hover:gap-3 text-sm md:text-base"
                 >
                   Shop Now
                   <svg
