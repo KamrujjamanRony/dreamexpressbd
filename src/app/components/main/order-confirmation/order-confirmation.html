@@ -2,7 +2,7 @@
   <!-- Loading State -->
   @if (loading) {
     <div class="max-w-3xl mx-auto">
-      <div class="bg-white dark:bg-gray-900 rounded-xl p-8 border border-gray-200 dark:border-gray-800">
+      <div class="bg-white dark:bg-neutral-900 rounded-xl p-8 border border-neutral-200 dark:border-neutral-800">
         <div class="text-center">
           <div class="skeleton-circle w-14 h-14 rounded-full mx-auto"></div>
           <div class="skeleton-line w-48 h-6 mx-auto mt-4 rounded-md"></div>
@@ -26,8 +26,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white mt-4">Order Confirmed!</h1>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+        <h1 class="text-2xl font-bold text-neutral-800 dark:text-white mt-4">Order Confirmed!</h1>
+        <p class="text-neutral-500 dark:text-neutral-400 text-sm mt-1">
           Thank you for your purchase{{ orderDetails.userName ? ', ' + orderDetails.userName : '' }}
         </p>
       </div>
@@ -41,7 +41,7 @@
         </svg>
         Print Voucher
       </button>
-      <button (click)="continueShopping()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+      <button (click)="continueShopping()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
@@ -51,21 +51,21 @@
 
     <!-- VOUCHER -->
     <div class="voucher-wrapper max-w-3xl mx-auto fade-slide-in" style="--delay: 2" id="voucher">
-      <div class="voucher-paper bg-white dark:bg-slate-900 rounded-[14px] border border-gray-200 dark:border-slate-800 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_10px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2),0_10px_30px_rgba(0,0,0,0.3)] overflow-hidden relative">
+      <div class="voucher-paper bg-white dark:bg-slate-900 rounded-[14px] border border-neutral-200 dark:border-slate-800 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_10px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2),0_10px_30px_rgba(0,0,0,0.3)] overflow-hidden relative">
         <!-- Voucher Header -->
         <div class="voucher-header flex justify-between items-start py-7 px-8 pb-5 flex-wrap gap-4">
           <div class="shrink-0">
-            <h1 class="text-2xl font-extrabold text-gray-900 dark:text-slate-100 tracking-tight leading-tight">{{ companyName }}</h1>
-            <p class="text-[0.75rem] uppercase tracking-[0.12em] text-gray-400 mt-0.5 font-semibold">Order Invoice</p>
+            <h1 class="text-2xl font-extrabold text-neutral-900 dark:text-slate-100 tracking-tight leading-tight">{{ companyName }}</h1>
+            <p class="text-[0.75rem] uppercase tracking-[0.12em] text-neutral-400 mt-0.5 font-semibold">Order Invoice</p>
           </div>
           <div class="voucher-meta text-right flex flex-col items-end gap-1">
             <div class="flex flex-col items-end">
-              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-gray-400 font-semibold">Invoice No.</span>
-              <span class="text-sm font-bold text-gray-900 dark:text-slate-200 font-mono">#{{ orderId }}</span>
+              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-neutral-400 font-semibold">Invoice No.</span>
+              <span class="text-sm font-bold text-neutral-900 dark:text-slate-200 font-mono">#{{ orderId }}</span>
             </div>
             <div class="flex flex-col items-end">
-              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-gray-400 font-semibold">Date</span>
-              <span class="text-sm font-bold text-gray-900 dark:text-slate-200">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
+              <span class="text-[0.62rem] uppercase tracking-[0.06em] text-neutral-400 font-semibold">Date</span>
+              <span class="text-sm font-bold text-neutral-900 dark:text-slate-200">{{ orderDetails.orderDate | date: 'mediumDate' }}</span>
             </div>
             <span class="status-badge text-[0.65rem] font-bold py-0.75 px-2.5 rounded-full uppercase tracking-[0.04em] mt-1" [ngClass]="getStatusClass(orderDetails.orderStatus)">
               {{ getOrderStatusText(orderDetails.orderStatus) }}
@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <div class="voucher-divider h-px bg-linear-to-r from-transparent via-gray-300 dark:via-slate-600 to-transparent mx-8"></div>
+        <div class="voucher-divider h-px bg-linear-to-r from-transparent via-neutral-300 dark:via-slate-600 to-transparent mx-8"></div>
 
         <!-- Billing / Shipping Row -->
         <div class="voucher-addresses grid grid-cols-3 gap-5 py-5 px-8">
@@ -200,7 +200,7 @@
                 <span>- <span [innerHTML]="orderDetails.discountAmount | bdt"></span></span>
               </div>
             }
-            <div class="grand-total-row flex justify-between items-center pt-2.5 mt-2 border-t-2 border-gray-900 dark:border-slate-200 text-[0.95rem] font-bold text-gray-900 dark:text-slate-100">
+            <div class="grand-total-row flex justify-between items-center pt-2.5 mt-2 border-t-2 border-neutral-900 dark:border-slate-200 text-[0.95rem] font-bold text-neutral-900 dark:text-slate-100">
               <span>Total Due</span>
               <span class="grand-total-amount text-lg font-extrabold text-rose-600 dark:text-rose-400" [innerHTML]="orderDetails.totalAmount | bdt"></span>
             </div>
@@ -218,7 +218,7 @@
 
         <!-- Voucher Footer -->
         <div class="voucher-footer py-4 px-8 pb-5">
-          <div class="h-px bg-linear-to-r from-transparent via-gray-300 dark:via-slate-600 to-transparent mb-3"></div>
+          <div class="h-px bg-linear-to-r from-transparent via-neutral-300 dark:via-slate-600 to-transparent mb-3"></div>
           <p class="text-center text-[0.78rem] font-semibold text-slate-500 dark:text-slate-400">{{ companyName }} &mdash; Thank you for your order!</p>
           <p class="text-center text-[0.65rem] text-slate-400 mt-0.5">This is a computer-generated invoice and does not require a signature.</p>
         </div>
@@ -233,7 +233,7 @@
         </svg>
         Print
       </button>
-      <button (click)="continueShopping()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">Continue Shopping</button>
+      <button (click)="continueShopping()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700">Continue Shopping</button>
     </div>
   }
 </div>
