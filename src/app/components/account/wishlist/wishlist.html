@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <h1
-      class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-3"
+      class="text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-100 flex items-center gap-3"
     >
       <fa-icon [icon]="faHeart" class="text-red-500"></fa-icon>
       My Wishlist
@@ -21,12 +21,12 @@
   @if (loading()) {
     <div class="animate-pulse space-y-4">
       @for (_ of [1, 2, 3]; track _) {
-        <div class="flex gap-4 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
-          <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg shrink-0"></div>
+        <div class="flex gap-4 bg-white dark:bg-neutral-800 rounded-xl p-4 shadow-sm">
+          <div class="w-24 h-24 bg-neutral-200 dark:bg-neutral-700 rounded-lg shrink-0"></div>
           <div class="flex-1 space-y-3">
-            <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+            <div class="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/4"></div>
           </div>
         </div>
       }
@@ -39,10 +39,10 @@
       >
         <fa-icon [icon]="faHeart" class="text-4xl text-red-300 dark:text-red-600"></fa-icon>
       </div>
-      <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+      <h2 class="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
         Your wishlist is empty
       </h2>
-      <p class="text-gray-500 dark:text-gray-400 mb-6">
+      <p class="text-neutral-500 dark:text-neutral-400 mb-6">
         Save items you love by clicking the heart icon on products.
       </p>
       <a
@@ -61,13 +61,13 @@
         track item.productId + (item.selectSize || '') + (item.selectColor || '')
       ) {
         <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden"
+          class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-md transition-shadow overflow-hidden"
         >
           <div class="flex items-center gap-4 p-4">
             <!-- Product Image -->
             <a
               [routerLink]="getViewLink(item.productId)"
-              class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700 shrink-0"
+              class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-neutral-50 dark:bg-neutral-700 shrink-0"
             >
               <img
                 [ngSrc]="item.image"
@@ -84,23 +84,23 @@
             <div class="flex-1 min-w-0">
               <a
                 [routerLink]="getViewLink(item.productId)"
-                class="font-semibold text-gray-800 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-400 transition truncate block"
+                class="font-semibold text-neutral-800 dark:text-neutral-100 hover:text-primary-600 dark:hover:text-primary-400 transition truncate block"
               >
                 {{ item.productName }}
               </a>
               <div
-                class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-gray-500 dark:text-gray-400"
+                class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-neutral-500 dark:text-neutral-400"
               >
                 @if (item.brand) {
                   <span
                     >Brand:
-                    <span class="text-gray-700 dark:text-gray-300">{{ item.brand }}</span></span
+                    <span class="text-neutral-700 dark:text-neutral-300">{{ item.brand }}</span></span
                   >
                 }
                 @if (item.selectColor) {
                   <span
                     >Color:
-                    <span class="text-gray-700 dark:text-gray-300 uppercase">{{
+                    <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
                       item.selectColor
                     }}</span></span
                   >
@@ -108,7 +108,7 @@
                 @if (item.selectSize) {
                   <span
                     >Size:
-                    <span class="text-gray-700 dark:text-gray-300 uppercase">{{
+                    <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
                       item.selectSize
                     }}</span></span
                   >
@@ -144,7 +144,7 @@
 
           <!-- Mobile: actions row -->
           <div
-            class="sm:hidden flex items-center justify-between border-t border-gray-100 dark:border-gray-700 px-4 py-2 bg-gray-50/50 dark:bg-gray-800/80"
+            class="sm:hidden flex items-center justify-between border-t border-neutral-100 dark:border-neutral-700 px-4 py-2 bg-neutral-50/50 dark:bg-neutral-800/80"
           >
             <button
               type="button"
