@@ -2,32 +2,32 @@ swiper-container::part(button-prev),
 swiper-container::part(button-next) {
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--color-white) 90%, transparent);
   border-radius: 50%;
-  color: #1f2937;
+  color: var(--color-neutral-800);
   --swiper-navigation-size: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 15%, transparent);
   transition: all 0.3s ease;
 }
 
 swiper-container::part(button-prev):hover,
 swiper-container::part(button-next):hover {
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: var(--color-white);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-black) 20%, transparent);
 }
 
 :host-context(.dark) swiper-container::part(button-prev),
 :host-context(.dark) swiper-container::part(button-next) {
-  background: rgba(30, 16, 51, 0.9);
+  background: color-mix(in srgb, var(--color-dark-elevated) 90%, transparent);
   color: var(--color-primary-300);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 40%, transparent);
 }
 
 :host-context(.dark) swiper-container::part(button-prev):hover,
 :host-context(.dark) swiper-container::part(button-next):hover {
   background: rgba(from var(--color-primary-700) r g b / 0.3);
   color: var(--color-primary-100);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-black) 50%, transparent);
 }
 
 @media (max-width: 768px) {
