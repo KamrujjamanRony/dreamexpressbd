@@ -1,8 +1,8 @@
 .invalid {
-  border-color: red !important;
+  border-color: var(--color-danger) !important;
 }
 
 .highlighted {
-  background-color: #007bff !important;
-  color: white;
+  background-color: var(--color-info) !important;
+  color: var(--color-white);
 }
