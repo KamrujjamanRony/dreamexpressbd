@@ -88,7 +88,7 @@ export class OrderDetails {
       'Delivered': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
       'Cancelled': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
     };
-    return statusMap[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+    return statusMap[status] || 'bg-neutral-100 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-300';
   }
 
 }
