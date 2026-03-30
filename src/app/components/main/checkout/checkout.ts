@@ -81,8 +81,11 @@ export class Checkout {
     activeStep = signal(1);
 
     // Computed totals
+    effectiveDeliveryCharge = computed(() =>
+        this.tokenApplied() && this.discountType() === 'FreeDelivery' ? 0 : this.deliveryCharge()
+    );
     orderTotal = computed(() =>
-        Math.max(0, (this.orderData?.subtotal || 0) + this.deliveryCharge() - this.discountAmount())
+        Math.max(0, (this.orderData?.subtotal || 0) + this.effectiveDeliveryCharge() - this.discountAmount())
     );
 
     constructor() {
@@ -114,43 +117,53 @@ export class Checkout {
             next: (data) => {
                 const activeCharges = (data.deliveryCharges || []).filter(c => c.isActive);
                 this.apiDeliveryCharges.set(activeCharges);
+                this.setDefaultDeliveryCharge();
             },
-            error: () => { } // fallback to defaults
+            error: () => {
+                // fallback default: outside Dhaka
+                this.deliveryCharge.set(120);
+            }
         });
 
         setTimeout(() => this.ready.set(true), 50);
     }
 
-    private calculateDeliveryCharge() {
-        if (this.tokenApplied() && this.discountType() === 'FreeDelivery') {
-            this.deliveryCharge.set(0);
-            return;
+    private setDefaultDeliveryCharge() {
+        const charges = this.apiDeliveryCharges();
+        if (charges.length > 0) {
+            const outsideCharge = charges.find(c => c.name.toLowerCase().includes('outside'));
+            this.deliveryCharge.set(outsideCharge ? outsideCharge.amount : charges[charges.length - 1].amount);
+        } else {
+            this.deliveryCharge.set(120);
         }
+    }
 
+    private calculateDeliveryCharge() {
         const district = (this.deliveryAddress()?.district || '').toLowerCase();
+        this.updateDeliveryChargeByDistrict(district);
+    }
+
+    private updateDeliveryChargeByDistrict(district: string) {
+        district = (district || '').toLowerCase();
         const charges = this.apiDeliveryCharges();
 
         if (charges.length > 0) {
-            // Try to find a matching charge by district name
             const match = charges.find(c =>
                 district.includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(district)
             );
             if (match) {
                 this.deliveryCharge.set(match.amount);
             } else if (district.includes('dhaka')) {
-                // Look for "Inside Dhaka" or similar
                 const dhakaCharge = charges.find(c => c.name.toLowerCase().includes('dhaka'));
                 this.deliveryCharge.set(dhakaCharge ? dhakaCharge.amount : charges[charges.length - 1].amount);
-            } else if (district) {
-                // Use "Outside Dhaka" or last charge as fallback
+            } else {
                 const outsideCharge = charges.find(c => c.name.toLowerCase().includes('outside'));
                 this.deliveryCharge.set(outsideCharge ? outsideCharge.amount : charges[charges.length - 1].amount);
             }
         } else {
-            // Fallback defaults if API charges not loaded
             if (district.includes('dhaka')) {
                 this.deliveryCharge.set(60);
-            } else if (district) {
+            } else {
                 this.deliveryCharge.set(120);
             }
         }
@@ -201,7 +214,6 @@ export class Checkout {
                     this.discountType.set('FreeDelivery');
                     this.discountValue.set(token.value);
                     this.discountAmount.set(0);
-                    this.deliveryCharge.set(0);
                 } else if (token.type === 'Percentage') {
                     const amount = Math.min(Math.round((subtotal * token.value) / 100), subtotal);
                     this.discountToken.set(token.code);
@@ -260,6 +272,8 @@ export class Checkout {
         this.areas.set([]);
         if (district) {
             this.dataService.getCitiesByRegion(district).subscribe(cities => this.cities.set(cities));
+            // Update delivery charge based on selected district
+            this.updateDeliveryChargeByDistrict(district);
         }
     }
 
