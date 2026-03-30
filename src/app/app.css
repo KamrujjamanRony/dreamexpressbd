@@ -1,0 +1,46 @@
+.route-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: 3px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.route-loader-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
+  background-size: 200% 100%;
+  animation:
+    routeProgress 2s ease-in-out forwards,
+    routeShimmer 1s linear infinite;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+}
+
+@keyframes routeProgress {
+  0% {
+    width: 0;
+  }
+  20% {
+    width: 40%;
+  }
+  50% {
+    width: 65%;
+  }
+  80% {
+    width: 85%;
+  }
+  100% {
+    width: 95%;
+  }
+}
+
+@keyframes routeShimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
