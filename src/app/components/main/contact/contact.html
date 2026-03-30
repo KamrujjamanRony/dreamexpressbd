@@ -1,16 +1,30 @@
 <!-- Hero Section -->
-<section class="contact-hero relative overflow-hidden bg-[linear-gradient(135deg,#f5f3ff_0%,#fdf2f8_50%,#f0e7ff_100%)] dark:bg-[linear-gradient(135deg,#0f0a1e_0%,#1a0e2e_50%,#0d0820_100%)]" [class.ready]="ready()">
-  <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_8%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.06)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_15%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.1)_0%,transparent_50%)]"></div>
+<section
+  class="contact-hero relative overflow-hidden bg-[linear-gradient(135deg,#f5f3ff_0%,#fdf2f8_50%,#f0e7ff_100%)] dark:bg-[linear-gradient(135deg,#0f0a1e_0%,#1a0e2e_50%,#0d0820_100%)]"
+  [class.ready]="ready()"
+>
+  <div
+    class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_8%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.06)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_15%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.1)_0%,transparent_50%)]"
+  ></div>
   <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
-    <span class="hero-badge inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-semibold tracking-wider uppercase mb-4">
+    <span
+      class="hero-badge inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-semibold tracking-wider uppercase mb-4"
+    >
       Get In Touch
     </span>
-    <h1 class="hero-title text-3xl sm:text-5xl font-extrabold text-neutral-900 dark:text-slate-100 mb-4">
+    <h1
+      class="hero-title text-3xl sm:text-5xl font-extrabold text-neutral-900 dark:text-slate-100 mb-4"
+    >
       Contact
-      <span class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-pink-500">Us</span>
+      <span class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-pink-500"
+        >Us</span
+      >
     </h1>
-    <p class="hero-subtitle text-neutral-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto">
-      Have a question or feedback? We'd love to hear from you. Reach out and we'll respond as soon as we can.
+    <p
+      class="hero-subtitle text-neutral-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto"
+    >
+      Have a question or feedback? We'd love to hear from you. Reach out and we'll respond as soon
+      as we can.
     </p>
   </div>
 </section>
@@ -18,46 +32,26 @@
 <!-- Contact Cards -->
 <section class="py-12 sm:py-16 bg-white dark:bg-dark-page">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <!-- Phone -->
-      <div class="animate-on-scroll text-center p-7 px-5 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" style="transition-delay: 0ms">
-        <div class="w-11 h-11 mx-auto mb-3 flex items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-700 text-base">
-          <i class="fas fa-phone-alt text-white"></i>
-        </div>
-        <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-1">Phone</h3>
-        <p class="text-sm text-neutral-500 dark:text-slate-400">{{ contactInfo()?.phoneNumber1 || '+880 1234-567890' }}</p>
-        @if (contactInfo()?.phoneNumber2) {
-          <p class="text-sm text-neutral-500 dark:text-slate-400">{{ contactInfo()?.phoneNumber2 }}</p>
+    @if (contactInfo()?.contactCards?.length) {
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        @for (card of contactInfo()?.contactCards; track card.id ?? $index) {
+          <div
+            class="animate-on-scroll text-center p-7 px-5 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]"
+            [style.transition-delay]="$index * 100 + 'ms'"
+          >
+            <div
+              class="w-11 h-11 mx-auto mb-3 flex items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-700 text-base"
+            >
+              <i [class]="getCardIcon(card.type) + ' text-white'"></i>
+            </div>
+            <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-1">
+              {{ card.title }}
+            </h3>
+            <p class="text-sm text-neutral-500 dark:text-slate-400">{{ card.value }}</p>
+          </div>
         }
       </div>
-
-      <!-- Email -->
-      <div class="animate-on-scroll text-center p-7 px-5 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" style="transition-delay: 100ms">
-        <div class="w-11 h-11 mx-auto mb-3 flex items-center justify-center rounded-xl bg-linear-to-br from-pink-500 to-rose-600 text-base">
-          <i class="fas fa-envelope text-white"></i>
-        </div>
-        <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-1">Email</h3>
-        <p class="text-sm text-neutral-500 dark:text-slate-400">{{ contactInfo()?.email || 'support@dreamexpress.bd' }}</p>
-      </div>
-
-      <!-- Address -->
-      <div class="animate-on-scroll text-center p-7 px-5 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" style="transition-delay: 200ms">
-        <div class="w-11 h-11 mx-auto mb-3 flex items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-600 text-base">
-          <i class="fas fa-map-marker-alt text-white"></i>
-        </div>
-        <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-1">Address</h3>
-        <p class="text-sm text-neutral-500 dark:text-slate-400">{{ contactInfo()?.address1 || 'Dhaka, Bangladesh' }}</p>
-      </div>
-
-      <!-- Hours -->
-      <div class="animate-on-scroll text-center p-7 px-5 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]" style="transition-delay: 300ms">
-        <div class="w-11 h-11 mx-auto mb-3 flex items-center justify-center rounded-xl bg-linear-to-br from-fuchsia-500 to-primary-600 text-base">
-          <i class="fas fa-clock text-white"></i>
-        </div>
-        <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-1">Working Hours</h3>
-        <p class="text-sm text-neutral-500 dark:text-slate-400">Sat - Thu: 10AM - 8PM</p>
-      </div>
-    </div>
+    }
   </div>
 </section>
 
@@ -67,48 +61,94 @@
     <div class="grid lg:grid-cols-5 gap-8">
       <!-- Form -->
       <div class="lg:col-span-3 animate-on-scroll">
-        <div class="p-8 rounded-[20px] bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10">
-          <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-slate-100 mb-1">Send Us a Message</h2>
-          <p class="text-sm text-neutral-500 dark:text-slate-400 mb-6">Fill out the form below and we'll get back to you shortly.</p>
+        <div
+          class="p-8 rounded-[20px] bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10"
+        >
+          <h2 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-slate-100 mb-1">
+            Send Us a Message
+          </h2>
+          <p class="text-sm text-neutral-500 dark:text-slate-400 mb-6">
+            Fill out the form below and we'll get back to you shortly.
+          </p>
 
           <form (ngSubmit)="submitForm()">
             <div class="grid sm:grid-cols-2 gap-4 mb-4">
               <div>
-                <label class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Full Name <span class="text-red-400">*</span></label>
+                <label
+                  class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5"
+                  >Full Name <span class="text-red-400">*</span></label
+                >
                 <div class="relative">
-                  <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"></i>
-                  <input type="text" [(ngModel)]="formName" name="name" placeholder="Your name"
-                    class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500" />
+                  <i
+                    class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"
+                  ></i>
+                  <input
+                    type="text"
+                    [(ngModel)]="formName"
+                    name="name"
+                    placeholder="Your name"
+                    class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                  />
                 </div>
               </div>
               <div>
-                <label class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Phone <span class="text-red-400">*</span></label>
+                <label
+                  class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5"
+                  >Phone <span class="text-red-400">*</span></label
+                >
                 <div class="relative">
-                  <i class="fas fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"></i>
-                  <input type="tel" [(ngModel)]="formPhone" name="phone" placeholder="Your phone"
-                    class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500" />
+                  <i
+                    class="fas fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"
+                  ></i>
+                  <input
+                    type="tel"
+                    [(ngModel)]="formPhone"
+                    name="phone"
+                    placeholder="Your phone"
+                    class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                  />
                 </div>
               </div>
             </div>
 
             <div class="mb-4">
-              <label class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Subject</label>
+              <label
+                class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5"
+                >Subject</label
+              >
               <div class="relative">
-                <i class="fas fa-tag absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"></i>
-                <input type="text" [(ngModel)]="formSubject" name="subject" placeholder="Subject (optional)"
-                  class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500" />
+                <i
+                  class="fas fa-tag absolute left-3.5 top-1/2 -translate-y-1/2 text-primary-400 text-[13px]"
+                ></i>
+                <input
+                  type="text"
+                  [(ngModel)]="formSubject"
+                  name="subject"
+                  placeholder="Subject (optional)"
+                  class="w-full py-2.5 px-3.5 pl-9.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                />
               </div>
             </div>
 
             <div class="mb-6">
-              <label class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Message <span class="text-red-400">*</span></label>
-              <textarea [(ngModel)]="formMessage" name="message" rows="5" placeholder="How can we help you?"
-                class="w-full py-3 px-3.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm resize-y bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] font-[inherit] placeholder:text-neutral-400 dark:placeholder:text-neutral-500"></textarea>
+              <label
+                class="block text-[13px] font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5"
+                >Message <span class="text-red-400">*</span></label
+              >
+              <textarea
+                [(ngModel)]="formMessage"
+                name="message"
+                rows="5"
+                placeholder="How can we help you?"
+                class="w-full py-3 px-3.5 border border-neutral-200 dark:border-neutral-700 rounded-[10px] text-sm resize-y bg-primary-50 dark:bg-primary-500/6 dark:text-neutral-200 outline-none transition-all duration-200 focus:border-primary-400 dark:focus:border-primary-600 focus:shadow-[0_0_0_3px_rgba(167,139,250,0.15)] dark:focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)] font-[inherit] placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+              ></textarea>
             </div>
 
-            <button type="submit"
+            <button
+              type="submit"
               class="inline-flex items-center py-3 px-7 bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] text-white font-semibold text-sm rounded-full border-none cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_color-mix(in_srgb,var(--color-primary-600)_30%,transparent)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
-              [disabled]="sending()">
+              [disabled]="sending()"
+            >
               @if (sending()) {
                 <i class="fas fa-spinner fa-spin mr-2"></i> Sending...
               } @else {
@@ -121,71 +161,102 @@
 
       <!-- Info Side -->
       <div class="lg:col-span-2 animate-on-scroll" style="transition-delay: 150ms">
-        <div class="p-7 rounded-[20px] bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10">
+        <div
+          class="p-7 rounded-[20px] bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10"
+        >
           <h3 class="text-lg font-bold text-neutral-900 dark:text-slate-100 mb-4">Quick Info</h3>
 
-          <div class="flex items-start gap-3.5 py-3.5 border-b border-neutral-100 dark:border-neutral-800">
-            <div class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm">
-              <i class="fas fa-truck text-primary-600"></i>
+          @for (info of contactInfo()?.quickInfo; track info.id ?? $index; let last = $last) {
+            <div
+              class="flex items-start gap-3.5 py-3.5"
+              [class]="last ? '' : 'border-b border-neutral-100 dark:border-neutral-800'"
+            >
+              <div
+                class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm"
+              >
+                <i [class]="info.icon + ' text-primary-600'"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">
+                  {{ info.title }}
+                </p>
+                <p class="text-xs text-neutral-500 dark:text-slate-400">{{ info.description }}</p>
+              </div>
             </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">Fast Delivery</p>
-              <p class="text-xs text-neutral-500 dark:text-slate-400">Delivery within 2-5 business days across Bangladesh.</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3.5 py-3.5 border-b border-neutral-100 dark:border-neutral-800">
-            <div class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm">
-              <i class="fas fa-undo text-primary-600"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">Easy Returns</p>
-              <p class="text-xs text-neutral-500 dark:text-slate-400">7-day easy return policy on all products.</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3.5 py-3.5 border-b border-neutral-100 dark:border-neutral-800">
-            <div class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm">
-              <i class="fas fa-shield-alt text-primary-600"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">Secure Payment</p>
-              <p class="text-xs text-neutral-500 dark:text-slate-400">100% secure payment with multiple options.</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3.5 py-3.5">
-            <div class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm">
-              <i class="fas fa-headset text-primary-600"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">24/7 Support</p>
-              <p class="text-xs text-neutral-500 dark:text-slate-400">Round the clock customer support via phone & chat.</p>
-            </div>
-          </div>
+          }
         </div>
 
         <!-- Social Links -->
-        @if (contactInfo()?.facebookLink || contactInfo()?.othersLink1) {
-          <div class="mt-5 py-5 px-7 rounded-2xl bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10">
+        @if (contactInfo()?.facebookLink || contactInfo()?.iLink || contactInfo()?.wNum) {
+          <div
+            class="mt-5 py-5 px-7 rounded-2xl bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10"
+          >
             <h3 class="text-sm font-bold text-neutral-900 dark:text-slate-100 mb-3">Follow Us</h3>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
               @if (contactInfo()?.facebookLink) {
-                <a [href]="contactInfo()?.facebookLink" target="_blank" rel="noopener"
-                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5">
+                <a
+                  [href]="contactInfo()?.facebookLink"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="Facebook"
+                >
                   <i class="fab fa-facebook-f"></i>
                 </a>
               }
-              @if (contactInfo()?.othersLink1) {
-                <a [href]="contactInfo()?.othersLink1" target="_blank" rel="noopener"
-                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5">
+              @if (contactInfo()?.iLink) {
+                <a
+                  [href]="contactInfo()?.iLink"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="Instagram"
+                >
                   <i class="fab fa-instagram"></i>
                 </a>
               }
-              @if (contactInfo()?.othersLink2) {
-                <a [href]="contactInfo()?.othersLink2" target="_blank" rel="noopener"
-                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5">
+              @if (contactInfo()?.yLink) {
+                <a
+                  [href]="contactInfo()?.yLink"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="YouTube"
+                >
                   <i class="fab fa-youtube"></i>
+                </a>
+              }
+              @if (contactInfo()?.wNum) {
+                <a
+                  [href]="'https://wa.me/' + contactInfo()?.wNum"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="WhatsApp"
+                >
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              }
+              @if (contactInfo()?.othersLink1) {
+                <a
+                  [href]="contactInfo()?.othersLink1"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="Link"
+                >
+                  <i class="fas fa-link"></i>
+                </a>
+              }
+              @if (contactInfo()?.othersLink2) {
+                <a
+                  [href]="contactInfo()?.othersLink2"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
+                  title="Link"
+                >
+                  <i class="fas fa-link"></i>
                 </a>
               }
             </div>
@@ -196,54 +267,68 @@
   </div>
 </section>
 
+<!-- Map Section -->
+@if (mapSafeUrl()) {
+  <section class="py-12 sm:py-16 bg-neutral-50 dark:bg-dark-surface">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8 animate-on-scroll">
+        <span
+          class="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider"
+          >Location</span
+        >
+        <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mt-2">
+          Find Us on the Map
+        </h2>
+      </div>
+      <div
+        class="animate-on-scroll rounded-2xl overflow-hidden border border-primary-500/8 dark:border-primary-500/12 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)]"
+      >
+        <iframe
+          [src]="mapSafeUrl()"
+          class="w-full h-[350px] sm:h-[420px] border-0"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+}
+
 <!-- FAQ Section -->
 <section class="py-12 sm:py-20 bg-white dark:bg-dark-page">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-10 animate-on-scroll">
-      <span class="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>
-      <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mt-2">Frequently Asked Questions</h2>
+      <span
+        class="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider"
+        >FAQ</span
+      >
+      <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mt-2">
+        Frequently Asked Questions
+      </h2>
     </div>
 
-    <div class="space-y-3">
-      <details class="animate-on-scroll group rounded-xl border border-primary-500/8 dark:border-primary-500/10 bg-primary-50 dark:bg-dark-panel overflow-hidden transition-shadow duration-300 open:shadow-[0_4px_16px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:open:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
-        <summary class="flex items-center justify-between py-4 px-5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
-          <span>How long does delivery take?</span>
-          <i class="fas fa-chevron-down text-[11px] text-primary-600 transition-transform duration-300 group-open:rotate-180"></i>
-        </summary>
-        <p class="px-5 pb-4 text-[13px] text-neutral-500 dark:text-slate-400 leading-relaxed">
-          We deliver within Dhaka in 1-2 business days and outside Dhaka in 3-5 business days.
-        </p>
-      </details>
-
-      <details class="animate-on-scroll group rounded-xl border border-primary-500/8 dark:border-primary-500/10 bg-primary-50 dark:bg-dark-panel overflow-hidden transition-shadow duration-300 open:shadow-[0_4px_16px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:open:shadow-[0_4px_16px_rgba(0,0,0,0.3)]" style="transition-delay: 100ms">
-        <summary class="flex items-center justify-between py-4 px-5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
-          <span>What is your return policy?</span>
-          <i class="fas fa-chevron-down text-[11px] text-primary-600 transition-transform duration-300 group-open:rotate-180"></i>
-        </summary>
-        <p class="px-5 pb-4 text-[13px] text-neutral-500 dark:text-slate-400 leading-relaxed">
-          We offer a hassle-free 7-day return policy. Simply contact us and we'll arrange the return.
-        </p>
-      </details>
-
-      <details class="animate-on-scroll group rounded-xl border border-primary-500/8 dark:border-primary-500/10 bg-primary-50 dark:bg-dark-panel overflow-hidden transition-shadow duration-300 open:shadow-[0_4px_16px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:open:shadow-[0_4px_16px_rgba(0,0,0,0.3)]" style="transition-delay: 200ms">
-        <summary class="flex items-center justify-between py-4 px-5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
-          <span>What payment methods do you accept?</span>
-          <i class="fas fa-chevron-down text-[11px] text-primary-600 transition-transform duration-300 group-open:rotate-180"></i>
-        </summary>
-        <p class="px-5 pb-4 text-[13px] text-neutral-500 dark:text-slate-400 leading-relaxed">
-          We accept Cash on Delivery, bKash, Nagad, and bank transfers.
-        </p>
-      </details>
-
-      <details class="animate-on-scroll group rounded-xl border border-primary-500/8 dark:border-primary-500/10 bg-primary-50 dark:bg-dark-panel overflow-hidden transition-shadow duration-300 open:shadow-[0_4px_16px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:open:shadow-[0_4px_16px_rgba(0,0,0,0.3)]" style="transition-delay: 300ms">
-        <summary class="flex items-center justify-between py-4 px-5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
-          <span>How can I track my order?</span>
-          <i class="fas fa-chevron-down text-[11px] text-primary-600 transition-transform duration-300 group-open:rotate-180"></i>
-        </summary>
-        <p class="px-5 pb-4 text-[13px] text-neutral-500 dark:text-slate-400 leading-relaxed">
-          Log into your account and visit the "My Orders" section. You can also use our order tracking page with your order ID.
-        </p>
-      </details>
-    </div>
+    @if (contactInfo()?.faqs?.length) {
+      <div class="space-y-3">
+        @for (faq of contactInfo()?.faqs; track faq.id ?? $index) {
+          <details
+            class="animate-on-scroll group rounded-xl border border-primary-500/8 dark:border-primary-500/10 bg-primary-50 dark:bg-dark-panel overflow-hidden transition-shadow duration-300 open:shadow-[0_4px_16px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:open:shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
+            [style.transition-delay]="$index * 100 + 'ms'"
+          >
+            <summary
+              class="flex items-center justify-between py-4 px-5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 cursor-pointer select-none"
+            >
+              <span>{{ faq.question }}</span>
+              <i
+                class="fas fa-chevron-down text-[11px] text-primary-600 transition-transform duration-300 group-open:rotate-180"
+              ></i>
+            </summary>
+            <p class="px-5 pb-4 text-[13px] text-neutral-500 dark:text-slate-400 leading-relaxed">
+              {{ faq.answer }}
+            </p>
+          </details>
+        }
+      </div>
+    }
   </div>
 </section>

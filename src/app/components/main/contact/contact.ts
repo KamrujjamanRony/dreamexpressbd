@@ -1,5 +1,6 @@
-import { Component, ElementRef, inject, signal, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, signal, computed, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { SContact } from '../../../services/s-contact';
 import { SToast } from '../../../utils/toast/toast.service';
 import { ContactM } from '../../../models/Contact';
@@ -15,6 +16,7 @@ export class Contact implements AfterViewInit, OnDestroy {
   private contactService = inject(SContact);
   private toast = inject(SToast);
   private el = inject(ElementRef);
+  private sanitizer = inject(DomSanitizer);
   private observer?: IntersectionObserver;
 
   siteId = environment.companyCode;
@@ -22,6 +24,16 @@ export class Contact implements AfterViewInit, OnDestroy {
   contactInfo = signal<ContactM | null>(null);
   loading = signal(true);
   ready = signal(false);
+  mapSafeUrl = computed(() => {
+    const info = this.contactInfo();
+    let url = '';
+    if (info?.lat && info?.lng) {
+      url = `https://maps.google.com/maps?q=${info.lat},${info.lng}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+    } else if (info?.mapUrl) {
+      url = info.mapUrl;
+    }
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
+  });
 
   // Contact form
   formName = '';
@@ -35,6 +47,7 @@ export class Contact implements AfterViewInit, OnDestroy {
       next: (data) => {
         this.contactInfo.set(data);
         this.loading.set(false);
+        setTimeout(() => this.observeNewElements(), 100);
       },
       error: () => this.loading.set(false),
     });
@@ -55,6 +68,23 @@ export class Contact implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.observer?.disconnect();
+  }
+
+  private observeNewElements() {
+    if (!this.observer) return;
+    this.el.nativeElement.querySelectorAll('.animate-on-scroll:not(.in-view)').forEach((el: Element) =>
+      this.observer!.observe(el)
+    );
+  }
+
+  getCardIcon(type: string): string {
+    const icons: Record<string, string> = {
+      phone: 'fas fa-phone-alt',
+      email: 'fas fa-envelope',
+      address: 'fas fa-map-marker-alt',
+      hours: 'fas fa-clock',
+    };
+    return icons[type?.toLowerCase()] || 'fas fa-info-circle';
   }
 
   submitForm() {
