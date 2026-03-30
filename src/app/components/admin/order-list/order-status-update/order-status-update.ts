@@ -55,6 +55,6 @@ export class OrderStatusUpdate {
       'Delivered': 'bg-green-100 text-green-800',
       'Cancelled': 'bg-red-100 text-red-800'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-neutral-100 text-neutral-800';
   }
 }
