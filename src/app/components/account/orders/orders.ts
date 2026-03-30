@@ -65,15 +65,17 @@ export class Orders {
   getStatusClass(status: string | number): string {
     const statusMap: Record<string, string> = {
       'Pending': 'bg-amber-100 text-amber-700',
+      'Confirm': 'bg-teal-100 text-teal-700',
       'Processing': 'bg-blue-100 text-blue-700',
       'Shipped': 'bg-primary-100 text-primary-700',
       'Delivered': 'bg-green-100 text-green-700',
       'Cancelled': 'bg-red-100 text-red-700',
       '0': 'bg-amber-100 text-amber-700',
-      '1': 'bg-blue-100 text-blue-700',
-      '2': 'bg-primary-100 text-primary-700',
-      '3': 'bg-green-100 text-green-700',
-      '4': 'bg-red-100 text-red-700',
+      '1': 'bg-teal-100 text-teal-700',
+      '2': 'bg-blue-100 text-blue-700',
+      '3': 'bg-primary-100 text-primary-700',
+      '4': 'bg-green-100 text-green-700',
+      '5': 'bg-red-100 text-red-700',
     };
     return statusMap[String(status)] || 'bg-gray-100 text-gray-700';
   }
@@ -81,10 +83,11 @@ export class Orders {
   getStatusText(status: string | number): string {
     const statusMap: Record<string, string> = {
       '0': 'Pending',
-      '1': 'Processing',
-      '2': 'Shipped',
-      '3': 'Delivered',
-      '4': 'Cancelled',
+      '1': 'Confirm',
+      '2': 'Processing',
+      '3': 'Shipped',
+      '4': 'Delivered',
+      '5': 'Cancelled',
     };
     return statusMap[String(status)] || String(status);
   }
@@ -161,9 +164,9 @@ export class Orders {
 
   private openPrintWindow(orderId: any, o: any, qrDataUrl: string): void {
     const statusMap: Record<string, string> = {
-      '0': 'Pending', 'Pending': 'Pending', '1': 'Processing', 'Processing': 'Processing',
-      '2': 'Shipped', 'Shipped': 'Shipped', '3': 'Delivered', 'Delivered': 'Delivered',
-      '4': 'Cancelled', 'Cancelled': 'Cancelled',
+      '0': 'Pending', 'Pending': 'Pending', '1': 'Confirm', 'Confirm': 'Confirm',
+      '2': 'Processing', 'Processing': 'Processing', '3': 'Shipped', 'Shipped': 'Shipped',
+      '4': 'Delivered', 'Delivered': 'Delivered', '5': 'Cancelled', 'Cancelled': 'Cancelled',
     };
     const status = statusMap[String(o.orderStatus)] || String(o.orderStatus);
     const date = new Date(o.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });

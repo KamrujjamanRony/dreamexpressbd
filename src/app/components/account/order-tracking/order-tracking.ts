@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
     faMagnifyingGlass,
     faClipboardList,
+    faClipboardCheck,
     faGear,
     faTruckFast,
     faCircleCheck,
@@ -46,12 +47,13 @@ export class OrderTracking {
 
     private statusSteps = [
         { key: 'Pending', label: 'Order Placed', icon: faClipboardList, code: 0 },
-        { key: 'Processing', label: 'Processing', icon: faGear, code: 1 },
-        { key: 'Shipped', label: 'Shipped', icon: faTruckFast, code: 2 },
-        { key: 'Delivered', label: 'Delivered', icon: faCircleCheck, code: 3 },
+        { key: 'Confirm', label: 'Confirm', icon: faClipboardCheck, code: 1 },
+        { key: 'Processing', label: 'Processing', icon: faGear, code: 2 },
+        { key: 'Shipped', label: 'Shipped', icon: faTruckFast, code: 3 },
+        { key: 'Delivered', label: 'Delivered', icon: faCircleCheck, code: 4 },
     ];
 
-    private cancelledStep = { key: 'Cancelled', label: 'Cancelled', icon: faCircleXmark, code: 4 };
+    private cancelledStep = { key: 'Cancelled', label: 'Cancelled', icon: faCircleXmark, code: 5 };
 
     ngOnInit(): void {
         this.route.queryParams.subscribe((params) => {
@@ -97,7 +99,7 @@ export class OrderTracking {
         const orderDate = order.orderDate || order.OrderDate;
         const deliveredDate = order.deliveredDate || order.DeliveredDate;
 
-        if (statusCode === 4) {
+        if (statusCode === 5) {
             // Cancelled
             const result: TrackingStep[] = [
                 { label: 'Order Placed', icon: faClipboardList, reached: true, active: false, date: orderDate },
@@ -113,7 +115,7 @@ export class OrderTracking {
             reached: statusCode >= step.code,
             active: statusCode === step.code,
             date:
-                step.code === 0 ? orderDate : step.code === 3 && deliveredDate ? deliveredDate : undefined,
+                step.code === 0 ? orderDate : step.code === 4 && deliveredDate ? deliveredDate : undefined,
         }));
 
         this.steps.set(result);
@@ -122,10 +124,11 @@ export class OrderTracking {
     private getStatusCode(status: string): number {
         const map: Record<string, number> = {
             Pending: 0,
-            Processing: 1,
-            Shipped: 2,
-            Delivered: 3,
-            Cancelled: 4,
+            Confirm: 1,
+            Processing: 2,
+            Shipped: 3,
+            Delivered: 4,
+            Cancelled: 5,
         };
         return map[status] ?? 0;
     }
@@ -133,10 +136,11 @@ export class OrderTracking {
     getStatusText(status: string | number): string {
         const map: Record<string, string> = {
             '0': 'Pending',
-            '1': 'Processing',
-            '2': 'Shipped',
-            '3': 'Delivered',
-            '4': 'Cancelled',
+            '1': 'Confirm',
+            '2': 'Processing',
+            '3': 'Shipped',
+            '4': 'Delivered',
+            '5': 'Cancelled',
         };
         return map[String(status)] || String(status);
     }
@@ -144,11 +148,13 @@ export class OrderTracking {
     getStatusClass(status: string | number): string {
         const map: Record<string, string> = {
             '0': 'bg-amber-100 text-amber-700',
-            '1': 'bg-blue-100 text-blue-700',
-            '2': 'bg-primary-100 text-primary-700',
-            '3': 'bg-green-100 text-green-700',
-            '4': 'bg-red-100 text-red-700',
+            '1': 'bg-teal-100 text-teal-700',
+            '2': 'bg-blue-100 text-blue-700',
+            '3': 'bg-primary-100 text-primary-700',
+            '4': 'bg-green-100 text-green-700',
+            '5': 'bg-red-100 text-red-700',
             Pending: 'bg-amber-100 text-amber-700',
+            Confirm: 'bg-teal-100 text-teal-700',
             Processing: 'bg-blue-100 text-blue-700',
             Shipped: 'bg-primary-100 text-primary-700',
             Delivered: 'bg-green-100 text-green-700',

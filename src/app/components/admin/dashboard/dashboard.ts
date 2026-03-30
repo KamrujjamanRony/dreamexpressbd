@@ -44,6 +44,7 @@ export class Dashboard implements OnInit {
     totalOrders = computed(() => this.orders().length);
     totalRevenue = computed(() => this.orders().reduce((sum, o) => sum + (o.totalAmount || 0), 0));
     pendingOrders = computed(() => this.orders().filter(o => o.orderStatus === 'Pending').length);
+    confirmOrders = computed(() => this.orders().filter(o => o.orderStatus === 'Confirm').length);
     processingOrders = computed(() => this.orders().filter(o => o.orderStatus === 'Processing').length);
     shippedOrders = computed(() => this.orders().filter(o => o.orderStatus === 'Shipped').length);
     deliveredOrders = computed(() => this.orders().filter(o => o.orderStatus === 'Delivered').length);
@@ -54,6 +55,7 @@ export class Dashboard implements OnInit {
         const total = this.totalOrders() || 1;
         return [
             { label: 'Pending', count: this.pendingOrders(), color: '#EAB308', pct: Math.round((this.pendingOrders() / total) * 100) },
+            { label: 'Confirm', count: this.confirmOrders(), color: '#14b8a6', pct: Math.round((this.confirmOrders() / total) * 100) },
             { label: 'Processing', count: this.processingOrders(), color: '#2563eb', pct: Math.round((this.processingOrders() / total) * 100) },
             { label: 'Shipped', count: this.shippedOrders(), color: '#3b82f6', pct: Math.round((this.shippedOrders() / total) * 100) },
             { label: 'Delivered', count: this.deliveredOrders(), color: '#22C55E', pct: Math.round((this.deliveredOrders() / total) * 100) },
@@ -123,6 +125,7 @@ export class Dashboard implements OnInit {
     getStatusColor(status: string): string {
         const colors: { [key: string]: string } = {
             'Pending': 'bg-yellow-100 text-yellow-800',
+            'Confirm': 'bg-teal-100 text-teal-800',
             'Processing': 'bg-blue-100 text-blue-800',
             'Shipped': 'bg-primary-100 text-primary-800',
             'Delivered': 'bg-green-100 text-green-800',

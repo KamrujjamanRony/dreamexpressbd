@@ -82,6 +82,7 @@ export class OrderDetails {
   getStatusClass(status: string): string {
     const statusMap: { [key: string]: string } = {
       'Pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      'Confirm': 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
       'Processing': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
       'Shipped': 'bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200',
       'Delivered': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
