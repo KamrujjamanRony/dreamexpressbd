@@ -36,9 +36,12 @@
   --color-neutral-950: #030712;
 
   /* ── Dark Surfaces (dark mode backgrounds) ── */
-  --color-dark-surface: #0f172a;
+  --color-dark-surface: #0b0f19;
+  --color-dark-page: #0e1220;
+  --color-dark-panel: #141a2e;
   --color-dark-card: #1e293b;
   --color-dark-muted: #334155;
+  --color-dark-hover: #1a2332;
   --color-dark-deep: #0f0a1e;
   --color-dark-elevated: #1e1137;
   --color-dark-scroll-track: #0f0f1a;
