@@ -35,8 +35,9 @@ export class SocialChat implements OnInit {
 
     this.contactService.get(environment.companyCode).subscribe({
       next: (contact) => {
-        if (contact.phoneNumber1) {
-          this.phoneNumber = `tel:${contact.phoneNumber1}`;
+        const phone = contact.contactCards?.find(c => c.type?.toLowerCase() === 'phone')?.value;
+        if (phone) {
+          this.phoneNumber = `tel:${phone}`;
         }
       },
     });
