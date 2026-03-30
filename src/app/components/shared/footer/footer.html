@@ -38,9 +38,9 @@
               <i class="fab fa-facebook-f"></i>
             </a>
           }
-          @if (contactData()?.othersLink1) {
+          @if (contactData()?.iLink) {
             <a
-              [href]="contactData()?.othersLink1"
+              [href]="contactData()?.iLink"
               target="_blank"
               rel="noopener noreferrer"
               class="social-icon-btn"
@@ -48,9 +48,9 @@
               <i class="fab fa-instagram"></i>
             </a>
           }
-          @if (contactData()?.othersLink2) {
+          @if (contactData()?.yLink) {
             <a
-              [href]="contactData()?.othersLink2"
+              [href]="contactData()?.yLink"
               target="_blank"
               rel="noopener noreferrer"
               class="social-icon-btn"
@@ -123,36 +123,12 @@
       <div class="footer-animate" style="transition-delay: 300ms">
         <h4 class="footer-heading">Contact Us</h4>
         <ul class="footer-info-list">
-          @if (contactData()?.phoneNumber1) {
+          @for (card of contactData()?.contactCards; track card.id ?? $index) {
             <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-phone-alt"></i></div>
+              <div class="footer-info-icon"><i [class]="getCardIcon(card.type)"></i></div>
               <div>
-                <p class="text-slate-400 text-xs">Phone</p>
-                <p class="text-white text-sm font-medium">{{ contactData()?.phoneNumber1 }}</p>
-                @if (contactData()?.phoneNumber2) {
-                  <p class="text-white text-sm">{{ contactData()?.phoneNumber2 }}</p>
-                }
-              </div>
-            </li>
-          }
-          @if (contactData()?.email) {
-            <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-envelope"></i></div>
-              <div>
-                <p class="text-slate-400 text-xs">Email</p>
-                <p class="text-white text-sm font-medium">{{ contactData()?.email }}</p>
-              </div>
-            </li>
-          }
-          @if (contactData()?.address1) {
-            <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-map-marker-alt"></i></div>
-              <div>
-                <p class="text-slate-400 text-xs">Address</p>
-                <p class="text-white text-sm font-medium">{{ contactData()?.address1 }}</p>
-                @if (contactData()?.address2) {
-                  <p class="text-white text-sm">{{ contactData()?.address2 }}</p>
-                }
+                <p class="text-slate-400 text-xs">{{ card.title }}</p>
+                <p class="text-white text-sm font-medium">{{ card.value }}</p>
               </div>
             </li>
           }

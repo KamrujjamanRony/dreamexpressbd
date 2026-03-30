@@ -34,6 +34,16 @@ export class Footer implements AfterViewInit, OnDestroy {
         });
     }
 
+    getCardIcon(type: string): string {
+        const icons: Record<string, string> = {
+            phone: 'fas fa-phone-alt',
+            email: 'fas fa-envelope',
+            address: 'fas fa-map-marker-alt',
+            hours: 'fas fa-clock',
+        };
+        return icons[type?.toLowerCase()] || 'fas fa-info-circle';
+    }
+
     ngAfterViewInit() {
         this.observer = new IntersectionObserver(
             (entries) => entries.forEach((e) => {
