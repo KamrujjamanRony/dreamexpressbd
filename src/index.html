@@ -71,28 +71,28 @@
       <!-- Site Opening Loader (auto-removed when Angular bootstraps) -->
       <style>
         :root {
-          --l-bg: #f9fafb;
-          --l-text: #111827;
-          --l-sub: #6b7280;
+          --l-bg: var(--color-neutral-50);
+          --l-text: var(--color-neutral-900);
+          --l-sub: var(--color-neutral-500);
           --l-accent: var(--color-primary-700);
           --l-accent2: var(--color-primary-500);
           --l-glow: color-mix(in srgb, var(--color-primary-600) 15%, transparent);
           --l-ring: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
           --l-dot: color-mix(in srgb, var(--color-primary-600) 50%, transparent);
-          --l-bar-bg: #e5e7eb;
+          --l-bar-bg: var(--color-neutral-200);
           --l-particle: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
         }
         @media (prefers-color-scheme: dark) {
           :root {
-            --l-bg: #0b0f19;
-            --l-text: #f0f0ff;
-            --l-sub: #94a3b8;
+            --l-bg: var(--color-dark-surface);
+            --l-text: var(--color-neutral-50);
+            --l-sub: var(--color-neutral-400);
             --l-accent: var(--color-primary-400);
             --l-accent2: var(--color-primary-400);
             --l-glow: color-mix(in srgb, var(--color-primary-400) 20%, transparent);
             --l-ring: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
             --l-dot: color-mix(in srgb, var(--color-primary-400) 60%, transparent);
-            --l-bar-bg: #1e293b;
+            --l-bar-bg: var(--color-dark-card);
             --l-particle: color-mix(in srgb, var(--color-primary-400) 6%, transparent);
           }
         }
