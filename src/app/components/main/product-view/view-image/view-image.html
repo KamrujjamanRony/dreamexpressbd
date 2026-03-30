@@ -3,7 +3,7 @@
   <div class="w-full">
     <!-- Main Image -->
     <div
-      class="image-container relative w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
+      class="image-container relative w-full overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700"
       (mousemove)="onMouseMove($event)"
       (mouseleave)="onMouseLeave()"
     >
@@ -35,7 +35,7 @@
           [ngClass]="
             mainImage === img
               ? 'border-primary-600 shadow-md'
-              : 'border-gray-200 dark:border-gray-600 hover:border-gray-400'
+              : 'border-neutral-200 dark:border-neutral-600 hover:border-neutral-400'
           "
         >
           <img
@@ -55,19 +55,19 @@
   <div class="flex flex-col">
     <!-- Title -->
     @if (product()?.title || product()?.name) {
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-50 leading-tight">
+      <h1 class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-50 leading-tight">
         {{ product()?.title || product()?.name }}
       </h1>
     }
 
     <!-- Brand & SKU -->
     <div
-      class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-gray-500 dark:text-gray-400"
+      class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-500 dark:text-neutral-400"
     >
       @if (product()?.brand) {
         <span
           >Brand:
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
             product()?.brand
           }}</span></span
         >
@@ -75,7 +75,7 @@
       @if (product()?.sku) {
         <span
           >SKU:
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
             product()?.sku
           }}</span></span
         >
@@ -83,7 +83,7 @@
       @if (product()?.itemName) {
         <span
           >Category:
-          <span class="font-medium text-gray-700 dark:text-gray-300">{{
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
             product()?.itemName
           }}</span></span
         >
@@ -92,7 +92,7 @@
 
     <!-- Short Description -->
     @if (product()?.shortDescription) {
-      <p class="mt-3 text-sm text-gray-600 dark:text-gray-300" style="white-space: pre-line">
+      <p class="mt-3 text-sm text-neutral-600 dark:text-neutral-300" style="white-space: pre-line">
         {{ product()?.shortDescription }}
       </p>
     }
@@ -105,7 +105,7 @@
           [innerHTML]="product()?.offerPrice | bdt"
         ></span>
         <span
-          class="text-lg text-gray-400 line-through"
+          class="text-lg text-neutral-400 line-through"
           [innerHTML]="product()?.regularPrice | bdt"
         ></span>
         @if (discountPercent > 0) {
@@ -124,17 +124,17 @@
     </div>
 
     <!-- Divider -->
-    <div class="border-t border-gray-200 dark:border-gray-700 my-5"></div>
+    <div class="border-t border-neutral-200 dark:border-neutral-700 my-5"></div>
 
     <!-- Color Variants -->
     @if (colorOptions.length > 0) {
       <div class="mb-5">
         <h3
-          class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3"
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
         >
           Color
           @if (viewColor) {
-            <span class="ml-2 font-normal normal-case text-gray-500"
+            <span class="ml-2 font-normal normal-case text-neutral-500"
               >— {{ viewColor.colorName }}</span
             >
           }
@@ -148,7 +148,7 @@
               [ngClass]="
                 viewColor?.colorName === color.colorName
                   ? 'border-primary-600 ring-2 ring-primary-200 dark:ring-primary-800 shadow-md'
-                  : 'border-gray-200 dark:border-gray-600'
+                  : 'border-neutral-200 dark:border-neutral-600'
               "
             >
               <img
@@ -193,11 +193,11 @@
     @if (sizeOptions.length > 0) {
       <div class="mb-5">
         <h3
-          class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3"
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
         >
           Size
           @if (viewSize) {
-            <span class="ml-2 font-normal normal-case text-gray-500">— {{ viewSize }}</span>
+            <span class="ml-2 font-normal normal-case text-neutral-500">— {{ viewSize }}</span>
           }
         </h3>
         <div class="flex flex-wrap gap-2">
@@ -209,7 +209,7 @@
               [ngClass]="
                 viewSize === size
                   ? 'border-primary-600 bg-primary-600 text-white shadow-md'
-                  : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                  : 'border-neutral-200 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:border-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20'
               "
             >
               {{ size }}
@@ -222,29 +222,29 @@
     <!-- Quantity -->
     <div class="mb-6">
       <h3
-        class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3"
+        class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
       >
         Quantity
       </h3>
       <div
-        class="inline-flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
+        class="inline-flex items-center border border-neutral-300 dark:border-neutral-600 rounded-lg overflow-hidden"
       >
         <button
           type="button"
-          class="w-11 h-11 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          class="w-11 h-11 flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           [disabled]="count <= 1"
           (click)="decrease()"
         >
           <fa-icon [icon]="faMinus" class="text-xs"></fa-icon>
         </button>
         <div
-          class="w-14 h-11 flex items-center justify-center text-base font-semibold text-gray-800 dark:text-gray-100 border-x border-gray-300 dark:border-gray-600"
+          class="w-14 h-11 flex items-center justify-center text-base font-semibold text-neutral-800 dark:text-neutral-100 border-x border-neutral-300 dark:border-neutral-600"
         >
           {{ count }}
         </div>
         <button
           type="button"
-          class="w-11 h-11 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+          class="w-11 h-11 flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer"
           (click)="increase()"
         >
           <fa-icon [icon]="faPlus" class="text-xs"></fa-icon>
@@ -265,7 +265,7 @@
       <button
         type="button"
         (click)="addToWishlist(product())"
-        class="flex items-center justify-center gap-2 px-6 py-3.5 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-400 hover:text-red-500 font-semibold rounded-xl transition-all duration-200 cursor-pointer text-base"
+        class="flex items-center justify-center gap-2 px-6 py-3.5 border-2 border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:border-red-400 hover:text-red-500 font-semibold rounded-xl transition-all duration-200 cursor-pointer text-base"
       >
         <fa-icon [icon]="faHeart"></fa-icon>
         Wishlist
@@ -274,14 +274,14 @@
 
     <!-- Description -->
     @if (product()?.description) {
-      <div class="mt-6 pt-5 border-t border-gray-200 dark:border-gray-700">
+      <div class="mt-6 pt-5 border-t border-neutral-200 dark:border-neutral-700">
         <h3
-          class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2"
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-2"
         >
           Description
         </h3>
         <p
-          class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"
+          class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed"
           style="white-space: pre-line"
         >
           {{ product()?.description }}
@@ -291,9 +291,9 @@
 
     <!-- Social Share -->
     @if (product()?.facebookPost || product()?.youtubeLink) {
-      <div class="mt-5 pt-5 border-t border-gray-200 dark:border-gray-700">
+      <div class="mt-5 pt-5 border-t border-neutral-200 dark:border-neutral-700">
         <div class="flex items-center gap-3">
-          <span class="text-sm text-gray-500 dark:text-gray-400">
+          <span class="text-sm text-neutral-500 dark:text-neutral-400">
             <fa-icon [icon]="faShareAlt" class="mr-1"></fa-icon> Share:
           </span>
           @if (product()?.facebookPost) {
@@ -301,7 +301,7 @@
               [href]="product()?.facebookPost"
               target="_blank"
               rel="noopener"
-              class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:bg-blue-500 hover:text-white transition-all duration-200"
+              class="w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-500 hover:bg-blue-500 hover:text-white transition-all duration-200"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -315,7 +315,7 @@
               [href]="product()?.youtubeLink"
               target="_blank"
               rel="noopener"
-              class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:bg-red-500 hover:text-white transition-all duration-200"
+              class="w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-500 hover:bg-red-500 hover:text-white transition-all duration-200"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
