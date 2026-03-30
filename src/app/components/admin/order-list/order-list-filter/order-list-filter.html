@@ -1,14 +1,14 @@
 <!-- order-list-filter.html -->
-<div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4">
+<div class="px-6 py-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg mb-4">
   <p>{{colorScheme()}}</p>
   <!-- Filters -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Status</label>
       <select autocomplete="off"
         [(ngModel)]="localStatus"
         (change)="applyFilters()"
-        class="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+        class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white"
       >
         @for (option of statusOptions; track option.value) {
           <option [value]="option.value">
@@ -19,25 +19,25 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
         >From Date</label
       >
       <input autocomplete="off"
         type="date"
         [(ngModel)]="localFromDate"
         (change)="applyFilters()"
-        class="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+        class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white"
         [style.color-scheme]="colorScheme()"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">To Date</label>
       <input autocomplete="off"
         type="date"
         [(ngModel)]="localToDate"
         (change)="applyFilters()"
-        class="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+        class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white"
         [style.color-scheme]="colorScheme()"
       />
     </div>
@@ -63,7 +63,7 @@
       </button>
 
       <button
-        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+        class="inline-flex items-center px-4 py-2 border border-neutral-300 dark:border-neutral-600 text-sm font-medium rounded-md text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
         (click)="resetFilters()"
       >
         <svg
