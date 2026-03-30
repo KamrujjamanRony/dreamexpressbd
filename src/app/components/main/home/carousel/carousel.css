@@ -84,23 +84,23 @@ swiper-container::part(button-prev),
 swiper-container::part(button-next) {
   width: 44px;
   height: 44px;
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--color-white) 12%, transparent);
   backdrop-filter: blur(10px);
   border-radius: 50%;
-  color: white;
+  color: var(--color-white);
   --swiper-navigation-size: 20px;
   transition: all 0.3s ease;
 }
 
 swiper-container::part(button-prev):hover,
 swiper-container::part(button-next):hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: color-mix(in srgb, var(--color-white) 30%, transparent);
   transform: scale(1.08);
 }
 
 /* Pagination dots */
 swiper-container::part(bullet) {
-  background: rgba(255, 255, 255, 0.4);
+  background: color-mix(in srgb, var(--color-white) 40%, transparent);
   opacity: 1;
   width: 8px;
   height: 8px;
