@@ -374,7 +374,7 @@ export class OrderList implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    return this.statusColors[status] || 'bg-gray-100 text-gray-800';
+    return this.statusColors[status] || 'bg-neutral-100 text-neutral-800';
   }
 
   printVoucher(order: OrderM) {
