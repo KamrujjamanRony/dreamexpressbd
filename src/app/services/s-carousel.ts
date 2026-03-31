@@ -28,8 +28,8 @@ export class SCarousel {
       ...(description && description.length > 0 ? { description: description.trim() } : {})
     }
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
-      switchMap((data) => {
-        const list = Array.isArray(data) ? data : data?.$values || [];
+      switchMap((res) => {
+        const list = Array.isArray(res) ? res : res?.data || res?.$values || [];
         const carousels: CarouselM[] = list.map(this.normalize);
         const hasGallery = carousels.some(c => c.galleryId);
         if (!hasGallery) return of(carousels);
