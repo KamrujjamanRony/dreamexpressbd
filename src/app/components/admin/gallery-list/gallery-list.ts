@@ -115,6 +115,7 @@ export class GalleryList {
 
     onFilterType(event: Event) {
         this.filterType.set((event.target as HTMLSelectElement).value);
+        this.loadItems();
     }
 
     /* ---------------- Image File Handler ---------------- */
