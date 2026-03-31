@@ -4,18 +4,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { SCategory } from '../../../services/s-category';
-import { SGallery } from '../../../services/s-gallery';
 import { debounce, form, FormField, required, validate } from '@angular/forms/signals';
 import { environment } from '../../../../environments/environment';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CategoryM } from '../../../models/Category';
-import { GalleryM } from '../../../models/Gallery';
+import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
 
 @Component({
   selector: 'app-category-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, GalleryPicker],
   templateUrl: './category-list.html',
   styleUrl: './category-list.css',
 })
@@ -26,7 +25,6 @@ export class CategoryList {
 
   /* ---------------- DI ---------------- */
   private categoryService = inject(SCategory);
-  private galleryService = inject(SGallery);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
@@ -40,23 +38,9 @@ export class CategoryList {
   items = signal<CategoryM[]>([]);
   searchQuery = signal('');
 
-  // Gallery picker
-  galleryImages = signal<GalleryM[]>([]);
-  isGalleryLoading = signal(false);
-  showGalleryPicker = signal(false);
-  gallerySearch = signal('');
+  // Gallery selection
   selectedGalleryId = signal<string>('');
   selectedGalleryUrl = signal<string>('');
-
-  filteredGalleryImages = computed(() => {
-    const query = this.gallerySearch().toLowerCase();
-    const images = this.galleryImages();
-    if (!query) return images;
-    return images.filter(img =>
-      img.description?.toLowerCase().includes(query) ||
-      img.type?.toLowerCase().includes(query)
-    );
-  });
 
   filteredList = computed(() => {
     const query = this.searchQuery().toLowerCase();
@@ -110,7 +94,6 @@ export class CategoryList {
   ngOnInit(): void {
     this.loadItems();
     this.loadPermissions();
-    this.loadGalleryImages();
   }
 
   /* ---------------- LOADERS ---------------- */
@@ -137,55 +120,15 @@ export class CategoryList {
     });
   }
 
-  loadGalleryImages() {
-    this.isGalleryLoading.set(true);
-    this.galleryService.search('Category').subscribe({
-      next: (data) => {
-        this.galleryImages.set(data);
-        this.preloadGalleryAssets(data);
-        this.isGalleryLoading.set(false);
-      },
-      error: () => {
-        this.isGalleryLoading.set(false);
-        console.error('Failed to load gallery images');
-      }
-    });
-  }
-
   /* ---------------- SEARCH ---------------- */
   onSearch(event: Event) {
     this.searchQuery.set((event.target as HTMLInputElement).value.trim());
   }
 
   /* ---------------- GALLERY PICKER ---------------- */
-  openGalleryPicker() {
-    if (!this.galleryImages().length && !this.isGalleryLoading()) {
-      this.loadGalleryImages();
-    }
-    this.showGalleryPicker.set(true);
-    this.gallerySearch.set('');
-  }
-
-  private preloadedImages: HTMLImageElement[] = [];
-
-  private preloadGalleryAssets(images: GalleryM[]) {
-    this.preloadedImages = [];
-    for (const image of images) {
-      if (!image?.imageUrl) {
-        continue;
-      }
-
-      const preloadImage = new Image();
-      preloadImage.decoding = 'sync';
-      preloadImage.src = this.imgURL + image.imageUrl;
-      this.preloadedImages.push(preloadImage);
-    }
-  }
-
-  selectGalleryImage(image: GalleryM) {
-    this.selectedGalleryId.set(image.id || '');
-    this.selectedGalleryUrl.set(image.imageUrl || '');
-    this.showGalleryPicker.set(false);
+  onGalleryPicked(event: { id: string; imageUrl: string }) {
+    this.selectedGalleryId.set(event.id);
+    this.selectedGalleryUrl.set(event.imageUrl);
   }
 
   clearGalleryImage() {
