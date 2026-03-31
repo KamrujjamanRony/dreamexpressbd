@@ -11,13 +11,12 @@ import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CarouselM } from '../../../models/Carousel';
 import { SCarousel } from '../../../services/s-carousel';
-import { SGallery } from '../../../services/s-gallery';
-import { GalleryM } from '../../../models/Gallery';
 import { QuillEditorComponent } from 'ngx-quill';
+import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
 
 @Component({
   selector: 'app-carousel-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent, GalleryPicker],
   templateUrl: './carousel-list.html',
   styleUrl: './carousel-list.css',
 })
@@ -29,7 +28,6 @@ export class CarouselList {
 
   /* ---------------- DI ---------------- */
   private carouselService = inject(SCarousel);
-  private galleryService = inject(SGallery);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
@@ -62,23 +60,9 @@ export class CarouselList {
 
   selected = signal<CarouselM | null>(null);
 
-  // Gallery picker
-  galleryImages = signal<GalleryM[]>([]);
-  isGalleryLoading = signal(false);
-  showGalleryPicker = signal(false);
-  gallerySearch = signal('');
+  // Gallery selection
   selectedGalleryId = signal<string>('');
   selectedGalleryUrl = signal<string>('');
-
-  filteredGalleryImages = computed(() => {
-    const query = this.gallerySearch().toLowerCase();
-    const images = this.galleryImages();
-    if (!query) return images;
-    return images.filter(img =>
-      img.description?.toLowerCase().includes(query) ||
-      img.type?.toLowerCase().includes(query)
-    );
-  });
 
   isLoading = signal(false);
   hasError = signal(false);
@@ -140,7 +124,6 @@ export class CarouselList {
   ngOnInit(): void {
     this.loadCarousels();
     this.loadPermissions();
-    this.loadGalleryImages();
   }
 
   /* ---------------- LOADERS ---------------- */
@@ -173,46 +156,9 @@ export class CarouselList {
   }
 
   /* ---------------- GALLERY PICKER ---------------- */
-  loadGalleryImages() {
-    this.isGalleryLoading.set(true);
-    this.galleryService.search('Carousel').subscribe({
-      next: (data) => {
-        this.galleryImages.set(data);
-        this.preloadGalleryAssets(data);
-        this.isGalleryLoading.set(false);
-      },
-      error: () => {
-        this.isGalleryLoading.set(false);
-        console.error('Failed to load gallery images');
-      }
-    });
-  }
-
-  private preloadedImages: HTMLImageElement[] = [];
-
-  private preloadGalleryAssets(images: GalleryM[]) {
-    this.preloadedImages = [];
-    for (const image of images) {
-      if (!image?.imageUrl) continue;
-      const preloadImage = new Image();
-      preloadImage.decoding = 'sync';
-      preloadImage.src = this.imgURL + image.imageUrl;
-      this.preloadedImages.push(preloadImage);
-    }
-  }
-
-  openGalleryPicker() {
-    if (!this.galleryImages().length && !this.isGalleryLoading()) {
-      this.loadGalleryImages();
-    }
-    this.showGalleryPicker.set(true);
-    this.gallerySearch.set('');
-  }
-
-  selectGalleryImage(image: GalleryM) {
-    this.selectedGalleryId.set(image.id || '');
-    this.selectedGalleryUrl.set(image.imageUrl || '');
-    this.showGalleryPicker.set(false);
+  onGalleryPicked(event: { id: string; imageUrl: string }) {
+    this.selectedGalleryId.set(event.id);
+    this.selectedGalleryUrl.set(event.imageUrl);
   }
 
   clearGalleryImage() {

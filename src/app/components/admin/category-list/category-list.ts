@@ -231,7 +231,6 @@ export class CategoryList {
     this.selectedGalleryId.set('');
     this.selectedGalleryUrl.set('');
     this.isSubmitted.set(false);
-    this.showGalleryPicker.set(false);
     this.form().reset();
   }
 
