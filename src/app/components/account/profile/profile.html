@@ -26,7 +26,9 @@
         <fa-icon [icon]="faUser" class="text-teal-600 dark:text-teal-400"></fa-icon>
       </div>
       <div>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium">
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
           Full Name
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
@@ -43,7 +45,9 @@
         <fa-icon [icon]="faPhone" class="text-cyan-600 dark:text-cyan-400"></fa-icon>
       </div>
       <div>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium">
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
           Phone
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
@@ -60,7 +64,9 @@
         <fa-icon [icon]="faLocationDot" class="text-primary-600 dark:text-primary-400"></fa-icon>
       </div>
       <div>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium">
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
           Division
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
@@ -77,7 +83,9 @@
         <fa-icon [icon]="faMapPin" class="text-amber-600 dark:text-amber-400"></fa-icon>
       </div>
       <div>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium">
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
           Address
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
@@ -85,6 +93,36 @@
         </p>
       </div>
     </div>
+
+    <!-- Shipping Address -->
+    @if (model().shippingDistrict || model().shippingCity || model().shippingStreet) {
+      <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+        <div
+          class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-full flex items-center justify-center shrink-0"
+        >
+          <fa-icon [icon]="faTruck" class="text-emerald-600 dark:text-emerald-400"></fa-icon>
+        </div>
+        <div>
+          <p
+            class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+          >
+            Shipping Address
+          </p>
+          <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+            {{ model().shippingStreet }}{{ model().shippingCity ? ', ' + model().shippingCity : ''
+            }}{{ model().shippingDistrict ? ', ' + model().shippingDistrict : '' }}
+          </p>
+          @if (model().shippingContact) {
+            <p class="text-neutral-500 dark:text-neutral-400 text-sm mt-0.5">
+              Contact: {{ model().shippingContact }}
+            </p>
+          }
+          @if (model().area) {
+            <p class="text-neutral-500 dark:text-neutral-400 text-sm">Area: {{ model().area }}</p>
+          }
+        </div>
+      </div>
+    }
   </div>
 } @else {
   <!-- Profile Edit Mode -->
@@ -120,7 +158,9 @@
     <div>
       @let phone = form.phone();
       @let phoneError = form.phone().invalid() && form.phone().touched();
-      <label for="phone" class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+      <label
+        for="phone"
+        class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
         >Phone Number</label
       >
       <input
@@ -145,7 +185,9 @@
       <!-- Division -->
       <div>
         @let distError = form.dist().invalid() && form.dist().touched();
-        <label for="dist" class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        <label
+          for="dist"
+          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
           >Division</label
         >
         <select
@@ -171,7 +213,9 @@
 
       <!-- City -->
       <div>
-        <label for="city" class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        <label
+          for="city"
+          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
           >City</label
         >
         <select
@@ -191,7 +235,9 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- Area -->
       <div>
-        <label for="area" class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        <label
+          for="area"
+          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
           >Area</label
         >
         <select
@@ -231,6 +277,108 @@
             }
           </ul>
         }
+      </div>
+    </div>
+
+    <!-- Shipping Address -->
+    <div class="border-t border-neutral-200 dark:border-neutral-600 pt-5">
+      <h3
+        class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-4 flex items-center gap-2"
+      >
+        <fa-icon [icon]="faTruck" class="text-emerald-500"></fa-icon>
+        Shipping Address (optional)
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label
+            for="shippingDistrict"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Shipping District</label
+          >
+          <input
+            type="text"
+            id="shippingDistrict"
+            [formField]="form.shippingDistrict"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="District"
+            autocomplete="off"
+          />
+        </div>
+        <div>
+          <label
+            for="shippingCity"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Shipping City</label
+          >
+          <input
+            type="text"
+            id="shippingCity"
+            [formField]="form.shippingCity"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="City"
+            autocomplete="off"
+          />
+        </div>
+        <div>
+          <label
+            for="shippingStreet"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Shipping Street</label
+          >
+          <input
+            type="text"
+            id="shippingStreet"
+            [formField]="form.shippingStreet"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="Street address"
+            autocomplete="off"
+          />
+        </div>
+        <div>
+          <label
+            for="shippingContact"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Shipping Contact</label
+          >
+          <input
+            type="text"
+            id="shippingContact"
+            [formField]="form.shippingContact"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="Contact number"
+            autocomplete="off"
+          />
+        </div>
+        <div>
+          <label
+            for="shippingType"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Shipping Type</label
+          >
+          <input
+            type="text"
+            id="shippingType"
+            [formField]="form.shippingType"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="Shipping type"
+            autocomplete="off"
+          />
+        </div>
+        <div>
+          <label
+            for="profileArea"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Area</label
+          >
+          <input
+            type="text"
+            id="profileArea"
+            [formField]="form.area"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            placeholder="Area"
+            autocomplete="off"
+          />
+        </div>
       </div>
     </div>
 

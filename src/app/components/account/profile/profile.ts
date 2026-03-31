@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { CustomerM } from '../../../models/Customer';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faUser, faPhone, faMapPin, faLocationDot, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPhone, faMapPin, faLocationDot, faPencil, faTruck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-profile',
@@ -26,6 +26,7 @@ export class Profile {
     faMapPin = faMapPin;
     faLocationDot = faLocationDot;
     faPencil = faPencil;
+    faTruck = faTruck;
 
     loading = signal(false);
     editMode = signal(false);
@@ -34,13 +35,19 @@ export class Profile {
     cities = signal<any[]>([]);
     areas = signal<any[]>([]);
 
-    model = signal<CustomerM>({
-        companyID: environment.companyCode,
+    model = signal({
+        companyID: String(environment.companyCode),
         fullName: '',
         phone: '',
         pass: '',
         dist: '',
         address: '',
+        shippingDistrict: '',
+        shippingCity: '',
+        shippingStreet: '',
+        shippingContact: '',
+        shippingType: '',
+        area: '',
     });
 
     form = form(this.model, (schemaPath) => {
@@ -77,12 +84,18 @@ export class Profile {
         if (userData?.id) {
             this.customerId.set(userData.id);
             this.model.set({
-                companyID: environment.companyCode,
+                companyID: String(environment.companyCode),
                 fullName: userData.fullName || '',
                 phone: userData.phone || '',
                 pass: userData.pass || '',
                 dist: userData.dist || '',
                 address: userData.address || '',
+                shippingDistrict: userData.shippingDistrict || '',
+                shippingCity: userData.shippingCity || '',
+                shippingStreet: userData.shippingStreet || '',
+                shippingContact: userData.shippingContact || '',
+                shippingType: userData.shippingType || '',
+                area: userData.area || '',
             });
             // Pre-load cities for the saved division
             if (userData.dist) {
