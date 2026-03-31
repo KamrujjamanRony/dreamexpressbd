@@ -5,6 +5,7 @@ import { filter } from 'rxjs';
 import { SCart } from '../../../services/s-cart';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { SearchOverlay } from '../search-overlay/search-overlay';
+import { CartDrawerService } from '../../../utils/cart-drawer/cart-drawer.service';
 
 @Component({
     selector: 'app-bottom-nav',
@@ -17,6 +18,7 @@ export class BottomNav {
     private authCookie = inject(SAuthCookie);
     private router = inject(Router);
     private destroyRef = inject(DestroyRef);
+    private cartDrawer = inject(CartDrawerService);
 
     @ViewChild('searchOverlay') searchOverlay!: SearchOverlay;
 
@@ -56,5 +58,9 @@ export class BottomNav {
 
     openSearch() {
         this.searchOverlay?.open();
+    }
+
+    openCartDrawer() {
+        this.cartDrawer.open();
     }
 }

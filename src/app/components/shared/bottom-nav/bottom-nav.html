@@ -40,7 +40,11 @@
       </a>
 
       <!-- Cart -->
-      <a routerLink="/cart" class="btm-tab group" [class.btm-active]="activeTab() === 'cart'">
+      <button
+        (click)="openCartDrawer()"
+        class="btm-tab group bg-transparent border-none cursor-pointer"
+        [class.btm-active]="activeTab() === 'cart'"
+      >
         <div class="btm-icon-wrap relative">
           <i class="fas fa-shopping-bag"></i>
           @if (totalCarts() > 0) {
@@ -51,7 +55,7 @@
           }
         </div>
         <span class="btm-label">Cart</span>
-      </a>
+      </button>
 
       <!-- Account -->
       <a
