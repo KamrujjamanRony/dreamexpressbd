@@ -256,29 +256,36 @@ export class Checkout {
             next: (data) => {
                 this.userDetails = data?.[0];
                 this.loading.set(false);
-                // Pre-fill address from user profile (prefer shipping address if available)
+                // Pre-fill address from user profile (prefer shipping address if available, fall back to main address)
                 if (this.userDetails) {
                     const district = this.userDetails.shippingDistrict || this.userDetails.dist || '';
                     const street = this.userDetails.shippingStreet || this.userDetails.address || '';
-                    const contact = this.userDetails.shippingContact || '';
+                    const contact = this.userDetails.shippingContact || this.userDetails.phone || '';
                     const area = this.userDetails.area || '';
+                    const city = this.userDetails.shippingCity || '';
 
                     if (district) {
                         this.onDistrictChange(district);
 
-                        // Pre-fill city after cities load
-                        const city = this.userDetails.shippingCity || '';
                         if (city) {
                             this.dataService.getCitiesByRegion(district).subscribe(cities => {
                                 this.cities.set(cities);
                                 this.guestCity = city;
                                 this.onCityChange(city);
+
+                                // Pre-select area after areas load
+                                if (area) {
+                                    this.dataService.getAreasByCity(city).subscribe(areas => {
+                                        this.areas.set(areas);
+                                        this.guestArea = area;
+                                    });
+                                }
                             });
                         }
                     }
                     if (street) this.guestStreet = street;
                     if (contact) this.guestPhone = contact;
-                    if (area) this.guestArea = area;
+                    if (area && !city) this.guestArea = area;
                 }
             },
             error: (error) => {
