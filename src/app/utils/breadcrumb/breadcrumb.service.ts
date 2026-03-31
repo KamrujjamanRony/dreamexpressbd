@@ -26,13 +26,10 @@ export class BreadcrumbService {
       url += `/${routeUrl}`;
     }
 
-    const label =
-      route.data['breadcrumb'] ??
-      this.extractTitle(route) ??
-      routeUrl;
-
-    if (label) {
-      acc.push({ label, url });
+    // Use explicit breadcrumb data if set; skip if empty string
+    const breadcrumbData = route.data['breadcrumb'];
+    if (breadcrumbData) {
+      acc.push({ label: breadcrumbData, url });
     }
 
     for (const child of route.children) {
@@ -40,13 +37,5 @@ export class BreadcrumbService {
     }
 
     return acc;
-  }
-
-  private extractTitle(route: ActivatedRouteSnapshot): string | null {
-    const title = route.title;
-    if (!title) return null;
-
-    // "Dashboard | Company" → "Dashboard"
-    return title.split('|')[0].trim();
   }
 }

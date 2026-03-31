@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faLock, faFolder, faHome, faGear, faBagShopping, faBuilding, faLayerGroup, faList, faBasketShopping, faChartBar, faChartPie, faRightFromBracket, faTicket, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faHome, faBagShopping, faLayerGroup, faBasketShopping, faRightFromBracket, faTicket, faUsers, faGauge, faImages, faTag, faUserShield, faBars, faCircleInfo, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { SAuth } from '../../../services/s-auth';
 // import { faStar } from '@fortawesome/free-regular-svg-icons';
 
@@ -13,29 +13,16 @@ import { SAuth } from '../../../services/s-auth';
 })
 export class Sidebar {
   auth = inject(SAuth);
-  faLock = faLock;
-  faFolder = faFolder;
-  faHome = faHome;
-  faGear = faGear;
-  faBagShopping = faBagShopping;
-  faBuilding = faBuilding;
-  faLayerGroup = faLayerGroup;
-  faList = faList;
-  faBasketShopping = faBasketShopping;
-  faChartPie = faChartPie;
-  faChartBar = faChartBar;
-  faTicket = faTicket;
-  faUsers = faUsers;
   faRightFromBracket = faRightFromBracket;
   menu: any[] = [
     {
       title: 'Dashboard',
-      icon: faChartPie,
+      icon: faGauge,
       link: '/admin/dashboard'
     },
     {
       title: 'Carousels',
-      icon: faBasketShopping,
+      icon: faImages,
       link: '/admin/carousel-list'
     },
     {
@@ -45,7 +32,7 @@ export class Sidebar {
     },
     {
       title: 'Brands',
-      icon: faBuilding,
+      icon: faTag,
       link: '/admin/brand-list'
     },
     {
@@ -70,22 +57,22 @@ export class Sidebar {
     },
     {
       title: 'Admins',
-      icon: faLock,
+      icon: faUserShield,
       link: '/admin/admin-list'
     },
     {
       title: 'Menu',
-      icon: faChartBar,
+      icon: faBars,
       link: '/admin/menu-list'
     },
     {
       title: 'About Us',
-      icon: faGear,
+      icon: faCircleInfo,
       link: '/admin/about'
     },
     {
       title: 'Contact',
-      icon: faGear,
+      icon: faEnvelope,
       link: '/admin/contact'
     },
     {
