@@ -66,7 +66,7 @@ export class GalleryPicker implements OnInit {
 
     loadImages() {
         this.isLoading.set(true);
-        this.galleryService.search(this.type() || undefined).subscribe({
+        this.galleryService.search(undefined, this.type() || undefined).subscribe({
             next: (data) => {
                 this.galleryImages.set(data);
                 this.preloadAssets(data);
