@@ -52,5 +52,5 @@ export class SCarousel {
       imageUrl: raw.imageUrl ?? raw.ImageUrl ?? '',
     };
   }
-  
+
 }
