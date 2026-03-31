@@ -11,6 +11,16 @@
   transform: scale(0.5);
 }
 
+/* Social buttons container collapse */
+.social-chat-buttons {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.social-chat-buttons--open {
+  max-height: 300px;
+}
+
 /* Social button reveal animation */
 .social-btn {
   @apply opacity-0 pointer-events-none;
