@@ -1,13 +1,13 @@
 <!-- Backdrop -->
 @if (drawerService.isOpen()) {
   <div
-    class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-[2px] transition-opacity duration-300"
+    class="fixed inset-0 z-60 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300"
     (click)="onClose()"
   ></div>
 
   <!-- Drawer Panel -->
   <div
-    class="fixed top-0 right-0 z-[61] h-full w-full max-w-md bg-white dark:bg-neutral-900 shadow-2xl flex flex-col animate-slide-in-right"
+    class="fixed top-0 right-0 z-61 h-full w-full max-w-md bg-white dark:bg-neutral-900 shadow-2xl flex flex-col animate-slide-in-right"
     (click)="$event.stopPropagation()"
   >
     <!-- Header -->
