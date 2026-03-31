@@ -44,8 +44,16 @@ export class ProductForm {
   quillModules = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'header': [1, 2, 3, false] }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['blockquote', 'code-block'],
+      ['link'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'direction': 'rtl' }],
       ['clean']
     ]
   };
