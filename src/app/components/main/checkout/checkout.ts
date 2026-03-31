@@ -256,14 +256,29 @@ export class Checkout {
             next: (data) => {
                 this.userDetails = data?.[0];
                 this.loading.set(false);
-                // Pre-fill address from user profile
+                // Pre-fill address from user profile (prefer shipping address if available)
                 if (this.userDetails) {
-                    if (this.userDetails.dist) {
-                        this.onDistrictChange(this.userDetails.dist);
+                    const district = this.userDetails.shippingDistrict || this.userDetails.dist || '';
+                    const street = this.userDetails.shippingStreet || this.userDetails.address || '';
+                    const contact = this.userDetails.shippingContact || '';
+                    const area = this.userDetails.area || '';
+
+                    if (district) {
+                        this.onDistrictChange(district);
+
+                        // Pre-fill city after cities load
+                        const city = this.userDetails.shippingCity || '';
+                        if (city) {
+                            this.dataService.getCitiesByRegion(district).subscribe(cities => {
+                                this.cities.set(cities);
+                                this.guestCity = city;
+                                this.onCityChange(city);
+                            });
+                        }
                     }
-                    if (this.userDetails.address) {
-                        this.guestStreet = this.userDetails.address;
-                    }
+                    if (street) this.guestStreet = street;
+                    if (contact) this.guestPhone = contact;
+                    if (area) this.guestArea = area;
                 }
             },
             error: (error) => {
