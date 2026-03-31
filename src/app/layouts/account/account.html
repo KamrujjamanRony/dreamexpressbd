@@ -69,6 +69,28 @@
                 Track Order
               </a>
             </li>
+            <li>
+              <a
+                routerLink="/account/wishlist"
+                routerLinkActive="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold"
+                (click)="closeSidebar()"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all duration-200 text-sm"
+              >
+                <fa-icon [icon]="faHeart" class="w-5 text-center"></fa-icon>
+                Wishlist
+              </a>
+            </li>
+            <li>
+              <a
+                routerLink="/account/shopping-cart"
+                routerLinkActive="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold"
+                (click)="closeSidebar()"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-all duration-200 text-sm"
+              >
+                <fa-icon [icon]="faCartShopping" class="w-5 text-center"></fa-icon>
+                Cart
+              </a>
+            </li>
           </ul>
 
           <!-- Divider -->

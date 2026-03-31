@@ -9,6 +9,8 @@ import {
   faArrowRightFromBracket,
   faBars,
   faXmark,
+  faHeart,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -27,6 +29,8 @@ export class Account {
   faLogout = faArrowRightFromBracket;
   faBars = faBars;
   faXmark = faXmark;
+  faHeart = faHeart;
+  faCartShopping = faCartShopping;
 
   sidebarOpen = signal(false);
 
