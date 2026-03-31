@@ -4,5 +4,6 @@ export interface CarouselM {
   title: string;
   description: string;
   bLink: string;
+  galleryId?: string;
   imageUrl: string;
 }

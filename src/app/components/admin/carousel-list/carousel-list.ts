@@ -1,5 +1,5 @@
 // carousel-list.ts
-import { CommonModule, IMAGE_LOADER, ImageLoaderConfig, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -11,21 +11,15 @@ import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CarouselM } from '../../../models/Carousel';
 import { SCarousel } from '../../../services/s-carousel';
+import { SGallery } from '../../../services/s-gallery';
+import { GalleryM } from '../../../models/Gallery';
 import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
   selector: 'app-carousel-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage, FormsModule, QuillEditorComponent],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent],
   templateUrl: './carousel-list.html',
   styleUrl: './carousel-list.css',
-  providers: [
-    {
-      provide: IMAGE_LOADER,
-      useValue: (config: ImageLoaderConfig) => {
-        return `${environment.ImageApi + config.src}?w=${config.width}`;
-      },
-    },
-  ],
 })
 export class CarouselList {
   faPencil = faPencil;
@@ -35,11 +29,11 @@ export class CarouselList {
 
   /* ---------------- DI ---------------- */
   private carouselService = inject(SCarousel);
+  private galleryService = inject(SGallery);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   imgURL = environment.ImageApi;
@@ -67,8 +61,24 @@ export class CarouselList {
   });
 
   selected = signal<CarouselM | null>(null);
-  selectedFile = signal<File | null>(null);
-  previewUrl = signal<string | null>(null);
+
+  // Gallery picker
+  galleryImages = signal<GalleryM[]>([]);
+  isGalleryLoading = signal(false);
+  showGalleryPicker = signal(false);
+  gallerySearch = signal('');
+  selectedGalleryId = signal<string>('');
+  selectedGalleryUrl = signal<string>('');
+
+  filteredGalleryImages = computed(() => {
+    const query = this.gallerySearch().toLowerCase();
+    const images = this.galleryImages();
+    if (!query) return images;
+    return images.filter(img =>
+      img.description?.toLowerCase().includes(query) ||
+      img.type?.toLowerCase().includes(query)
+    );
+  });
 
   isLoading = signal(false);
   hasError = signal(false);
@@ -130,6 +140,7 @@ export class CarouselList {
   ngOnInit(): void {
     this.loadCarousels();
     this.loadPermissions();
+    this.loadGalleryImages();
   }
 
   /* ---------------- LOADERS ---------------- */
@@ -161,46 +172,52 @@ export class CarouselList {
     this.searchQuery.set((event.target as HTMLInputElement).value.trim());
   }
 
-  /* ---------------- Image File Handler ---------------- */
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        this.toast.warning('Please select an image file', 'bottom-right', 5000);
-        this.clearFileInput();
-        return;
+  /* ---------------- GALLERY PICKER ---------------- */
+  loadGalleryImages() {
+    this.isGalleryLoading.set(true);
+    this.galleryService.search('Carousel').subscribe({
+      next: (data) => {
+        this.galleryImages.set(data);
+        this.preloadGalleryAssets(data);
+        this.isGalleryLoading.set(false);
+      },
+      error: () => {
+        this.isGalleryLoading.set(false);
+        console.error('Failed to load gallery images');
       }
+    });
+  }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        this.toast.warning('Image size should be less than 5MB', 'bottom-right', 5000);
-        this.clearFileInput();
-        return;
-      }
+  private preloadedImages: HTMLImageElement[] = [];
 
-      this.selectedFile.set(file);
-
-      const reader = new FileReader();
-      reader.onload = () => this.previewUrl.set(reader.result as string);
-      reader.readAsDataURL(file);
+  private preloadGalleryAssets(images: GalleryM[]) {
+    this.preloadedImages = [];
+    for (const image of images) {
+      if (!image?.imageUrl) continue;
+      const preloadImage = new Image();
+      preloadImage.decoding = 'sync';
+      preloadImage.src = this.imgURL + image.imageUrl;
+      this.preloadedImages.push(preloadImage);
     }
   }
 
-  clearFileInput() {
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
+  openGalleryPicker() {
+    if (!this.galleryImages().length && !this.isGalleryLoading()) {
+      this.loadGalleryImages();
     }
-    this.selectedFile.set(null);
+    this.showGalleryPicker.set(true);
+    this.gallerySearch.set('');
   }
 
-  removeImage() {
-    this.previewUrl.set(null);
-    this.selectedFile.set(null);
-    this.clearFileInput();
+  selectGalleryImage(image: GalleryM) {
+    this.selectedGalleryId.set(image.id || '');
+    this.selectedGalleryUrl.set(image.imageUrl || '');
+    this.showGalleryPicker.set(false);
+  }
+
+  clearGalleryImage() {
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
   }
 
   /* ---------------- SUBMIT ---------------- */
@@ -219,7 +236,7 @@ export class CarouselList {
     }
 
     // Check if image is selected for new items
-    if (!this.selected() && !this.selectedFile()) {
+    if (!this.selected() && !this.selectedGalleryId()) {
       this.toast.warning('Please select an image!', 'bottom-right', 5000);
       return;
     }
@@ -227,26 +244,20 @@ export class CarouselList {
     this.isSubmitted.set(true);
 
     const formValue = this.form().value();
-    const formData = new FormData();
+    const body: any = {
+      companyID: formValue.companyID,
+      title: formValue.title || '',
+      description: formValue.description || '',
+      bLink: formValue.bLink || '',
+    };
 
-    formData.append('CompanyID', String(formValue.companyID));
-    formData.append('Title', formValue.title || '');
-    formData.append('Description', formValue.description || '');
-    formData.append('BLink', formValue.bLink || '');
-
-    // Append file if selected
-    if (this.selectedFile()) {
-      formData.append('ImageFile', this.selectedFile() as File);
-    }
-
-    // On update, send current imageUrl
-    if (this.selected()?.imageUrl) {
-      formData.append('imageUrl', this.selected()!.imageUrl);
+    if (this.selectedGalleryId()) {
+      body.galleryId = this.selectedGalleryId();
     }
 
     const request$ = this.selected()
-      ? this.carouselService.update(this.selected()!.id, formData)
-      : this.carouselService.add(formData);
+      ? this.carouselService.update(this.selected()!.id, body)
+      : this.carouselService.add(body);
 
     request$.subscribe({
       next: (response) => {
@@ -284,17 +295,15 @@ export class CarouselList {
 
     this.form().reset();
 
-    // Set main image preview
-    if (carousel.imageUrl) {
-      this.previewUrl.set(
-        this.imgURL ? `${this.imgURL}${carousel.imageUrl}` : carousel.imageUrl
-      );
+    // Set gallery image if linked
+    if (carousel.galleryId) {
+      this.selectedGalleryId.set(carousel.galleryId);
+      this.selectedGalleryUrl.set(carousel.imageUrl || '');
     } else {
-      this.previewUrl.set(null);
+      this.selectedGalleryId.set('');
+      this.selectedGalleryUrl.set(carousel.imageUrl || '');
     }
 
-    this.selectedFile.set(null);
-    this.clearFileInput();
     this.showList.set(false);
   }
 
@@ -335,15 +344,14 @@ export class CarouselList {
     });
 
     this.selected.set(null);
-    this.selectedFile.set(null);
-    this.previewUrl.set(null);
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
     this.isSubmitted.set(false);
 
     // Reset editor value
     this.editorDescription = '';
 
     this.form().reset();
-    this.clearFileInput();
   }
 
   onToggleList() {

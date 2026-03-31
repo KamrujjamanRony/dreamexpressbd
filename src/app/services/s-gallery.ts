@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { GalleryM } from '../models/Gallery';
 
@@ -23,7 +23,12 @@ export class SGallery {
         if (description) reqBody['description'] = description;
         if (postBy) reqBody['postBy'] = postBy;
 
-        return this.http.post<GalleryM[]>(`${this.apiUrl}/Search`, reqBody);
+        return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
+            map((data) => {
+                const list = Array.isArray(data) ? data : data?.$values || [];
+                return list;
+            })
+        );
     }
 
     update(id: string, model: FormData): Observable<GalleryM> {
