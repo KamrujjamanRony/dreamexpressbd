@@ -241,6 +241,11 @@
 
     <!-- product area with filter button -->
     <div class="w-full">
+      <!-- Page title -->
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+        {{ categoryNames().length ? categoryNames().join(', ') : 'Shop Products' }}
+      </h2>
+
       <!-- sorting and filter button -->
       <div class="flex items-center mb-4 gap-3 justify-end">
         <select

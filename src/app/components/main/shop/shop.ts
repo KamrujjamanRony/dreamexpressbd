@@ -4,6 +4,7 @@ import { ProductCard } from '../../shared/product-card/product-card';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SProduct } from '../../../services/s-product';
+import { SCategory } from '../../../services/s-category';
 import { SData } from '../../../services/s-data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service';
@@ -16,6 +17,7 @@ import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service'
 })
 export class Shop {
   private productService = inject(SProduct);
+  private categoryService = inject(SCategory);
   private dataService = inject(SData);
   private route = inject(ActivatedRoute);
   private renderer = inject(Renderer2);
@@ -156,26 +158,32 @@ export class Shop {
 
     this.route.queryParamMap.subscribe(queryParams => {
       const category = queryParams.get('category');
-      if (category && isNaN(+category)) {
+      const search = queryParams.get('search') || '';
+
+      if (category && !isNaN(+category)) {
+        // Numeric category ID — resolve name from API
+        this.categoryService.search().subscribe(categories => {
+          const match = categories.find(c => c.id === +category);
+          if (match) {
+            this.categoryNames.set([match.itemName]);
+            this.breadcrumbService.appendCrumb(match.itemName);
+          } else {
+            this.categoryNames.set([]);
+          }
+        });
+      } else if (category) {
         this.categoryNames.set([category]);
         this.breadcrumbService.appendCrumb(category);
       } else {
         this.categoryNames.set([]);
       }
-      this.loadProducts();
+
+      this.loadProducts(search);
     });
   }
 
-  loadProducts() {
-    const queryParams = this.route.snapshot.queryParams;
-    const category = queryParams['category'] || '';
-    const search = queryParams['search'] || '';
-
-    // If category is numeric, use it as itemId; otherwise pass as search
-    const itemId = category && !isNaN(+category) ? +category : 0;
-    const searchTerm = search || (!itemId && category ? category : '');
-
-    this.productService.search(itemId, searchTerm).subscribe(data => {
+  loadProducts(search: string = '') {
+    this.productService.search(0, search).subscribe(data => {
       this.products.set(data);
       this.categories.set(this.groupProductsByProperty(data, 'itemName'));
       this.brands.set(this.groupProductsByProperty(data, 'brand'));
