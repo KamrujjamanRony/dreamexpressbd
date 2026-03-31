@@ -3,6 +3,7 @@ import { Field } from '../field/field';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { UpperCasePipe, TitleCasePipe } from '@angular/common';
+import { QuillEditorComponent } from 'ngx-quill';
 
 interface SpecItem {
   item: string;
@@ -16,7 +17,7 @@ interface Specification {
 
 @Component({
   selector: 'app-product-form',
-  imports: [Field, FormsModule, FormField, UpperCasePipe, TitleCasePipe],
+  imports: [Field, FormsModule, FormField, UpperCasePipe, TitleCasePipe, QuillEditorComponent],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })
@@ -34,6 +35,20 @@ export class ProductForm {
   sizeOptions = ['xs', 's', 'm', 'l', 'xl'];
   colorOptions = ['red', 'green', 'blue', 'black', 'white', 'brown', 'yellow'];
   availabilityOptions = ['in stock', 'out of stock', 'pre-order'];
+
+  /* ---------------- Rich Text Editor ---------------- */
+  editorShortDescription = '';
+  editorProductDetails = '';
+  editorOthers = '';
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'header': [1, 2, 3, false] }],
+      ['clean']
+    ]
+  };
 
   /* ---------------- SIGNAL ARRAYS (dynamic) ---------------- */
   images = signal<string[]>([]);
@@ -138,6 +153,11 @@ export class ProductForm {
         others: this.product.others ?? '',
         isActive: this.product.isActive ?? true,
       });
+
+      // Sync editor properties
+      this.editorShortDescription = this.product.shortDescription ?? '';
+      this.editorProductDetails = this.product.productDetails ?? '';
+      this.editorOthers = this.product.others ?? '';
 
       // Set signal arrays
       const imgs = this.product.images;
@@ -273,6 +293,15 @@ export class ProductForm {
 
   onSubmit(event: Event) {
     this.isSubmitted = true;
+
+    // Sync editor values to model before validation
+    this.model.update(m => ({
+      ...m,
+      shortDescription: this.editorShortDescription,
+      productDetails: this.editorProductDetails,
+      others: this.editorOthers,
+    }));
+
     if (this.form().valid()) {
       const formValue = this.form().value();
       this.submitForm.emit({

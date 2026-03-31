@@ -1,5 +1,8 @@
 @if (
-  product?.specifications?.length > 0 || product?.productDetails || product?.additionalInformation
+  product?.specifications?.length > 0 ||
+  product?.productDetails ||
+  product?.additionalInformation ||
+  product?.specialFeature
 ) {
   <div class="mt-10 border-t border-neutral-200 dark:border-neutral-700">
     <!-- Tabs -->
@@ -46,6 +49,20 @@
           Additional Info
         </button>
       }
+      @if (product?.specialFeature) {
+        <button
+          type="button"
+          (click)="activeTab = 'feature'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'feature'
+              ? 'border-b-2 border-primary-600 text-primary-600'
+              : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
+          "
+        >
+          Special Feature
+        </button>
+      }
     </div>
 
     <!-- Tab Content -->
@@ -85,19 +102,25 @@
       <!-- Product Details Tab -->
       @if (activeTab === 'details' && product?.productDetails) {
         <div
-          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-line"
-        >
-          {{ product.productDetails }}
-        </div>
+          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product.productDetails"
+        ></div>
       }
 
       <!-- Additional Info Tab -->
       @if (activeTab === 'info' && product?.additionalInformation) {
         <div
-          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-line"
-        >
-          {{ product.additionalInformation }}
-        </div>
+          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product.additionalInformation"
+        ></div>
+      }
+
+      <!-- Special Feature Tab -->
+      @if (activeTab === 'feature' && product?.specialFeature) {
+        <div
+          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product.specialFeature"
+        ></div>
       }
     </div>
   </div>

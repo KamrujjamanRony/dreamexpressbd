@@ -39,21 +39,6 @@ export class Sidebar {
       link: '/admin/carousel-list'
     },
     {
-      title: 'Products',
-      icon: faBasketShopping,
-      link: '/admin/product-list'
-    },
-    {
-      title: 'Menu',
-      icon: faChartBar,
-      link: '/admin/menu-list'
-    },
-    {
-      title: 'Users',
-      icon: faChartBar,
-      link: '/admin/user-list'
-    },
-    {
       title: 'Categories',
       icon: faLayerGroup,
       link: '/admin/category-list'
@@ -62,6 +47,11 @@ export class Sidebar {
       title: 'Brands',
       icon: faBuilding,
       link: '/admin/brand-list'
+    },
+    {
+      title: 'Products',
+      icon: faBasketShopping,
+      link: '/admin/product-list'
     },
     {
       title: 'Customers',
@@ -84,9 +74,9 @@ export class Sidebar {
       link: '/admin/admin-list'
     },
     {
-      title: 'Settings',
-      icon: faGear,
-      link: '/admin/settings'
+      title: 'Menu',
+      icon: faChartBar,
+      link: '/admin/menu-list'
     },
     {
       title: 'About Us',

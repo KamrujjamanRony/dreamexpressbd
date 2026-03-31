@@ -239,14 +239,13 @@
         @let shortDescError =
           form.shortDescription().invalid() && form.shortDescription().touched();
         <Field label="Short Description">
-          <textarea
-            autocomplete="off"
-            [formField]="form.shortDescription"
-            class="block py-2.5 px-0 w-full text-sm text-neutral-950 bg-transparent border-0 border-b-2 border-neutral-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            [class.border-red-400]="shortDescError"
-            placeholder=""
-            rows="2"
-          ></textarea>
+          <quill-editor
+            [(ngModel)]="editorShortDescription"
+            [ngModelOptions]="{ standalone: true }"
+            [modules]="quillModules"
+            [styles]="{ height: '80px' }"
+            placeholder="Short Description"
+          ></quill-editor>
         </Field>
         @if (shortDescError) {
           <ul class="mt-1">
@@ -259,13 +258,13 @@
 
       <!-- Product Details -->
       <Field label="Full Product Details">
-        <textarea
-          autocomplete="off"
-          [formField]="form.productDetails"
-          class="block py-2.5 px-0 w-full text-sm text-neutral-950 bg-transparent border-0 border-b-2 border-neutral-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          placeholder=""
-          rows="4"
-        ></textarea>
+        <quill-editor
+          [(ngModel)]="editorProductDetails"
+          [ngModelOptions]="{ standalone: true }"
+          [modules]="quillModules"
+          [styles]="{ height: '120px' }"
+          placeholder="Full Product Details"
+        ></quill-editor>
       </Field>
     </div>
   </div>
@@ -517,13 +516,13 @@
 
       <!-- Others -->
       <Field label="Other Information">
-        <textarea
-          autocomplete="off"
-          [formField]="form.others"
-          class="block py-2.5 px-0 w-full text-sm text-neutral-950 bg-transparent border-0 border-b-2 border-neutral-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          placeholder=""
-          rows="2"
-        ></textarea>
+        <quill-editor
+          [(ngModel)]="editorOthers"
+          [ngModelOptions]="{ standalone: true }"
+          [modules]="quillModules"
+          [styles]="{ height: '80px' }"
+          placeholder="Other Information"
+        ></quill-editor>
       </Field>
     </div>
   </div>
@@ -553,7 +552,9 @@
           [formField]="form.isActive"
           class="w-4 h-4 text-teal-600 bg-neutral-100 border-neutral-300 rounded focus:ring-teal-500 focus:ring-2"
         />
-        <label for="active-checkbox" class="ms-2 text-sm font-medium text-neutral-900"> Active </label>
+        <label for="active-checkbox" class="ms-2 text-sm font-medium text-neutral-900">
+          Active
+        </label>
       </div>
     </div>
   </div>

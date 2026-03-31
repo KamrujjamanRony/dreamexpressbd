@@ -38,11 +38,10 @@
                   {{ item.title }}
                 </h2>
                 @if (item.description) {
-                  <p
+                  <div
                     class="carousel-desc text-sm md:text-base lg:text-lg text-primary-500 leading-relaxed mt-3 md:mt-5 drop-shadow-md"
-                  >
-                    {{ item.description }}
-                  </p>
+                    [innerHTML]="item.description"
+                  ></div>
                 }
                 @if (item.bLink) {
                   <a

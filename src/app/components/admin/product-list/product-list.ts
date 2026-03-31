@@ -17,6 +17,7 @@ import { SCategory } from '../../../services/s-category';
 import { SAuth } from '../../../services/s-auth';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of, switchMap } from 'rxjs';
+import { QuillEditorComponent } from 'ngx-quill';
 
 interface ColorWithFile extends ProductColorsM {
   file?: File;
@@ -29,7 +30,7 @@ interface ImagePreview {
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage, FormsModule, QuillEditorComponent],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css'],
   providers: [
@@ -139,6 +140,20 @@ export class ProductList {
 
   isSubmitted = signal(false);
   showList = signal(true);
+
+  /* ---------------- Rich Text Editor ---------------- */
+  editorDescription = '';
+  editorSpecialFeature = '';
+  editorAdditionalInfo = '';
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'header': [1, 2, 3, false] }],
+      ['clean']
+    ]
+  };
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
@@ -517,6 +532,15 @@ export class ProductList {
   /* ---------------- SUBMIT ---------------- */
   onSubmit(event: Event) {
     event.preventDefault();
+
+    // Sync editor values to model before validation
+    this.model.update(m => ({
+      ...m,
+      description: this.editorDescription,
+      specialFeature: this.editorSpecialFeature,
+      additionalInformation: this.editorAdditionalInfo,
+    }));
+
     console.log('Form Value:', this.form().value());
 
     if (!this.form().valid()) {
@@ -684,6 +708,11 @@ export class ProductList {
       imageUrl: product.imageUrl || '',
       images: product.images || [],
     });
+
+    // Sync editor properties
+    this.editorDescription = product.description || '';
+    this.editorSpecialFeature = product.specialFeature || '';
+    this.editorAdditionalInfo = product.additionalInformation || '';
 
     this.form().reset();
 
@@ -864,6 +893,11 @@ export class ProductList {
     this.relatedSearchQuery.set('');
     this.filteredRelatedProducts.set([]);
     this.colorImageReferences.set([]);
+
+    // Reset editor values
+    this.editorDescription = '';
+    this.editorSpecialFeature = '';
+    this.editorAdditionalInfo = '';
 
     this.form().reset();
     this.clearFileInput();

@@ -17,6 +17,8 @@ export class ViewContent {
       this.activeTab = 'details';
     } else if (this.product?.additionalInformation) {
       this.activeTab = 'info';
+    } else if (this.product?.specialFeature) {
+      this.activeTab = 'feature';
     }
   }
 }

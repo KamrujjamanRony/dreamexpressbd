@@ -9,10 +9,11 @@ import { SContact } from '../../../services/s-contact';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { ContactM, DeliveryChargeM, QuickInfoM, FaqM, ContactCardM } from '../../../models/Contact';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
   selector: 'app-contact-update',
-  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent],
   templateUrl: './contact-update.html',
   styleUrl: './contact-update.css',
 })
@@ -46,6 +47,16 @@ export class ContactUpdate {
 
   isView = signal(false);
   isEdit = signal(false);
+
+  /* ---------------- Rich Text Editor ---------------- */
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'header': [1, 2, 3, false] }],
+      ['clean']
+    ]
+  };
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({

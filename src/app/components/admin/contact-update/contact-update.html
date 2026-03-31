@@ -375,13 +375,14 @@
                   placeholder="Question"
                   class="w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
                 />
-                <textarea
-                  [value]="faq.answer"
-                  (input)="updateFaq($index, 'answer', $any($event.target).value)"
+                <quill-editor
+                  [ngModel]="faq.answer"
+                  [ngModelOptions]="{ standalone: true }"
+                  (onContentChanged)="updateFaq($index, 'answer', $event.html || '')"
+                  [modules]="quillModules"
+                  [styles]="{ height: '100px' }"
                   placeholder="Answer"
-                  rows="3"
-                  class="w-full px-2.5 py-2 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand resize-y"
-                ></textarea>
+                ></quill-editor>
               </div>
             }
           </div>
