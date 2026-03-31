@@ -200,6 +200,13 @@ export const routes: Routes = [
         title: `Contact Us Update | ${companyName}`,
       },
       {
+        path: 'blog-list',
+        loadComponent: () =>
+          import('./components/admin/blog-list/blog-list').then(m => m.BlogList),
+        data: { breadcrumb: 'Blog List' },
+        title: `Blog List | ${companyName}`,
+      },
+      {
         path: 'gallery-list',
         loadComponent: () =>
           import('./components/admin/gallery-list/gallery-list').then(m => m.GalleryList),
