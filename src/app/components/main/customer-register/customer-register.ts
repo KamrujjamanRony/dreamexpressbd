@@ -59,8 +59,8 @@ export class CustomerRegister {
     required(schemaPath.fullName, { message: 'Full name is required' });
     required(schemaPath.phone, { message: 'Phone number is required' });
     required(schemaPath.pass, { message: 'Password is required' });
-    required(schemaPath.dist, { message: 'Division is required' });
-    required(schemaPath.address, { message: 'Address is required' });
+    required(schemaPath.shippingDistrict, { message: 'Division is required' });
+    required(schemaPath.shippingStreet, { message: 'Address is required' });
 
     validate(schemaPath.fullName, ({ value }) => {
       if (value() && value().length < 2) {
@@ -128,7 +128,13 @@ export class CustomerRegister {
   }
 
   onShippingDistrictChange(division: string): void {
-    this.model.update(m => ({ ...m, shippingDistrict: division, shippingCity: '', area: '' }));
+    this.model.update(m => ({
+      ...m,
+      dist: division,
+      shippingDistrict: division,
+      shippingCity: '',
+      area: ''
+    }));
     this.shippingCities.set([]);
     this.shippingAreas.set([]);
     if (division) {
@@ -148,6 +154,10 @@ export class CustomerRegister {
     this.model.update(m => ({ ...m, area }));
   }
 
+  onShippingStreetChange(street: string): void {
+    this.model.update(m => ({ ...m, address: street, shippingStreet: street }));
+  }
+
   onShippingTypeChange(type: string): void {
     this.model.update(m => ({ ...m, shippingType: type }));
   }
@@ -162,17 +172,20 @@ export class CustomerRegister {
 
     this.loading.set(true);
     const formValue = this.form().value();
+    const district = formValue.shippingDistrict || formValue.dist;
+    const street = formValue.shippingStreet || formValue.address;
+
     const payload: CustomerM = {
       companyID: environment.companyCode,
       fullName: formValue.fullName,
       phone: formValue.phone,
       pass: formValue.pass,
-      dist: formValue.dist,
-      address: formValue.address,
-      shippingDistrict: formValue.shippingDistrict,
+      dist: district,
+      address: street,
+      shippingDistrict: district,
       shippingCity: formValue.shippingCity,
-      shippingStreet: formValue.shippingStreet,
-      shippingContact: formValue.shippingContact,
+      shippingStreet: street,
+      shippingContact: formValue.phone,
       shippingType: formValue.shippingType,
       area: formValue.area,
     };

@@ -175,202 +175,16 @@
             }
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Division -->
-            <div>
-              @let distError = form.dist().invalid() && form.dist().touched();
-              <label
-                for="dist"
-                class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-              >
-                Division
-              </label>
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
-                >
-                  <svg
-                    class="w-5 h-5 text-neutral-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <select
-                  id="dist"
-                  [value]="form.dist().value()"
-                  (change)="onDistrictChange($any($event.target).value)"
-                  class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer"
-                  [class]="
-                    distError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
-                  "
-                >
-                  <option value="" disabled>Select Division</option>
-                  @for (region of regions(); track region.name) {
-                    <option [value]="region.name">{{ region.name }}</option>
-                  }
-                </select>
-              </div>
-              @if (distError) {
-                <ul class="mt-1">
-                  @for (error of form.dist().errors(); track error) {
-                    <li class="text-sm text-red-500">{{ error.message }}</li>
-                  }
-                </ul>
-              }
-            </div>
-
-            <!-- City -->
-            <div>
-              <label
-                for="city"
-                class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-              >
-                City
-              </label>
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
-                >
-                  <svg
-                    class="w-5 h-5 text-neutral-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
-                </div>
-                <select
-                  id="city"
-                  (change)="onCityChange($any($event.target).value)"
-                  [disabled]="!form.dist().value()"
-                  class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  [class]="'border-neutral-200 dark:border-neutral-600'"
-                >
-                  <option value="" disabled selected>Select City</option>
-                  @for (city of cities(); track city.name) {
-                    <option [value]="city.name">{{ city.name }}</option>
-                  }
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Area -->
-            <div>
-              <label
-                for="area"
-                class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-              >
-                Area
-              </label>
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10"
-                >
-                  <svg
-                    class="w-5 h-5 text-neutral-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                    />
-                  </svg>
-                </div>
-                <select
-                  id="area"
-                  [disabled]="cities().length === 0"
-                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">Select Area</option>
-                  @for (area of areas(); track area.name) {
-                    <option [value]="area.name">{{ area.name }}</option>
-                  }
-                </select>
-              </div>
-            </div>
-
-            <!-- Address -->
-            <div>
-              @let address = form.address();
-              @let addressError = form.address().invalid() && form.address().touched();
-              <label
-                for="address"
-                class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-              >
-                Address
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg
-                    class="w-5 h-5 text-neutral-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="address"
-                  [formField]="form.address"
-                  class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
-                  [class]="
-                    addressError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
-                  "
-                  placeholder="Your full address"
-                  autocomplete="off"
-                />
-              </div>
-              @if (addressError) {
-                <ul class="mt-1">
-                  @for (error of address.errors(); track error) {
-                    <li class="text-sm text-red-500">{{ error.message }}</li>
-                  }
-                </ul>
-              }
-            </div>
-          </div>
-
-          <!-- Shipping Address Section -->
+          <!-- Address Section -->
           <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
             <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-3">
-              Shipping Address <span class="text-neutral-400 font-normal">(optional)</span>
+              Address
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Shipping Division -->
               <div>
+                @let shippingDistrictError =
+                  form.shippingDistrict().invalid() && form.shippingDistrict().touched();
                 <label
                   for="shippingDistrict"
                   class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
@@ -380,13 +194,25 @@
                   id="shippingDistrict"
                   [value]="form.shippingDistrict().value()"
                   (change)="onShippingDistrictChange($any($event.target).value)"
-                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+                  class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+                  [class]="
+                    shippingDistrictError
+                      ? 'border-red-400'
+                      : 'border-neutral-200 dark:border-neutral-600'
+                  "
                 >
                   <option value="">Select Division</option>
                   @for (region of regions(); track region.name) {
                     <option [value]="region.name">{{ region.name }}</option>
                   }
                 </select>
+                @if (shippingDistrictError) {
+                  <ul class="mt-1">
+                    @for (error of form.shippingDistrict().errors(); track error) {
+                      <li class="text-sm text-red-500">{{ error.message }}</li>
+                    }
+                  </ul>
+                }
               </div>
               <!-- Shipping City -->
               <div>
@@ -430,6 +256,8 @@
               </div>
               <!-- Shipping Street -->
               <div>
+                @let shippingStreetError =
+                  form.shippingStreet().invalid() && form.shippingStreet().touched();
                 <label
                   for="shippingStreet"
                   class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
@@ -439,26 +267,23 @@
                   type="text"
                   id="shippingStreet"
                   [formField]="form.shippingStreet"
-                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  (input)="onShippingStreetChange($any($event.target).value)"
+                  class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  [class]="
+                    shippingStreetError
+                      ? 'border-red-400'
+                      : 'border-neutral-200 dark:border-neutral-600'
+                  "
                   placeholder="House no, Road, Area"
                   autocomplete="off"
                 />
-              </div>
-              <!-- Shipping Contact -->
-              <div>
-                <label
-                  for="shippingContact"
-                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-                  >Contact</label
-                >
-                <input
-                  type="tel"
-                  id="shippingContact"
-                  [formField]="form.shippingContact"
-                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-                  placeholder="Contact number"
-                  autocomplete="off"
-                />
+                @if (shippingStreetError) {
+                  <ul class="mt-1">
+                    @for (error of form.shippingStreet().errors(); track error) {
+                      <li class="text-sm text-red-500">{{ error.message }}</li>
+                    }
+                  </ul>
+                }
               </div>
               <!-- Shipping Type -->
               <div>
