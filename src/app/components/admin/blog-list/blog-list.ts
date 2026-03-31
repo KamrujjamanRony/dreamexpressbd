@@ -10,6 +10,7 @@ import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { BlogM, BlogDtl } from '../../../models/Blog';
 import { SBlog } from '../../../services/s-blog';
+import { SGallery } from '../../../services/s-gallery';
 import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
 
 @Component({
@@ -27,6 +28,7 @@ export class BlogList {
 
     /* ---------------- DI ---------------- */
     private blogService = inject(SBlog);
+    private galleryService = inject(SGallery);
     private permissionService = inject(SPermission);
     private toast = inject(SToast);
     private confirm = inject(SConfirm);
@@ -55,6 +57,9 @@ export class BlogList {
     selectedGalleryId = signal<string>('');
     selectedGalleryUrl = signal<string>('');
 
+    // Gallery URL map for display
+    galleryMap = signal<Map<string, string>>(new Map());
+
     isLoading = signal(false);
     hasError = signal(false);
 
@@ -72,11 +77,12 @@ export class BlogList {
     vLink = signal('');
 
     /* ---------------- DETAIL ROWS ---------------- */
-    dtls = signal<{ title: string; desc: string; iUrl: string; imageUrl: string }[]>([]);
+    dtls = signal<{ title: string; desc: string; iUrl: string }[]>([]);
 
     /* ---------------- LIFECYCLE ---------------- */
     ngOnInit(): void {
         this.loadBlogs();
+        this.loadGalleryMap();
         this.loadPermissions();
     }
 
@@ -104,6 +110,18 @@ export class BlogList {
         });
     }
 
+    loadGalleryMap() {
+        this.galleryService.search(undefined, 'Blog').subscribe({
+            next: (data) => {
+                this.galleryMap.set(new Map(data.map(g => [g.id || '', g.imageUrl || ''])));
+            }
+        });
+    }
+
+    getImageUrl(galleryId: string): string {
+        return galleryId ? this.galleryMap().get(galleryId) || '' : '';
+    }
+
     /* ---------------- SEARCH ---------------- */
     onSearch(event: Event) {
         this.searchQuery.set((event.target as HTMLInputElement).value.trim());
@@ -123,19 +141,19 @@ export class BlogList {
     /* ---------------- DETAIL ROW GALLERY PICKER ---------------- */
     onDtlGalleryPicked(index: number, event: { id: string; imageUrl: string }) {
         this.dtls.update(list => list.map((d, i) =>
-            i === index ? { ...d, iUrl: event.id, imageUrl: event.imageUrl } : d
+            i === index ? { ...d, iUrl: event.id } : d
         ));
     }
 
     clearDtlGalleryImage(index: number) {
         this.dtls.update(list => list.map((d, i) =>
-            i === index ? { ...d, iUrl: '', imageUrl: '' } : d
+            i === index ? { ...d, iUrl: '' } : d
         ));
     }
 
     /* ---------------- DETAIL ROW MANAGEMENT ---------------- */
     addDetailRow() {
-        this.dtls.update(list => [...list, { title: '', desc: '', iUrl: '', imageUrl: '' }]);
+        this.dtls.update(list => [...list, { title: '', desc: '', iUrl: '' }]);
     }
 
     removeDetailRow(index: number) {
@@ -214,15 +232,15 @@ export class BlogList {
         this.heading.set(blog.heading || '');
         this.vLink.set(blog.vLink || '');
 
-        this.selectedGalleryId.set(blog.galleryId || '');
-        this.selectedGalleryUrl.set(blog.imageUrl || '');
+        // imageUrl is the gallery ID from the API
+        this.selectedGalleryId.set(blog.imageUrl || '');
+        this.selectedGalleryUrl.set(this.getImageUrl(blog.imageUrl));
 
         // Set detail rows preserving gallery IDs
         this.dtls.set((blog.dtls || []).map(d => ({
             title: d.title || '',
             desc: d.desc || '',
-            iUrl: d.iUrl || '',
-            imageUrl: d.imageUrl || '',
+            iUrl: d.iUrl || ''
         })));
 
         this.showList.set(false);
