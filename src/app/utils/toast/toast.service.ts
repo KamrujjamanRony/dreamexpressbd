@@ -16,10 +16,12 @@ export class SToast {
         return acc;
       },
       {
+        'top-center': [],
         'top-right': [],
         'top-left': [],
         'bottom-right': [],
         'bottom-left': [],
+        'bottom-center': [],
       }
     );
   });
@@ -27,7 +29,7 @@ export class SToast {
   show(
     type: ToastType,
     message: string,
-    position: ToastPosition = 'top-right',
+    position: ToastPosition = 'top-center',
     duration = 3000,
     replace = false
   ) {
@@ -54,13 +56,13 @@ export class SToast {
     this.startTimer(toast);
   }
 
-  success(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
+  success(msg: string, pos: ToastPosition = 'top-right', d?: number, r?: boolean) {
     this.show('success', msg, pos, d, r);
   }
-  danger(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
+  danger(msg: string, pos: ToastPosition = 'top-center', d?: number, r?: boolean) {
     this.show('danger', msg, pos, d, r);
   }
-  warning(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
+  warning(msg: string, pos: ToastPosition = 'top-center', d?: number, r?: boolean) {
     this.show('warning', msg, pos, d, r);
   }
 
@@ -73,11 +75,11 @@ export class SToast {
         list.map(x =>
           x.id === id
             ? {
-                ...x,
-                paused: true,
-                remaining:
-                  x.remaining - (Date.now() - x.startTime),
-              }
+              ...x,
+              paused: true,
+              remaining:
+                x.remaining - (Date.now() - x.startTime),
+            }
             : x
         )
       );

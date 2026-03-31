@@ -1,9 +1,11 @@
 export type ToastType = 'success' | 'danger' | 'warning';
 export type ToastPosition =
+  | 'top-center'
   | 'top-right'
   | 'top-left'
   | 'bottom-right'
-  | 'bottom-left';
+  | 'bottom-left'
+  | 'bottom-center';
 
 export interface ToastM {
   id: number;

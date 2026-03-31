@@ -1,40 +1,41 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { SToast } from './toast.service';
 import { ToastM, ToastPosition } from './toast.model';
 
 @Component({
-    selector: 'app-toast',
-    imports: [CommonModule],
-    templateUrl: './toast.html',
-    styleUrl: './toast.css',
+  selector: 'app-toast',
+  imports: [],
+  templateUrl: './toast.html',
+  styleUrl: './toast.css',
 })
 export class Toast {
   public toastService = inject(SToast);
 
-  // 🔑 THIS fixes the typing issue
   readonly positions: readonly ToastPosition[] = [
+    'top-center',
     'top-right',
     'top-left',
     'bottom-right',
     'bottom-left',
+    'bottom-center',
   ];
 
-  iconBg(type: ToastM['type']) {
+  typeClass(type: ToastM['type']) {
     return {
-      success: 'bg-success-soft',
-      danger: 'bg-danger-soft',
-      warning: 'bg-warning-soft',
+      success: 'toast-success',
+      danger: 'toast-danger',
+      warning: 'toast-warning',
     }[type];
   }
 
   containerClass(pos: ToastPosition) {
     return {
-      'top-right': 'top-4 right-4',
-      'top-left': 'top-4 left-4',
-      'bottom-right': 'bottom-4 right-4',
-      'bottom-left': 'bottom-4 left-4',
+      'top-center': 'top-6 left-1/2 -translate-x-1/2',
+      'top-right': 'top-6 right-6',
+      'top-left': 'top-6 left-6',
+      'bottom-right': 'bottom-6 right-6',
+      'bottom-left': 'bottom-6 left-6',
+      'bottom-center': 'bottom-6 left-1/2 -translate-x-1/2',
     }[pos];
   }
-
 }
