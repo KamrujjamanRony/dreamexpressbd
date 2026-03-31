@@ -150,11 +150,6 @@ export const routes: Routes = [
         title: `Menu List | ${companyName}`,
       },
       {
-        path: 'user-list',
-        loadComponent: () => import('./components/admin/users/users').then(m => m.Users),
-        title: `User List | ${companyName}`,
-      },
-      {
         path: 'category-list',
         loadComponent: () => import('./components/admin/category-list/category-list').then(m => m.CategoryList),
         title: `Category List | ${companyName}`,
