@@ -2,7 +2,9 @@
   <!-- shop wrapper -->
   <div class="max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
-    <div class="hidden md:block bg-white dark:bg-neutral-900 px-4 pb-6 shadow dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] rounded overflow-hidden min-w-64">
+    <div
+      class="hidden md:block bg-white dark:bg-neutral-900 px-4 pb-6 shadow dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] rounded overflow-hidden min-w-64"
+    >
       <div class="divide-y divide-neutral-300 dark:divide-neutral-800">
         <!-- Header -->
         <div class="flex items-center py-4">
@@ -145,7 +147,9 @@
               class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
             />
 
-            <div class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-4">
+            <div
+              class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-4"
+            >
               <span>${{ minRangeValue() }}</span>
               <span>${{ maxRangeValue() }}</span>
             </div>
@@ -232,7 +236,6 @@
             </div>
           </div>
         }
-
       </div>
     </div>
 
@@ -294,7 +297,9 @@
             (click)="$event.stopPropagation()"
           >
             <!-- Fixed Header -->
-            <div class="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
+            <div
+              class="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800"
+            >
               <h3 class="text-slate-900 dark:text-slate-100 text-lg font-semibold">Filter</h3>
               <a
                 type="button"
@@ -312,7 +317,9 @@
                 <!-- Categories Section -->
                 @if (categories().length > 0) {
                   <div class="p-6">
-                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Categories</h6>
+                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">
+                      Categories
+                    </h6>
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
@@ -360,7 +367,9 @@
                 <!-- Brands Section -->
                 @if (brands().length > 0) {
                   <div class="p-6">
-                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Brands</h6>
+                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">
+                      Brands
+                    </h6>
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
@@ -407,7 +416,9 @@
 
                 <!-- Price Section -->
                 <div class="p-6">
-                  <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-4">Price</h6>
+                  <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-4">
+                    Price
+                  </h6>
                   <div class="relative">
                     <div class="h-1.5 bg-neutral-200 dark:bg-neutral-700 relative rounded-full">
                       <div
@@ -437,9 +448,17 @@
                       class="absolute top-0 w-full h-1.5 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:hover:bg-primary-dark [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
                     />
 
-                    <div class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-6">
-                      <span class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md">${{ minRangeValue() }}</span>
-                      <span class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md">${{ maxRangeValue() }}</span>
+                    <div
+                      class="flex justify-between text-slate-600 dark:text-slate-400 font-medium text-sm mt-6"
+                    >
+                      <span
+                        class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md"
+                        >${{ minRangeValue() }}</span
+                      >
+                      <span
+                        class="bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 px-3 py-1 rounded-md"
+                        >${{ maxRangeValue() }}</span
+                      >
                     </div>
                   </div>
                 </div>
@@ -447,7 +466,9 @@
                 <!-- Color Section -->
                 @if (colors().length > 0) {
                   <div class="p-6">
-                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Colors</h6>
+                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">
+                      Colors
+                    </h6>
                     <div
                       class="flex px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-primary-500/8 overflow-hidden mb-4"
                     >
@@ -499,7 +520,9 @@
                 <!-- Size Section -->
                 @if (sizes().length > 0) {
                   <div class="p-6">
-                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">Sizes</h6>
+                    <h6 class="text-slate-900 dark:text-slate-100 text-sm font-semibold mb-3">
+                      Sizes
+                    </h6>
                     <div class="flex flex-wrap gap-2">
                       @for (data of sizes(); track data.title) {
                         <div class="size-selector">
@@ -526,7 +549,6 @@
                     </div>
                   </div>
                 }
-
               </div>
             </div>
 
@@ -564,7 +586,9 @@
           @for (product of filteredProducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           } @empty {
-            <div class="text-center text-xl col-span-full dark:text-neutral-400">No products found.</div>
+            <div class="text-center text-xl col-span-full dark:text-neutral-400">
+              No products found.
+            </div>
           }
           <!-- single product end -->
         </div>
