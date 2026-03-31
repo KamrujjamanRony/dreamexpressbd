@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faShoppingBag, faMinus, faPlus, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { SToast } from '../../../../utils/toast/toast.service';
+import { CartDrawerService } from '../../../../utils/cart-drawer/cart-drawer.service';
 
 @Component({
   selector: 'app-view-image',
@@ -22,6 +23,7 @@ export class ViewImage {
   wishListService = inject(SWishlist);
   renderer = inject(Renderer2);
   private toast = inject(SToast);
+  private cartDrawer = inject(CartDrawerService);
   imgBaseUrl = environment.ImageApi;
   count: number = 1;
   viewImage: any;
@@ -179,7 +181,7 @@ export class ViewImage {
             }
 
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+              next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
               error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           } else {
@@ -194,7 +196,7 @@ export class ViewImage {
               products: [cartProduct],
             };
             this.cartService.add(newCart).subscribe({
-              next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+              next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
               error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           }
@@ -211,7 +213,7 @@ export class ViewImage {
             products: [cartProduct],
           };
           this.cartService.add(newCart).subscribe({
-            next: () => this.toast.success('Product added to cart!', 'top-right', 2000),
+            next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
             error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
           });
         },
@@ -220,6 +222,7 @@ export class ViewImage {
       // Guest → store locally
       this.cartService.addLocalProduct(cartProduct);
       this.toast.success('Product added to cart!', 'top-right', 2000);
+      this.cartDrawer.open();
     }
   }
 
