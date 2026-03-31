@@ -336,7 +336,7 @@ export class Checkout {
                 city: this.guestCity.trim(),
                 district: this.guestDistrict.trim(),
                 area: this.guestArea.trim(),
-                contact: this.isGuest ? this.guestPhone.trim() : (this.userDetails?.phone || ''),
+                contact: this.guestPhone.trim(),
                 type: 'Home',
             });
             this.calculateDeliveryCharge();
@@ -377,7 +377,7 @@ export class Checkout {
             userId: this.isGuest ? (this.guestService.getGuestId() || 'guest') : (this.user.id || ''),
             userEmail: '',
             userName: this.isGuest ? this.guestName.trim() : (this.userDetails?.fullName || ''),
-            userPhone: this.isGuest ? this.guestPhone.trim() : (this.userDetails?.phone || this.deliveryAddress().contact || ''),
+            userPhone: this.deliveryAddress().contact || this.guestPhone.trim() || this.userDetails?.phone || '',
             orderItems,
             subtotal: this.orderData.subtotal || 0,
             deliveryCharge: this.deliveryCharge() || 0,

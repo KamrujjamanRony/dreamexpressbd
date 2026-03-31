@@ -203,7 +203,12 @@
                 >
                   <option value="">Select Division</option>
                   @for (region of regions(); track region.name) {
-                    <option [value]="region.name">{{ region.name }}</option>
+                    <option
+                      [value]="region.name"
+                      [selected]="form.shippingDistrict().value() === region.name"
+                    >
+                      {{ region.name }}
+                    </option>
                   }
                 </select>
                 @if (shippingDistrictError) {
@@ -230,7 +235,12 @@
                 >
                   <option value="">Select City</option>
                   @for (city of shippingCities(); track city.name) {
-                    <option [value]="city.name">{{ city.name }}</option>
+                    <option
+                      [value]="city.name"
+                      [selected]="form.shippingCity().value() === city.name"
+                    >
+                      {{ city.name }}
+                    </option>
                   }
                 </select>
               </div>
@@ -250,7 +260,9 @@
                 >
                   <option value="">Select Area</option>
                   @for (area of shippingAreas(); track area.name) {
-                    <option [value]="area.name">{{ area.name }}</option>
+                    <option [value]="area.name" [selected]="form.area().value() === area.name">
+                      {{ area.name }}
+                    </option>
                   }
                 </select>
               </div>
@@ -300,7 +312,12 @@
                 >
                   <option value="">Select Type</option>
                   @for (type of addressTypes; track type.value) {
-                    <option [value]="type.value">{{ type.label }}</option>
+                    <option
+                      [value]="type.value"
+                      [selected]="form.shippingType().value() === type.value"
+                    >
+                      {{ type.label }}
+                    </option>
                   }
                 </select>
               </div>
