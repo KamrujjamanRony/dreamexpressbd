@@ -113,3 +113,23 @@ body {
     width: 100%;
   }
 }
+
+/* ── Quill Rich Text Editor ── */
+quill-editor {
+  display: block;
+  width: 100%;
+}
+
+.ql-container,
+.ql-toolbar {
+  width: 100% !important;
+}
+
+.ql-container {
+  resize: none !important;
+}
+
+.ql-editor {
+  resize: none !important;
+  overflow-y: auto;
+}
