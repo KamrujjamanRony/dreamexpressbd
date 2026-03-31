@@ -33,7 +33,7 @@ export class SCarousel {
         const carousels: CarouselM[] = list.map(this.normalize);
         const hasGallery = carousels.some(c => c.galleryId);
         if (!hasGallery) return of(carousels);
-        return this.galleryService.search().pipe(
+        return this.galleryService.search(undefined, 'Carousel').pipe(
           map(gallery => {
             const urlMap = new Map(gallery.map(g => [g.id, g.imageUrl]));
             return carousels.map(c => ({
