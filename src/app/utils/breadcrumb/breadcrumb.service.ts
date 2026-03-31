@@ -16,6 +16,12 @@ export class BreadcrumbService {
       });
   }
 
+  /** Append a dynamic breadcrumb after the route-based ones */
+  appendCrumb(label: string, url?: string) {
+    const current = this.breadcrumbs();
+    this.breadcrumbs.set([...current, { label, url: url || '' }]);
+  }
+
   private build(
     route: ActivatedRouteSnapshot,
     url: string = '',
