@@ -43,7 +43,7 @@ export class GalleryList {
     imgURL = environment.ImageApi;
     emptyImg = environment.emptyImg;
 
-    typeOptions = ['Product', 'Carousel', 'Category', 'Brand', 'OrderItem', 'About', 'Contact'];
+    typeOptions = ['Product', 'Carousel', 'Category', 'Brand', 'OrderItem', 'Blog', 'About', 'Contact'];
 
     /* ---------------- SIGNAL STATE ---------------- */
     items = signal<GalleryM[]>([]);
@@ -80,6 +80,7 @@ export class GalleryList {
 
     isSubmitted = signal(false);
     showList = signal(true);
+    isDragging = signal(false);
 
     /* ---------------- FORM MODEL ---------------- */
     formType = '';
@@ -129,26 +130,51 @@ export class GalleryList {
         const input = event.target as HTMLInputElement;
 
         if (input.files && input.files.length > 0) {
-            const file = input.files[0];
-
-            if (!file.type.startsWith('image/')) {
-                this.toast.warning('Please select an image file', 'bottom-right', 5000);
-                this.clearFileInput();
-                return;
-            }
-
-            if (file.size > 5 * 1024 * 1024) {
-                this.toast.warning('Image size should be less than 5MB', 'bottom-right', 5000);
-                this.clearFileInput();
-                return;
-            }
-
-            this.selectedFile.set(file);
-
-            const reader = new FileReader();
-            reader.onload = () => this.previewUrl.set(reader.result as string);
-            reader.readAsDataURL(file);
+            this.handleFile(input.files[0]);
         }
+    }
+
+    onDragOver(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragging.set(true);
+    }
+
+    onDragLeave(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragging.set(false);
+    }
+
+    onDrop(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragging.set(false);
+
+        const files = event.dataTransfer?.files;
+        if (files && files.length > 0) {
+            this.handleFile(files[0]);
+        }
+    }
+
+    private handleFile(file: File) {
+        if (!file.type.startsWith('image/')) {
+            this.toast.warning('Please select an image file', 'bottom-right', 5000);
+            this.clearFileInput();
+            return;
+        }
+
+        if (file.size > 3 * 1024 * 1024) {
+            this.toast.warning('Image size should be less than 3MB', 'bottom-right', 5000);
+            this.clearFileInput();
+            return;
+        }
+
+        this.selectedFile.set(file);
+
+        const reader = new FileReader();
+        reader.onload = () => this.previewUrl.set(reader.result as string);
+        reader.readAsDataURL(file);
     }
 
     clearFileInput() {

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faLock, faHome, faBagShopping, faLayerGroup, faBasketShopping, faRightFromBracket, faTicket, faUsers, faGauge, faImages, faTag, faUserShield, faBars, faCircleInfo, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faHome, faBagShopping, faLayerGroup, faBasketShopping, faRightFromBracket, faTicket, faUsers, faGauge, faImages, faTag, faUserShield, faBars, faCircleInfo, faEnvelope, faPhotoFilm } from '@fortawesome/free-solid-svg-icons';
 import { SAuth } from '../../../services/s-auth';
 // import { faStar } from '@fortawesome/free-regular-svg-icons';
 
@@ -74,6 +74,11 @@ export class Sidebar {
       title: 'Contact',
       icon: faEnvelope,
       link: '/admin/contact'
+    },
+    {
+      title: 'Gallery',
+      icon: faPhotoFilm,
+      link: '/admin/gallery-list'
     },
     {
       title: 'Home',
