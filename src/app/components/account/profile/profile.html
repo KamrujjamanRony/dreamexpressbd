@@ -289,59 +289,90 @@
         Shipping Address (optional)
       </h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Shipping Division -->
         <div>
           <label
             for="shippingDistrict"
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Shipping District</label
+            >Division</label
           >
-          <input
-            type="text"
+          <select
             id="shippingDistrict"
-            [formField]="form.shippingDistrict"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="District"
-            autocomplete="off"
-          />
+            [value]="form.shippingDistrict().value()"
+            (change)="onShippingDistrictChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+          >
+            <option value="">Select Division</option>
+            @for (region of regions(); track region.name) {
+              <option [value]="region.name">{{ region.name }}</option>
+            }
+          </select>
         </div>
+        <!-- Shipping City -->
         <div>
           <label
             for="shippingCity"
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Shipping City</label
+            >City</label
           >
-          <input
-            type="text"
+          <select
             id="shippingCity"
-            [formField]="form.shippingCity"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="City"
-            autocomplete="off"
-          />
+            [value]="form.shippingCity().value()"
+            (change)="onShippingCityChange($any($event.target).value)"
+            [disabled]="!form.shippingDistrict().value()"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select City</option>
+            @for (city of shippingCities(); track city.name) {
+              <option [value]="city.name">{{ city.name }}</option>
+            }
+          </select>
         </div>
+        <!-- Shipping Area -->
+        <div>
+          <label
+            for="profileArea"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Area</label
+          >
+          <select
+            id="profileArea"
+            [value]="form.area().value()"
+            (change)="onShippingAreaChange($any($event.target).value)"
+            [disabled]="!form.shippingCity().value()"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select Area</option>
+            @for (area of shippingAreas(); track area.name) {
+              <option [value]="area.name">{{ area.name }}</option>
+            }
+          </select>
+        </div>
+        <!-- Shipping Street -->
         <div>
           <label
             for="shippingStreet"
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Shipping Street</label
+            >Street Address</label
           >
           <input
             type="text"
             id="shippingStreet"
             [formField]="form.shippingStreet"
             class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="Street address"
+            placeholder="House no, Road, Area"
             autocomplete="off"
           />
         </div>
+        <!-- Shipping Contact -->
         <div>
           <label
             for="shippingContact"
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Shipping Contact</label
+            >Contact</label
           >
           <input
-            type="text"
+            type="tel"
             id="shippingContact"
             [formField]="form.shippingContact"
             class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
@@ -349,35 +380,24 @@
             autocomplete="off"
           />
         </div>
+        <!-- Shipping Type -->
         <div>
           <label
             for="shippingType"
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Shipping Type</label
+            >Type</label
           >
-          <input
-            type="text"
+          <select
             id="shippingType"
-            [formField]="form.shippingType"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="Shipping type"
-            autocomplete="off"
-          />
-        </div>
-        <div>
-          <label
-            for="profileArea"
-            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Area</label
+            [value]="form.shippingType().value()"
+            (change)="onShippingTypeChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
           >
-          <input
-            type="text"
-            id="profileArea"
-            [formField]="form.area"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="Area"
-            autocomplete="off"
-          />
+            <option value="">Select Type</option>
+            @for (type of addressTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
+            }
+          </select>
         </div>
       </div>
     </div>

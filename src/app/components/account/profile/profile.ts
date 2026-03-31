@@ -34,6 +34,14 @@ export class Profile {
     regions = signal<any[]>([]);
     cities = signal<any[]>([]);
     areas = signal<any[]>([]);
+    shippingCities = signal<any[]>([]);
+    shippingAreas = signal<any[]>([]);
+
+    addressTypes = [
+        { label: 'Home', value: 'Home' },
+        { label: 'Work', value: 'Work' },
+        { label: 'Other', value: 'Other' }
+    ];
 
     model = signal({
         companyID: String(environment.companyCode),
@@ -90,16 +98,24 @@ export class Profile {
                 pass: userData.pass || '',
                 dist: userData.dist || '',
                 address: userData.address || '',
-                shippingDistrict: userData.shippingDistrict || '',
+                shippingDistrict: userData.shippingDistrict || userData.dist || '',
                 shippingCity: userData.shippingCity || '',
-                shippingStreet: userData.shippingStreet || '',
-                shippingContact: userData.shippingContact || '',
+                shippingStreet: userData.shippingStreet || userData.address || '',
+                shippingContact: userData.shippingContact || userData.phone || '',
                 shippingType: userData.shippingType || '',
                 area: userData.area || '',
             });
             // Pre-load cities for the saved division
             if (userData.dist) {
                 this.dataService.getCitiesByRegion(userData.dist).subscribe(cities => this.cities.set(cities));
+            }
+            // Pre-load shipping cities/areas
+            const shippingDiv = userData.shippingDistrict || userData.dist || '';
+            if (shippingDiv) {
+                this.dataService.getCitiesByRegion(shippingDiv).subscribe(cities => this.shippingCities.set(cities));
+            }
+            if (userData.shippingCity) {
+                this.dataService.getAreasByCity(userData.shippingCity).subscribe(areas => this.shippingAreas.set(areas));
             }
         }
     }
@@ -122,6 +138,31 @@ export class Profile {
         if (city) {
             this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
         }
+    }
+
+    onShippingDistrictChange(division: string): void {
+        this.model.update(m => ({ ...m, shippingDistrict: division, shippingCity: '', area: '' }));
+        this.shippingCities.set([]);
+        this.shippingAreas.set([]);
+        if (division) {
+            this.dataService.getCitiesByRegion(division).subscribe(cities => this.shippingCities.set(cities));
+        }
+    }
+
+    onShippingCityChange(city: string): void {
+        this.model.update(m => ({ ...m, shippingCity: city, area: '' }));
+        this.shippingAreas.set([]);
+        if (city) {
+            this.dataService.getAreasByCity(city).subscribe(areas => this.shippingAreas.set(areas));
+        }
+    }
+
+    onShippingAreaChange(area: string): void {
+        this.model.update(m => ({ ...m, area }));
+    }
+
+    onShippingTypeChange(type: string): void {
+        this.model.update(m => ({ ...m, shippingType: type }));
     }
 
     onSubmit(event: Event): void {
