@@ -72,6 +72,12 @@ export class CustomerList {
         pass: '',
         dist: '',
         address: '',
+        shippingDistrict: '',
+        shippingCity: '',
+        shippingStreet: '',
+        shippingContact: '',
+        shippingType: '',
+        area: '',
         companyID: environment.companyCode.toString(),
     });
 
@@ -170,6 +176,12 @@ export class CustomerList {
             pass: formValue.pass,
             dist: formValue.dist,
             address: formValue.address,
+            shippingDistrict: formValue.shippingDistrict,
+            shippingCity: formValue.shippingCity,
+            shippingStreet: formValue.shippingStreet,
+            shippingContact: formValue.shippingContact,
+            shippingType: formValue.shippingType,
+            area: formValue.area,
         };
 
         const request$ = this.selected()
@@ -201,6 +213,12 @@ export class CustomerList {
             pass: item.pass ?? '',
             dist: item.dist ?? '',
             address: item.address ?? '',
+            shippingDistrict: item.shippingDistrict ?? '',
+            shippingCity: item.shippingCity ?? '',
+            shippingStreet: item.shippingStreet ?? '',
+            shippingContact: item.shippingContact ?? '',
+            shippingType: item.shippingType ?? '',
+            area: item.area ?? '',
             companyID: item.companyID.toString(),
         }));
 
@@ -239,6 +257,12 @@ export class CustomerList {
             pass: '',
             dist: '',
             address: '',
+            shippingDistrict: '',
+            shippingCity: '',
+            shippingStreet: '',
+            shippingContact: '',
+            shippingType: '',
+            area: '',
             companyID: environment.companyCode.toString(),
         });
 

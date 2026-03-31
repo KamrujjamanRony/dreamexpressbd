@@ -71,6 +71,10 @@
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Phone</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">District</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Address</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping District</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping City</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping Street</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping Contact</th>
                   @if (isEdit() || isDelete()) {
                     <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
                   }
@@ -88,6 +92,10 @@
                     <td class="px-6 py-4">{{ item?.phone || '-' }}</td>
                     <td class="px-6 py-4">{{ item?.dist || '-' }}</td>
                     <td class="px-6 py-4">{{ item?.address || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.shippingDistrict || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.shippingCity || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.shippingStreet || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.shippingContact || '-' }}</td>
                     <td class="px-6 py-4">
                       @if (isEdit()) {
                         <button
@@ -277,6 +285,123 @@
                     }
                   </ul>
                 }
+              </div>
+
+              <!-- Shipping Address Section -->
+              <div class="md:col-span-2 mt-2 mb-1">
+                <h3
+                  class="text-sm font-semibold text-neutral-600 dark:text-neutral-300 border-b border-neutral-200 dark:border-neutral-700 pb-1"
+                >
+                  Shipping Address
+                </h3>
+              </div>
+
+              <!-- shippingDistrict -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="shippingDistrict"
+                    [formField]="form.shippingDistrict"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="shippingDistrict"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Shipping District</label
+                  >
+                </div>
+              </div>
+
+              <!-- shippingCity -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="shippingCity"
+                    [formField]="form.shippingCity"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="shippingCity"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Shipping City</label
+                  >
+                </div>
+              </div>
+
+              <!-- shippingStreet -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="shippingStreet"
+                    [formField]="form.shippingStreet"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="shippingStreet"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Shipping Street</label
+                  >
+                </div>
+              </div>
+
+              <!-- shippingContact -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="shippingContact"
+                    [formField]="form.shippingContact"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="shippingContact"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Shipping Contact</label
+                  >
+                </div>
+              </div>
+
+              <!-- shippingType -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="shippingType"
+                    [formField]="form.shippingType"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="shippingType"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Shipping Type</label
+                  >
+                </div>
+              </div>
+
+              <!-- area -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    id="area"
+                    [formField]="form.area"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="area"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Area</label
+                  >
+                </div>
               </div>
 
               <div class="flex gap-2 md:col-span-2">
