@@ -18,6 +18,7 @@ export class Toast {
     'bottom-right',
     'bottom-left',
     'bottom-center',
+    'center',
   ];
 
   typeClass(type: ToastM['type']) {
@@ -36,6 +37,7 @@ export class Toast {
       'bottom-right': 'bottom-6 right-6',
       'bottom-left': 'bottom-6 left-6',
       'bottom-center': 'bottom-6 left-1/2 -translate-x-1/2',
+      'center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
     }[pos];
   }
 }

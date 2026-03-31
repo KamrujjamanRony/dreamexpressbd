@@ -22,6 +22,7 @@ export class SToast {
         'bottom-right': [],
         'bottom-left': [],
         'bottom-center': [],
+        'center': [],
       }
     );
   });
@@ -29,10 +30,11 @@ export class SToast {
   show(
     type: ToastType,
     message: string,
-    position: ToastPosition = 'top-center',
+    _position: ToastPosition = 'top-right',
     duration = 3000,
     replace = false
   ) {
+    const position: ToastPosition = 'top-right';
     const now = Date.now();
 
     const toast: ToastM = {
@@ -56,13 +58,13 @@ export class SToast {
     this.startTimer(toast);
   }
 
-  success(msg: string, pos: ToastPosition = 'top-right', d?: number, r?: boolean) {
+  success(msg: string, pos: ToastPosition = 'center', d?: number, r?: boolean) {
     this.show('success', msg, pos, d, r);
   }
-  danger(msg: string, pos: ToastPosition = 'top-center', d?: number, r?: boolean) {
+  danger(msg: string, pos: ToastPosition = 'center', d?: number, r?: boolean) {
     this.show('danger', msg, pos, d, r);
   }
-  warning(msg: string, pos: ToastPosition = 'top-center', d?: number, r?: boolean) {
+  warning(msg: string, pos: ToastPosition = 'center', d?: number, r?: boolean) {
     this.show('warning', msg, pos, d, r);
   }
 

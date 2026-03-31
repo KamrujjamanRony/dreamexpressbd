@@ -226,21 +226,21 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: transparent;
-  color: #94a3b8;
+  background: #ef4444;
+  color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .toast-close:hover {
-  background: #f1f5f9;
-  color: #475569;
+  background: #dc2626;
+  color: #fff;
 }
 
 /* ──────────────────────────────────────────
@@ -259,9 +259,10 @@
   background: #334155;
 }
 :host-context(.dark) .toast-close {
-  color: #64748b;
+  background: #dc2626;
+  color: #fff;
 }
 :host-context(.dark) .toast-close:hover {
-  background: #334155;
-  color: #cbd5e1;
+  background: #b91c1c;
+  color: #fff;
 }
