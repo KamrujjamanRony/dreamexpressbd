@@ -9,7 +9,7 @@ import { CategoryM } from '../models/Category';
 })
 export class SCategory {
   private readonly http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/Item`;
+  private apiUrl = `${environment.apiUrl}/Category`;
 
   add(model: FormData): Observable<CategoryM> {
     return this.http.post<CategoryM>(this.apiUrl, model);
