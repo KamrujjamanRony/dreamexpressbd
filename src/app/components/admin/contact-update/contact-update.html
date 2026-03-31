@@ -400,30 +400,73 @@
                     class="flex items-center gap-3 p-3 rounded border border-default-medium"
                     [class.opacity-50]="!charge.isActive"
                   >
-                    <div class="flex-1">
-                      <span class="text-sm font-medium text-heading">{{ charge.name }}</span>
-                      <span class="text-sm text-body ml-2">— ৳{{ charge.amount }}</span>
-                    </div>
-                    @if (isEdit()) {
+                    @if (editingChargeIndex() === $index) {
+                      <!-- Inline Edit Mode -->
+                      <div class="flex-1 flex items-center gap-2">
+                        <input
+                          type="text"
+                          [(ngModel)]="editChargeName"
+                          name="editChargeName"
+                          placeholder="Name"
+                          class="w-40 px-2 py-1 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                        />
+                        <input
+                          type="number"
+                          [(ngModel)]="editChargeAmount"
+                          name="editChargeAmount"
+                          placeholder="Amount"
+                          min="0"
+                          class="w-24 px-2 py-1 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand"
+                        />
+                      </div>
                       <button
                         type="button"
-                        (click)="toggleChargeActive($index)"
-                        class="text-xs px-2 py-1 rounded"
-                        [class]="
-                          charge.isActive
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-neutral-100 text-neutral-500'
-                        "
+                        (click)="saveEditCharge()"
+                        class="text-xs px-2 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
                       >
-                        {{ charge.isActive ? 'Active' : 'Inactive' }}
+                        Save
                       </button>
                       <button
                         type="button"
-                        (click)="removeDeliveryCharge($index)"
-                        class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                        (click)="cancelEditCharge()"
+                        class="text-xs px-2 py-1 rounded bg-neutral-200 text-neutral-600 hover:bg-neutral-300"
                       >
-                        ✕
+                        Cancel
                       </button>
+                    } @else {
+                      <!-- Display Mode -->
+                      <div class="flex-1">
+                        <span class="text-sm font-medium text-heading">{{ charge.name }}</span>
+                        <span class="text-sm text-body ml-2">— ৳{{ charge.amount }}</span>
+                      </div>
+                      @if (isEdit()) {
+                        <button
+                          type="button"
+                          (click)="startEditCharge($index)"
+                          class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          (click)="toggleChargeActive($index)"
+                          class="text-xs px-2 py-1 rounded"
+                          [class]="
+                            charge.isActive
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-neutral-100 text-neutral-500'
+                          "
+                        >
+                          {{ charge.isActive ? 'Active' : 'Inactive' }}
+                        </button>
+                        <button
+                          type="button"
+                          (click)="removeDeliveryCharge($index)"
+                          class="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                        >
+                          ✕
+                        </button>
+                      }
                     }
                   </div>
                 }

@@ -41,6 +41,11 @@ export class ContactUpdate {
   newChargeName = '';
   newChargeAmount: number | null = null;
 
+  // Edit charge
+  editingChargeIndex = signal<number | null>(null);
+  editChargeName = '';
+  editChargeAmount: number | null = null;
+
   isLoading = signal(false);
   hasError = signal(false);
   isSubmitted = signal(false);
@@ -240,6 +245,34 @@ export class ContactUpdate {
 
   removeDeliveryCharge(index: number) {
     this.deliveryCharges.update(list => list.filter((_, i) => i !== index));
+    if (this.editingChargeIndex() === index) this.cancelEditCharge();
+  }
+
+  startEditCharge(index: number) {
+    const charge = this.deliveryCharges()[index];
+    this.editingChargeIndex.set(index);
+    this.editChargeName = charge.name;
+    this.editChargeAmount = charge.amount;
+  }
+
+  saveEditCharge() {
+    const index = this.editingChargeIndex();
+    const name = this.editChargeName.trim();
+    const amount = this.editChargeAmount;
+    if (index === null || !name || amount === null || amount < 0) {
+      this.toast.warning('Please enter a valid name and amount', 'bottom-right', 3000);
+      return;
+    }
+    this.deliveryCharges.update(list =>
+      list.map((c, i) => i === index ? { ...c, name, amount } : c)
+    );
+    this.cancelEditCharge();
+  }
+
+  cancelEditCharge() {
+    this.editingChargeIndex.set(null);
+    this.editChargeName = '';
+    this.editChargeAmount = null;
   }
 
   toggleChargeActive(index: number) {
