@@ -1,4 +1,4 @@
-import { CommonModule, IMAGE_LOADER, ImageLoaderConfig, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -13,17 +13,9 @@ import { GalleryM } from '../../../models/Gallery';
 
 @Component({
     selector: 'app-gallery-list',
-    imports: [CommonModule, FontAwesomeModule, NgOptimizedImage, FormsModule],
+    imports: [CommonModule, FontAwesomeModule, FormsModule],
     templateUrl: './gallery-list.html',
     styleUrl: './gallery-list.css',
-    providers: [
-        {
-            provide: IMAGE_LOADER,
-            useValue: (config: ImageLoaderConfig) => {
-                return `${environment.ImageApi + config.src}?w=${config.width}`;
-            },
-        },
-    ],
 })
 export class GalleryList {
     faPencil = faPencil;
@@ -48,7 +40,7 @@ export class GalleryList {
     /* ---------------- SIGNAL STATE ---------------- */
     items = signal<GalleryM[]>([]);
     searchQuery = signal('');
-    filterType = signal('');
+    filterType = signal(this.typeOptions[0]);
 
     filteredList = computed(() => {
         const query = this.searchQuery().toLowerCase();
@@ -104,7 +96,7 @@ export class GalleryList {
         this.isLoading.set(true);
         this.hasError.set(false);
 
-        this.galleryService.search().subscribe({
+        this.galleryService.search(this.filterType()).subscribe({
             next: (data) => {
                 this.items.set(data);
                 this.isLoading.set(false);
