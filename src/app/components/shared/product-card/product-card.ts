@@ -11,6 +11,7 @@ import { BdtPipe } from "../../../pipes/bdt.pipe";
 import { CartM, CartProductM } from '../../../models/Cart';
 import { environment } from '../../../../environments/environment';
 import { SToast } from '../../../utils/toast/toast.service';
+import { CartDrawerService } from '../../../utils/cart-drawer/cart-drawer.service';
 
 @Component({
   selector: 'app-product-card',
@@ -29,6 +30,7 @@ export class ProductCard {
   private cartService = inject(SCart);
   private router = inject(Router);
   private toast = inject(SToast);
+  private cartDrawer = inject(CartDrawerService);
 
   get isCustomer(): boolean {
     return this.cartService.isCustomer();
@@ -86,7 +88,7 @@ export class ProductCard {
               userCart.products.push(cartProduct);
             }
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => this.toast.success('Added to cart!', 'top-right', 2000),
+              next: () => { this.toast.success('Added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
               error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           } else {
@@ -102,7 +104,7 @@ export class ProductCard {
               totalAmount: 0,
             };
             this.cartService.add(newCart).subscribe({
-              next: () => this.toast.success('Added to cart!', 'top-right', 2000),
+              next: () => { this.toast.success('Added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
               error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
             });
           }
@@ -113,6 +115,7 @@ export class ProductCard {
       // Guest → store locally
       this.cartService.addLocalProduct(cartProduct);
       this.toast.success('Added to cart!', 'top-right', 2000);
+      this.cartDrawer.open();
     }
   }
 }
