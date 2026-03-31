@@ -21,7 +21,7 @@ export const routes: Routes = [
       {
         path: 'shop',
         loadComponent: () => import('./components/main/shop/shop').then(m => m.Shop),
-        data: { breadcrumb: 'Shop', reuse: true, seo: { title: 'Shop', description: `Browse our wide collection of products at ${companyName}. Best prices and fast delivery in Bangladesh.` } },
+        data: { breadcrumb: 'Category', reuse: true, seo: { title: 'Shop', description: `Browse our wide collection of products at ${companyName}. Best prices and fast delivery in Bangladesh.` } },
         title: `Shop | ${companyName}`
       },
       {
