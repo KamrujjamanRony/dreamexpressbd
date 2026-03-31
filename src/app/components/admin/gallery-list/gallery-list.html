@@ -252,8 +252,10 @@
 
             <!-- Image Preview -->
             @if (previewUrl()) {
-              <div class="relative w-48 h-48 rounded-base border border-default overflow-hidden">
-                <img [src]="previewUrl()" alt="Preview" class="w-full h-full object-cover" />
+              <div
+                class="relative inline-block max-w-xs rounded-base border border-default overflow-hidden"
+              >
+                <img [src]="previewUrl()" alt="Preview" class="block max-h-64 w-auto" />
                 <button
                   type="button"
                   (click)="removeImage()"
