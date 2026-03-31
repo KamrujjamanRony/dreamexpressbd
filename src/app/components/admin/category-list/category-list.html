@@ -88,7 +88,7 @@
                       <img
                         [src]="item?.imageUrl ? imgURL + item.imageUrl : emptyImg"
                         alt="{{ item?.categoryName }}"
-                        class="w-12 h-12 object-cover rounded"
+                        class="max-w-16 max-h-16 object-contain rounded"
                       />
                     </td>
                     <td class="px-6 py-4">{{ item?.categoryName || '-' }}</td>
@@ -154,7 +154,8 @@
               <!-- categoryName -->
               <div>
                 @let categoryName = form.categoryName();
-                @let categoryNameError = form.categoryName().invalid() && form.categoryName().touched();
+                @let categoryNameError =
+                  form.categoryName().invalid() && form.categoryName().touched();
                 <div class="relative pb-2">
                   <input
                     id="categoryName"
