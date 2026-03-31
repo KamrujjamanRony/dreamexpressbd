@@ -61,8 +61,8 @@ export class Profile {
     form = form(this.model, (schemaPath) => {
         required(schemaPath.fullName, { message: 'Full name is required' });
         required(schemaPath.phone, { message: 'Phone number is required' });
-        required(schemaPath.dist, { message: 'Division is required' });
-        required(schemaPath.address, { message: 'Address is required' });
+        required(schemaPath.shippingDistrict, { message: 'Division is required' });
+        required(schemaPath.shippingStreet, { message: 'Address is required' });
 
         validate(schemaPath.fullName, ({ value }) => {
             if (value() && value().length < 2) {
@@ -141,7 +141,13 @@ export class Profile {
     }
 
     onShippingDistrictChange(division: string): void {
-        this.model.update(m => ({ ...m, shippingDistrict: division, shippingCity: '', area: '' }));
+        this.model.update(m => ({
+            ...m,
+            dist: division,
+            shippingDistrict: division,
+            shippingCity: '',
+            area: ''
+        }));
         this.shippingCities.set([]);
         this.shippingAreas.set([]);
         if (division) {
@@ -161,6 +167,10 @@ export class Profile {
         this.model.update(m => ({ ...m, area }));
     }
 
+    onShippingStreetChange(street: string): void {
+        this.model.update(m => ({ ...m, address: street, shippingStreet: street }));
+    }
+
     onShippingTypeChange(type: string): void {
         this.model.update(m => ({ ...m, shippingType: type }));
     }
@@ -178,12 +188,27 @@ export class Profile {
 
         this.customerService.update(this.customerId(), {
             ...formData,
+            dist: formData.shippingDistrict || formData.dist,
+            address: formData.shippingStreet || formData.address,
+            shippingDistrict: formData.shippingDistrict || formData.dist,
+            shippingStreet: formData.shippingStreet || formData.address,
+            shippingContact: formData.phone,
             companyID: environment.companyCode,
         }).subscribe({
             next: (response) => {
                 this.toast.success('Profile updated successfully!', 'top-right', 3000);
                 // Update the cookie with new data
-                this.authCookie.login({ ...response, id: this.customerId() });
+                this.authCookie.login({
+                    ...response,
+                    ...formData,
+                    id: this.customerId(),
+                    companyID: environment.companyCode,
+                    dist: formData.shippingDistrict || formData.dist,
+                    address: formData.shippingStreet || formData.address,
+                    shippingDistrict: formData.shippingDistrict || formData.dist,
+                    shippingStreet: formData.shippingStreet || formData.address,
+                    shippingContact: formData.phone,
+                });
                 this.editMode.set(false);
                 this.loading.set(false);
             },

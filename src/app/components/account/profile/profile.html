@@ -56,73 +56,37 @@
       </div>
     </div>
 
-    <!-- Division -->
-    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
-      <div
-        class="w-10 h-10 bg-primary-100 dark:bg-primary-900/40 rounded-full flex items-center justify-center shrink-0"
-      >
-        <fa-icon [icon]="faLocationDot" class="text-primary-600 dark:text-primary-400"></fa-icon>
-      </div>
-      <div>
-        <p
-          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
-        >
-          Division
-        </p>
-        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
-          {{ model().dist || '—' }}
-        </p>
-      </div>
-    </div>
-
     <!-- Address -->
     <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
       <div
-        class="w-10 h-10 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center shrink-0"
+        class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-full flex items-center justify-center shrink-0"
       >
-        <fa-icon [icon]="faMapPin" class="text-amber-600 dark:text-amber-400"></fa-icon>
+        <fa-icon [icon]="faTruck" class="text-emerald-600 dark:text-emerald-400"></fa-icon>
       </div>
-      <div>
+      <div class="flex-1">
         <p
           class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
         >
           Address
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
-          {{ model().address || '—' }}
+          {{ model().shippingStreet || model().address || '—' }}
         </p>
-      </div>
-    </div>
-
-    <!-- Shipping Address -->
-    @if (model().shippingDistrict || model().shippingCity || model().shippingStreet) {
-      <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
         <div
-          class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-full flex items-center justify-center shrink-0"
+          class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-neutral-500 dark:text-neutral-400"
         >
-          <fa-icon [icon]="faTruck" class="text-emerald-600 dark:text-emerald-400"></fa-icon>
-        </div>
-        <div>
-          <p
-            class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
-          >
-            Shipping Address
-          </p>
-          <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
-            {{ model().shippingStreet }}{{ model().shippingCity ? ', ' + model().shippingCity : ''
-            }}{{ model().shippingDistrict ? ', ' + model().shippingDistrict : '' }}
-          </p>
-          @if (model().shippingContact) {
-            <p class="text-neutral-500 dark:text-neutral-400 text-sm mt-0.5">
-              Contact: {{ model().shippingContact }}
-            </p>
+          @if (model().shippingDistrict || model().dist) {
+            <span>Division: {{ model().shippingDistrict || model().dist }}</span>
+          }
+          @if (model().shippingCity) {
+            <span>City: {{ model().shippingCity }}</span>
           }
           @if (model().area) {
-            <p class="text-neutral-500 dark:text-neutral-400 text-sm">Area: {{ model().area }}</p>
+            <span>Area: {{ model().area }}</span>
           }
         </div>
       </div>
-    }
+    </div>
   </div>
 } @else {
   <!-- Profile Edit Mode -->
@@ -181,112 +145,13 @@
       }
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <!-- Division -->
-      <div>
-        @let distError = form.dist().invalid() && form.dist().touched();
-        <label
-          for="dist"
-          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-          >Division</label
-        >
-        <select
-          id="dist"
-          [value]="form.dist().value()"
-          (change)="onDistrictChange($any($event.target).value)"
-          class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
-          [class]="distError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
-        >
-          <option value="" disabled>Select Division</option>
-          @for (region of regions(); track region.name) {
-            <option [value]="region.name">{{ region.name }}</option>
-          }
-        </select>
-        @if (distError) {
-          <ul class="mt-1">
-            @for (error of form.dist().errors(); track error) {
-              <li class="text-sm text-red-500">{{ error.message }}</li>
-            }
-          </ul>
-        }
-      </div>
-
-      <!-- City -->
-      <div>
-        <label
-          for="city"
-          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-          >City</label
-        >
-        <select
-          id="city"
-          (change)="onCityChange($any($event.target).value)"
-          [disabled]="!form.dist().value()"
-          class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <option value="" disabled selected>Select City</option>
-          @for (city of cities(); track city.name) {
-            <option [value]="city.name">{{ city.name }}</option>
-          }
-        </select>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <!-- Area -->
-      <div>
-        <label
-          for="area"
-          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-          >Area</label
-        >
-        <select
-          id="area"
-          [disabled]="cities().length === 0"
-          class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <option value="">Select Area</option>
-          @for (area of areas(); track area.name) {
-            <option [value]="area.name">{{ area.name }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Address -->
-      <div>
-        @let address = form.address();
-        @let addressError = form.address().invalid() && form.address().touched();
-        <label
-          for="address"
-          class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-          >Address</label
-        >
-        <input
-          type="text"
-          id="address"
-          [formField]="form.address"
-          class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-          [class]="addressError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
-          placeholder="Your full address"
-          autocomplete="off"
-        />
-        @if (addressError) {
-          <ul class="mt-1">
-            @for (error of address.errors(); track error) {
-              <li class="text-sm text-red-500">{{ error.message }}</li>
-            }
-          </ul>
-        }
-      </div>
-    </div>
-
-    <!-- Shipping Address -->
+    <!-- Address -->
     <div class="border-t border-neutral-200 dark:border-neutral-600 pt-5">
       <h3
         class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-4 flex items-center gap-2"
       >
         <fa-icon [icon]="faTruck" class="text-emerald-500"></fa-icon>
-        Shipping Address (optional)
+        Address
       </h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- Shipping Division -->
@@ -296,17 +161,36 @@
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
             >Division</label
           >
+          @let shippingDistrictError =
+            form.shippingDistrict().invalid() && form.shippingDistrict().touched();
           <select
             id="shippingDistrict"
             [value]="form.shippingDistrict().value()"
             (change)="onShippingDistrictChange($any($event.target).value)"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+            class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+            [class]="
+              shippingDistrictError
+                ? 'border-red-400'
+                : 'border-neutral-200 dark:border-neutral-600'
+            "
           >
             <option value="">Select Division</option>
             @for (region of regions(); track region.name) {
-              <option [value]="region.name">{{ region.name }}</option>
+              <option
+                [value]="region.name"
+                [selected]="form.shippingDistrict().value() === region.name"
+              >
+                {{ region.name }}
+              </option>
             }
           </select>
+          @if (shippingDistrictError) {
+            <ul class="mt-1">
+              @for (error of form.shippingDistrict().errors(); track error) {
+                <li class="text-sm text-red-500">{{ error.message }}</li>
+              }
+            </ul>
+          }
         </div>
         <!-- Shipping City -->
         <div>
@@ -324,7 +208,9 @@
           >
             <option value="">Select City</option>
             @for (city of shippingCities(); track city.name) {
-              <option [value]="city.name">{{ city.name }}</option>
+              <option [value]="city.name" [selected]="form.shippingCity().value() === city.name">
+                {{ city.name }}
+              </option>
             }
           </select>
         </div>
@@ -344,7 +230,9 @@
           >
             <option value="">Select Area</option>
             @for (area of shippingAreas(); track area.name) {
-              <option [value]="area.name">{{ area.name }}</option>
+              <option [value]="area.name" [selected]="form.area().value() === area.name">
+                {{ area.name }}
+              </option>
             }
           </select>
         </div>
@@ -355,30 +243,27 @@
             class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
             >Street Address</label
           >
+          @let shippingStreetError =
+            form.shippingStreet().invalid() && form.shippingStreet().touched();
           <input
             type="text"
             id="shippingStreet"
             [formField]="form.shippingStreet"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            (input)="onShippingStreetChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            [class]="
+              shippingStreetError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+            "
             placeholder="House no, Road, Area"
             autocomplete="off"
           />
-        </div>
-        <!-- Shipping Contact -->
-        <div>
-          <label
-            for="shippingContact"
-            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-            >Contact</label
-          >
-          <input
-            type="tel"
-            id="shippingContact"
-            [formField]="form.shippingContact"
-            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
-            placeholder="Contact number"
-            autocomplete="off"
-          />
+          @if (shippingStreetError) {
+            <ul class="mt-1">
+              @for (error of form.shippingStreet().errors(); track error) {
+                <li class="text-sm text-red-500">{{ error.message }}</li>
+              }
+            </ul>
+          }
         </div>
         <!-- Shipping Type -->
         <div>
@@ -395,7 +280,9 @@
           >
             <option value="">Select Type</option>
             @for (type of addressTypes; track type.value) {
-              <option [value]="type.value">{{ type.label }}</option>
+              <option [value]="type.value" [selected]="form.shippingType().value() === type.value">
+                {{ type.label }}
+              </option>
             }
           </select>
         </div>
