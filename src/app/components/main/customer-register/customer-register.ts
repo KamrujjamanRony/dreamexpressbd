@@ -38,6 +38,12 @@ export class CustomerRegister {
     pass: '',
     dist: '',
     address: '',
+    shippingDistrict: '',
+    shippingCity: '',
+    shippingStreet: '',
+    shippingContact: '',
+    shippingType: '',
+    area: '',
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
@@ -130,6 +136,12 @@ export class CustomerRegister {
       pass: formValue.pass,
       dist: formValue.dist,
       address: formValue.address,
+      shippingDistrict: formValue.shippingDistrict,
+      shippingCity: formValue.shippingCity,
+      shippingStreet: formValue.shippingStreet,
+      shippingContact: formValue.shippingContact,
+      shippingType: formValue.shippingType,
+      area: formValue.area,
     };
 
     this.customerService.add(payload).subscribe({
@@ -157,6 +169,12 @@ export class CustomerRegister {
       pass: '',
       dist: '',
       address: '',
+      shippingDistrict: '',
+      shippingCity: '',
+      shippingStreet: '',
+      shippingContact: '',
+      shippingType: '',
+      area: '',
     });
     this.form().reset();
   }

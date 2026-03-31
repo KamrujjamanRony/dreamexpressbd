@@ -58,7 +58,9 @@
                 id="fullName"
                 [formField]="form.fullName"
                 class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
-                [class]="fullNameError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+                [class]="
+                  fullNameError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                "
                 placeholder="Enter your full name"
                 autocomplete="off"
               />
@@ -103,7 +105,9 @@
                 id="phone"
                 [formField]="form.phone"
                 class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
-                [class]="phoneError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+                [class]="
+                  phoneError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                "
                 placeholder="Enter your phone number"
                 autocomplete="off"
               />
@@ -148,7 +152,9 @@
                 id="pass"
                 [formField]="form.pass"
                 class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 pr-12 p-3 transition-all duration-200"
-                [class]="passError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+                [class]="
+                  passError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                "
                 placeholder="Create a password"
                 autocomplete="off"
               />
@@ -208,7 +214,9 @@
                   [value]="form.dist().value()"
                   (change)="onDistrictChange($any($event.target).value)"
                   class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200 appearance-none cursor-pointer"
-                  [class]="distError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+                  [class]="
+                    distError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                  "
                 >
                   <option value="" disabled>Select Division</option>
                   @for (region of regions(); track region.name) {
@@ -338,7 +346,9 @@
                   id="address"
                   [formField]="form.address"
                   class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
-                  [class]="addressError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+                  [class]="
+                    addressError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                  "
                   placeholder="Your full address"
                   autocomplete="off"
                 />
@@ -350,6 +360,111 @@
                   }
                 </ul>
               }
+            </div>
+          </div>
+
+          <!-- Shipping Address Section -->
+          <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
+            <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-3">
+              Shipping Address <span class="text-neutral-400 font-normal">(optional)</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Shipping District -->
+              <div>
+                <label
+                  for="shippingDistrict"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >District</label
+                >
+                <input
+                  type="text"
+                  id="shippingDistrict"
+                  [formField]="form.shippingDistrict"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Shipping district"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Shipping City -->
+              <div>
+                <label
+                  for="shippingCity"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >City</label
+                >
+                <input
+                  type="text"
+                  id="shippingCity"
+                  [formField]="form.shippingCity"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Shipping city"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Shipping Street -->
+              <div>
+                <label
+                  for="shippingStreet"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >Street</label
+                >
+                <input
+                  type="text"
+                  id="shippingStreet"
+                  [formField]="form.shippingStreet"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Shipping street"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Shipping Contact -->
+              <div>
+                <label
+                  for="shippingContact"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >Contact</label
+                >
+                <input
+                  type="text"
+                  id="shippingContact"
+                  [formField]="form.shippingContact"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Shipping contact number"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Shipping Type -->
+              <div>
+                <label
+                  for="shippingType"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >Type</label
+                >
+                <input
+                  type="text"
+                  id="shippingType"
+                  [formField]="form.shippingType"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Home / Office"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Area -->
+              <div>
+                <label
+                  for="regArea"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+                  >Area</label
+                >
+                <input
+                  type="text"
+                  id="regArea"
+                  [formField]="form.area"
+                  class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                  placeholder="Area"
+                  autocomplete="off"
+                />
+              </div>
             </div>
           </div>
 
