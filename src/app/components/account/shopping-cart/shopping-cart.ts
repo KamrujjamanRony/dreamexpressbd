@@ -46,6 +46,7 @@ export class ShoppingCart {
   loading = signal(true);
   totalPrice = signal(0);
   totalQuantity = signal(0);
+  shippingCharge = signal(120); // Default: Outside Dhaka
 
   get isCustomer(): boolean {
     return this.cartService.isCustomer();

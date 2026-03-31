@@ -207,14 +207,15 @@
             </div>
             <div class="flex justify-between text-neutral-600 dark:text-neutral-400">
               <span>Shipping</span>
-              <span class="text-green-600 font-medium">Calculated at checkout</span>
+              <span class="font-medium" [innerHTML]="shippingCharge() | bdt"></span>
             </div>
+            <p class="text-xs text-neutral-400 dark:text-neutral-500 -mt-1">Default: Outside Dhaka</p>
           </div>
 
           <div class="border-t border-neutral-200 dark:border-neutral-700 mt-4 pt-4">
             <div class="flex justify-between font-bold text-lg text-neutral-800 dark:text-neutral-100">
               <span>Total</span>
-              <span class="text-primary-600" [innerHTML]="totalPrice() | bdt"></span>
+              <span class="text-primary-600" [innerHTML]="totalPrice() + shippingCharge() | bdt"></span>
             </div>
           </div>
 
