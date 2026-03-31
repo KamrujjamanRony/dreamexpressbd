@@ -1,16 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { ViewImage } from './view-image/view-image';
 import { ViewContent } from './view-content/view-content';
-import { Breadcrumbs } from '../../shared/breadcrumbs/breadcrumbs';
 import { RelatedProduct } from './related-product/related-product';
 import { ActivatedRoute } from '@angular/router';
 import { SProduct } from '../../../services/s-product';
+import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service';
 import { Subscription } from 'rxjs';
 import { ProductSkeleton } from "../../shared/product-skeleton/product-skeleton";
 
 @Component({
   selector: 'app-product-view',
-  imports: [Breadcrumbs, ViewContent, ViewImage, RelatedProduct, ProductSkeleton],
+  imports: [ViewContent, ViewImage, RelatedProduct, ProductSkeleton],
   templateUrl: './product-view.html',
   styleUrl: './product-view.css',
 })
@@ -18,6 +18,7 @@ export class ProductView {
 
   route = inject(ActivatedRoute);
   productService = inject(SProduct);
+  private breadcrumbService = inject(BreadcrumbService);
   paramsSubscription?: Subscription;
   product = signal<any>(null);
   allProducts = signal<any[]>([]);
@@ -32,6 +33,9 @@ export class ProductView {
         const id = params.get('id');
         this.productService.get(id).subscribe(data => {
           this.product.set(data);
+          if (data?.title) {
+            this.breadcrumbService.appendCrumb(data.title);
+          }
         });
       },
     });
