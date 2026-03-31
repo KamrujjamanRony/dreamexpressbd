@@ -1,8 +1,8 @@
 export interface CategoryM {
   id?: number;
   companyID: number;
-  slItem: number | null;
-  itemName: string;
+  slCategory: number | null;
+  categoryName: string;
   iGalleryId?: string;
   imageUrl?: string;
 }

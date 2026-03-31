@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap, of } from 'rxjs';
 import { CarouselM } from '../models/Carousel';
+import { SGallery } from './s-gallery';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SCarousel {
   private readonly http = inject(HttpClient);
+  private readonly galleryService = inject(SGallery);
   private apiUrl = `${environment.apiUrl}/Carousel`;
 
   add(model: any): Observable<CarouselM> {
@@ -26,9 +28,20 @@ export class SCarousel {
       ...(description && description.length > 0 ? { description: description.trim() } : {})
     }
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
-      map((data) => {
+      switchMap((data) => {
         const list = Array.isArray(data) ? data : data?.$values || [];
-        return list.map(this.normalize);
+        const carousels: CarouselM[] = list.map(this.normalize);
+        const hasGallery = carousels.some(c => c.galleryId);
+        if (!hasGallery) return of(carousels);
+        return this.galleryService.search().pipe(
+          map(gallery => {
+            const urlMap = new Map(gallery.map(g => [g.id, g.imageUrl]));
+            return carousels.map(c => ({
+              ...c,
+              imageUrl: c.galleryId ? urlMap.get(c.galleryId) || '' : ''
+            }));
+          })
+        );
       })
     );
   }

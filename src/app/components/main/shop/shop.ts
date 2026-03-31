@@ -165,8 +165,8 @@ export class Shop {
         this.categoryService.search().subscribe(categories => {
           const match = categories.find(c => c.id === +category);
           if (match) {
-            this.categoryNames.set([match.itemName]);
-            this.breadcrumbService.appendCrumb(match.itemName);
+            this.categoryNames.set([match.categoryName]);
+            this.breadcrumbService.appendCrumb(match.categoryName);
           } else {
             this.categoryNames.set([]);
           }

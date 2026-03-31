@@ -48,10 +48,10 @@ export class CategoryList {
     return this.items()
       .filter(item =>
         String(item.id ?? '').toLowerCase().includes(query) ||
-        String(item.slItem ?? '').toLowerCase().includes(query) ||
-        item.itemName?.toLowerCase().includes(query)
+        String(item.slCategory ?? '').toLowerCase().includes(query) ||
+        item.categoryName?.toLowerCase().includes(query)
       )
-      .sort((a, b) => (a.slItem! - b.slItem!));
+      .sort((a, b) => (a.slCategory! - b.slCategory!));
   });
 
   selected = signal<CategoryM | null>(null);
@@ -69,25 +69,25 @@ export class CategoryList {
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
-    itemName: '',
-    slItem: '',
+    categoryName: '',
+    slCategory: '',
     companyID: environment.companyCode.toString(),
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (schemaPath) => {
-    required(schemaPath.itemName, { message: 'itemName is required' });
-    validate(schemaPath.slItem, ({ value }) => {
+    required(schemaPath.categoryName, { message: 'Category Name is required' });
+    validate(schemaPath.slCategory, ({ value }) => {
       if (value() && !/^\d+$/.test(value())) {
         return {
           kind: 'complexity',
-          message: 'SL Item must be a valid number'
+          message: 'SL Category must be a valid number'
         }
       }
       return null;
     })
 
-    debounce(schemaPath.itemName, 300);
+    debounce(schemaPath.categoryName, 300);
   });
 
   /* ---------------- LIFECYCLE ---------------- */
@@ -151,8 +151,8 @@ export class CategoryList {
 
     const body = {
       companyID: +formValue.companyID,
-      itemName: formValue.itemName,
-      slItem: +formValue.slItem || 0,
+      categoryName: formValue.categoryName,
+      slCategory: +formValue.slCategory || 0,
       iGalleryId: this.selectedGalleryId() || '',
     };
 
@@ -181,8 +181,8 @@ export class CategoryList {
     // Update form model
     this.model.update(current => ({
       ...current,
-      itemName: item.itemName ?? '',
-      slItem: item.slItem?.toString() ?? '',
+      categoryName: item.categoryName ?? '',
+      slCategory: item.slCategory?.toString() ?? '',
       companyID: item.companyID.toString(),
     }));
 
@@ -222,8 +222,8 @@ export class CategoryList {
   /* ---------------- RESET ---------------- */
   formReset() {
     this.model.set({
-      itemName: '',
-      slItem: '',
+      categoryName: '',
+      slCategory: '',
       companyID: environment.companyCode.toString(),
     });
 

@@ -82,16 +82,16 @@
                     [class.bg-blue-300]="selected()?.id === item.id"
                   >
                     <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                      {{ item?.slItem || '-' }}
+                      {{ item?.slCategory || '-' }}
                     </td>
                     <td class="px-6 py-4">
                       <img
                         [src]="item?.imageUrl ? imgURL + item.imageUrl : emptyImg"
-                        alt="{{ item?.itemName }}"
+                        alt="{{ item?.categoryName }}"
                         class="w-12 h-12 object-cover rounded"
                       />
                     </td>
-                    <td class="px-6 py-4">{{ item?.itemName || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.categoryName || '-' }}</td>
                     <td class="px-6 py-4">
                       @if (isEdit()) {
                         <button
@@ -151,56 +151,56 @@
                 (imageCleared)="clearGalleryImage()"
               />
 
-              <!-- itemName -->
+              <!-- categoryName -->
               <div>
-                @let itemName = form.itemName();
-                @let itemNameError = form.itemName().invalid() && form.itemName().touched();
+                @let categoryName = form.categoryName();
+                @let categoryNameError = form.categoryName().invalid() && form.categoryName().touched();
                 <div class="relative pb-2">
                   <input
-                    id="itemName"
-                    [formField]="form.itemName"
+                    id="categoryName"
+                    [formField]="form.categoryName"
                     rows="4"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
                     placeholder=""
                     autocomplete="off"
                   />
                   <label
-                    for="itemName"
+                    for="categoryName"
                     class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
                     >Category Name</label
                   >
                 </div>
-                @if (itemNameError) {
+                @if (categoryNameError) {
                   <ul class="-mt-2 mb-2">
-                    @for (error of itemName.errors(); track error) {
+                    @for (error of categoryName.errors(); track error) {
                       <li class="text-sm text-red-600">{{ error.message }}</li>
                     }
                   </ul>
                 }
               </div>
 
-              <!-- SL Item -->
+              <!-- SL Category -->
               <div>
-                @let slItem = form.slItem();
-                @let slItemError = form.slItem().invalid() && form.slItem().touched();
+                @let slCategory = form.slCategory();
+                @let slCategoryError = form.slCategory().invalid() && form.slCategory().touched();
                 <div class="relative pb-2">
                   <input
                     type="text"
-                    [formField]="form.slItem"
-                    id="slItem"
+                    [formField]="form.slCategory"
+                    id="slCategory"
                     autocomplete="off"
                     class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
                     placeholder=" "
                   />
                   <label
-                    for="slItem"
+                    for="slCategory"
                     class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1 capitalize"
                     >SL Number</label
                   >
                 </div>
-                @if (slItemError) {
+                @if (slCategoryError) {
                   <ul class="-mt-2 mb-2">
-                    @for (error of slItem.errors(); track error) {
+                    @for (error of slCategory.errors(); track error) {
                       <li class="text-sm text-red-600">{{ error.message }}</li>
                     }
                   </ul>

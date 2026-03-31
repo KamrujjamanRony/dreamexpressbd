@@ -54,7 +54,7 @@
             >
               <option value="">All Categories</option>
               @for (category of categories(); track category.id) {
-                <option [value]="category.id">{{ category.itemName }}</option>
+                <option [value]="category.id">{{ category.categoryName }}</option>
               }
             </select>
 
@@ -306,7 +306,7 @@
                           </option>
                           @for (cat of categories(); track cat.id) {
                             <option [value]="cat.id" class="dark:bg-neutral-900">
-                              {{ cat.itemName }}
+                              {{ cat.categoryName }}
                             </option>
                           }
                         </select>
