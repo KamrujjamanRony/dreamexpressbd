@@ -4,16 +4,18 @@ import { Component, computed, ElementRef, inject, signal, ViewChild } from '@ang
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField } from '@angular/forms/signals';
+import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment.production';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CarouselM } from '../../../models/Carousel';
 import { SCarousel } from '../../../services/s-carousel';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
   selector: 'app-carousel-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage],
+  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage, FormsModule, QuillEditorComponent],
   templateUrl: './carousel-list.html',
   styleUrl: './carousel-list.css',
   providers: [
@@ -78,6 +80,18 @@ export class CarouselList {
 
   isSubmitted = signal(false);
   showList = signal(true);
+
+  /* ---------------- Rich Text Editor ---------------- */
+  editorDescription = '';
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'header': [1, 2, 3, false] }],
+      ['clean']
+    ]
+  };
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
@@ -185,6 +199,12 @@ export class CarouselList {
   onSubmit(event: Event) {
     event.preventDefault();
 
+    // Sync editor values to model before validation
+    this.model.update(m => ({
+      ...m,
+      description: this.editorDescription,
+    }));
+
     if (!this.form().valid()) {
       this.toast.warning('Please fill all required fields!', 'bottom-right', 5000);
       return;
@@ -251,6 +271,9 @@ export class CarouselList {
       companyID: carousel.companyID,
     }));
 
+    // Sync editor property
+    this.editorDescription = carousel.description || '';
+
     this.form().reset();
 
     // Set main image preview
@@ -307,6 +330,9 @@ export class CarouselList {
     this.selectedFile.set(null);
     this.previewUrl.set(null);
     this.isSubmitted.set(false);
+
+    // Reset editor value
+    this.editorDescription = '';
 
     this.form().reset();
     this.clearFileInput();
