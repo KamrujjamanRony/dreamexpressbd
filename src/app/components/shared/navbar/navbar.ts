@@ -10,6 +10,7 @@ import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { NgClass, NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { SearchOverlay } from '../search-overlay/search-overlay';
+import { CartDrawerService } from '../../../utils/cart-drawer/cart-drawer.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,6 +28,7 @@ export class Navbar implements OnDestroy {
   private CategoryService = inject(SCategory);
   private productService = inject(SProduct);
   private router = inject(Router);
+  private cartDrawer = inject(CartDrawerService);
 
   categories: any[] = [];
   imageBaseUrl = environment.ImageApi;
@@ -178,6 +180,10 @@ export class Navbar implements OnDestroy {
     this.cartService.refreshCartCount();
     this.totalCarts = this.cartService.cartCount;
     this.cdr.detectChanges();
+  }
+
+  openCartDrawer() {
+    this.cartDrawer.open();
   }
 
   refreshWishlistCount() {
