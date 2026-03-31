@@ -28,7 +28,7 @@ select.guest-select {
 
 /* Place order button shimmer */
 .place-order-btn::before {
-  @apply absolute top-0 left-[-100%] w-full h-full;
+  @apply absolute top-0 -left-full w-full h-full;
   content: '';
   background: linear-gradient(
     90deg,
