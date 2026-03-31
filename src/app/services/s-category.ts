@@ -25,7 +25,7 @@ export class SCategory {
         const categories: CategoryM[] = list.map(this.normalize);
         const hasGallery = categories.some(c => c.iGalleryId);
         if (!hasGallery) return of(categories);
-        return this.galleryService.search().pipe(
+        return this.galleryService.search(undefined, 'Category').pipe(
           map(gallery => {
             const urlMap = new Map(gallery.map(g => [g.id, g.imageUrl]));
             return categories.map(c => ({
