@@ -1,18 +1,18 @@
 @if (isView()) {
   @if (showList()) {
-    <div class="max-w-8xl mx-auto relative mt-5">
+    <div class="max-w-8xl mx-auto relative mt-5 animate-fade-in">
       <div class="w-full mb-10 px-3">
         <div
-          class="relative bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-neutral-950 dark:border-neutral-700"
+          class="relative bg-neutral-primary/80 backdrop-blur-sm shadow-lg rounded-2xl border border-default/50 dark:bg-neutral-950/80 dark:border-neutral-700/50"
         >
           <!-- Header -->
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-5">
             <!-- Search -->
             <div class="w-full md:max-w-xs">
               <label for="search" class="sr-only">Search</label>
               <div class="relative">
                 <div
-                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-600 dark:text-neutral-400"
+                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-400"
                 >
                   <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
                 </div>
@@ -21,13 +21,13 @@
                   (input)="onSearch($event)"
                   type="text"
                   id="search"
-                  class="block w-full ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-400"
-                  placeholder="Search..."
+                  class="block w-full ps-9 pe-3 bg-neutral-100/60 border border-neutral-200/80 text-heading text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 px-3 py-2.5 shadow-sm placeholder:text-neutral-400 transition-all dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-200"
+                  placeholder="Search images..."
                 />
               </div>
             </div>
 
-            <h1 class="text-xl md:text-3xl font-bold text-emerald-500 underline text-center w-full">
+            <h1 class="text-xl md:text-3xl font-bold bg-linear-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent text-center w-full">
               Image Gallery
             </h1>
 
@@ -35,7 +35,7 @@
               <!-- Type Filter -->
               <select
                 (change)="onFilterType($event)"
-                class="text-sm border border-default-medium rounded-base px-3 py-2.5 bg-neutral-secondary-medium text-heading focus:ring-brand focus:border-brand dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200"
+                class="text-sm border border-neutral-200/80 rounded-xl px-3 py-2.5 bg-neutral-100/60 text-heading focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-200"
               >
                 <option value="">All Types</option>
                 @for (type of typeOptions; track type) {
@@ -47,9 +47,9 @@
                 <button
                   type="button"
                   (click)="showList.set(false)"
-                  class="text-white bg-linear-to-r from-green-400 via-green-500 to-green-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer whitespace-nowrap"
+                  class="text-white bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 font-medium rounded-xl text-sm px-5 py-2.5 text-center leading-5 cursor-pointer whitespace-nowrap shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-[1.02]"
                 >
-                  Add Image
+                  + Add Image
                 </button>
               }
             </div>
@@ -57,34 +57,48 @@
 
           <!-- Loading State -->
           @if (isLoading()) {
-            <p class="text-3xl font-bold text-center p-10 text-emerald-600">Loading ...</p>
+            <div class="flex flex-col items-center justify-center p-16 gap-3">
+              <div class="w-10 h-10 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
+              <p class="text-sm text-neutral-400">Loading gallery...</p>
+            </div>
           }
 
           <!-- Error State -->
           @else if (hasError()) {
-            <p class="text-3xl font-bold text-center p-10 text-red-600">
-              There was an error loading data.
-            </p>
+            <div class="flex flex-col items-center justify-center p-16 gap-2">
+              <svg class="w-12 h-12 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              <p class="text-lg font-semibold text-red-500">Failed to load images</p>
+              <p class="text-sm text-neutral-400">Please try again later</p>
+            </div>
           }
 
           <!-- Empty State -->
           @else if (filteredList().length === 0) {
-            <p class="text-3xl font-bold text-center p-10 text-orange-600">No images found.</p>
+            <div class="flex flex-col items-center justify-center p-16 gap-2">
+              <svg class="w-16 h-16 text-neutral-300 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+              </svg>
+              <p class="text-lg font-semibold text-neutral-400">No images found</p>
+              <p class="text-sm text-neutral-400">Upload your first image to get started</p>
+            </div>
           }
 
           <!-- Image Grid -->
           @else {
             <div
-              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4"
+              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-5"
             >
               @for (item of filteredList(); track item?.id || $index) {
                 <div
-                  class="group relative bg-neutral-secondary-soft rounded-base border border-default overflow-hidden dark:bg-neutral-900 dark:border-neutral-700"
+                  class="gallery-card group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 ease-out hover:-translate-y-1"
                   [class.ring-2]="selected()?.id === item.id"
                   [class.ring-emerald-500]="selected()?.id === item.id"
+                  [style.animation-delay]="($index * 60) + 'ms'"
                 >
                   <!-- Image -->
-                  <div class="relative aspect-square">
+                  <div class="relative aspect-square bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
                     @if (item.imageUrl) {
                       <img
                         [ngSrc]="item.imageUrl"
@@ -92,39 +106,45 @@
                         ngSrcset="128w, 256w, 512w"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
                         alt="{{ item.type }} image"
-                        class="object-cover"
+                        class="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         [priority]="$index < 6"
                         [loaderParams]="{ w: 256 }"
                       />
                     } @else {
                       <div
-                        class="w-full h-full flex items-center justify-center bg-neutral-200 dark:bg-neutral-800"
+                        class="w-full h-full flex items-center justify-center"
                       >
-                        <span class="text-neutral-400 text-xs">No Image</span>
+                        <svg class="w-8 h-8 text-neutral-300 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                        </svg>
                       </div>
                     }
 
-                    <!-- Hover Overlay with Actions -->
+                    <!-- Gradient Overlay (always visible, subtle) -->
+                    <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <!-- Hover Actions -->
                     @if (isEdit() || isDelete()) {
                       <div
-                        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
+                        class="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-400"
                       >
                         @if (isEdit()) {
                           <button
                             type="button"
-                            class="w-8 h-8 rounded-full bg-orange-400 hover:bg-orange-500 text-white flex items-center justify-center cursor-pointer"
+                            class="w-9 h-9 rounded-xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-orange-500 hover:text-orange-600 flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-110 translate-y-3 group-hover:translate-y-0"
                             (click)="onUpdate(item)"
                           >
-                            <fa-icon [icon]="faPencil" class="text-xs"></fa-icon>
+                            <fa-icon [icon]="faPencil" class="text-sm"></fa-icon>
                           </button>
                         }
                         @if (isDelete()) {
                           <button
                             type="button"
-                            class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center cursor-pointer"
+                            class="w-9 h-9 rounded-xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-rose-500 hover:text-rose-600 flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-110 translate-y-3 group-hover:translate-y-0"
+                            style="transition-delay: 75ms"
                             (click)="onDelete(item.id!)"
                           >
-                            <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                            <fa-icon [icon]="faTrash" class="text-sm"></fa-icon>
                           </button>
                         }
                       </div>
@@ -132,17 +152,22 @@
                   </div>
 
                   <!-- Info -->
-                  <div class="p-2">
-                    <span
-                      class="inline-block text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                    >
-                      {{ item.type }}
-                    </span>
+                  <div class="p-2.5 bg-white dark:bg-neutral-900">
+                    <div class="flex items-center gap-1.5">
+                      <span
+                        class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-emerald-500 to-teal-500 text-white tracking-wider"
+                      >
+                        {{ item.type }}
+                      </span>
+                    </div>
                     @if (item.description) {
-                      <p class="text-xs text-body mt-1 line-clamp-2">{{ item.description }}</p>
+                      <p class="text-xs text-body mt-1.5 line-clamp-2 leading-relaxed">{{ item.description }}</p>
                     }
                     @if (item.postBy) {
-                      <p class="text-[10px] text-neutral-400 mt-1">by {{ item.postBy }}</p>
+                      <p class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
+                        <span class="w-3 h-3 rounded-full bg-linear-to-br from-emerald-400 to-teal-400 inline-flex items-center justify-center text-white text-[7px] font-bold">{{ item.postBy.charAt(0).toUpperCase() }}</span>
+                        {{ item.postBy }}
+                      </p>
                     }
                   </div>
                 </div>
