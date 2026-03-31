@@ -27,7 +27,9 @@
               </div>
             </div>
 
-            <h1 class="text-xl md:text-3xl font-bold bg-linear-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent text-center w-full">
+            <h1
+              class="text-xl md:text-3xl font-bold bg-linear-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent text-center w-full"
+            >
               Image Gallery
             </h1>
 
@@ -58,7 +60,9 @@
           <!-- Loading State -->
           @if (isLoading()) {
             <div class="flex flex-col items-center justify-center p-16 gap-3">
-              <div class="w-10 h-10 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
+              <div
+                class="w-10 h-10 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"
+              ></div>
               <p class="text-sm text-neutral-400">Loading gallery...</p>
             </div>
           }
@@ -66,8 +70,19 @@
           <!-- Error State -->
           @else if (hasError()) {
             <div class="flex flex-col items-center justify-center p-16 gap-2">
-              <svg class="w-12 h-12 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              <svg
+                class="w-12 h-12 text-red-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                />
               </svg>
               <p class="text-lg font-semibold text-red-500">Failed to load images</p>
               <p class="text-sm text-neutral-400">Please try again later</p>
@@ -77,8 +92,19 @@
           <!-- Empty State -->
           @else if (filteredList().length === 0) {
             <div class="flex flex-col items-center justify-center p-16 gap-2">
-              <svg class="w-16 h-16 text-neutral-300 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+              <svg
+                class="w-16 h-16 text-neutral-300 dark:text-neutral-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
+                />
               </svg>
               <p class="text-lg font-semibold text-neutral-400">No images found</p>
               <p class="text-sm text-neutral-400">Upload your first image to get started</p>
@@ -95,10 +121,12 @@
                   class="gallery-card group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 ease-out hover:-translate-y-1"
                   [class.ring-2]="selected()?.id === item.id"
                   [class.ring-emerald-500]="selected()?.id === item.id"
-                  [style.animation-delay]="($index * 60) + 'ms'"
+                  [style.animation-delay]="$index * 60 + 'ms'"
                 >
                   <!-- Image -->
-                  <div class="relative aspect-square bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
+                  <div
+                    class="relative aspect-square bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
+                  >
                     @if (item.imageUrl) {
                       <img
                         [ngSrc]="item.imageUrl"
@@ -111,17 +139,28 @@
                         [loaderParams]="{ w: 256 }"
                       />
                     } @else {
-                      <div
-                        class="w-full h-full flex items-center justify-center"
-                      >
-                        <svg class="w-8 h-8 text-neutral-300 dark:text-neutral-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                      <div class="w-full h-full flex items-center justify-center">
+                        <svg
+                          class="w-8 h-8 text-neutral-300 dark:text-neutral-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
+                          />
                         </svg>
                       </div>
                     }
 
                     <!-- Gradient Overlay (always visible, subtle) -->
-                    <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div
+                      class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    ></div>
 
                     <!-- Hover Actions -->
                     @if (isEdit() || isDelete()) {
@@ -161,11 +200,16 @@
                       </span>
                     </div>
                     @if (item.description) {
-                      <p class="text-xs text-body mt-1.5 line-clamp-2 leading-relaxed">{{ item.description }}</p>
+                      <p class="text-xs text-body mt-1.5 line-clamp-2 leading-relaxed">
+                        {{ item.description }}
+                      </p>
                     }
                     @if (item.postBy) {
                       <p class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                        <span class="w-3 h-3 rounded-full bg-linear-to-br from-emerald-400 to-teal-400 inline-flex items-center justify-center text-white text-[7px] font-bold">{{ item.postBy.charAt(0).toUpperCase() }}</span>
+                        <span
+                          class="w-3 h-3 rounded-full bg-linear-to-br from-emerald-400 to-teal-400 inline-flex items-center justify-center text-white text-[7px] font-bold"
+                          >{{ item.postBy.charAt(0).toUpperCase() }}</span
+                        >
                         {{ item.postBy }}
                       </p>
                     }
