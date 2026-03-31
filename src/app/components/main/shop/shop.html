@@ -249,40 +249,40 @@
         </h2>
 
         <div class="flex items-center gap-3">
-        <select
-          autocomplete="off"
-          [ngModel]="sortValue()"
-          (ngModelChange)="sortValue.set($event)"
-          class="w-44 text-sm px-4 py-3 border-2 border-neutral-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-neutral-700 dark:shadow-none dark:bg-neutral-900 dark:text-neutral-200"
-        >
-          <option value="">Default sorting</option>
-          <option value="low-high">Price low-high</option>
-          <option value="high-low">Price high-low</option>
-          <option value="latest">Latest product</option>
-        </select>
-
-        <!-- Filter toggle button for mobile/tablet -->
-        <button
-          type="button"
-          (click)="openDrawer()"
-          class="md:hidden px-5 py-3 rounded-md text-white text-sm font-medium bg-primary-600 hover:bg-primary-700 flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          <select
+            autocomplete="off"
+            [ngModel]="sortValue()"
+            (ngModelChange)="sortValue.set($event)"
+            class="w-44 text-sm px-4 py-3 border-2 border-neutral-300 shadow-sm rounded focus:ring-primary focus:border-primary dark:border-neutral-700 dark:shadow-none dark:bg-neutral-900 dark:text-neutral-200"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-            />
-          </svg>
-          Filters
-        </button>
+            <option value="">Default sorting</option>
+            <option value="low-high">Price low-high</option>
+            <option value="high-low">Price high-low</option>
+            <option value="latest">Latest product</option>
+          </select>
+
+          <!-- Filter toggle button for mobile/tablet -->
+          <button
+            type="button"
+            (click)="openDrawer()"
+            class="md:hidden px-5 py-3 rounded-md text-white text-sm font-medium bg-primary-600 hover:bg-primary-700 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+              />
+            </svg>
+            Filters
+          </button>
         </div>
       </div>
 
