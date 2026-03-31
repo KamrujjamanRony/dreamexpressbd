@@ -1,5 +1,5 @@
 <!-- Floating widget tray -->
-<div class="widget-tray fixed bottom-6 right-6 z-50 flex flex-col items-center gap-[0.65rem]" [class.widget-tray--hidden]="!isVisible">
+<div class="widget-tray fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-50 flex flex-col items-center gap-[0.65rem]" [class.widget-tray--hidden]="!isVisible">
   <!-- Theme toggle FAB (always on top) -->
   <button class="w-12 h-12 rounded-full border-none text-white cursor-pointer flex items-center justify-center relative transition-all duration-300 bg-[linear-gradient(135deg,#f59e0b,#f97316)] shadow-[0_4px_14px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.5)] hover:scale-[1.08]"
     (click)="toggleTheme()" aria-label="Toggle theme">
