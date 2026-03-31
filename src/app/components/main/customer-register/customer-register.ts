@@ -30,6 +30,14 @@ export class CustomerRegister {
   regions = signal<any[]>([]);
   cities = signal<any[]>([]);
   areas = signal<any[]>([]);
+  shippingCities = signal<any[]>([]);
+  shippingAreas = signal<any[]>([]);
+
+  addressTypes = [
+    { label: 'Home', value: 'Home' },
+    { label: 'Work', value: 'Work' },
+    { label: 'Other', value: 'Other' }
+  ];
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
@@ -117,6 +125,31 @@ export class CustomerRegister {
     if (city) {
       this.dataService.getAreasByCity(city).subscribe(areas => this.areas.set(areas));
     }
+  }
+
+  onShippingDistrictChange(division: string): void {
+    this.model.update(m => ({ ...m, shippingDistrict: division, shippingCity: '', area: '' }));
+    this.shippingCities.set([]);
+    this.shippingAreas.set([]);
+    if (division) {
+      this.dataService.getCitiesByRegion(division).subscribe(cities => this.shippingCities.set(cities));
+    }
+  }
+
+  onShippingCityChange(city: string): void {
+    this.model.update(m => ({ ...m, shippingCity: city, area: '' }));
+    this.shippingAreas.set([]);
+    if (city) {
+      this.dataService.getAreasByCity(city).subscribe(areas => this.shippingAreas.set(areas));
+    }
+  }
+
+  onShippingAreaChange(area: string): void {
+    this.model.update(m => ({ ...m, area }));
+  }
+
+  onShippingTypeChange(type: string): void {
+    this.model.update(m => ({ ...m, shippingType: type }));
   }
 
   onSubmit(event: Event): void {
