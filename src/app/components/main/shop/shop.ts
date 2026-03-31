@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { SProduct } from '../../../services/s-product';
 import { SData } from '../../../services/s-data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'app-shop',
@@ -18,6 +19,7 @@ export class Shop {
   private dataService = inject(SData);
   private route = inject(ActivatedRoute);
   private renderer = inject(Renderer2);
+  private breadcrumbService = inject(BreadcrumbService);
 
   // Signals for reactive state
   products = signal<any>(null);
@@ -156,6 +158,7 @@ export class Shop {
       const category = queryParams.get('category');
       if (category && isNaN(+category)) {
         this.categoryNames.set([category]);
+        this.breadcrumbService.appendCrumb(category);
       } else {
         this.categoryNames.set([]);
       }
