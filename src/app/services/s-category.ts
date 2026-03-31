@@ -11,7 +11,7 @@ export class SCategory {
   private readonly http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Category`;
 
-  add(model: FormData): Observable<CategoryM> {
+  add(model: any): Observable<CategoryM> {
     return this.http.post<CategoryM>(this.apiUrl, model);
   }
 
@@ -25,8 +25,8 @@ export class SCategory {
     );
   }
 
-  update(id: any, updateRequest: FormData): Observable<CategoryM> {
-    return this.http.put<CategoryM>(`${this.apiUrl}/${id}`, updateRequest);
+  update(id: any, model: any): Observable<CategoryM> {
+    return this.http.put<CategoryM>(`${this.apiUrl}/${id}`, model);
   }
 
   delete(id: any): Observable<CategoryM> {
@@ -39,6 +39,7 @@ export class SCategory {
       companyID: raw.companyID ?? raw.CompanyID ?? raw.companyId ?? raw.CompanyId,
       slItem: raw.slItem ?? raw.SLItem ?? raw.SlItem ?? null,
       itemName: raw.itemName ?? raw.ItemName ?? '',
+      iGalleryId: raw.iGalleryId ?? raw.IGalleryId ?? raw.igalleryId ?? '',
       imageUrl: raw.imageUrl ?? raw.ImageUrl ?? '',
     };
   }

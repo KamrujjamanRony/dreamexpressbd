@@ -3,5 +3,6 @@ export interface CategoryM {
   companyID: number;
   slItem: number | null;
   itemName: string;
+  iGalleryId?: string;
   imageUrl?: string;
 }
