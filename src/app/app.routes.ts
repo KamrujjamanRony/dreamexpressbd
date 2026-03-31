@@ -199,6 +199,13 @@ export const routes: Routes = [
         data: { breadcrumb: 'Contact Us' },
         title: `Contact Us Update | ${companyName}`,
       },
+      {
+        path: 'gallery-list',
+        loadComponent: () =>
+          import('./components/admin/gallery-list/gallery-list').then(m => m.GalleryList),
+        data: { breadcrumb: 'Image Gallery' },
+        title: `Image Gallery | ${companyName}`,
+      },
     ]
   },
   {

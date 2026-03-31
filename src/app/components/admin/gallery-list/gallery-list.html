@@ -1,0 +1,248 @@
+@if (isView()) {
+  @if (showList()) {
+    <div class="max-w-8xl mx-auto relative mt-5">
+      <div class="w-full mb-10 px-3">
+        <div
+          class="relative bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-neutral-950 dark:border-neutral-700"
+        >
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4">
+            <!-- Search -->
+            <div class="w-full md:max-w-xs">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-600 dark:text-neutral-400"
+                >
+                  <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                </div>
+                <input
+                  autocomplete="off"
+                  (input)="onSearch($event)"
+                  type="text"
+                  id="search"
+                  class="block w-full ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-400"
+                  placeholder="Search..."
+                />
+              </div>
+            </div>
+
+            <h1
+              class="text-xl md:text-3xl font-bold text-emerald-500 underline text-center w-full"
+            >
+              Image Gallery
+            </h1>
+
+            <div class="flex items-center gap-2 w-full md:justify-end">
+              <!-- Type Filter -->
+              <select
+                (change)="onFilterType($event)"
+                class="text-sm border border-default-medium rounded-base px-3 py-2.5 bg-neutral-secondary-medium text-heading focus:ring-brand focus:border-brand dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200"
+              >
+                <option value="">All Types</option>
+                @for (type of typeOptions; track type) {
+                  <option [value]="type">{{ type }}</option>
+                }
+              </select>
+
+              @if (isInsert()) {
+                <button
+                  type="button"
+                  (click)="showList.set(false)"
+                  class="text-white bg-linear-to-r from-green-400 via-green-500 to-green-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer whitespace-nowrap"
+                >
+                  Add Image
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          @if (isLoading()) {
+            <p class="text-3xl font-bold text-center p-10 text-emerald-600">Loading ...</p>
+          }
+
+          <!-- Error State -->
+          @else if (hasError()) {
+            <p class="text-3xl font-bold text-center p-10 text-red-600">
+              There was an error loading data.
+            </p>
+          }
+
+          <!-- Empty State -->
+          @else if (filteredList().length === 0) {
+            <p class="text-3xl font-bold text-center p-10 text-orange-600">No images found.</p>
+          }
+
+          <!-- Image Grid -->
+          @else {
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4">
+              @for (item of filteredList(); track item?.id || $index) {
+                <div
+                  class="group relative bg-neutral-secondary-soft rounded-base border border-default overflow-hidden dark:bg-neutral-900 dark:border-neutral-700"
+                  [class.ring-2]="selected()?.id === item.id"
+                  [class.ring-emerald-500]="selected()?.id === item.id"
+                >
+                  <!-- Image -->
+                  <div class="relative aspect-square">
+                    @if (item.imageUrl) {
+                      <img
+                        [ngSrc]="item.imageUrl"
+                        fill
+                        ngSrcset="128w, 256w, 512w"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
+                        alt="{{ item.type }} image"
+                        class="object-cover"
+                        [priority]="$index < 6"
+                        [loaderParams]="{ w: 256 }"
+                      />
+                    } @else {
+                      <div class="w-full h-full flex items-center justify-center bg-neutral-200 dark:bg-neutral-800">
+                        <span class="text-neutral-400 text-xs">No Image</span>
+                      </div>
+                    }
+
+                    <!-- Hover Overlay with Actions -->
+                    @if (isEdit() || isDelete()) {
+                      <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        @if (isEdit()) {
+                          <button
+                            type="button"
+                            class="w-8 h-8 rounded-full bg-orange-400 hover:bg-orange-500 text-white flex items-center justify-center cursor-pointer"
+                            (click)="onUpdate(item)"
+                          >
+                            <fa-icon [icon]="faPencil" class="text-xs"></fa-icon>
+                          </button>
+                        }
+                        @if (isDelete()) {
+                          <button
+                            type="button"
+                            class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center cursor-pointer"
+                            (click)="onDelete(item.id!)"
+                          >
+                            <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Info -->
+                  <div class="p-2">
+                    <span class="inline-block text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
+                      {{ item.type }}
+                    </span>
+                    @if (item.description) {
+                      <p class="text-xs text-body mt-1 line-clamp-2">{{ item.description }}</p>
+                    }
+                    @if (item.postBy) {
+                      <p class="text-[10px] text-neutral-400 mt-1">by {{ item.postBy }}</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Add / Edit Form -->
+    <div class="max-w-2xl mx-auto relative mt-5 px-3">
+      <div class="bg-white rounded-lg shadow-md border border-neutral-200 transition-all dark:bg-neutral-950 dark:border-neutral-700">
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-neutral-800 dark:text-neutral-50">
+              {{ selected() ? 'Edit Image' : 'Add Image' }}
+            </h2>
+            <button
+              class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
+              (click)="onToggleList()"
+            >
+              <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
+          </div>
+
+          <form autocomplete="off" class="space-y-5" (submit)="onSubmit($event)">
+            <!-- Type Select -->
+            <div>
+              <label for="formType" class="block text-sm font-medium text-body mb-1">Type *</label>
+              <select
+                id="formType"
+                [(ngModel)]="formType"
+                name="formType"
+                class="block w-full px-3 py-2.5 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
+              >
+                <option value="" disabled>Select Type</option>
+                @for (type of typeOptions; track type) {
+                  <option [value]="type">{{ type }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="formDescription" class="block text-sm font-medium text-body mb-1">Description</label>
+              <input
+                type="text"
+                id="formDescription"
+                [(ngModel)]="formDescription"
+                name="formDescription"
+                placeholder="Optional description"
+                class="block w-full px-3 py-2.5 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
+              />
+            </div>
+
+            <!-- Image Upload -->
+            <div>
+              <label class="block text-sm font-medium text-body mb-1">Image *</label>
+              <input
+                #fileInput
+                type="file"
+                accept="image/*"
+                (change)="onFileSelect($event)"
+                class="block w-full text-sm text-body file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 dark:file:bg-emerald-900 dark:file:text-emerald-300 cursor-pointer"
+              />
+            </div>
+
+            <!-- Image Preview -->
+            @if (previewUrl()) {
+              <div class="relative w-48 h-48 rounded-base border border-default overflow-hidden">
+                <img [src]="previewUrl()" alt="Preview" class="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  (click)="removeImage()"
+                  class="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs cursor-pointer hover:bg-red-600"
+                >
+                  <fa-icon [icon]="faXmark"></fa-icon>
+                </button>
+              </div>
+            }
+
+            <!-- Submit Buttons -->
+            <div class="flex gap-2">
+              <button
+                type="submit"
+                [disabled]="isSubmitted()"
+                class="flex-1 text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {{ isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save' }}
+              </button>
+              <button
+                type="button"
+                (click)="onToggleList()"
+                class="text-neutral-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+} @else {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
+}
