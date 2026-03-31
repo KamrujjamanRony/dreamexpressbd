@@ -15,17 +15,18 @@ export class SGallery {
         return this.http.post<GalleryM>(this.apiUrl, model);
     }
 
-    search(type?: string, description?: string, postBy?: string): Observable<GalleryM[]> {
-        const reqBody: Record<string, any> = {
+    search(id?: string, type?: string, description?: string, postBy?: string): Observable<GalleryM[]> {
+        const reqBody = {
+            id: id || '',
             companyID: environment.companyCode,
+            type: type || '',
+            description: description || '',
+            postBy: postBy || '',
         };
-        if (type) reqBody['type'] = type;
-        if (description) reqBody['description'] = description;
-        if (postBy) reqBody['postBy'] = postBy;
 
         return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
-            map((data) => {
-                const list = Array.isArray(data) ? data : data?.$values || [];
+            map((res) => {
+                const list = Array.isArray(res) ? res : res?.data || res?.$values || [];
                 return list;
             })
         );

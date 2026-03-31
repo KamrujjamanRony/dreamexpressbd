@@ -20,8 +20,8 @@ export class SCategory {
   search(): Observable<CategoryM[]> {
     const reqBody = { companyID: environment.companyCode };
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
-      switchMap((data) => {
-        const list = Array.isArray(data) ? data : data?.$values || [];
+      switchMap((res) => {
+        const list = Array.isArray(res) ? res : res?.data || res?.$values || [];
         const categories: CategoryM[] = list.map(this.normalize);
         const hasGallery = categories.some(c => c.iGalleryId);
         if (!hasGallery) return of(categories);
