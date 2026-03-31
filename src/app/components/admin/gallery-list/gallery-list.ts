@@ -96,7 +96,7 @@ export class GalleryList {
         this.isLoading.set(true);
         this.hasError.set(false);
 
-        this.galleryService.search(this.filterType()).subscribe({
+        this.galleryService.search(undefined, this.filterType()).subscribe({
             next: (data) => {
                 this.items.set(data);
                 this.isLoading.set(false);
