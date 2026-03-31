@@ -5,11 +5,12 @@ import { environment } from '../environments/environment';
 import { Toast } from './utils/toast/toast';
 import { Confirm } from "./utils/confirm/confirm";
 import { SocialChat } from "./utils/social-chat/social-chat";
+import { CartDrawer } from "./utils/cart-drawer/cart-drawer";
 import { SSeo } from './services/s-seo';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Toast, Confirm, SocialChat],
+  imports: [RouterOutlet, Toast, Confirm, SocialChat, CartDrawer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
