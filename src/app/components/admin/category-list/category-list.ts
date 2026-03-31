@@ -4,12 +4,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { SCategory } from '../../../services/s-category';
+import { SGallery } from '../../../services/s-gallery';
 import { debounce, form, FormField, required, validate } from '@angular/forms/signals';
 import { environment } from '../../../../environments/environment';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CategoryM } from '../../../models/Category';
+import { GalleryM } from '../../../models/Gallery';
 
 @Component({
   selector: 'app-category-list',
@@ -24,12 +26,12 @@ export class CategoryList {
 
   /* ---------------- DI ---------------- */
   private categoryService = inject(SCategory);
+  private galleryService = inject(SGallery);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   imgURL = environment.ImageApi;
   emptyImg = environment.emptyImg;
@@ -37,8 +39,24 @@ export class CategoryList {
   /* ---------------- SIGNAL STATE ---------------- */
   items = signal<CategoryM[]>([]);
   searchQuery = signal('');
-  selectedFile = signal<File | null>(null);
-  previewUrl = signal<string | null>(null);
+
+  // Gallery picker
+  galleryImages = signal<GalleryM[]>([]);
+  isGalleryLoading = signal(false);
+  showGalleryPicker = signal(false);
+  gallerySearch = signal('');
+  selectedGalleryId = signal<string>('');
+  selectedGalleryUrl = signal<string>('');
+
+  filteredGalleryImages = computed(() => {
+    const query = this.gallerySearch().toLowerCase();
+    const images = this.galleryImages();
+    if (!query) return images;
+    return images.filter(img =>
+      img.description?.toLowerCase().includes(query) ||
+      img.type?.toLowerCase().includes(query)
+    );
+  });
 
   filteredList = computed(() => {
     const query = this.searchQuery().toLowerCase();
@@ -92,6 +110,7 @@ export class CategoryList {
   ngOnInit(): void {
     this.loadItems();
     this.loadPermissions();
+    this.loadGalleryImages();
   }
 
   /* ---------------- LOADERS ---------------- */
@@ -118,9 +137,60 @@ export class CategoryList {
     });
   }
 
+  loadGalleryImages() {
+    this.isGalleryLoading.set(true);
+    this.galleryService.search('Category').subscribe({
+      next: (data) => {
+        this.galleryImages.set(data);
+        this.preloadGalleryAssets(data);
+        this.isGalleryLoading.set(false);
+      },
+      error: () => {
+        this.isGalleryLoading.set(false);
+        console.error('Failed to load gallery images');
+      }
+    });
+  }
+
   /* ---------------- SEARCH ---------------- */
   onSearch(event: Event) {
     this.searchQuery.set((event.target as HTMLInputElement).value.trim());
+  }
+
+  /* ---------------- GALLERY PICKER ---------------- */
+  openGalleryPicker() {
+    if (!this.galleryImages().length && !this.isGalleryLoading()) {
+      this.loadGalleryImages();
+    }
+    this.showGalleryPicker.set(true);
+    this.gallerySearch.set('');
+  }
+
+  private preloadedImages: HTMLImageElement[] = [];
+
+  private preloadGalleryAssets(images: GalleryM[]) {
+    this.preloadedImages = [];
+    for (const image of images) {
+      if (!image?.imageUrl) {
+        continue;
+      }
+
+      const preloadImage = new Image();
+      preloadImage.decoding = 'sync';
+      preloadImage.src = this.imgURL + image.imageUrl;
+      this.preloadedImages.push(preloadImage);
+    }
+  }
+
+  selectGalleryImage(image: GalleryM) {
+    this.selectedGalleryId.set(image.id || '');
+    this.selectedGalleryUrl.set(image.imageUrl || '');
+    this.showGalleryPicker.set(false);
+  }
+
+  clearGalleryImage() {
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
   }
 
   /* ---------------- SUBMIT ---------------- */
@@ -128,7 +198,7 @@ export class CategoryList {
     event.preventDefault();
 
     if (!this.form().valid()) {
-      this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
+      this.toast.warning('Form is Invalid!');
       return;
     }
 
@@ -136,30 +206,27 @@ export class CategoryList {
 
     const formValue = this.form().value();
 
-    const formData = new FormData();
-    formData.append('CompanyID', formValue.companyID);
-    formData.append('ItemName', formValue.itemName);
-    formData.append('SLItem', formValue.slItem || '0');
-    formData.append('ImageUrl', this.selected()?.imageUrl || '');
-
-    if (this.selectedFile()) {
-      formData.append('ImageFile', this.selectedFile()!);
-    }
+    const body = {
+      companyID: +formValue.companyID,
+      itemName: formValue.itemName,
+      slItem: +formValue.slItem || 0,
+      iGalleryId: this.selectedGalleryId() || '',
+    };
 
     const request$ = this.selected()
-      ? this.categoryService.update(this.selected()!.id!, formData)
-      : this.categoryService.add(formData);
+      ? this.categoryService.update(this.selected()!.id!, body)
+      : this.categoryService.add(body);
 
     request$.subscribe({
       next: () => {
         this.loadItems();
         this.onToggleList();
-        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+        this.toast.success('Saved successfully!');
       },
       error: (error) => {
         this.isSubmitted.set(false);
         console.error('Error:', error);
-        this.toast.danger(error?.error || 'Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger(error?.error || 'Save unsuccessful!');
       }
     });
   }
@@ -176,30 +243,14 @@ export class CategoryList {
       companyID: item.companyID.toString(),
     }));
 
-    // Show existing image preview
-    if (item.imageUrl) {
-      this.previewUrl.set(this.imgURL + item.imageUrl);
+    // Set gallery image
+    if (item.iGalleryId) {
+      this.selectedGalleryId.set(item.iGalleryId);
+      this.selectedGalleryUrl.set(item.imageUrl || '');
     }
 
     this.form().reset();
     this.showList.set(false);
-  }
-
-  /* ---------------- IMAGE ---------------- */
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.selectedFile.set(file);
-      const reader = new FileReader();
-      reader.onload = () => this.previewUrl.set(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  }
-
-  clearFileInput() {
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
-    }
   }
 
   /* ---------------- DELETE ---------------- */
@@ -212,14 +263,13 @@ export class CategoryList {
     });
 
     if (ok) {
-      // Delete item
       this.categoryService.delete(id).subscribe({
         next: () => {
           this.items.update(list => list.filter(i => i.id !== id));
-          this.toast.success('item deleted successfully!', 'bottom-right', 5000);
+          this.toast.success('Item deleted successfully!');
         },
         error: (error) => {
-          this.toast.danger(error?.error || 'item deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger(error?.error || 'Item delete unsuccessful!');
           console.error('Error deleting item:', error);
         }
       });
@@ -235,10 +285,10 @@ export class CategoryList {
     });
 
     this.selected.set(null);
-    this.selectedFile.set(null);
-    this.previewUrl.set(null);
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
     this.isSubmitted.set(false);
-    this.clearFileInput();
+    this.showGalleryPicker.set(false);
     this.form().reset();
   }
 
