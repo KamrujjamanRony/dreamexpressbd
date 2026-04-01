@@ -86,7 +86,7 @@ export class Navbar implements OnDestroy {
       this.categories = data;
     });
 
-    this.productService.search().subscribe(data => {
+    this.productService.search(0, 0, '', 1).subscribe(data => {
       this.productList.set(data);
       this.cdr.detectChanges();
     });
@@ -132,7 +132,7 @@ export class Navbar implements OnDestroy {
             return of([]);
           }
           this.searchLoading.set(true);
-          return this.productService.search(0, term);
+          return this.productService.search(0, 0, term, null);
         })
       )
       .subscribe(results => {

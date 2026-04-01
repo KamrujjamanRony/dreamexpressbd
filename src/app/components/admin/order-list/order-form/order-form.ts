@@ -170,7 +170,7 @@ export class OrderForm implements OnChanges {
   /* ---------------- EFFECTS ---------------- */
   constructor() {
     // Load products
-    this.productService.search().subscribe(products => this.products.set(products));
+    this.productService.search(0, 0, '', 1).subscribe(products => this.products.set(products));
 
     // Load regions for division dropdown
     this.dataService.getRegions().subscribe(regions => this.regions.set(regions));

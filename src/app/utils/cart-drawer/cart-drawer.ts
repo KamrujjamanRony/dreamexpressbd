@@ -66,7 +66,7 @@ export class CartDrawer implements OnInit, OnDestroy {
 
   loadCart() {
     this.loading.set(true);
-    this.productService.search().subscribe(products => {
+    this.productService.search(0, 0, '', 1).subscribe(products => {
       if (this.isCustomer) {
         const customerId = this.cartService.getCustomerId();
         if (!customerId) { this.loading.set(false); return; }
@@ -141,7 +141,7 @@ export class CartDrawer implements OnInit, OnDestroy {
     } else {
       this.cartService.removeLocalProduct(item.productId, item.selectSize, item.selectColor);
       const local = this.cartService.getLocalCart();
-      this.productService.search().subscribe(products => {
+      this.productService.search(0, 0, '', 1).subscribe(products => {
         this.items.set(this.mergeCartAndProducts(local, products));
         this.calcSubtotal();
       });

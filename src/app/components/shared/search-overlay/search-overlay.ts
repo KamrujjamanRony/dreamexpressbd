@@ -52,7 +52,7 @@ export class SearchOverlay implements OnInit {
                     return of([]);
                 }
                 this.isLoading.set(true);
-                return this.productService.search(0, 0, term);
+                return this.productService.search(0, 0, term, null);
             }),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe(results => {

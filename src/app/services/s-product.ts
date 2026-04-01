@@ -35,7 +35,7 @@ export class SProduct {
     id = 0,
     categoryId: any = 0,
     search: string = '',
-    isActive: number | null = null,
+    isActive: number | null = 1,
     title: string = '',
     description: string = '',
     brand: string = '',

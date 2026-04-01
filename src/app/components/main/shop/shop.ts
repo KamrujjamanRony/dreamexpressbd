@@ -183,7 +183,7 @@ export class Shop {
   }
 
   loadProducts(search: string = '') {
-    this.productService.search(0, 0, search).subscribe(data => {
+    this.productService.search(0, 0, search, null).subscribe(data => {
       this.products.set(data);
       this.categories.set(this.groupProductsByProperty(data, 'categoryName'));
       this.brands.set(this.groupProductsByProperty(data, 'brand'));

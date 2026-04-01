@@ -76,7 +76,7 @@ export class Home {
   private loadData() {
     this.loading.set(true);
 
-    this.productService.search().subscribe({
+    this.productService.search(0, 0, '', 1).subscribe({
       next: (data) => {
         this.products.set(data);
         this.loading.set(false);

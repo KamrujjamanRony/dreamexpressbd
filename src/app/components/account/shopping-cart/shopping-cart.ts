@@ -59,7 +59,7 @@ export class ShoppingCart {
 
   loadCart() {
     this.loading.set(true);
-    this.productService.search().subscribe((productData) => {
+    this.productService.search(0, 0, '', 1).subscribe((productData) => {
       this.products.set(productData);
 
       if (this.isCustomer) {

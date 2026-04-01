@@ -127,7 +127,7 @@ export class Dashboard implements OnInit {
             error: () => this.isLoading.set(false)
         });
 
-        this.productService.search().subscribe({
+        this.productService.search(0, 0, '', 1).subscribe({
             next: (data) => this.totalProducts.set(data.length),
             error: () => { }
         });

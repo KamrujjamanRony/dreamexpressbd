@@ -55,7 +55,7 @@ export class Wishlist {
 
   loadWishlist() {
     this.loading.set(true);
-    this.productService.search().subscribe((productData) => {
+    this.productService.search(0, 0, '', null).subscribe((productData) => {
       this.products.set(productData);
 
       if (this.isCustomer) {
