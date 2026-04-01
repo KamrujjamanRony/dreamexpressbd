@@ -137,14 +137,9 @@
                         <div class="relative w-16 h-16">
                           @if (item.imageUrl) {
                             <img
-                              [ngSrc]="item.imageUrl"
-                              fill
-                              ngSrcset="64w, 128w, 256w"
-                              sizes="64px"
+                              [src]="item.resolvedImageUrl ? imgURL + item.resolvedImageUrl : emptyImg"
                               alt="Product Image"
-                              class="object-cover rounded"
-                              [priority]="$index < 2"
-                              [loaderParams]="{ w: 64 }"
+                              class="w-full h-full object-cover rounded"
                             />
                           } @else {
                             <div
@@ -158,7 +153,7 @@
                       <td class="px-6 py-4 font-medium max-w-xs">
                         <div class="truncate" [title]="item.title">{{ item.title }}</div>
                       </td>
-                      <td class="px-6 py-4">{{ getCategoryName(item.itemId) }}</td>
+                      <td class="px-6 py-4">{{ getCategoryName(item.categoryId) }}</td>
                       <td class="px-6 py-4">{{ item.brand || '-' }}</td>
                       <td class="px-6 py-4">{{ item.model || '-' }}</td>
                       <td class="px-6 py-4">
@@ -291,14 +286,13 @@
                 <div class="space-y-6">
                   <!-- Category and Brand Row -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Category (itemId) -->
+                    <!-- Category (categoryId) -->
                     <div>
-                      <!-- @let itemIdField = form.itemId(); -->
                       <div class="relative pb-2">
                         <select
                           autocomplete="off"
-                          [formField]="form.itemId"
-                          id="itemId"
+                          [formField]="form.categoryId"
+                          id="categoryId"
                           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
                         >
                           <option value="" disabled selected class="dark:bg-neutral-900">
@@ -311,7 +305,7 @@
                           }
                         </select>
                         <label
-                          for="itemId"
+                          for="categoryId"
                           class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
                           >Category *</label
                         >
@@ -566,65 +560,35 @@
               <!-- Tab 2: Images -->
               @if (activeTab() === 'images') {
                 <div class="space-y-6">
-                  <!-- Main Image -->
+                  <!-- Main Image via Gallery Picker -->
+                  <app-gallery-picker
+                    type="Product"
+                    label="Main Image"
+                    [required]="!selected()"
+                    [selectedId]="selectedGalleryId()"
+                    [selectedUrl]="selectedGalleryUrl()"
+                    (imagePicked)="onMainImagePicked($event)"
+                    (imageCleared)="clearMainImage()"
+                  />
+
+                  <!-- Additional Images -->
                   <div class="pb-2">
-                    <label class="block text-sm font-medium text-heading mb-2" for="imageUrl">
-                      Main Image {{ !selected() ? '*' : '' }}
-                    </label>
+                    <label class="block text-sm font-medium text-heading mb-3">Additional Images</label>
 
-                    <!-- Main Image Preview -->
-                    @if (previewUrl()) {
-                      <div class="mb-3 relative inline-block">
-                        <img
-                          [src]="previewUrl()"
-                          alt="Preview"
-                          class="h-32 w-32 object-cover rounded border"
-                        />
-                        <button
-                          type="button"
-                          (click)="removeImage()"
-                          class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                          title="Remove image"
-                        >
-                          <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
-                        </button>
-                      </div>
-                    }
-
-                    <input
-                      #fileInput
-                      id="imageUrl"
-                      type="file"
-                      accept="image/*"
-                      (change)="onFileSelect($event)"
-                      class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-                    />
-                    <p class="mt-1 text-xs text-neutral-500">
-                      SVG, PNG, JPG or WEBP (MAX. 5MB, 1280x720px)
-                    </p>
-                  </div>
-
-                  <!-- Multiple Images -->
-                  <div class="pb-2">
-                    <label class="block text-sm font-medium text-heading mb-2">
-                      Additional Images
-                    </label>
-
-                    <!-- Multiple Images Preview -->
-                    @if (multiplePreviews().length > 0) {
-                      <div class="mb-3 flex flex-wrap gap-3">
-                        @for (preview of multiplePreviews(); track $index) {
+                    @if (productImages().length > 0) {
+                      <div class="flex flex-wrap gap-3 mb-4">
+                        @for (img of productImages(); track $index; let i = $index) {
                           <div class="relative">
                             <img
-                              [src]="preview.url"
-                              alt="Preview {{ $index + 1 }}"
-                              class="h-24 w-24 object-cover rounded border"
+                              [src]="imgURL + img.url"
+                              alt="Image {{ i + 1 }}"
+                              class="h-24 w-24 object-contain rounded border bg-neutral-100 dark:bg-neutral-800"
                             />
                             <button
                               type="button"
-                              (click)="removeMultipleImage($index)"
+                              (click)="removeProductImage(i)"
                               class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                              title="Remove image"
+                              title="Remove"
                             >
                               <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
                             </button>
@@ -633,16 +597,14 @@
                       </div>
                     }
 
-                    <input
-                      #multipleFileInput
-                      id="multipleImages"
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      (change)="onMultipleFileSelect($event)"
-                      class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                    <app-gallery-picker
+                      type="Product"
+                      label="Add Another Image"
+                      [selectedId]="addImageGalleryId()"
+                      [selectedUrl]="addImageGalleryUrl()"
+                      (imagePicked)="onAddProductImage($event)"
+                      (imageCleared)="clearAddImagePicker()"
                     />
-                    <p class="mt-1 text-xs text-neutral-500">You can select multiple images</p>
                   </div>
 
                   <!-- Catalog URL -->
@@ -669,136 +631,60 @@
                 <div class="space-y-6">
                   <div class="flex justify-between items-center">
                     <h3 class="text-lg font-medium">Product Colors</h3>
-                    @if (selected()) {
-                      <button
-                        type="button"
-                        (click)="addColor()"
-                        class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition-colors"
-                      >
-                        + Add Color
-                      </button>
-                    }
+                    <button
+                      type="button"
+                      (click)="addColor()"
+                      class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-1"
+                    >
+                      <fa-icon [icon]="faPlus"></fa-icon> Add Color
+                    </button>
                   </div>
 
-                  @if (!selected()) {
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-700">
-                      <p class="text-sm">
-                        Please save the product first to add colors. Colors can be managed when
-                        editing the product.
-                      </p>
-                    </div>
-                  } @else if (isLoadingColors()) {
-                    <div class="text-center py-8">
-                      <div
-                        class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"
-                      ></div>
-                      <p class="mt-2 text-neutral-600">Loading colors...</p>
-                    </div>
-                  } @else {
-                    <!-- Colors List -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      @for (color of colorsList(); track $index; let i = $index) {
-                        <div class="border rounded-lg p-4 bg-neutral-50 dark:bg-neutral-800">
-                          <div class="flex justify-between items-start mb-3">
-                            <h4 class="font-medium">Color #{{ i + 1 }}</h4>
-                            <button
-                              type="button"
-                              (click)="removeColor(i)"
-                              class="text-red-500 hover:text-red-700"
-                            >
-                              <fa-icon [icon]="faTrash"></fa-icon>
-                            </button>
-                          </div>
-
-                          <div class="space-y-4">
-                            <!-- Color Name -->
-                            <div>
-                              <label class="block text-sm font-medium mb-1"> Color Name </label>
-                              <input
-                                autocomplete="off"
-                                type="text"
-                                [(ngModel)]="color.colorName"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="w-full px-3 py-2 border border-neutral-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600"
-                                placeholder="e.g., Red, Blue, Black"
-                                required
-                              />
-                            </div>
-
-                            <!-- Color Image Selection -->
-                            <div>
-                              <label class="block text-sm font-medium mb-1"> Color Image </label>
-
-                              <!-- Tabs for image selection method -->
-                              <div class="flex border-b border-neutral-200 mb-3">
-                                <h1 class="text-sm">Choose from Product Images</h1>
-                              </div>
-
-                              <!-- Current Image Preview -->
-                              @if (color.image) {
-                                <div class="mb-2 relative inline-block">
-                                  <img
-                                    [src]="color.image"
-                                    alt="Color"
-                                    class="h-44 w-44 object-cover rounded border"
-                                  />
-                                  <button
-                                    type="button"
-                                    (click)="removeColorImage(i)"
-                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full pb-1 px-1.5 hover:bg-red-600 transition-colors"
-                                    title="Remove image"
-                                  >
-                                    <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
-                                  </button>
-                                </div>
-                              } @else {
-                                <!-- Choose from Product Images -->
-                                <div>
-                                  @if (multiplePreviews().length > 0) {
-                                    <div class="flex gap-2 mt-2">
-                                      @for (
-                                        preview of multiplePreviews();
-                                        track $index;
-                                        let imgIndex = $index
-                                      ) {
-                                        <div
-                                          class="relative cursor-pointer border-2 rounded p-1 hover:border-emerald-500 transition-colors"
-                                          [class.border-emerald-500]="
-                                            selectedColorImageIndex() === imgIndex
-                                          "
-                                          (click)="selectColorImageFromProduct(i, imgIndex)"
-                                        >
-                                          <img
-                                            [src]="preview.url"
-                                            alt="Product image"
-                                            class="h-12 w-12 object-cover rounded"
-                                          />
-                                        </div>
-                                      }
-                                    </div>
-                                    <p class="text-xs text-neutral-500 mt-2">
-                                      Click on an image to use it for this color
-                                    </p>
-                                  } @else {
-                                    <p class="text-sm text-neutral-500">
-                                      No product images available. Please upload images in the
-                                      Images tab first.
-                                    </p>
-                                  }
-                                </div>
-                              }
-                            </div>
-                          </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @for (color of colorsList(); track $index; let i = $index) {
+                      <div class="border rounded-lg p-4 bg-neutral-50 dark:bg-neutral-800">
+                        <div class="flex justify-between items-center mb-3">
+                          <h4 class="font-medium">Color #{{ i + 1 }}</h4>
+                          <button
+                            type="button"
+                            (click)="removeColor(i)"
+                            class="text-red-500 hover:text-red-700"
+                          >
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                          </button>
                         </div>
-                      }
 
-                      @if (colorsList().length === 0) {
-                        <p class="text-center text-neutral-500 py-4">
-                          No colors added yet. Click "Add Color" to start adding colors.
-                        </p>
-                      }
-                    </div>
-                  }
+                        <div class="space-y-3">
+                          <div>
+                            <label class="block text-sm font-medium mb-1">Color Name</label>
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              [(ngModel)]="color.cn"
+                              [ngModelOptions]="{ standalone: true }"
+                              class="w-full px-3 py-2 border border-neutral-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600"
+                              placeholder="e.g., Red, Blue, Black"
+                            />
+                          </div>
+
+                          <app-gallery-picker
+                            type="Product"
+                            label="Color Swatch Image"
+                            [selectedId]="color.id"
+                            [selectedUrl]="color.resolvedUrl || ''"
+                            (imagePicked)="onColorImagePicked(i, $event)"
+                            (imageCleared)="clearColorImage(i)"
+                          />
+                        </div>
+                      </div>
+                    }
+
+                    @if (colorsList().length === 0) {
+                      <p class="text-center text-neutral-500 py-4 col-span-2">
+                        No colors added yet. Click "Add Color" to start.
+                      </p>
+                    }
+                  </div>
                 </div>
               }
 
@@ -861,9 +747,9 @@
                                 >
                                   <!-- Product Image -->
                                   <div class="w-10 h-10 mr-3 shrink-0">
-                                    @if (product.imageUrl) {
+                                    @if (product.resolvedImageUrl) {
                                       <img
-                                        [src]="imgURL + product.imageUrl"
+                                        [src]="imgURL + product.resolvedImageUrl"
                                         [alt]="product.title"
                                         class="w-10 h-10 object-cover rounded"
                                         loading="lazy"

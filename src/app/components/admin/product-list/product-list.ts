@@ -1,14 +1,14 @@
 // product-list.ts
-import { CommonModule, IMAGE_LOADER, ImageLoaderConfig, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faXmark, faMagnifyingGlass, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
-import { ProductM, ProductColorsM } from '../../../models/Products';
+import { ProductColorM, ProductM } from '../../../models/Products';
 import { BrandM } from '../../../models/Brand';
 import { CategoryM } from '../../../models/Category';
 import { SProduct } from '../../../services/s-product';
@@ -16,37 +16,22 @@ import { SBrand } from '../../../services/s-brand';
 import { SCategory } from '../../../services/s-category';
 import { SAuth } from '../../../services/s-auth';
 import { environment } from '../../../../environments/environment';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { QuillEditorComponent } from 'ngx-quill';
-
-interface ColorWithFile extends ProductColorsM {
-  file?: File;
-}
-
-interface ImagePreview {
-  file?: File;
-  url: string;
-}
+import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FontAwesomeModule, FormField, NgOptimizedImage, FormsModule, QuillEditorComponent],
+  imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent, GalleryPicker],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css'],
-  providers: [
-    {
-      provide: IMAGE_LOADER,
-      useValue: (config: ImageLoaderConfig) => {
-        return `${environment.ImageApi + config.src}?w=${config.width}`;
-      },
-    },
-  ],
 })
 export class ProductList {
   faPencil = faPencil;
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
   faTrash = faTrash;
+  faPlus = faPlus;
 
   /* ---------------- DI ---------------- */
   private productService = inject(SProduct);
@@ -57,8 +42,6 @@ export class ProductList {
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('multipleFileInput') multipleFileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('categoryFilter') categoryFilter!: ElementRef<HTMLSelectElement>;
   @ViewChild('brandFilter') brandFilter!: ElementRef<HTMLSelectElement>;
@@ -95,7 +78,7 @@ export class ProductList {
           product.model?.toLowerCase().includes(query);
 
         // Category filter
-        const matchesCategory = !categoryId || product.itemId === categoryId;
+        const matchesCategory = !categoryId || product.categoryId === categoryId;
 
         // Brand filter
         const matchesBrand = !brand || product.brand?.toLowerCase().includes(brand);
@@ -113,22 +96,22 @@ export class ProductList {
   });
 
   selected = signal<ProductM | null>(null);
-  selectedFile = signal<File | null>(null);
-  multipleFiles = signal<File[]>([]);
-  previewUrl = signal<string | null>(null);
-  multiplePreviews = signal<ImagePreview[]>([]);
 
-  colorsList = signal<ProductColorsM[]>([]);
-  colorsFiles = signal<{ index: number, file: File }[]>([]);
+  /* Gallery — main image */
+  selectedGalleryId = signal('');
+  selectedGalleryUrl = signal('');
 
-  selectedColorImageIndex = signal<number | null>(null);
+  /* Gallery — additional images */
+  productImages = signal<{ id: string; url: string }[]>([]);
+  addImageGalleryId = signal('');
+  addImageGalleryUrl = signal('');
+
+  colorsList = signal<ProductColorM[]>([]);
+
+  relatedProductsList = signal<number[]>([]);
   relatedSearchQuery = signal('');
   filteredRelatedProducts = signal<ProductM[]>([]);
   isFilteringRelated = signal(false);
-  isLoadingColors = signal(false);
-  colorImageReferences = signal<{ colorIndex: number, imagePath: string }[]>([]);
-
-  relatedProductsList = signal<number[]>([]);
 
   isLoading = signal(false);
   hasError = signal(false);
@@ -168,11 +151,12 @@ export class ProductList {
     companyID: environment.companyCode,
     title: '',
     description: '',
-    itemId: '0',
+    categoryId: '0',
     brand: '',
     model: '',
     origin: '',
     sku: '',
+    sl: 0,
     sizes: '',
     regularPrice: 0,
     offerPrice: 0,
@@ -183,8 +167,6 @@ export class ProductList {
     facebookPost: '',
     others: '',
     isActive: true,
-    imageUrl: '',
-    images: [] as any[],
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
@@ -234,30 +216,6 @@ export class ProductList {
     this.categoryService.search().subscribe({
       next: (data) => this.categories.set(data),
       error: (error) => console.error('Error loading categories:', error)
-    });
-  }
-
-  // Add this method to load colors when editing a product
-  loadProductColors(productId: number) {
-    this.isLoadingColors.set(true);
-
-    this.productService.getColor(productId).subscribe({
-      next: (colors) => {
-        // Map the colors and ensure images are properly formatted
-        const colorsWithUrls = colors.map(color => ({
-          ...color,
-          // If image is a path, prepend the image URL
-          image: color.image ? (color.image.startsWith('http') ? color.image : `${this.imgURL}${color.image}`) : ''
-        }));
-
-        this.colorsList.set(colorsWithUrls);
-        this.isLoadingColors.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading colors:', error);
-        this.toast.danger('Failed to load product colors', 'bottom-right', 3000);
-        this.isLoadingColors.set(false);
-      }
     });
   }
 
@@ -317,187 +275,56 @@ export class ProductList {
     return this.relatedProductsList().includes(productId);
   }
 
-  /* ---------------- IMAGE HANDLERS ---------------- */
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-
-      if (!this.validateImageFile(file)) return;
-
-      this.selectedFile.set(file);
-
-      const reader = new FileReader();
-      reader.onload = () => this.previewUrl.set(reader.result as string);
-      reader.readAsDataURL(file);
-    }
+  /* ---------------- GALLERY HANDLERS ---------------- */
+  onMainImagePicked(event: { id: string; imageUrl: string }) {
+    this.selectedGalleryId.set(event.id);
+    this.selectedGalleryUrl.set(event.imageUrl);
   }
 
-  onMultipleFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const files = Array.from(input.files);
-      const validFiles: File[] = [];
-
-      for (const file of files) {
-        if (this.validateImageFile(file, false)) {
-          validFiles.push(file);
-        }
-      }
-
-      if (validFiles.length === 0) return;
-
-      // Create previews
-      validFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.multiplePreviews.update(prev => [
-            ...prev,
-            { file, url: e.target?.result as string }
-          ]);
-        };
-        reader.readAsDataURL(file);
-      });
-
-      this.multipleFiles.update(prev => [...prev, ...validFiles]);
-
-      // Clear input
-      input.value = '';
-    }
+  clearMainImage() {
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
   }
 
-  onColorImageSelect(event: Event, index: number) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-
-      if (!this.validateImageFile(file)) return;
-
-      // Store file for later upload
-      this.colorsFiles.update(prev => {
-        const filtered = prev.filter(f => f.index !== index);
-        return [...filtered, { index, file }];
-      });
-
-      // Show preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.colorsList.update(colors => {
-          const updated = [...colors];
-          updated[index] = {
-            ...updated[index],
-            image: e.target?.result as string
-          };
-          return updated;
-        });
-      };
-      reader.readAsDataURL(file);
-
-      // Clear input
-      input.value = '';
-    }
+  onAddProductImage(event: { id: string; imageUrl: string }) {
+    this.productImages.update(imgs => [...imgs, { id: event.id, url: event.imageUrl }]);
+    // Reset the add-image picker so it can pick another
+    this.addImageGalleryId.set('');
+    this.addImageGalleryUrl.set('');
   }
 
-  private validateImageFile(file: File, showToast = true): boolean {
-    if (!file.type.startsWith('image/')) {
-      if (showToast) this.toast.warning('Please select an image file', 'bottom-right', 5000);
-      return false;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      if (showToast) this.toast.warning('Image size should be less than 5MB', 'bottom-right', 5000);
-      return false;
-    }
-
-    return true;
+  clearAddImagePicker() {
+    this.addImageGalleryId.set('');
+    this.addImageGalleryUrl.set('');
   }
 
-  clearFileInput() {
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
-    }
-    this.selectedFile.set(null);
+  removeProductImage(index: number) {
+    this.productImages.update(imgs => imgs.filter((_, i) => i !== index));
   }
 
-  clearMultipleFileInput() {
-    if (this.multipleFileInput) {
-      this.multipleFileInput.nativeElement.value = '';
-    }
-  }
-
-  removeImage() {
-    this.previewUrl.set(null);
-    this.selectedFile.set(null);
-    this.clearFileInput();
-  }
-
-  removeMultipleImage(index: number) {
-    this.multiplePreviews.update(prev => prev.filter((_, i) => i !== index));
-    this.multipleFiles.update(prev => prev.filter((_, i) => i !== index));
-    this.clearMultipleFileInput();
-  }
-
-  removeColorImage(index: number) {
+  onColorImagePicked(index: number, event: { id: string; imageUrl: string }) {
     this.colorsList.update(colors => {
       const updated = [...colors];
-      updated[index] = {
-        ...updated[index],
-        image: ''
-      };
+      updated[index] = { ...updated[index], id: event.id, resolvedUrl: event.imageUrl };
       return updated;
     });
+  }
 
-    // Remove any references
-    this.colorImageReferences.update(refs => refs.filter(r => r.colorIndex !== index));
-    this.selectedColorImageIndex.set(null);
+  clearColorImage(index: number) {
+    this.colorsList.update(colors => {
+      const updated = [...colors];
+      updated[index] = { ...updated[index], id: '', resolvedUrl: '' };
+      return updated;
+    });
   }
 
   /* ---------------- COLORS MANAGEMENT ---------------- */
-  selectColorImageFromProduct(colorIndex: number, imageIndex: number) {
-    const preview = this.multiplePreviews()[imageIndex];
-    if (preview) {
-      this.colorsList.update(colors => {
-        const updated = [...colors];
-        updated[colorIndex] = {
-          ...updated[colorIndex],
-          image: preview.url
-        };
-        return updated;
-      });
-
-      // Store reference to the original product image if it's an existing image
-      if (!preview.file && this.selected()) {
-        // This is an existing product image from the server
-        const productImage = this.selected()?.images?.[imageIndex];
-        if (productImage) {
-          // Store the image path for later submission
-          this.colorImageReferences.update(refs => {
-            const filtered = refs.filter(r => r.colorIndex !== colorIndex);
-            return [...filtered, { colorIndex, imagePath: productImage }];
-          });
-        }
-      } else if (preview.file) {
-        // This is a newly uploaded image - will be handled by the main product upload
-        // For now, we'll just use the data URL as preview
-      }
-
-      this.selectedColorImageIndex.set(imageIndex);
-    }
-  }
-
   addColor() {
-    this.colorsList.update(prev => [...prev, { colorName: '', image: '' }]);
+    this.colorsList.update(prev => [...prev, { cn: '', id: '', resolvedUrl: '' }]);
   }
 
   removeColor(index: number) {
     this.colorsList.update(prev => prev.filter((_, i) => i !== index));
-    this.colorsFiles.update(prev => prev.filter(f => f.index !== index).map(f => ({
-      ...f,
-      index: f.index > index ? f.index - 1 : f.index
-    })));
   }
 
   /* ---------------- RELATED PRODUCTS ---------------- */
@@ -549,8 +376,6 @@ export class ProductList {
       additionalInformation: this.editorAdditionalInfo,
     }));
 
-    console.log('Form Value:', this.form().value());
-
     if (!this.form().valid()) {
       this.toast.warning('Please fill all required fields!', 'bottom-right', 5000);
       return;
@@ -558,8 +383,7 @@ export class ProductList {
 
     const formValue = this.form().value();
 
-    // Validate required fields
-    if (!formValue.itemId) {
+    if (!formValue.categoryId || formValue.categoryId === '0') {
       this.toast.warning('Please select a category!', 'bottom-right', 5000);
       this.activeTab.set('basic');
       return;
@@ -583,8 +407,7 @@ export class ProductList {
       return;
     }
 
-    // Check if main image is selected for new items
-    if (!this.selected() && !this.selectedFile()) {
+    if (!this.selected() && !this.selectedGalleryId()) {
       this.toast.warning('Please select a main image!', 'bottom-right', 5000);
       this.activeTab.set('images');
       return;
@@ -592,91 +415,46 @@ export class ProductList {
 
     this.isSubmitted.set(true);
 
-    const formData = new FormData();
-    console.log("form values:", formValue);
-
-
-    // Append all basic fields
-    Object.entries(formValue).forEach(([key, value]) => {
-      // itemId should be sent as numberic value
-      if (key === 'itemId') {
-        value = Number(value);
-      }
-      // images array should be sent key value[0], key value[1]... and so on
-      if (key === 'images') {
-        if (Array.isArray(value)) {
-          value.forEach((img: any) => {
-            formData.append(`images`, img);
-          });
-        }
-        return;
-
-      }
-      if (value !== null && value !== undefined && value !== '') {
-        formData.append(key, String(value));
-      }
-    });
-
-    // first remove then Append isActive as numeric value (1 or 0)
-    formData.delete('colors');
-    formData.delete('productColors');
-    formData.delete('isActive');
-    formData.append('isActive', formValue.isActive ? '1' : '0');
-
-    // Append postBy from logged-in admin
     const adminUser = this.auth.getUser();
-    if (adminUser?.username) {
-      formData.append('PostBy', adminUser.username);
-    }
-
-    // Append main image
-    if (this.selectedFile()) {
-      formData.delete('ImageFile');
-      formData.append('ImageFile', this.selectedFile() as File);
-    }
-
-    // Append multiple images
-    this.multipleFiles().forEach((file) => {
-      formData.append('ImageFiles', file);
-    });
-
-    // Append related products
-    if (this.relatedProductsList().length > 0) {
-      console.log(this.relatedProductsList());
-      this.relatedProductsList().forEach((id: any) => {
-        formData.append(`relatedProducts`, id);
-      });
-    }
+    const body = {
+      companyID: environment.companyCode,
+      title: formValue.title,
+      postBy: adminUser?.username || '',
+      description: this.editorDescription,
+      categoryId: Number(formValue.categoryId),
+      brand: formValue.brand,
+      model: formValue.model,
+      origin: formValue.origin,
+      additionalInformation: this.editorAdditionalInfo,
+      specialFeature: this.editorSpecialFeature,
+      catalogURL: formValue.catalogURL,
+      sl: formValue.sl || 0,
+      sku: formValue.sku,
+      sizes: formValue.sizes,
+      others: formValue.others,
+      regularPrice: formValue.regularPrice,
+      offerPrice: formValue.offerPrice,
+      youtubeLink: formValue.youtubeLink,
+      facebookPost: formValue.facebookPost,
+      isActive: formValue.isActive ? 1 : 0,
+      imageUrl: this.selectedGalleryId(),
+      images: this.productImages().map(img => img.id),
+      productColors: this.colorsList()
+        .filter(c => c.cn)
+        .map(c => ({ cn: c.cn, id: c.id })),
+      relatedProducts: this.relatedProductsList(),
+    };
 
     const request$ = this.selected()
-      ? this.productService.update(this.selected()!.id, formData)
-      : this.productService.add(formData);
+      ? this.productService.update(this.selected()!.id, body)
+      : this.productService.add(body);
 
     request$.subscribe({
       next: () => {
-        // After product is saved, save colors if any      
-        if (this.selected()) {
-          this.saveColors(this.selected()!.id).subscribe({
-            next: () => {
-              this.loadProducts();
-              this.onToggleList();
-              this.toast.success('Product and colors saved successfully!', 'bottom-right', 5000);
-              this.isSubmitted.set(false);
-            },
-            error: (colorError) => {
-              console.error('Error saving colors:', colorError);
-              this.toast.success('Product saved but colors failed to save', 'bottom-right', 5000);
-              this.loadProducts();
-              this.onToggleList();
-              this.isSubmitted.set(false);
-            }
-          });
-        } else {
-          this.loadProducts();
-          this.onToggleList();
-          this.toast.success('Product saved successfully!', 'bottom-right', 5000);
-          this.isSubmitted.set(false);
-        }
+        this.loadProducts();
+        this.onToggleList();
+        this.toast.success('Product saved successfully!', 'bottom-right', 5000);
+        this.isSubmitted.set(false);
       },
       error: (error) => {
         this.isSubmitted.set(false);
@@ -698,11 +476,12 @@ export class ProductList {
       companyID: environment.companyCode,
       title: product.title,
       description: product.description || '',
-      itemId: String(product.itemId || '0'),
+      categoryId: String(product.categoryId || '0'),
       brand: product.brand || '',
       model: product.model || '',
       origin: product.origin || '',
       sku: product.sku || '',
+      sl: product.sl || 0,
       sizes: product.sizes || '',
       regularPrice: product.regularPrice || 0,
       offerPrice: product.offerPrice || 0,
@@ -713,8 +492,6 @@ export class ProductList {
       facebookPost: product.facebookPost || '',
       others: product.others || '',
       isActive: product.isActive ?? true,
-      imageUrl: product.imageUrl || '',
-      images: product.images || [],
     });
 
     // Sync editor properties
@@ -729,109 +506,39 @@ export class ProductList {
 
     // Set related products
     if (product.relatedProducts) {
-
       this.relatedProductsList.set(product.relatedProducts);
     }
 
-    // Set colors
+    // Set main image
+    this.selectedGalleryId.set(product.imageUrl || '');
+    this.selectedGalleryUrl.set(product.resolvedImageUrl || '');
 
-
-    // Load colors from API
-    this.loadProductColors(product.id);
-
-    // Set main image preview
-    if (product.imageUrl) {
-      this.previewUrl.set(
-        this.imgURL ? `${this.imgURL}${product.imageUrl}` : product.imageUrl
-      );
-    } else {
-      this.previewUrl.set(null);
-    }
-
-    // Set multiple images preview
-    if (product.images && product.images.length > 0) {
-      const previews = product.images.map(img => ({
-        file: undefined,
-        url: this.imgURL ? `${this.imgURL}${img}` : img
+    // Set additional images
+    if (product.images?.length) {
+      const imgs = product.images.map((id, i) => ({
+        id,
+        url: product.resolvedImages?.[i] || ''
       }));
-      this.multiplePreviews.set(previews);
+      this.productImages.set(imgs);
     } else {
-      this.multiplePreviews.set([]);
+      this.productImages.set([]);
     }
 
-    this.selectedFile.set(null);
-    this.multipleFiles.set([]);
-    this.colorsFiles.set([]);
-    this.colorImageReferences.set([]);
-    this.clearFileInput();
-    this.clearMultipleFileInput();
+    // Set colors
+    if (product.productColors?.length) {
+      this.colorsList.set(product.productColors.map(c => ({
+        cn: c.cn,
+        id: c.id,
+        resolvedUrl: c.resolvedUrl || ''
+      })));
+    } else {
+      this.colorsList.set([]);
+    }
+
+    this.addImageGalleryId.set('');
+    this.addImageGalleryUrl.set('');
     this.activeTab.set('basic');
     this.showList.set(false);
-  }
-
-  // Add method to save colors separately
-  saveColors(productId: number): Observable<any> {
-    // Prepare colors data according to API format
-    const colorsData = this.colorsList().map((color, index) => {
-      // Check if this color uses an existing product image
-      const imageRef = this.colorImageReferences().find(r => r.colorIndex === index);
-
-      if (imageRef) {
-        // Use existing image path
-        return {
-          colorName: color.colorName || '',
-          image: imageRef.imagePath
-        };
-      } else if (color.image && !color.image.startsWith('data:')) {
-        // This is an existing color with a server path
-        // Extract just the filename/path without the base URL
-        let imagePath = color.image;
-
-        // Remove base URL if present
-        if (this.imgURL && color.image.startsWith(this.imgURL)) {
-          imagePath = color.image.replace(this.imgURL, '');
-        }
-
-        // Remove any leading slashes
-        imagePath = imagePath.replace(/^\/+/, '');
-
-        return {
-          colorName: color.colorName || '',
-          image: imagePath
-        };
-      } else if (color.image && color.image.startsWith('data:')) {
-        // This is a new image with data URL - we need to upload it first
-        // For now, return empty string (will need separate file upload)
-        return {
-          colorName: color.colorName || '',
-          image: '' // Empty string for new images
-        };
-      } else {
-        // Color without image
-        return {
-          colorName: color.colorName || '',
-          image: ''
-        };
-      }
-    });
-
-    // Check if colors already exist for this product
-    return this.productService.getColor(productId).pipe(
-      switchMap(existingColors => {
-        if (existingColors && existingColors.length > 0) {
-          // Update existing colors
-          return this.productService.updateColor(productId, colorsData);
-        } else {
-          // Add new colors
-          return this.productService.addColor(productId, colorsData);
-        }
-      }),
-      catchError(error => {
-        console.error('Error saving colors:', error);
-        // If getColor fails (maybe 404), try addColor
-        return this.productService.addColor(productId, colorsData);
-      })
-    );
   }
 
   /* ---------------- DELETE ---------------- */
@@ -867,11 +574,12 @@ export class ProductList {
       companyID: environment.companyCode,
       title: '',
       description: '',
-      itemId: '0',
+      categoryId: '0',
       brand: '',
       model: '',
       origin: '',
       sku: '',
+      sl: 0,
       sizes: '',
       regularPrice: 0,
       offerPrice: 0,
@@ -882,25 +590,20 @@ export class ProductList {
       facebookPost: '',
       others: '',
       isActive: true,
-      imageUrl: '',
-      images: [],
     });
 
     this.selected.set(null);
-    this.selectedFile.set(null);
-    this.multipleFiles.set([]);
-    this.previewUrl.set(null);
-    this.multiplePreviews.set([]);
+    this.selectedGalleryId.set('');
+    this.selectedGalleryUrl.set('');
+    this.productImages.set([]);
+    this.addImageGalleryId.set('');
+    this.addImageGalleryUrl.set('');
     this.colorsList.set([]);
-    this.colorsFiles.set([]);
     this.relatedProductsList.set([]);
     this.isSubmitted.set(false);
     this.activeTab.set('basic');
-
-    this.selectedColorImageIndex.set(null);
     this.relatedSearchQuery.set('');
     this.filteredRelatedProducts.set([]);
-    this.colorImageReferences.set([]);
 
     // Reset editor values
     this.editorDescription = '';
@@ -908,8 +611,6 @@ export class ProductList {
     this.editorAdditionalInfo = '';
 
     this.form().reset();
-    this.clearFileInput();
-    this.clearMultipleFileInput();
   }
 
   onToggleList() {
