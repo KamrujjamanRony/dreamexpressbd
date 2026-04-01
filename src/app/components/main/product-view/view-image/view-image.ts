@@ -76,6 +76,15 @@ export class ViewImage {
     return this.toDisplayUrl(color?.resolvedUrl || '');
   }
 
+  get catalogLink(): string {
+    const raw = (this.product()?.catalogURL || '').trim();
+    if (!raw) return '';
+    if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      return raw;
+    }
+    return `https://${raw}`;
+  }
+
   /** Parse sizes from comma-separated string or array */
   get sizeOptions(): string[] {
     if (!this.product()?.sizes) return [];

@@ -24,22 +24,14 @@
   <section class="blog-view-shell relative overflow-hidden">
     <div class="blog-view-noise"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-6 relative z-10">
       <a routerLink="/blogs" class="back-link reveal" [class.ready]="ready()">
         <i class="fas fa-arrow-left"></i>
         Back to articles
       </a>
 
       <article class="story-hero reveal" [class.ready]="ready()">
-        <div class="story-hero-media story-hero-media--top">
-          @if (heroImageUrl()) {
-            <img [src]="imgBase + heroImageUrl()" [alt]="blog()?.heading || 'Blog image'" class="story-hero-image" />
-          } @else {
-            <div class="story-fallback">
-              <i class="fas fa-book-open-reader text-5xl"></i>
-            </div>
-          }
-        </div>
+        
 
         <div class="story-hero-copy">
           <h1 class="story-title">{{ blog()?.heading }}</h1>
@@ -55,6 +47,16 @@
                 allowfullscreen
                 class="story-inline-video"
               ></iframe>
+            </div>
+          }
+        </div>
+
+        <div class="story-hero-media story-hero-media--top">
+          @if (heroImageUrl()) {
+            <img [src]="imgBase + heroImageUrl()" [alt]="blog()?.heading || 'Blog image'" class="story-hero-image" />
+          } @else {
+            <div class="story-fallback">
+              <i class="fas fa-book-open-reader text-5xl"></i>
             </div>
           }
         </div>

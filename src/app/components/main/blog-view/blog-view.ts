@@ -120,21 +120,47 @@ export class BlogView {
     }
 
     private extractYouTubeId(link: string): string | null {
-        if (!link) {
+        const input = (link || '').trim();
+        if (!input) {
             return null;
         }
 
+        // Support plain YouTube video IDs pasted directly.
+        if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+            return input;
+        }
+
+        const normalized = /^https?:\/\//i.test(input) ? input : `https://${input}`;
+
         try {
-            const url = new URL(link);
-            if (url.hostname.includes('youtu.be')) {
-                return url.pathname.replace('/', '') || null;
+            const url = new URL(normalized);
+            const host = url.hostname.toLowerCase();
+
+            if (host.includes('youtu.be')) {
+                const id = url.pathname.split('/').filter(Boolean)[0] || '';
+                return id || null;
             }
+
             if (url.pathname.includes('/embed/')) {
-                return url.pathname.split('/embed/')[1] || null;
+                const id = url.pathname.split('/embed/')[1]?.split('/')[0] || '';
+                return id || null;
             }
+
+            if (url.pathname.includes('/shorts/')) {
+                const id = url.pathname.split('/shorts/')[1]?.split('/')[0] || '';
+                return id || null;
+            }
+
+            if (url.pathname.includes('/live/')) {
+                const id = url.pathname.split('/live/')[1]?.split('/')[0] || '';
+                return id || null;
+            }
+
             return url.searchParams.get('v');
         } catch {
-            return null;
+            // Last fallback: extract from common path patterns when URL parsing fails.
+            const match = input.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
+            return match?.[1] || null;
         }
     }
 

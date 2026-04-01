@@ -58,6 +58,15 @@ export class ViewImage {
     return color;
   }
 
+  get catalogLink(): string {
+    const raw = (this.product?.catalogURL || '').trim();
+    if (!raw) return '';
+    if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      return raw;
+    }
+    return `https://${raw}`;
+  }
+
   // Function to generate an array of stars based on average rating
   getStarsArray(averageRating: number): boolean[] {
     const roundedRating = Math.round(averageRating * 2) / 2;
