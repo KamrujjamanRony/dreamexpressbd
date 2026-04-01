@@ -1,0 +1,81 @@
+@if (loading()) {
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+    <div class="grid lg:grid-cols-[1.4fr_0.9fr] gap-6 animate-pulse">
+      <div class="rounded-[2rem] min-h-[26rem] bg-neutral-200 dark:bg-neutral-800"></div>
+      <div class="space-y-4">
+        <div class="rounded-[1.5rem] h-40 bg-neutral-200 dark:bg-neutral-800"></div>
+        <div class="rounded-[1.5rem] h-40 bg-neutral-200 dark:bg-neutral-800"></div>
+      </div>
+    </div>
+  </section>
+} @else {
+  <section
+    class="blogs-shell relative overflow-hidden bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_34%,#f7fbff_100%)] dark:bg-[linear-gradient(180deg,#08101c_0%,#0d1627_42%,#101a2f_100%)]"
+  >
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 lg:py-10 relative z-10">
+
+      @if (!filteredBlogs().length) {
+        <section class="empty-state reveal">
+          <div class="empty-state-icon"><i class="fas fa-feather-pointed"></i></div>
+          <h2>No stories matched your search</h2>
+          <p>
+            Try a broader keyword or clear the current filter to explore all published blog content.
+          </p>
+        </section>
+      } @else {
+        <section class="">
+          <div class="flex items-end justify-between gap-4 mb-6 reveal">
+            <div>
+              <span class="section-kicker">Browse the archive</span>
+              <h2 class="section-title mt-2">All Blog Posts</h2>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+            @for (blog of filteredBlogs(); track blog.id; let index = $index) {
+              <article class="blog-card reveal" [style.transition-delay]="(index % 6) * 70 + 'ms'">
+                <a [routerLink]="['/blogs', blog.id]" class="blog-card-link">
+                  <div class="blog-card-media">
+                    @if (blog.heroImageUrl) {
+                      <img
+                        [src]="imgBase + blog.heroImageUrl"
+                        [alt]="blog.heading"
+                        class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                      />
+                    } @else if (detailImage(blog)) {
+                      <img
+                        [src]="imgBase + detailImage(blog)"
+                        [alt]="blog.heading"
+                        class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                      />
+                    } @else {
+                      <div class="blog-card-placeholder">
+                        <i class="fas fa-book-open"></i>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="blog-card-body group">
+                    <div class="blog-card-meta">
+                      <span>{{ readingTime(blog) }}</span>
+                      <span>{{ blog.dtls.length }} sections</span>
+                    </div>
+                    <h3 class="blog-card-title">{{ blog.heading }}</h3>
+                    <p class="blog-card-subtitle">{{ blog.primaryTitle }}</p>
+                    <p class="blog-card-copy">{{ excerpt(blog.primaryDesc, 125) }}</p>
+
+                    <div class="blog-card-footer">
+                      <span class="blog-card-linktext">Open article</span>
+                      <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </section>
+}
