@@ -1,7 +1,7 @@
 <div class="space-y-10 md:space-y-14">
   @if (categoryWiseProducts()) {
     @for (category of categories(); track category) {
-      @if (categoryWiseProducts()[category.itemName]) {
+      @if (categoryWiseProducts()[category.categoryName]) {
         <div>
           <!-- Section Header -->
           <div class="flex items-center justify-between mb-6">
@@ -10,14 +10,14 @@
               <h2
                 class="text-xl md:text-2xl lg:text-3xl font-bold text-neutral-800 dark:text-neutral-100"
               >
-                {{ category.itemName }}
+                {{ category.categoryName }}
               </h2>
             </div>
 
-            @if (categoryWiseProducts()[category.itemName]?.length > 4) {
+            @if (categoryWiseProducts()[category.categoryName]?.length > 4) {
               <a
                 [routerLink]="['/shop']"
-                [queryParams]="{ category: category.itemName }"
+                [queryParams]="{ category: category.categoryName }"
                 class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors group/link"
               >
                 View All
@@ -39,7 +39,10 @@
           </div>
           <!-- Product Grid -->
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
-            @for (product of categoryWiseProducts()[category.itemName].slice(0, 4); track $index) {
+            @for (
+              product of categoryWiseProducts()[category.categoryName].slice(0, 4);
+              track $index
+            ) {
               <app-product-card [product]="product"></app-product-card>
             }
           </div>
