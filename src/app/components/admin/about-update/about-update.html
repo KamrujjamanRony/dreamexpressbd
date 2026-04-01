@@ -207,16 +207,6 @@
             <div class="flex items-center justify-between p-4 border-b border-default-medium">
               <h3 class="text-lg font-semibold text-heading">Select Gallery Image</h3>
               <div class="flex items-center gap-3">
-                <select
-                  [(ngModel)]="galleryFilterType"
-                  [ngModelOptions]="{ standalone: true }"
-                  class="text-sm border border-default-medium rounded px-2 py-1 bg-transparent text-heading"
-                >
-                  <option value="">All Types</option>
-                  @for (type of galleryTypeOptions; track type) {
-                    <option [value]="type">{{ type }}</option>
-                  }
-                </select>
                 <button
                   type="button"
                   (click)="closeGalleryPicker()"
@@ -229,7 +219,7 @@
 
             <!-- Image Grid -->
             <div class="p-4 overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-              @for (img of getFilteredGalleryImages(); track img.id) {
+              @for (img of galleryImages(); track img.id) {
                 <div
                   (click)="selectGalleryImage(img)"
                   class="cursor-pointer border-2 border-transparent hover:border-emerald-500 rounded-lg overflow-hidden transition"
@@ -245,9 +235,9 @@
                   </p>
                 </div>
               }
-              @if (getFilteredGalleryImages().length === 0) {
+              @if (galleryImages().length === 0) {
                 <p class="col-span-full text-center text-neutral-500 py-8">
-                  No gallery images found.
+                  No About gallery images found.
                 </p>
               }
             </div>

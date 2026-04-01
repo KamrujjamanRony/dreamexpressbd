@@ -57,8 +57,6 @@ export class AboutUpdate {
   /* ---------------- Gallery Picker ---------------- */
   showGalleryPicker = signal(false);
   galleryPickerTarget = signal<'main' | number | null>(null);
-  galleryFilterType = '';
-  galleryTypeOptions = ['Product', 'Carousel', 'Category', 'Brand', 'OrderItem', 'Blog', 'About', 'Contact'];
 
   /* ---------------- Quill Config ---------------- */
   quillModules = {
@@ -97,7 +95,7 @@ export class AboutUpdate {
   }
 
   loadGalleryImages() {
-    this.galleryService.search().subscribe({
+    this.galleryService.search(undefined, 'About').subscribe({
       next: (data) => this.galleryImages.set(data),
     });
   }
@@ -155,12 +153,6 @@ export class AboutUpdate {
   closeGalleryPicker() {
     this.showGalleryPicker.set(false);
     this.galleryPickerTarget.set(null);
-  }
-
-  getFilteredGalleryImages(): GalleryM[] {
-    const type = this.galleryFilterType;
-    if (!type) return this.galleryImages();
-    return this.galleryImages().filter(img => img.type === type);
   }
 
   /* ---------------- Info Management ---------------- */
