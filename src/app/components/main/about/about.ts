@@ -1,6 +1,5 @@
 import { Component, computed, ElementRef, inject, signal, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { SAbout } from '../../../services/s-about';
 import { SContact } from '../../../services/s-contact';
 import { SGallery } from '../../../services/s-gallery';
@@ -16,12 +15,11 @@ import {
   faLink,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import { SafePipe } from '../../../pipes/safe.pipe';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, RouterLink, FontAwesomeModule, SafePipe],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './about.html',
   styleUrl: './about.css',
 })
