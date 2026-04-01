@@ -12,10 +12,11 @@ import { BlogM, BlogDtl } from '../../../models/Blog';
 import { SBlog } from '../../../services/s-blog';
 import { SGallery } from '../../../services/s-gallery';
 import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
+import { QuillEditorComponent } from 'ngx-quill';
 
 @Component({
     selector: 'app-blog-list',
-    imports: [CommonModule, FontAwesomeModule, FormsModule, GalleryPicker],
+    imports: [CommonModule, FontAwesomeModule, FormsModule, GalleryPicker, QuillEditorComponent],
     templateUrl: './blog-list.html',
     styleUrl: './blog-list.css',
 })
@@ -34,6 +35,25 @@ export class BlogList {
     private confirm = inject(SConfirm);
 
     @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
+  /* ---------------- Quill Config ---------------- */
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['blockquote', 'code-block'],
+      ['link'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'direction': 'rtl' }],
+      ['clean']
+    ]
+  };
+
 
     imgURL = environment.ImageApi;
 

@@ -5,13 +5,11 @@
 }
 
 .blog-view-shell {
-  background:
-    linear-gradient(180deg, #fcfbf8 0%, #f7f7f5 18%, #f5f8fc 54%, #eff4fa 100%);
+  background: linear-gradient(180deg, #fcfbf8 0%, #f7f7f5 18%, #f5f8fc 54%, #eff4fa 100%);
 }
 
 :host-context(.dark) .blog-view-shell {
-  background:
-    linear-gradient(180deg, #09111d 0%, #0c1524 30%, #0d1829 62%, #0a1421 100%);
+  background: linear-gradient(180deg, #09111d 0%, #0c1524 30%, #0d1829 62%, #0a1421 100%);
 }
 
 .blog-view-shell::before {
@@ -439,6 +437,9 @@
 
 .editorial-copy {
   min-width: 0;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .editorial-title {
@@ -471,7 +472,9 @@
   overflow: hidden;
   border-radius: 1.5rem;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .related-card:hover {
@@ -520,7 +523,9 @@
 .reveal {
   opacity: 0;
   transform: translateY(22px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
 
 .reveal.in-view,

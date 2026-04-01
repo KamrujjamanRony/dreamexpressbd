@@ -63,7 +63,7 @@
                     </div>
                     <h3 class="blog-card-title">{{ blog.heading }}</h3>
                     <p class="blog-card-subtitle">{{ blog.primaryTitle }}</p>
-                    <p class="blog-card-copy">{{ excerpt(blog.primaryDesc, 125) }}</p>
+                    <p class="blog-card-copy overflow-hidden" [innerHTML]="excerpt(blog.primaryDesc, 125)"></p>
 
                     <div class="blog-card-footer">
                       <span class="blog-card-linktext">Open article</span>
