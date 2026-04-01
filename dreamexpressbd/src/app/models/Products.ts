@@ -6,7 +6,7 @@ export interface ProductM {
   imageUrl: string;
   itemId: number;
   slItem: number;
-  itemName: string;
+  categoryName: string;
   brand: string;
   model: string;
   origin: string;
