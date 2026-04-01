@@ -35,6 +35,7 @@ export class SProduct {
     id = 0,
     categoryId: any = 0,
     search: string = '',
+    isActive: number | null = null,
     title: string = '',
     description: string = '',
     brand: string = '',
@@ -50,6 +51,7 @@ export class SProduct {
       companyID: environment.companyCode,
       ...(id && id > 0 ? { id } : {}),
       ...(categoryId && categoryId > 0 ? { categoryId } : {}),
+      ...(isActive === 0 || isActive === 1 ? { isActive } : {}),
       ...(search ? { search: search.trim() } : {}),
       ...(title ? { title: title.trim() } : {}),
       ...(description ? { description: description.trim() } : {}),
@@ -62,7 +64,7 @@ export class SProduct {
       ...(sl && sl > 0 ? { sl } : {})
     };
 
-    const cacheKey = `${environment.companyCode}_${categoryId}_${search}_${title}_${description}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
+    const cacheKey = `${environment.companyCode}_${categoryId}_${search}_${isActive ?? 'all'}_${title}_${description}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
 
     if (this.searchCache.has(cacheKey)) {
       return this.searchCache.get(cacheKey)!;

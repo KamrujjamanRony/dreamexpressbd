@@ -58,7 +58,7 @@ export class ProductList {
   searchQuery = signal('');
   selectedCategory = signal<number | null>(null);
   selectedBrand = signal<string | null>(null);
-  selectedStatus = signal<boolean | null>(null);
+  selectedStatus = signal<number | null>(null);
 
   activeTab = signal<'basic' | 'images' | 'colors' | 'related'>('basic');
 
@@ -83,8 +83,12 @@ export class ProductList {
         // Brand filter
         const matchesBrand = !brand || product.brand?.toLowerCase().includes(brand);
 
-        // Status filter
-        const matchesStatus = status === null || product.isActive === status;
+        // Status filter (API may return 1/0, true/false, or string values)
+        const productIsActive =
+          product.isActive === true ||
+          product.isActive === 1 ||
+          product.isActive === '1';
+        const matchesStatus = status === null || productIsActive === (status === 1);
 
         return matchesSearch && matchesCategory && matchesBrand && matchesStatus;
       })
@@ -188,11 +192,11 @@ export class ProductList {
     this.isDelete.set(this.permissionService.hasPermission('Product', 'delete'));
   }
 
-  loadProducts() {
+  loadProducts(isActive: number | null = this.selectedStatus()) {
     this.isLoading.set(true);
     this.hasError.set(false);
 
-    this.productService.search().subscribe({
+    this.productService.search(0, 0, '', isActive).subscribe({
       next: (data) => {
         this.products.set(data);
         this.isLoading.set(false);
@@ -236,7 +240,9 @@ export class ProductList {
 
   onFilterByStatus(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
-    this.selectedStatus.set(value ? value === 'true' : null);
+    const status = value === '' ? null : Number(value);
+    this.selectedStatus.set(status);
+    this.loadProducts(status);
   }
 
   resetFilters() {
@@ -244,6 +250,7 @@ export class ProductList {
     this.selectedCategory.set(null);
     this.selectedBrand.set(null);
     this.selectedStatus.set(null);
+    this.loadProducts(null);
 
     // Reset select elements
     if (this.categoryFilter) {

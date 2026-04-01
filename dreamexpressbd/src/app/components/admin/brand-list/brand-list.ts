@@ -120,7 +120,7 @@ export class BrandList {
     event.preventDefault();
 
     if (!this.form().valid()) {
-      this.toast.warning('Form is Invalid!', 'bottom-right', 5000);
+      this.toast.warning('Form is Invalid!', 'top-right', 5000);
       return;
     }
 
@@ -142,7 +142,7 @@ export class BrandList {
       next: () => {
         this.loadItems();
         this.onToggleList();
-        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+        this.toast.success('Saved successfully!', 'top-right', 5000);
       },
       error: (error) => {
         this.isSubmitted.set(false);
@@ -182,7 +182,7 @@ export class BrandList {
       this.brandService.delete(id).subscribe({
         next: () => {
           this.items.update(list => list.filter(i => i.id !== id));
-          this.toast.success('Brand deleted successfully!', 'bottom-right', 5000);
+          this.toast.success('Brand deleted successfully!', 'top-right', 5000);
         },
         error: (error) => {
           this.toast.danger('Brand deleted unsuccessful!', 'top-left', 3000);
