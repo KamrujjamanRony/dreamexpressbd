@@ -40,6 +40,13 @@
           <i class="fas fa-store text-xs opacity-70 transition-all duration-250"></i>
           Shop
         </a>
+        <a
+          routerLink="/blogs"
+          class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
+        >
+          <i class="fas fa-newspaper text-xs opacity-70 transition-all duration-250"></i>
+          Blogs
+        </a>
 
         <!-- Categories Mega Dropdown -->
         <div class="relative">
@@ -432,6 +439,15 @@
       >
         <i class="fas fa-info-circle w-4.5 text-center text-[15px] text-neutral-400"></i>
         <span>About Us</span>
+        <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
+      </a>
+      <a
+        routerLink="/blogs"
+        class="flex items-center gap-3 p-3 text-sm font-medium text-neutral-700 dark:text-neutral-300 rounded-[10px] no-underline transition-all duration-200 cursor-pointer hover:bg-primary-500/6 hover:text-primary-600 dark:hover:bg-primary-500/12 dark:hover:text-primary-100"
+        (click)="closeMobileMenu()"
+      >
+        <i class="fas fa-newspaper w-4.5 text-center text-[15px] text-neutral-400"></i>
+        <span>Blogs</span>
         <i class="fas fa-chevron-right ml-auto text-xs text-neutral-400"></i>
       </a>
       <a
