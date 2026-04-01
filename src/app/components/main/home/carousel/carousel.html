@@ -18,10 +18,13 @@
           (click)="item?.bLink && navigate(item.bLink)"
         >
           <!-- Background Image with Ken Burns -->
-          <div
-            class="absolute inset-0 bg-cover bg-center carousel-bg"
-            [style.backgroundImage]="'url(' + imageApi + item.imageUrl + ')'"
-          ></div>
+          <img
+            [src]="imageApi + item.imageUrl"
+            [alt]="item.title || 'Carousel banner'"
+            [attr.fetchpriority]="$first ? 'high' : 'auto'"
+            [attr.loading]="$first ? 'eager' : 'lazy'"
+            class="absolute inset-0 w-full h-full object-cover object-center carousel-bg"
+          />
           <!-- Bottom gradient for text readability -->
           <div
             class="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/60 via-black/25 to-transparent pointer-events-none"

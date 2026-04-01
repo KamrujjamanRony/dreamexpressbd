@@ -39,13 +39,37 @@
 
     <!-- Preconnect -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Google Fonts — non-blocking preload -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <!-- Font Awesome — non-blocking preload -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
       integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+      media="print"
+      onload="this.media = 'all'"
     />
 
     <!-- JSON-LD Structured Data -->
@@ -68,35 +92,8 @@
   </head>
   <body>
     <app-root>
-      <!-- Site Opening Loader (auto-removed when Angular bootstraps) -->
+      <!-- Lightweight loader (auto-removed when Angular bootstraps) -->
       <style>
-        :root {
-          --l-bg: var(--color-neutral-50);
-          --l-text: var(--color-neutral-900);
-          --l-sub: var(--color-neutral-500);
-          --l-accent: var(--color-primary-700);
-          --l-accent2: var(--color-primary-500);
-          --l-glow: color-mix(in srgb, var(--color-primary-600) 15%, transparent);
-          --l-ring: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
-          --l-dot: color-mix(in srgb, var(--color-primary-600) 50%, transparent);
-          --l-bar-bg: var(--color-neutral-200);
-          --l-particle: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
-        }
-        @media (prefers-color-scheme: dark) {
-          :root {
-            --l-bg: var(--color-dark-surface);
-            --l-text: var(--color-neutral-50);
-            --l-sub: var(--color-neutral-400);
-            --l-accent: var(--color-primary-400);
-            --l-accent2: var(--color-primary-400);
-            --l-glow: color-mix(in srgb, var(--color-primary-400) 20%, transparent);
-            --l-ring: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
-            --l-dot: color-mix(in srgb, var(--color-primary-400) 60%, transparent);
-            --l-bar-bg: var(--color-dark-card);
-            --l-particle: color-mix(in srgb, var(--color-primary-400) 6%, transparent);
-          }
-        }
-
         .app-loader {
           position: fixed;
           inset: 0;
@@ -105,355 +102,62 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          background: var(--l-bg);
-          overflow: hidden;
+          background: var(--color-neutral-50, #f9fafb);
         }
-
-        /* ── Floating Particles ── */
-        .app-loader .particles {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
+        @media (prefers-color-scheme: dark) {
+          .app-loader {
+            background: var(--color-dark-surface, #171717);
+          }
         }
-        .app-loader .particle {
-          position: absolute;
-          border-radius: 50%;
-          background: var(--l-particle);
-          animation: particleFloat linear infinite;
-        }
-        .app-loader .particle:nth-child(1) {
-          width: 6px;
-          height: 6px;
-          left: 10%;
-          animation-duration: 7s;
-          animation-delay: 0s;
-        }
-        .app-loader .particle:nth-child(2) {
-          width: 4px;
-          height: 4px;
-          left: 25%;
-          animation-duration: 9s;
-          animation-delay: 1s;
-        }
-        .app-loader .particle:nth-child(3) {
-          width: 8px;
-          height: 8px;
-          left: 40%;
-          animation-duration: 6s;
-          animation-delay: 2s;
-        }
-        .app-loader .particle:nth-child(4) {
-          width: 5px;
-          height: 5px;
-          left: 60%;
-          animation-duration: 8s;
-          animation-delay: 0.5s;
-        }
-        .app-loader .particle:nth-child(5) {
-          width: 7px;
-          height: 7px;
-          left: 75%;
-          animation-duration: 10s;
-          animation-delay: 3s;
-        }
-        .app-loader .particle:nth-child(6) {
-          width: 4px;
-          height: 4px;
-          left: 88%;
-          animation-duration: 7.5s;
-          animation-delay: 1.5s;
-        }
-
-        /* ── Logo Container ── */
-        .loader-logo-wrap {
-          position: relative;
-          width: 140px;
-          height: 140px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 32px;
-          animation: logoEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-        }
-
-        /* Glow ring behind logo */
-        .loader-logo-wrap::before {
-          content: '';
-          position: absolute;
-          inset: -8px;
-          border-radius: 50%;
-          background: radial-gradient(circle, var(--l-glow) 0%, transparent 70%);
-          animation: glowPulse 2.5s ease-in-out infinite;
-        }
-
-        /* Orbit ring */
-        .loader-orbit {
-          position: absolute;
-          inset: -12px;
-          border: 2px solid var(--l-ring);
-          border-radius: 50%;
-          animation: orbitSpin 3s linear infinite;
-        }
-        .loader-orbit::after {
-          content: '';
-          position: absolute;
-          top: -5px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, var(--l-accent), var(--l-accent2));
-          box-shadow: 0 0 12px var(--l-dot);
-        }
-
-        /* Second orbit (counter-rotate, larger) */
-        .loader-orbit-2 {
-          position: absolute;
-          inset: -24px;
-          border: 1.5px dashed var(--l-ring);
-          border-radius: 50%;
-          opacity: 0.5;
-          animation: orbitSpin 5s linear infinite reverse;
-        }
-        .loader-orbit-2::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--l-accent2);
-          box-shadow: 0 0 8px var(--l-dot);
-        }
-
-        .loader-logo-wrap img {
-          width: 80px;
-          height: 80px;
+        .app-loader img {
+          width: 72px;
+          height: 72px;
           object-fit: contain;
-          position: relative;
-          z-index: 2;
-          border-radius: 16px;
-          animation: logoBreathe 2.5s ease-in-out infinite;
+          border-radius: 14px;
+          animation: pulse 1.8s ease-in-out infinite;
         }
-
-        /* ── Brand Name (letter-by-letter) ── */
-        .loader-brand {
-          display: flex;
-          gap: 3px;
-          font-family: 'Inter', sans-serif;
-          font-size: 24px;
-          font-weight: 700;
-          color: var(--l-text);
-          letter-spacing: 1px;
-          margin-bottom: 8px;
-        }
-        .loader-brand span {
-          display: inline-block;
-          opacity: 0;
-          transform: translateY(20px);
-          animation: letterReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .loader-brand span:nth-child(1) {
-          animation-delay: 0.3s;
-        }
-        .loader-brand span:nth-child(2) {
-          animation-delay: 0.36s;
-        }
-        .loader-brand span:nth-child(3) {
-          animation-delay: 0.42s;
-        }
-        .loader-brand span:nth-child(4) {
-          animation-delay: 0.48s;
-        }
-        .loader-brand span:nth-child(5) {
-          animation-delay: 0.54s;
-        }
-        .loader-brand span:nth-child(6) {
-          animation-delay: 0.62s;
-        }
-        .loader-brand span:nth-child(7) {
-          animation-delay: 0.68s;
-        }
-        .loader-brand span:nth-child(8) {
-          animation-delay: 0.74s;
-        }
-        .loader-brand span:nth-child(9) {
-          animation-delay: 0.8s;
-        }
-        .loader-brand span:nth-child(10) {
-          animation-delay: 0.86s;
-        }
-        .loader-brand span:nth-child(11) {
-          animation-delay: 0.94s;
-        }
-        .loader-brand span:nth-child(12) {
-          animation-delay: 1s;
-        }
-        .loader-brand span:nth-child(13) {
-          animation-delay: 1.06s;
-        }
-        .loader-brand span:nth-child(14) {
-          animation-delay: 1.12s;
-        }
-        .loader-brand span:nth-child(15) {
-          animation-delay: 1.18s;
-        }
-        .loader-brand span:nth-child(16) {
-          animation-delay: 1.24s;
-        }
-
-        /* Tagline */
-        .loader-tagline {
-          font-family: 'Inter', sans-serif;
-          font-size: 13px;
-          font-weight: 400;
-          color: var(--l-sub);
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          opacity: 0;
-          animation: fadeSlideUp 0.6s ease forwards 1.4s;
-          margin-bottom: 36px;
-        }
-
-        /* ── Progress Bar ── */
-        .loader-progress {
-          width: 200px;
+        .app-loader .bar {
+          width: 160px;
           height: 3px;
-          background: var(--l-bar-bg);
-          border-radius: 4px;
+          background: var(--color-neutral-200, #e5e7eb);
+          border-radius: 3px;
           overflow: hidden;
-          opacity: 0;
-          animation: fadeIn 0.4s ease forwards 1.6s;
+          margin-top: 24px;
         }
-        .loader-progress-bar {
+        .app-loader .bar i {
+          display: block;
           height: 100%;
-          width: 0;
-          border-radius: 4px;
-          background: linear-gradient(90deg, var(--l-accent), var(--l-accent2), var(--l-accent));
-          background-size: 200% 100%;
-          animation:
-            progressGrow 2.5s ease-in-out infinite 1.7s,
-            shimmer 1.5s linear infinite 1.7s;
+          width: 40%;
+          border-radius: 3px;
+          background: var(--color-primary-600, #2563eb);
+          animation: slide 1.2s ease-in-out infinite;
         }
-
-        /* ── Keyframes ── */
-        @keyframes logoEntrance {
-          from {
-            opacity: 0;
-            transform: scale(0.5) translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        @keyframes logoBreathe {
+        @keyframes pulse {
           0%,
           100% {
             transform: scale(1);
+            opacity: 0.9;
           }
           50% {
-            transform: scale(1.05);
-          }
-        }
-        @keyframes glowPulse {
-          0%,
-          100% {
-            opacity: 0.6;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.08);
-          }
-        }
-        @keyframes orbitSpin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes letterReveal {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fadeSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fadeIn {
-          to {
+            transform: scale(1.06);
             opacity: 1;
           }
         }
-        @keyframes progressGrow {
+        @keyframes slide {
           0% {
-            width: 0;
+            transform: translateX(-100%);
           }
           50% {
-            width: 80%;
+            transform: translateX(250%);
           }
           100% {
-            width: 100%;
-          }
-        }
-        @keyframes shimmer {
-          to {
-            background-position: -200% 0;
-          }
-        }
-        @keyframes particleFloat {
-          0% {
-            transform: translateY(100vh) scale(0);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-10vh) scale(1.2);
-            opacity: 0;
+            transform: translateX(400%);
           }
         }
       </style>
       <div class="app-loader">
-        <div class="particles">
-          <div class="particle"></div>
-          <div class="particle"></div>
-          <div class="particle"></div>
-          <div class="particle"></div>
-          <div class="particle"></div>
-          <div class="particle"></div>
-        </div>
-        <div class="loader-logo-wrap">
-          <div class="loader-orbit"></div>
-          <div class="loader-orbit-2"></div>
-          <img src="logo.webp" alt="Dream Express BD" width="80" height="80" />
-        </div>
-        <!-- D·r·e·a·m·⎵·E·x·p·r·e·s·s·⎵·B·D -->
-        <div class="loader-brand">
-          <span>D</span><span>r</span><span>e</span><span>a</span><span>m</span>
-          <span>&nbsp;</span>
-          <span>E</span><span>x</span><span>p</span><span>r</span><span>e</span><span>s</span
-          ><span>s</span>
-          <span>&nbsp;</span>
-          <span>B</span><span>D</span>
-        </div>
-        <div class="loader-tagline">Quality Products Online</div>
-        <div class="loader-progress"><div class="loader-progress-bar"></div></div>
+        <img src="logo.webp" alt="Dream Express BD" width="72" height="72" />
+        <div class="bar"><i></i></div>
       </div>
     </app-root>
   </body>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, DestroyRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, DestroyRef, ViewChild } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -12,6 +12,7 @@ import { CartDrawerService } from '../../../utils/cart-drawer/cart-drawer.servic
     imports: [RouterLink, SearchOverlay],
     templateUrl: './bottom-nav.html',
     styleUrl: './bottom-nav.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BottomNav {
     private cartService = inject(SCart);

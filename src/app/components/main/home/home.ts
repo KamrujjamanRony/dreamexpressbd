@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { SData } from '../../../services/s-data';
 import { SCategory } from '../../../services/s-category';
 import { SProduct } from '../../../services/s-product';
@@ -17,6 +17,7 @@ import { SCarousel } from '../../../services/s-carousel';
   imports: [Carousel, FeatureProduct, Categories, ProductSkeleton, ProductWrapper, AddSection, RecommendProduct],
   templateUrl: './home.html',
   styleUrl: './home.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home {
   private dataService = inject(SData);

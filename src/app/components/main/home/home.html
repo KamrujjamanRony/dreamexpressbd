@@ -48,18 +48,30 @@
     }
 
     @if (isProductsPermitted() && categories().length > 0 && categoryWiseProducts()) {
-      <app-product-wrapper
-        [categoryWiseProducts]="categoryWiseProducts()"
-        [categories]="categories()"
-      />
+      @defer (on viewport) {
+        <app-product-wrapper
+          [categoryWiseProducts]="categoryWiseProducts()"
+          [categories]="categories()"
+        />
+      } @placeholder {
+        <div class="h-96"></div>
+      }
     }
 
     @if (isAddSectionPermitted()) {
-      <app-add-section />
+      @defer (on viewport) {
+        <app-add-section />
+      } @placeholder {
+        <div class="h-48"></div>
+      }
     }
 
     @if (isRecommendPermitted() && products().length > 0) {
-      <app-recommend-product [products]="products()" />
+      @defer (on viewport) {
+        <app-recommend-product [products]="products()" />
+      } @placeholder {
+        <div class="h-96"></div>
+      }
     }
   </section>
 }

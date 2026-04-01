@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject, input } from '@angular/core';
 import { Router } from "@angular/router";
 import { environment } from '../../../../../environments/environment';
 
@@ -8,6 +8,7 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './carousel.html',
   styleUrl: './carousel.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Carousel {
   private router = inject(Router);

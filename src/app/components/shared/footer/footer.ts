@@ -1,4 +1,4 @@
-import { Component, inject, signal, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
@@ -12,6 +12,7 @@ import { ContactM } from '../../../models/Contact';
     imports: [CommonModule, RouterLink],
     templateUrl: './footer.html',
     styleUrl: './footer.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer implements AfterViewInit, OnDestroy {
     private aboutService = inject(SAbout);

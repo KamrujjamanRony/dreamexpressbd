@@ -1,5 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { SWishlist } from '../../../services/s-wishlist';
@@ -18,6 +18,7 @@ import { CartDrawerService } from '../../../utils/cart-drawer/cart-drawer.servic
   imports: [CommonModule, RouterLink, FontAwesomeModule, BdtPipe, NgOptimizedImage],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
   product = input<any>(null);

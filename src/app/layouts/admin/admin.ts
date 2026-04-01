@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from '../../components/shared/sidebar/sidebar';
 import { Breadcrumb } from '../../utils/breadcrumb/breadcrumb';
@@ -7,7 +7,8 @@ import { Breadcrumb } from '../../utils/breadcrumb/breadcrumb';
   selector: 'app-admin',
   imports: [RouterOutlet, Sidebar, Breadcrumb],
   templateUrl: './admin.html',
-  styleUrl: './admin.css',
+  styleUrls: ['./admin.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class Admin {
 
