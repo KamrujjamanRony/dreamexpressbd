@@ -11,7 +11,7 @@
   <swiper-container
     mousewheel-force-to-axis="true"
     slides-per-view="2"
-    loop="true"
+    [loop]="categories().length > 4"
     navigation="true"
     autoplay-delay="3000"
     autoplay-disable-on-interaction="false"
