@@ -104,11 +104,20 @@ export class ShoppingCart {
         selectSize: cartItem.selectSize,
         productName: product?.title || 'Product',
         price,
-        image: product?.imageUrl ? this.imgBaseUrl + product.imageUrl : '',
-        category: product?.itemName || '',
+        image: this.resolveProductImage(product),
+        category: product?.categoryName || '',
         brand: product?.brand || '',
       };
     });
+  }
+
+  private resolveProductImage(product: any): string {
+    const value = product?.resolvedImageUrl || product?.imageUrl || '';
+    if (!value) return '';
+    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+      return value;
+    }
+    return `${this.imgBaseUrl}${value}`;
   }
 
   calculateTotals() {
