@@ -428,4 +428,13 @@ export class Checkout {
         });
     }
 
+    getCheckoutImage(item: any): string {
+        const value = item?.displayImage || item?.image || '';
+        if (!value) return '';
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+            return value;
+        }
+        return `${this.imgBaseUrl}${value}`;
+    }
+
 }

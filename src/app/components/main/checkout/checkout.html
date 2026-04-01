@@ -491,7 +491,7 @@
                   <div class="w-14 h-14 rounded-[10px] overflow-hidden shrink-0">
                     @if (item.image) {
                       <img
-                        [src]="item.image.startsWith('http') ? item.image : imgBaseUrl + item.image"
+                        [src]="getCheckoutImage(item)"
                         [alt]="item.productName"
                         class="w-full h-full object-cover rounded-lg"
                       />
