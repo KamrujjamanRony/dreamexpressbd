@@ -25,6 +25,18 @@ export const routes: Routes = [
         title: `Shop | ${companyName}`
       },
       {
+        path: 'blogs',
+        loadComponent: () => import('./components/main/blogs/blogs').then(m => m.Blogs),
+        data: { breadcrumb: 'Blogs', reuse: true, seo: { title: 'Blogs', description: `Read news, guides, and featured stories from ${companyName}.` } },
+        title: `Blogs | ${companyName}`
+      },
+      {
+        path: 'blogs/:id',
+        loadComponent: () => import('./components/main/blog-view/blog-view').then(m => m.BlogView),
+        data: { breadcrumb: 'Blog', reuse: true, seo: { title: 'Blog', description: `Explore detailed stories and updates from ${companyName}.` } },
+        title: `Blog View | ${companyName}`
+      },
+      {
         path: 'about-us',
         loadComponent: () => import('./components/main/about/about').then(m => m.About),
         data: { breadcrumb: 'About Us', reuse: true, seo: { title: 'About Us', description: `Learn about ${companyName} - our mission, vision, and commitment to quality products and customer satisfaction.` } },
