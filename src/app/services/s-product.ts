@@ -2,8 +2,9 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, of, tap, shareReplay, catchError } from 'rxjs';
-import { ProductColorsM, ProductM } from '../models/Products';
+import { map, Observable, of, tap, shareReplay, catchError, switchMap } from 'rxjs';
+import { ProductColorM, ProductM } from '../models/Products';
+import { SGallery } from './s-gallery';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { ProductColorsM, ProductM } from '../models/Products';
 export class SProduct {
 
   private http = inject(HttpClient);
+  private galleryService = inject(SGallery);
   private apiUrl = `${environment.apiUrl}/Product`;
 
   // in-memory cache
@@ -19,7 +21,7 @@ export class SProduct {
   // -------------------------
   // ADD PRODUCT
   // -------------------------
-  add(model: FormData): Observable<ProductM> {
+  add(model: any): Observable<ProductM> {
     return this.http.post<ProductM>(this.apiUrl, model).pipe(
       tap(() => this.clearCache()),
       catchError(this.handleError<ProductM>('add'))
@@ -30,7 +32,7 @@ export class SProduct {
   // SEARCH PRODUCTS (CACHED)
   // -------------------------
   search(
-    itemId: any = 0,
+    categoryId: any = 0,
     search: string = '',
     title: string = '',
     description: string = '',
@@ -45,7 +47,7 @@ export class SProduct {
 
     const reqBody = {
       companyID: environment.companyCode,
-      ...(itemId && itemId > 0 ? { itemId: itemId } : {}),
+      ...(categoryId && categoryId > 0 ? { categoryId } : {}),
       ...(search ? { search: search.trim() } : {}),
       ...(title ? { title: title.trim() } : {}),
       ...(description ? { description: description.trim() } : {}),
@@ -55,25 +57,45 @@ export class SProduct {
       ...(additionalInformation ? { additionalInformation: additionalInformation.trim() } : {}),
       ...(specialFeature ? { specialFeature: specialFeature.trim() } : {}),
       ...(catalogURL ? { catalogURL: catalogURL.trim() } : {}),
-      ...(sl && sl > 0 ? { sl: sl } : {})
-    }
+      ...(sl && sl > 0 ? { sl } : {})
+    };
 
-    const cacheKey = `${environment.companyCode}_${search}_${title}_${description}_${itemId}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
+    const cacheKey = `${environment.companyCode}_${categoryId}_${search}_${title}_${description}_${brand}_${model}_${origin}_${additionalInformation}_${specialFeature}_${catalogURL}_${sl}`;
 
-    // return cached result if exists
     if (this.searchCache.has(cacheKey)) {
       return this.searchCache.get(cacheKey)!;
     }
 
     const request$ = this.http
-      .post<ProductM[]>(`${this.apiUrl}/search`, reqBody)
+      .post<any>(`${this.apiUrl}/search`, reqBody)
       .pipe(
-        shareReplay(1), // prevent multiple API calls
+        map(res => Array.isArray(res) ? res : res?.data || res?.$values || []),
+        switchMap((products: any[]) => {
+          if (!products.length) return of(products as ProductM[]);
+          return this.galleryService.search(undefined, 'Product').pipe(
+            map(gallery => {
+              const galleryMap = new Map<string, string>();
+              gallery.forEach(g => {
+                if (g.id && g.imageUrl) galleryMap.set(String(g.id), g.imageUrl);
+              });
+              return products.map(p => ({
+                ...p,
+                resolvedImageUrl: galleryMap.get(String(p.imageUrl)) || '',
+                resolvedImages: (p.images || []).map((id: string) => galleryMap.get(String(id)) || ''),
+                productColors: (p.productColors || []).map((c: any) => ({
+                  ...c,
+                  resolvedUrl: galleryMap.get(String(c.id)) || ''
+                })) as ProductColorM[]
+              })) as ProductM[];
+            }),
+            catchError(() => of(products as ProductM[]))
+          );
+        }),
+        shareReplay(1),
         catchError(this.handleError<ProductM[]>('search', []))
       );
 
     this.searchCache.set(cacheKey, request$);
-
     return request$;
   }
 
@@ -89,7 +111,7 @@ export class SProduct {
   // -------------------------
   // UPDATE PRODUCT
   // -------------------------
-  update(id: any, data: FormData): Observable<ProductM> {
+  update(id: any, data: any): Observable<ProductM> {
     return this.http.put<ProductM>(`${this.apiUrl}/${id}`, data).pipe(
       tap(() => this.clearCache()),
       catchError(this.handleError<ProductM>('update'))
@@ -120,75 +142,6 @@ export class SProduct {
         );
       }),
       catchError(this.handleError<ProductM[]>('getRelated', []))
-    );
-  }
-
-  // -------------------------
-  // ADD PRODUCT COLORS
-  // -------------------------
-  addColor(id: any, colors: ProductColorsM[]): Observable<ProductColorsM[]> {
-    // Ensure colors are properly formatted
-    const formattedColors = colors.map(color => ({
-      colorName: color.colorName || '',
-      image: color.image || ''
-    }));
-
-    return this.http.post<ProductColorsM[]>(
-      `${this.apiUrl}/${id}/colors`, 
-      formattedColors,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    ).pipe(
-      tap(() => this.clearCache()),
-      catchError(this.handleError<ProductColorsM[]>('addColor'))
-    );
-  }
-
-  // -------------------------
-  // GET PRODUCT COLORS
-  // -------------------------
-  getColor(id: any): Observable<ProductColorsM[]> {
-    return this.http.get<ProductColorsM[]>(`${this.apiUrl}/${id}/colors`).pipe(
-      catchError(this.handleError<ProductColorsM[]>('getColor', []))
-    );
-  }
-
-  // -------------------------
-  // UPDATE PRODUCT COLORS
-  // -------------------------
-  updateColor(id: any, colors: ProductColorsM[]): Observable<ProductColorsM[]> {
-    // Ensure colors are properly formatted
-    const formattedColors = colors.map(color => ({
-      colorName: color.colorName || '',
-      image: color.image || ''
-    }));
-
-    return this.http.put<ProductColorsM[]>(
-      `${this.apiUrl}/${id}/colors`, 
-      formattedColors,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    ).pipe(
-      tap(() => this.clearCache()),
-      catchError(this.handleError<ProductColorsM[]>('updateColor'))
-    );
-  }
-
-  // -------------------------
-  // DELETE PRODUCT COLOR (if needed)
-  // -------------------------
-  deleteColor(productId: any, colorIndex?: number): Observable<any> {
-    // If your API supports deleting specific colors, implement here
-    // This is a placeholder - adjust based on your API
-    return this.http.delete(`${this.apiUrl}/${productId}/colors/${colorIndex || ''}`).pipe(
-      tap(() => this.clearCache()),
-      catchError(this.handleError('deleteColor'))
     );
   }
 
