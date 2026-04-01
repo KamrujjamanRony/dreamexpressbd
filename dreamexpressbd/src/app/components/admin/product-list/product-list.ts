@@ -280,7 +280,7 @@ export class ProductList {
   /* ---------------- UTILITY ---------------- */
   getCategoryName(categoryId: number): string {
     const category = this.categories().find(c => c.id === categoryId);
-    return category?.itemName || '-';
+    return category?.categoryName || '-';
   }
 
   getProductTitle(productId: number): string {

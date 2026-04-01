@@ -53,7 +53,7 @@
             >
               <option value="">All Categories</option>
               @for (category of categories(); track category.id) {
-                <option [value]="category.id">{{ category.itemName }}</option>
+                <option [value]="category.id">{{ category.categoryName }}</option>
               }
             </select>
 
@@ -300,7 +300,7 @@
                           </option>
                           @for (cat of categories(); track cat.id) {
                             <option [value]="cat.id" class="dark:bg-gray-900">
-                              {{ cat.itemName }}
+                              {{ cat.categoryName }}
                             </option>
                           }
                         </select>
@@ -721,11 +721,7 @@
 
                               <!-- Tabs for image selection method -->
                               <div class="flex border-b border-gray-200 mb-3">
-                                <h1
-                                  class="text-sm"
-                                >
-                                  Choose from Product Images
-                                </h1>
+                                <h1 class="text-sm">Choose from Product Images</h1>
                               </div>
 
                               <!-- Current Image Preview -->
