@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, input, Renderer2 } from '@angular/core';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 import { SCart } from '../../../../services/s-cart';
@@ -13,7 +13,7 @@ import { CartDrawerService } from '../../../../utils/cart-drawer/cart-drawer.ser
 
 @Component({
   selector: 'app-view-image',
-  imports: [CommonModule, BdtPipe, NgOptimizedImage, FontAwesomeModule],
+  imports: [CommonModule, BdtPipe, FontAwesomeModule],
   templateUrl: './view-image.html',
   styleUrl: './view-image.css',
 })
@@ -47,18 +47,18 @@ export class ViewImage {
   }
 
   get mainImage(): string {
-    return this.viewImage || this.imgBaseUrl + this.product()?.imageUrl;
+    return this.viewImage || this.product()?.resolvedImageUrl || '';
   }
 
   /** All gallery images: [main, ...images, ...colorImages] */
   get galleryImages(): string[] {
     const images: string[] = [];
-    if (this.product()?.imageUrl) {
-      images.push(this.imgBaseUrl + this.product()?.imageUrl);
+    if (this.product()?.resolvedImageUrl) {
+      images.push(this.product()?.resolvedImageUrl);
     }
-    if (this.product()?.images?.length) {
-      for (const img of this.product()?.images) {
-        images.push(this.imgBaseUrl + img);
+    if (this.product()?.resolvedImages?.length) {
+      for (const img of this.product()?.resolvedImages) {
+        images.push(img);
       }
     }
     return images;
@@ -102,13 +102,13 @@ export class ViewImage {
   }
 
   onViewColorClick(color: any) {
-    if (this.viewColor?.colorName === color.colorName) {
+    if (this.viewColor?.cn === color.cn) {
       this.viewColor = null;
       this.viewImage = null;
     } else {
       this.viewColor = color;
-      if (color.image) {
-        this.viewImage = this.imgBaseUrl + color.image;
+      if (color.resolvedUrl) {
+        this.viewImage = color.resolvedUrl;
       }
     }
   }
@@ -153,7 +153,7 @@ export class ViewImage {
     const cartProduct: CartProductM = {
       productId: product.id,
       selectSize: this.viewSize || '',
-      selectColor: this.viewColor?.colorName || '',
+      selectColor: this.viewColor?.cn || '',
       quantity: this.count,
       price: price,
       totalPrice: price * this.count,

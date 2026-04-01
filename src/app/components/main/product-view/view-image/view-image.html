@@ -15,12 +15,9 @@
         </span>
       }
       <img
-        [ngSrc]="mainImage"
+        [src]="mainImage"
         alt="product"
         class="w-full aspect-square object-cover object-top transition-opacity duration-300"
-        width="600"
-        height="600"
-        priority
       />
       <div class="zoom w-full h-full" [ngStyle]="zoomStyle"></div>
     </div>
@@ -39,11 +36,9 @@
           "
         >
           <img
-            [ngSrc]="img"
+            [src]="img"
             alt="thumbnail"
             class="w-full h-full object-cover"
-            width="80"
-            height="107"
             loading="lazy"
           />
         </button>
@@ -138,36 +133,34 @@
           Color
           @if (viewColor) {
             <span class="ml-2 font-normal normal-case text-neutral-500"
-              >— {{ viewColor.colorName }}</span
+              >— {{ viewColor.cn }}</span
             >
           }
         </h3>
         <div class="flex flex-wrap gap-3">
-          @for (color of colorOptions; track color.colorName) {
+          @for (color of colorOptions; track color.cn) {
             <button
               type="button"
               (click)="onViewColorClick(color)"
               class="relative rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer hover:shadow-md"
               [ngClass]="
-                viewColor?.colorName === color.colorName
+                viewColor?.cn === color.cn
                   ? 'border-primary-600 ring-2 ring-primary-200 dark:ring-primary-800 shadow-md'
                   : 'border-neutral-200 dark:border-neutral-600'
               "
             >
               <img
-                [ngSrc]="imgBaseUrl + color.image"
-                [alt]="color.colorName"
+                [src]="color.resolvedUrl"
+                [alt]="color.cn"
                 class="w-14 h-14 md:w-16 md:h-16 object-cover"
-                width="64"
-                height="85"
                 loading="lazy"
               />
               <div
                 class="absolute inset-x-0 bottom-0 bg-black/50 text-white text-2xs text-center py-0.5 font-medium"
               >
-                {{ color.colorName }}
+                {{ color.cn }}
               </div>
-              @if (viewColor?.colorName === color.colorName) {
+              @if (viewColor?.cn === color.cn) {
                 <div
                   class="absolute top-1 right-1 w-4 h-4 bg-primary-600 rounded-full flex items-center justify-center"
                 >
