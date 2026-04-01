@@ -16,7 +16,9 @@ export class SBlog {
     }
 
     get(id: any): Observable<BlogM> {
-        return this.http.get<BlogM>(`${this.apiUrl}/${id}`);
+        return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+            map((res) => this.normalize(res?.data ?? res))
+        );
     }
 
     search(id: any = 0, sl: string = '', heading: string = '', title: string = '', desc: string = ''): Observable<BlogM[]> {
