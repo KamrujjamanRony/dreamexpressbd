@@ -367,15 +367,21 @@ export class OrderForm implements OnChanges {
     const rawItems: any = this.selectedOrder.orderItems || (this.selectedOrder as any).OrderItems;
     const items = rawItems?.$values || rawItems || [];
     if (items.length) {
-      this.orderItems.set(items.map((item: any) => ({
-        productId: item.productId ?? item.ProductId,
-        productName: item.productName ?? item.ProductName ?? '',
-        quantity: item.quantity ?? item.Quantity ?? 1,
-        price: item.price ?? item.Price ?? 0,
-        size: item.size ?? item.Size ?? '',
-        color: item.color ?? item.Color ?? '',
-        image: item.image ?? item.Image ?? '',
-      })));
+      this.orderItems.set(items.map((item: any) => {
+        const pid = item.productId ?? item.ProductId;
+        const matched = this.products().find(p => p.id === pid);
+        const resolvedFile = matched?.resolvedImageUrl || '';
+        return {
+          productId: pid,
+          productName: item.productName ?? item.ProductName ?? '',
+          quantity: item.quantity ?? item.Quantity ?? 1,
+          price: item.price ?? item.Price ?? 0,
+          size: item.size ?? item.Size ?? '',
+          color: item.color ?? item.Color ?? '',
+          image: item.image ?? item.Image ?? '',                          // gallery ID from API
+          displayImage: resolvedFile ? this.imgBaseUrl + resolvedFile : '', // full URL for display
+        };
+      }));
     }
 
     this.form().reset();
@@ -579,16 +585,21 @@ export class OrderForm implements OnChanges {
   }
 
   getProductColorsWithImage(product: ProductM): { cn: string; resolvedUrl: string }[] {
-    return this.getColorsArray(product).filter(c => c.cn).map(c => ({ cn: c.cn, resolvedUrl: c.resolvedUrl || '' }));
+    return this.getColorsArray(product).filter(c => c.cn).map(c => ({
+      cn: c.cn,
+      resolvedUrl: c.resolvedUrl ? this.imgBaseUrl + c.resolvedUrl : ''
+    }));
   }
 
   getProductImageUrl(product: ProductM): string {
-    return product.resolvedImageUrl || product.imageUrl || '';
+    const file = product.resolvedImageUrl || '';
+    return file ? this.imgBaseUrl + file : '';
   }
 
   getColorImage(product: ProductM, colorName: string): string {
     const match = this.getColorsArray(product).find(c => c.cn === colorName);
-    return match?.resolvedUrl || '';
+    const file = match?.resolvedUrl || '';
+    return file ? this.imgBaseUrl + file : '';
   }
 
   private addProductToItems(product: ProductM, size: string, color: string) {
@@ -602,10 +613,12 @@ export class OrderForm implements OnChanges {
       );
     } else {
       // Use color variant image if a color is selected, otherwise use product image
-      let itemImage = product.resolvedImageUrl || product.imageUrl || '';
+      let galleryId = product.imageUrl || '';  // gallery ID for API
+      let displayUrl = product.resolvedImageUrl ? this.imgBaseUrl + product.resolvedImageUrl : '';
       if (color) {
-        const colorImage = this.getColorImage(product, color);
-        if (colorImage) itemImage = colorImage;
+        const matched = (product.productColors || []).find(c => c.cn === color);
+        if (matched?.id) galleryId = matched.id;
+        if (matched?.resolvedUrl) displayUrl = this.imgBaseUrl + matched.resolvedUrl;
       }
       const item: OrderItemM = {
         productId: product.id!,
@@ -614,7 +627,8 @@ export class OrderForm implements OnChanges {
         price: product.offerPrice || product.regularPrice || 0,
         size: size || '',
         color: color || '',
-        image: itemImage
+        image: galleryId,
+        displayImage: displayUrl,
       };
       this.orderItems.update(items => [...items, item]);
     }

@@ -335,9 +335,9 @@
               <div
                 class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-700"
               >
-                @if (item.image) {
+                @if (item.displayImage) {
                   <img
-                    [src]="imgBaseUrl + item.image"
+                    [src]="item.displayImage"
                     [alt]="item.productName"
                     class="w-full h-full object-cover"
                   />
