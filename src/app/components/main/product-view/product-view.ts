@@ -28,13 +28,15 @@ export class ProductView {
     this.productService.search().subscribe(products => {
       this.allProducts.set(products);
     });
+
     this.paramsSubscription = this.route.paramMap.subscribe({
       next: (params: any) => {
         const id = params.get('id');
-        this.productService.get(id).subscribe(data => {
-          this.product.set(data);
-          if (data?.title) {
-            this.breadcrumbService.appendCrumb(data.title);
+        this.productService.search().subscribe(data => {
+          const selected = data.find((item: any) => String(item?.id) === String(id)) || null;
+          this.product.set(selected);
+          if (selected?.title) {
+            this.breadcrumbService.appendCrumb(selected.title);
           }
         });
       },

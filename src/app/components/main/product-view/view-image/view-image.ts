@@ -46,22 +46,34 @@ export class ViewImage {
     this.warningMsg = null;
   }
 
+  private toDisplayUrl(value?: string | null): string {
+    if (!value) return '';
+    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+      return value;
+    }
+    return `${this.imgBaseUrl}${value}`;
+  }
+
   get mainImage(): string {
-    return this.viewImage || this.product()?.resolvedImageUrl || '';
+    return this.toDisplayUrl(this.viewImage || this.product()?.resolvedImageUrl || '');
   }
 
   /** All gallery images: [main, ...images, ...colorImages] */
   get galleryImages(): string[] {
     const images: string[] = [];
     if (this.product()?.resolvedImageUrl) {
-      images.push(this.product()?.resolvedImageUrl);
+      images.push(this.toDisplayUrl(this.product()?.resolvedImageUrl));
     }
     if (this.product()?.resolvedImages?.length) {
       for (const img of this.product()?.resolvedImages) {
-        images.push(img);
+        images.push(this.toDisplayUrl(img));
       }
     }
     return images;
+  }
+
+  getColorDisplayUrl(color: any): string {
+    return this.toDisplayUrl(color?.resolvedUrl || '');
   }
 
   /** Parse sizes from comma-separated string or array */
@@ -108,7 +120,7 @@ export class ViewImage {
     } else {
       this.viewColor = color;
       if (color.resolvedUrl) {
-        this.viewImage = color.resolvedUrl;
+        this.viewImage = this.toDisplayUrl(color.resolvedUrl);
       }
     }
   }

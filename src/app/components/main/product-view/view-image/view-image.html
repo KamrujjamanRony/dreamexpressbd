@@ -72,11 +72,11 @@
           }}</span></span
         >
       }
-      @if (product()?.itemName) {
+      @if (product()?.categoryName) {
         <span
           >Category:
           <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
-            product()?.itemName
+            product()?.categoryName
           }}</span></span
         >
       }
@@ -143,7 +143,7 @@
               "
             >
               <img
-                [src]="color.resolvedUrl"
+                [src]="getColorDisplayUrl(color)"
                 [alt]="color.cn"
                 class="w-14 h-14 md:w-16 md:h-16 object-cover"
                 loading="lazy"
