@@ -99,6 +99,7 @@ body {
 /* ── Global Print Styles ── */
 @media print {
   body.printing-voucher app-navbar,
+  body.printing-voucher app-breadcrumb,
   body.printing-voucher app-footer,
   body.printing-voucher app-bottom-nav,
   body.printing-voucher app-social-chat,
