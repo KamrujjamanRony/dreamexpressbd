@@ -36,231 +36,61 @@
           {{ aboutData()?.heading }}
         </p>
       }
+      @if (resolveGalleryUrl(aboutData()?.imageUrl ?? '')) {
+        <div class="mt-8 animate-on-scroll">
+          <img
+            [src]="resolveGalleryUrl(aboutData()?.imageUrl ?? '')"
+            [alt]="companyName"
+            class="mx-auto w-full max-w-2xl h-auto rounded-2xl shadow-lg object-cover"
+          />
+        </div>
+      }
     </div>
   </section>
 
-  <!-- Stats Section -->
-  @if (stats().length) {
-    <section class="py-12 sm:py-16 bg-white dark:bg-dark-page">
+  <!-- Info Sections -->
+  @for (item of aboutData()?.info || []; track item.id ?? $index; let i = $index) {
+    <section
+      class="py-12 sm:py-20"
+      [class]="i % 2 === 0 ? 'bg-neutral-50 dark:bg-dark-surface' : 'bg-white dark:bg-dark-page'"
+    >
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          @for (stat of stats(); track stat.label; let i = $index) {
-            <div
-              class="animate-on-scroll text-center py-6 px-4 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]"
-              [style.transition-delay]="i * 100 + 'ms'"
-            >
-              <div
-                class="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--color-primary-600),var(--color-primary-500))] text-white text-lg"
-              >
-                <i [class]="stat.icon"></i>
-              </div>
-              <div class="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-slate-100">
-                {{ stat.value }}
-              </div>
-              <div class="text-xs sm:text-sm text-neutral-500 dark:text-slate-400 font-medium">
-                {{ stat.label }}
-              </div>
+        <div
+          class="grid lg:grid-cols-2 gap-10 items-center"
+          [class]="i % 2 !== 0 ? 'lg:grid-flow-dense' : ''"
+        >
+          <!-- Image -->
+          @if (resolveGalleryUrl(item.imgU)) {
+            <div class="animate-on-scroll" [class.lg:col-start-2]="i % 2 !== 0">
+              <img
+                [src]="resolveGalleryUrl(item.imgU)"
+                [alt]="item.title"
+                class="w-full h-auto rounded-2xl shadow-lg object-cover"
+              />
             </div>
           }
-        </div>
-      </div>
-    </section>
-  }
 
-  <!-- Our Story Section -->
-  @if (aboutData()?.title || aboutData()?.description) {
-    <section class="py-12 sm:py-20 bg-neutral-50 dark:bg-dark-surface">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <!-- Content -->
           <div class="animate-on-scroll min-w-0">
-            <div class="relative flex items-center justify-center min-h-70">
-              @if (aboutData()?.imageUrl) {
-                <img
-                  [src]="imgBase + aboutData()?.imageUrl"
-                  [alt]="companyName"
-                  class="w-full h-auto rounded-2xl shadow-lg object-cover"
-                />
-              } @else {
-                <div
-                  class="relative z-2 text-center p-10 rounded-3xl bg-white dark:bg-dark-panel shadow-[0_8px_30px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-primary-500/8 dark:border-primary-500/12"
-                >
-                  <i class="fas fa-store text-5xl text-primary-600"></i>
-                  <h3 class="text-lg font-bold text-neutral-900 dark:text-slate-100 mt-3">
-                    {{ companyName }}
-                  </h3>
-                </div>
-                <div
-                  class="absolute inset-0 bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-primary-600)_12%,transparent)_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-primary-600)_20%,transparent)_1.5px,transparent_1.5px)] bg-size-[20px_20px] rounded-3xl"
-                ></div>
-              }
-            </div>
-          </div>
-          <div class="animate-on-scroll min-w-0">
-            @if (aboutData()?.title) {
-              <span
-                class="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider"
-                >{{ aboutData()?.title }}</span
-              >
+            @if (item.title) {
+              <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mb-4">
+                {{ item.title }}
+              </h2>
             }
-            <h2
-              class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mt-2 mb-4"
-            >
-              How It All Started
-            </h2>
-            @if (aboutData()?.description) {
+            @if (item.desc) {
               <div
                 class="text-neutral-600 dark:text-neutral-400 leading-relaxed wrap-break-word overflow-hidden"
-                [innerHTML]="aboutData()?.description"
+                [innerHTML]="item.desc"
               ></div>
             }
           </div>
-        </div>
-      </div>
-    </section>
-  }
 
-  <!-- Mission & Vision -->
-  @if (aboutData()?.title2 || aboutData()?.description2) {
-    <section class="py-12 sm:py-20 bg-white dark:bg-dark-page">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-12 animate-on-scroll">
-          <span
-            class="text-primary-600 dark:text-primary-400 font-semibold text-sm uppercase tracking-wider"
-            >What Drives Us</span
-          >
-          @if (aboutData()?.title2) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100 mt-2">
-              {{ aboutData()?.title2 }}
-            </h2>
+          <!-- Fallback when no image: make content full width -->
+          @if (!resolveGalleryUrl(item.imgU)) {
+            <div></div>
           }
         </div>
-        @if (missionVisionLines().length > 1) {
-          <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
-            @for (line of missionVisionLines(); track $index) {
-              <div
-                class="animate-on-scroll p-8 rounded-2xl bg-primary-50 dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_10%,transparent)] dark:hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]"
-                [style.transition-delay]="$index * 150 + 'ms'"
-              >
-                <div
-                  class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 bg-linear-to-br"
-                  [class]="
-                    $index % 2 === 0
-                      ? 'from-primary-500 to-primary-700'
-                      : 'from-pink-500 to-rose-700'
-                  "
-                >
-                  <i
-                    [class]="
-                      $index % 2 === 0
-                        ? 'fas fa-bullseye text-white text-xl'
-                        : 'fas fa-eye text-white text-xl'
-                    "
-                  ></i>
-                </div>
-                <div
-                  class="text-neutral-600 dark:text-neutral-400 leading-relaxed"
-                  [innerHTML]="line"
-                ></div>
-              </div>
-            }
-          </div>
-        } @else if (aboutData()?.description2) {
-          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <div
-              class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-base sm:text-lg"
-              [innerHTML]="aboutData()?.description2"
-            ></div>
-          </div>
-        }
       </div>
     </section>
   }
-
-  <!-- Why Choose Us -->
-  @if (aboutData()?.title3 || aboutData()?.description3) {
-    <section class="py-12 sm:py-20 bg-neutral-50 dark:bg-dark-surface">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-12 animate-on-scroll">
-          @if (aboutData()?.title3) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100">
-              {{ aboutData()?.title3 }}
-            </h2>
-          }
-        </div>
-        @if (aboutData()?.description3) {
-          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <div
-              class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-base sm:text-lg"
-              [innerHTML]="aboutData()?.description3"
-            ></div>
-          </div>
-        }
-      </div>
-    </section>
-  }
-
-  <!-- Core Values -->
-  @if (aboutData()?.title4 || aboutData()?.description4) {
-    <section class="py-12 sm:py-20 bg-white dark:bg-dark-page">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-12 animate-on-scroll">
-          @if (aboutData()?.title4) {
-            <h2 class="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-slate-100">
-              {{ aboutData()?.title4 }}
-            </h2>
-          }
-        </div>
-        @if (coreValues().length > 1) {
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            @for (v of coreValues(); track $index) {
-              <div
-                class="animate-on-scroll value-card text-center py-7 px-5 rounded-2xl bg-white dark:bg-dark-panel border border-primary-500/8 dark:border-primary-500/12 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_color-mix(in_srgb,var(--color-primary-600)_12%,transparent)] dark:hover:shadow-[0_12px_30px_color-mix(in_srgb,var(--color-primary-600)_15%,transparent)]"
-                [style.transition-delay]="$index * 100 + 'ms'"
-              >
-                <div
-                  class="value-icon w-11 h-11 mx-auto mb-3.5 flex items-center justify-center rounded-xl bg-primary-500/8 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400 text-base transition-all duration-300"
-                >
-                  <i [class]="v.icon"></i>
-                </div>
-                <h3 class="text-base font-bold text-neutral-900 dark:text-slate-100 mb-1.5">
-                  {{ v.title }}
-                </h3>
-                @if (v.desc) {
-                  <p class="text-sm text-neutral-500 dark:text-slate-400 leading-relaxed">
-                    {{ v.desc }}
-                  </p>
-                }
-              </div>
-            }
-          </div>
-        } @else if (aboutData()?.description4) {
-          <div class="max-w-3xl mx-auto text-center animate-on-scroll">
-            <div
-              class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-base sm:text-lg"
-              [innerHTML]="aboutData()?.description4"
-            ></div>
-          </div>
-        }
-      </div>
-    </section>
-  }
-
-  <!-- CTA Section -->
-  <section
-    class="cta-section py-16 sm:py-20 bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600),var(--color-primary-500))] relative overflow-hidden"
-  >
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center animate-on-scroll relative z-10">
-      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
-      <p class="text-primary-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-        Discover thousands of products at unbeatable prices with fast delivery across Bangladesh.
-      </p>
-      <a
-        routerLink="/shop"
-        class="inline-flex items-center gap-2 py-3.5 px-8 bg-white text-primary-600 font-bold rounded-full text-[15px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] cursor-pointer"
-      >
-        <i class="fas fa-shopping-bag mr-2"></i>
-        Explore Our Shop
-      </a>
-    </div>
-  </section>
 }
