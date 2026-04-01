@@ -147,14 +147,14 @@ export class CarouselList {
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        this.toast.warning('Please select an image file', 'bottom-right', 5000);
+        this.toast.warning('Please select an image file', 'top-right', 5000);
         this.clearFileInput();
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        this.toast.warning('Image size should be less than 5MB', 'bottom-right', 5000);
+        this.toast.warning('Image size should be less than 5MB', 'top-right', 5000);
         this.clearFileInput();
         return;
       }
@@ -185,13 +185,13 @@ export class CarouselList {
     event.preventDefault();
 
     if (!this.form().valid()) {
-      this.toast.warning('Please fill all required fields!', 'bottom-right', 5000);
+      this.toast.warning('Please fill all required fields!', 'top-right', 5000);
       return;
     }
 
     // Check if image is selected for new items
     if (!this.selected() && !this.selectedFile()) {
-      this.toast.warning('Please select an image!', 'bottom-right', 5000);
+      this.toast.warning('Please select an image!', 'top-right', 5000);
       return;
     }
 
@@ -217,7 +217,7 @@ export class CarouselList {
       next: (response) => {
         this.loadCarousels();
         this.onToggleList();
-        this.toast.success('Saved successfully!', 'bottom-right', 5000);
+        this.toast.success('Saved successfully!', 'top-right', 5000);
         this.isSubmitted.set(false);
       },
       error: (error) => {
@@ -272,7 +272,7 @@ export class CarouselList {
       this.carouselService.delete(id).subscribe({
         next: () => {
           this.carousels.update(list => list.filter(c => c.id !== id));
-          this.toast.success('Carousel deleted successfully!', 'bottom-right', 5000);
+          this.toast.success('Carousel deleted successfully!', 'top-right', 5000);
         },
         error: (error) => {
           this.toast.danger(
