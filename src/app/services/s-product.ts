@@ -32,6 +32,7 @@ export class SProduct {
   // SEARCH PRODUCTS (CACHED)
   // -------------------------
   search(
+    id = 0,
     categoryId: any = 0,
     search: string = '',
     title: string = '',
@@ -47,6 +48,7 @@ export class SProduct {
 
     const reqBody = {
       companyID: environment.companyCode,
+      ...(id && id > 0 ? { id } : {}),
       ...(categoryId && categoryId > 0 ? { categoryId } : {}),
       ...(search ? { search: search.trim() } : {}),
       ...(title ? { title: title.trim() } : {}),
@@ -97,15 +99,6 @@ export class SProduct {
 
     this.searchCache.set(cacheKey, request$);
     return request$;
-  }
-
-  // -------------------------
-  // GET SINGLE PRODUCT
-  // -------------------------
-  get(id: any): Observable<ProductM> {
-    return this.http.get<ProductM>(`${this.apiUrl}/${id}`).pipe(
-      catchError(this.handleError<ProductM>('get'))
-    );
   }
 
   // -------------------------

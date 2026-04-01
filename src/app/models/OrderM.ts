@@ -37,5 +37,6 @@ export interface OrderItemM {
     price: number;
     size?: string;
     color?: string;
-    image: string;
+    image: string;         // gallery ID — sent to API
+    displayImage?: string; // full URL — used for UI display only (not sent)
 }
