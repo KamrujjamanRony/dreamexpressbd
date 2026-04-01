@@ -7,6 +7,7 @@ import { SProduct } from '../../../services/s-product';
 import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service';
 import { Subscription } from 'rxjs';
 import { ProductSkeleton } from "../../shared/product-skeleton/product-skeleton";
+import { SSeo } from '../../../services/s-seo';
 
 @Component({
   selector: 'app-product-view',
@@ -19,6 +20,7 @@ export class ProductView {
   route = inject(ActivatedRoute);
   productService = inject(SProduct);
   private breadcrumbService = inject(BreadcrumbService);
+  private seo = inject(SSeo);
   paramsSubscription?: Subscription;
   product = signal<any>(null);
   allProducts = signal<any[]>([]);
@@ -37,6 +39,16 @@ export class ProductView {
           this.product.set(selected);
           if (selected?.title) {
             this.breadcrumbService.appendCrumb(selected.title);
+            this.seo.updateProductMeta({
+              name: selected.title,
+              description: selected.description,
+              image: selected.resolvedImageUrl || selected.resolvedImages?.[0],
+              price: selected.regularPrice,
+              offerPrice: selected.offerPrice,
+              sku: selected.sku,
+              brand: selected.brand,
+              category: selected.categoryId?.toString(),
+            });
           }
         });
       },

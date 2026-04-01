@@ -15,6 +15,7 @@ import { environment } from '../../../../environments/environment';
 import { BlogM } from '../../../models/Blog';
 import { SBlog } from '../../../services/s-blog';
 import { SGallery } from '../../../services/s-gallery';
+import { SSeo } from '../../../services/s-seo';
 import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service';
 
 @Component({
@@ -29,6 +30,7 @@ export class BlogView {
     private readonly blogService = inject(SBlog);
     private readonly galleryService = inject(SGallery);
     private readonly breadcrumbService = inject(BreadcrumbService);
+    private readonly seo = inject(SSeo);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly el = inject(ElementRef<HTMLElement>);
     private observer?: IntersectionObserver;
@@ -78,6 +80,12 @@ export class BlogView {
                     this.blog.set(blog);
                     if (blog.heading) {
                         this.breadcrumbService.appendCrumb(blog.heading);
+                        const heroImg = blog.imageUrl ? this.galleryMap().get(blog.imageUrl) || '' : '';
+                        this.seo.updateBlogMeta({
+                            heading: blog.heading,
+                            description: blog.dtls?.[0]?.desc,
+                            image: heroImg || undefined,
+                        });
                     }
                     this.loading.set(false);
                     setTimeout(() => this.ready.set(true), 80);

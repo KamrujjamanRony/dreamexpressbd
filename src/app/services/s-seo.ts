@@ -53,7 +53,7 @@ export class SSeo {
         const keywords = seo.keywords ?? this.defaults.keywords;
         const ogImage = seo.ogImage ?? this.defaults.ogImage;
         const ogType = seo.ogType ?? 'website';
-        const url = `${this.defaults.webUrl}${this.router.url}`;
+        const url = `${this.defaults.webUrl}${this.router.url.split('?')[0]}`;
 
         this.titleService.setTitle(title);
 
@@ -78,35 +78,99 @@ export class SSeo {
         if (seo.noIndex) {
             this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
         } else {
-            this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+            this.meta.updateTag({ name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
         }
 
         // Canonical URL
         this.updateCanonical(url);
+
+        // Remove any previous dynamic JSON-LD (product/blog)
+        this.removeJsonLd();
     }
 
     /** Update for dynamic product pages */
-    updateProductMeta(product: { name: string; description?: string; image?: string; price?: number }) {
-        const title = `${product.name} | ${this.defaults.siteName}`;
-        const description = product.description
+    updateProductMeta(product: { name: string; description?: string; image?: string; price?: number; offerPrice?: number; sku?: string; brand?: string; category?: string }) {
+        const title = `${product.name} | Buy Online | ${this.defaults.siteName}`;
+        const rawDesc = product.description
             ? product.description.replace(/<[^>]*>/g, '').substring(0, 160)
-            : `Buy ${product.name} from ${this.defaults.siteName}`;
+            : `Buy ${product.name} from ${this.defaults.siteName}. Best price in Bangladesh with fast delivery.`;
         const ogImage = product.image ?? this.defaults.ogImage;
+        const url = `${this.defaults.webUrl}${this.router.url.split('?')[0]}`;
 
         this.titleService.setTitle(title);
-        this.meta.updateTag({ name: 'description', content: description });
+        this.meta.updateTag({ name: 'description', content: rawDesc });
+        this.meta.updateTag({ name: 'keywords', content: `${product.name}, ${product.brand ?? ''}, ${product.category ?? ''}, ${this.defaults.keywords}` });
         this.meta.updateTag({ property: 'og:title', content: title });
-        this.meta.updateTag({ property: 'og:description', content: description });
+        this.meta.updateTag({ property: 'og:description', content: rawDesc });
         this.meta.updateTag({ property: 'og:image', content: ogImage });
+        this.meta.updateTag({ property: 'og:url', content: url });
         this.meta.updateTag({ property: 'og:type', content: 'product' });
         this.meta.updateTag({ name: 'twitter:title', content: title });
-        this.meta.updateTag({ name: 'twitter:description', content: description });
+        this.meta.updateTag({ name: 'twitter:description', content: rawDesc });
         this.meta.updateTag({ name: 'twitter:image', content: ogImage });
+        this.meta.updateTag({ name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
+        this.updateCanonical(url);
 
         // Product structured data
-        if (product.price != null) {
-            this.addProductJsonLd(product.name, description, ogImage, product.price);
-        }
+        this.addProductJsonLd({
+            name: product.name,
+            description: rawDesc,
+            image: ogImage,
+            price: product.offerPrice ?? product.price ?? 0,
+            regularPrice: product.price,
+            sku: product.sku,
+            brand: product.brand,
+            url,
+        });
+    }
+
+    /** Update for dynamic blog/article pages */
+    updateBlogMeta(blog: { heading: string; description?: string; image?: string; datePublished?: string }) {
+        const title = `${blog.heading} | ${this.defaults.siteName}`;
+        const rawDesc = blog.description
+            ? blog.description.replace(/<[^>]*>/g, '').substring(0, 160)
+            : `Read about ${blog.heading} on ${this.defaults.siteName}`;
+        const ogImage = blog.image ?? this.defaults.ogImage;
+        const url = `${this.defaults.webUrl}${this.router.url.split('?')[0]}`;
+
+        this.titleService.setTitle(title);
+        this.meta.updateTag({ name: 'description', content: rawDesc });
+        this.meta.updateTag({ property: 'og:title', content: title });
+        this.meta.updateTag({ property: 'og:description', content: rawDesc });
+        this.meta.updateTag({ property: 'og:image', content: ogImage });
+        this.meta.updateTag({ property: 'og:url', content: url });
+        this.meta.updateTag({ property: 'og:type', content: 'article' });
+        this.meta.updateTag({ name: 'twitter:title', content: title });
+        this.meta.updateTag({ name: 'twitter:description', content: rawDesc });
+        this.meta.updateTag({ name: 'twitter:image', content: ogImage });
+        this.meta.updateTag({ name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
+        this.updateCanonical(url);
+
+        this.addArticleJsonLd(title, rawDesc, ogImage, url, blog.datePublished);
+    }
+
+    /** Generate BreadcrumbList JSON-LD from breadcrumb trail */
+    updateBreadcrumbJsonLd(crumbs: { name: string; url: string }[]) {
+        const existing = this.doc.getElementById('seo-breadcrumb');
+        existing?.remove();
+
+        if (!crumbs.length) return;
+
+        const jsonLd = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: crumbs.map((crumb, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                name: crumb.name,
+                item: crumb.url,
+            })),
+        };
+        const script = this.doc.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(jsonLd);
+        script.id = 'seo-breadcrumb';
+        this.doc.head.appendChild(script);
     }
 
     private updateCanonical(url: string) {
@@ -119,21 +183,60 @@ export class SSeo {
         link.setAttribute('href', url);
     }
 
-    private addProductJsonLd(name: string, description: string, image: string, price: number) {
+    private addProductJsonLd(product: { name: string; description: string; image: string; price: number; regularPrice?: number; sku?: string; brand?: string; url: string }) {
         this.removeJsonLd();
-        const jsonLd = {
+        const jsonLd: Record<string, unknown> = {
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name,
-            description,
-            image,
+            name: product.name,
+            description: product.description,
+            image: product.image,
+            url: product.url,
             offers: {
                 '@type': 'Offer',
-                price: price.toString(),
+                price: product.price.toString(),
                 priceCurrency: 'BDT',
                 availability: 'https://schema.org/InStock',
+                seller: {
+                    '@type': 'Organization',
+                    name: this.defaults.siteName,
+                },
             },
         };
+        if (product.sku) jsonLd['sku'] = product.sku;
+        if (product.brand) jsonLd['brand'] = { '@type': 'Brand', name: product.brand };
+
+        const script = this.doc.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(jsonLd);
+        script.id = 'seo-jsonld';
+        this.doc.head.appendChild(script);
+    }
+
+    private addArticleJsonLd(title: string, description: string, image: string, url: string, datePublished?: string) {
+        this.removeJsonLd();
+        const jsonLd: Record<string, unknown> = {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: title,
+            description,
+            image,
+            url,
+            author: {
+                '@type': 'Organization',
+                name: this.defaults.siteName,
+            },
+            publisher: {
+                '@type': 'Organization',
+                name: this.defaults.siteName,
+                logo: {
+                    '@type': 'ImageObject',
+                    url: this.defaults.ogImage,
+                },
+            },
+        };
+        if (datePublished) jsonLd['datePublished'] = datePublished;
+
         const script = this.doc.createElement('script');
         script.type = 'application/ld+json';
         script.textContent = JSON.stringify(jsonLd);

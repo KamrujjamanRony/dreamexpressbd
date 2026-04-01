@@ -1,10 +1,15 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin/
 Disallow: /account
+Disallow: /account/
 Disallow: /checkout
 Disallow: /cart
 Disallow: /order-confirmation
 Disallow: /login
 
-Sitemap: http://localhost:4200/sitemap.xml
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+Sitemap: https://dreamexpressbd.com/sitemap.xml
