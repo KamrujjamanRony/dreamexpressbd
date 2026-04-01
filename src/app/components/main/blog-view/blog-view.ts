@@ -35,7 +35,6 @@ export class BlogView {
 
     protected readonly imgBase = environment.ImageApi;
     protected readonly blog = signal<BlogM | null>(null);
-    protected readonly relatedBlogs = signal<BlogM[]>([]);
     protected readonly galleryMap = signal<Map<string, string>>(new Map());
     protected readonly loading = signal(true);
     protected readonly notFound = signal(false);
@@ -72,18 +71,11 @@ export class BlogView {
 
             forkJoin({
                 blog: this.blogService.get(id),
-                allBlogs: this.blogService.search(),
                 gallery: this.galleryService.search('', 'Blog'),
             }).subscribe({
-                next: ({ blog, allBlogs, gallery }) => {
+                next: ({ blog, gallery }) => {
                     this.galleryMap.set(new Map(gallery.map((item) => [item.id || '', item.imageUrl || ''])));
                     this.blog.set(blog);
-                    this.relatedBlogs.set(
-                        allBlogs
-                            .filter((item) => item.id !== blog.id)
-                            .sort((left, right) => this.toOrder(left.sl) - this.toOrder(right.sl))
-                            .slice(0, 3)
-                    );
                     if (blog.heading) {
                         this.breadcrumbService.appendCrumb(blog.heading);
                     }
@@ -114,32 +106,6 @@ export class BlogView {
 
     protected sectionId(index: number): string {
         return `section-${index + 1}`;
-    }
-
-    protected sectionLabel(index: number): string {
-        return String(index + 1).padStart(2, '0');
-    }
-
-    protected readingTime(blog: BlogM | null): string {
-        if (!blog) {
-            return '1 min read';
-        }
-
-        const source = [blog.heading, ...blog.dtls.flatMap((detail) => [detail.title, detail.desc])]
-            .join(' ')
-            .trim();
-        const minutes = Math.max(1, Math.round(source.split(/\s+/).filter(Boolean).length / 160));
-        return `${minutes} min read`;
-    }
-
-    protected excerpt(blog: BlogM | null, limit: number): string {
-        const raw = blog?.dtls?.[0]?.desc || blog?.heading || '';
-        const normalized = raw.replace(/\s+/g, ' ').trim();
-        if (normalized.length <= limit) {
-            return normalized;
-        }
-
-        return `${normalized.slice(0, limit).trimEnd()}...`;
     }
 
     private toSafeEmbedUrl(link: string): SafeResourceUrl | null {
@@ -191,8 +157,4 @@ export class BlogView {
         });
     }
 
-    private toOrder(value: string): number {
-        const parsed = Number(value);
-        return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
-    }
 }
