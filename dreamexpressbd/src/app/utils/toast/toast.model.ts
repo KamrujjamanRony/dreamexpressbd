@@ -3,7 +3,7 @@ export type ToastPosition =
   | 'top-right'
   | 'top-left'
   | 'bottom-right'
-  | 'top-left';
+  | 'bottom-left';
 
 export interface ToastM {
   id: number;

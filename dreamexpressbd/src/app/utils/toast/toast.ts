@@ -17,7 +17,7 @@ export class Toast {
     'top-right',
     'top-left',
     'bottom-right',
-    'top-left',
+    'bottom-left',
   ];
 
   iconBg(type: ToastM['type']) {
@@ -26,15 +26,6 @@ export class Toast {
       danger: 'bg-danger-soft',
       warning: 'bg-warning-soft',
     }[type];
-  }
-
-  containerClass(pos: ToastPosition) {
-    return {
-      'top-right': 'top-4 right-4',
-      'top-left': 'top-4 left-4',
-      'bottom-right': 'bottom-4 right-4',
-      'top-left': 'bottom-4 left-4',
-    }[pos];
   }
 
 }

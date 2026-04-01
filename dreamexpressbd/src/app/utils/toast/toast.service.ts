@@ -5,6 +5,12 @@ import { ToastM, ToastType, ToastPosition } from './toast.model';
 export class SToast {
   private id = 0;
   private timers = new Map<number, any>();
+  private readonly validPositions: readonly ToastPosition[] = [
+    'top-right',
+    'top-left',
+    'bottom-right',
+    'bottom-left',
+  ];
 
   private _toasts = signal<ToastM[]>([]);
   readonly toasts = this._toasts.asReadonly();
@@ -19,7 +25,7 @@ export class SToast {
         'top-right': [],
         'top-left': [],
         'bottom-right': [],
-        'top-left': [],
+        'bottom-left': [],
       }
     );
   });
@@ -32,12 +38,15 @@ export class SToast {
     replace = false
   ) {
     const now = Date.now();
+    const normalizedPosition = this.validPositions.includes(position)
+      ? position
+      : 'top-right';
 
     const toast: ToastM = {
       id: ++this.id,
       message,
       type,
-      position,
+      position: normalizedPosition,
       duration,
       paused: false,
       startTime: now,
@@ -46,7 +55,7 @@ export class SToast {
 
     this._toasts.update(list => {
       if (replace) {
-        return [...list.filter(t => t.position !== position), toast];
+        return [...list.filter(t => t.position !== normalizedPosition), toast];
       }
       return [...list, toast];
     });
@@ -55,13 +64,13 @@ export class SToast {
   }
 
   success(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
-    this.show('success', msg, pos, d, r);
+    this.show('success', msg, pos ?? 'top-right', d, r);
   }
   danger(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
-    this.show('danger', msg, pos, d, r);
+    this.show('danger', msg, pos ?? 'top-right', d, r);
   }
   warning(msg: string, pos?: ToastPosition, d?: number, r?: boolean) {
-    this.show('warning', msg, pos, d, r);
+    this.show('warning', msg, pos ?? 'top-right', d, r);
   }
 
   pause(id: number) {

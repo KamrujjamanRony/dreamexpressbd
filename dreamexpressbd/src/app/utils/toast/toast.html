@@ -1,5 +1,11 @@
 @for (position of positions; track position) {
-  <div class="fixed z-50 space-y-3" [class]="containerClass(position)">
+  <div
+    class="fixed z-50 space-y-3"
+    [class.top-4]="position === 'top-right' || position === 'top-left'"
+    [class.bottom-4]="position === 'bottom-right' || position === 'bottom-left'"
+    [class.right-4]="position === 'top-right' || position === 'bottom-right'"
+    [class.left-4]="position === 'top-left' || position === 'bottom-left'"
+  >
     @for (toast of toastService.toastsByPosition()[position]; track toast.id) {
       <div
         class="toast-item flex items-center w-full max-w-sm p-4 bg-neutral-primary-soft rounded-base shadow-xs border border-default"
