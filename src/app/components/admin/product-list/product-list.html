@@ -137,7 +137,9 @@
                         <div class="relative w-16 h-16">
                           @if (item.imageUrl) {
                             <img
-                              [src]="item.resolvedImageUrl ? imgURL + item.resolvedImageUrl : emptyImg"
+                              [src]="
+                                item.resolvedImageUrl ? imgURL + item.resolvedImageUrl : emptyImg
+                              "
                               alt="Product Image"
                               class="w-full h-full object-cover rounded"
                             />
@@ -573,7 +575,9 @@
 
                   <!-- Additional Images -->
                   <div class="pb-2">
-                    <label class="block text-sm font-medium text-heading mb-3">Additional Images</label>
+                    <label class="block text-sm font-medium text-heading mb-3"
+                      >Additional Images</label
+                    >
 
                     @if (productImages().length > 0) {
                       <div class="flex flex-wrap gap-3 mb-4">
