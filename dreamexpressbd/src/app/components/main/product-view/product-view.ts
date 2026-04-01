@@ -30,7 +30,7 @@ export class ProductView {
     this.paramsSubscription = this.route.paramMap.subscribe({
       next: (params: any) => {
         const id = params.get('id');
-        this.productService.get(id).subscribe(data => {
+        this.productService.search(id).subscribe(data => {
           this.product.set(data);
         });
       },
