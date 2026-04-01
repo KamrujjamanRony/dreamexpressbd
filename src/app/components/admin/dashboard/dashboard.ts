@@ -10,6 +10,7 @@ import { SOrder } from '../../../services/s-order';
 import { SProduct } from '../../../services/s-product';
 import { SCustomer } from '../../../services/s-customer';
 import { SToken } from '../../../services/s-token';
+import { SPermission } from '../../../services/s-permission';
 import { OrderM } from '../../../models/OrderM';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 
@@ -33,12 +34,18 @@ export class Dashboard implements OnInit {
     private productService = inject(SProduct);
     private customerService = inject(SCustomer);
     private tokenService = inject(SToken);
+    private permissionService = inject(SPermission);
 
     orders = signal<OrderM[]>([]);
     totalProducts = signal(0);
     totalCustomers = signal(0);
     totalTokens = signal(0);
     isLoading = signal(true);
+
+    isView = signal(false);
+    isInsert = signal(false);
+    isEdit = signal(false);
+    isDelete = signal(false);
 
     // Computed stats
     totalOrders = computed(() => this.orders().length);
@@ -92,7 +99,21 @@ export class Dashboard implements OnInit {
     );
 
     ngOnInit() {
+        this.loadPermissions();
+
+        if (!this.isView()) {
+            this.isLoading.set(false);
+            return;
+        }
+
         this.loadData();
+    }
+
+    loadPermissions() {
+        this.isView.set(this.permissionService.hasPermission('Dashboard', 'view'));
+        this.isInsert.set(this.permissionService.hasPermission('Dashboard', 'create'));
+        this.isEdit.set(this.permissionService.hasPermission('Dashboard', 'edit'));
+        this.isDelete.set(this.permissionService.hasPermission('Dashboard', 'delete'));
     }
 
     loadData() {
