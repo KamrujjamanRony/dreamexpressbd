@@ -127,16 +127,6 @@ export class OrderForm implements OnChanges {
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (s) => {
     required(s.userName, { message: 'Customer name is required' });
-    required(s.userPhone, { message: 'Phone is required' });
-
-    validate(s.userPhone, ({ value }) => {
-      const v = value();
-      if (v && !/^(?:\+88|88)?(01[3-9]\d{8})$/.test(v)) {
-        return { kind: 'invalid', message: 'Please enter a valid Bangladeshi phone number' };
-      }
-      return null;
-    });
-
     required(s.paymentMethod, { message: 'Payment method is required' });
 
     validate(s.subtotal, ({ value }) => {
@@ -161,7 +151,6 @@ export class OrderForm implements OnChanges {
 
     debounce(s.userName, 300);
     debounce(s.userEmail, 300);
-    debounce(s.userPhone, 300);
   });
 
   paymentMethods = [
@@ -431,6 +420,7 @@ export class OrderForm implements OnChanges {
     const formValue = this.model();
     const orderData: Partial<OrderM> = {
       ...formValue,
+      userPhone: formValue.shippingAddress.contact,
       totalAmount: this.totalAmount(),
       id: this.selectedOrder?.id,
       orderDate: formValue.orderDate || new Date().toISOString(),

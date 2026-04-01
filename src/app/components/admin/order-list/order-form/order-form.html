@@ -68,33 +68,7 @@
           }
         </div>
 
-        <!-- User Phone -->
-        <div class="md:col-span-2">
-          @let userPhone = form.userPhone();
-          @let userPhoneError = form.userPhone().invalid() && form.userPhone().touched();
-          <div class="relative pb-1">
-            <input
-              type="tel"
-              [formField]="form.userPhone"
-              id="userPhone"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
-              placeholder=" "
-            />
-            <label
-              for="userPhone"
-              class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-              >Phone *</label
-            >
-          </div>
-          @if (userPhoneError) {
-            <ul class="-mt-1 mb-1">
-              @for (error of userPhone.errors(); track error) {
-                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
-              }
-            </ul>
-          }
-        </div>
+
       </div>
     </div>
 
