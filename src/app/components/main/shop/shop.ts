@@ -112,9 +112,9 @@ export class Shop {
     if (!products) return [];
 
     return products.map((product: any) => {
-      const offer = product.offerPrice;
-      const regular = product.regularPrice;
-      const discount = offer && regular
+      const offer = product.offerPrice || 0;
+      const regular = product.regularPrice || 0;
+      const discount = offer > 0 && regular > 0
         ? Math.round(((regular - offer) / regular) * 100)
         : 0;
 
@@ -183,22 +183,24 @@ export class Shop {
   }
 
   loadProducts(search: string = '') {
-    this.productService.search(0, search).subscribe(data => {
+    this.productService.search(0, 0, search).subscribe(data => {
       this.products.set(data);
-      this.categories.set(this.groupProductsByProperty(data, 'itemName'));
+      this.categories.set(this.groupProductsByProperty(data, 'categoryName'));
       this.brands.set(this.groupProductsByProperty(data, 'brand'));
       this.sizes.set(this.groupProductsByArrayProperty(data, 'sizes'));
       this.colors.set(this.groupProductsByArrayProperty(data, 'colors'));
 
       // Set price range based on products
       if (data && data.length > 0) {
-        const prices = data.map((p: any) => p.offerPrice || p.price);
-        const min = Math.min(...prices);
-        const max = Math.max(...prices);
-        this.priceMin.set(min);
-        this.priceMax.set(max);
-        this.minRangeValue.set(min);
-        this.maxRangeValue.set(max);
+        const prices = data.map((p: any) => p.offerPrice || p.regularPrice || 0).filter((v: number) => !isNaN(v));
+        if (prices.length > 0) {
+          const min = Math.min(...prices);
+          const max = Math.max(...prices);
+          this.priceMin.set(min);
+          this.priceMax.set(max);
+          this.minRangeValue.set(min);
+          this.maxRangeValue.set(max);
+        }
       }
     });
   }
@@ -285,7 +287,7 @@ export class Shop {
       return data;
     }
     return data.filter((product: any) =>
-      product && categories.includes(product.itemName?.toString())
+      product && categories.includes(product.categoryName?.toString())
     );
   }
 
@@ -320,14 +322,21 @@ export class Shop {
   }
 
   byPrice(data: any[]): any[] {
-    if (this.minRangeValue() === this.priceMin() &&
-      this.maxRangeValue() === this.priceMax()) {
+    const min = this.minRangeValue();
+    const max = this.maxRangeValue();
+    const pMin = this.priceMin();
+    const pMax = this.priceMax();
+
+    if (isNaN(min) || isNaN(max) || isNaN(pMin) || isNaN(pMax)) {
+      return data;
+    }
+    if (min === pMin && max === pMax) {
       return data;
     }
 
     return data.filter((product: any) => {
-      const price = product.offerPrice || product.price;
-      return price >= this.minRangeValue() && price <= this.maxRangeValue();
+      const price = product.offerPrice || product.regularPrice || 0;
+      return price >= min && price <= max;
     });
   }
 
@@ -350,11 +359,11 @@ export class Shop {
       return data;
     } else if (sort === "low-high") {
       return [...data].sort((a: any, b: any) =>
-        (a.offerPrice || a.price) - (b.offerPrice || b.price)
+        (a.offerPrice || a.regularPrice) - (b.offerPrice || b.regularPrice)
       );
     } else if (sort === "high-low") {
       return [...data].sort((a: any, b: any) =>
-        (b.offerPrice || b.price) - (a.offerPrice || a.price)
+        (b.offerPrice || b.regularPrice) - (a.offerPrice || a.regularPrice)
       );
     } else if (sort === "latest") {
       return [...data].sort((a: any, b: any) =>
