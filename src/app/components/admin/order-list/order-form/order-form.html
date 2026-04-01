@@ -96,9 +96,8 @@
       </div>
     </div>
 
-    <!-- Order Details -->
+    <!-- Order Items -->
     <div class="border-b border-neutral-200 dark:border-neutral-700 pb-4">
-      <h3 class="text-lg font-medium text-neutral-900 dark:text-white mb-3">Order Items</h3>
 
       <!-- Product Search -->
       <div class="relative mb-4">
@@ -141,7 +140,7 @@
                 >
                   @if (getProductImageUrl(product)) {
                     <img
-                      [src]="imgBaseUrl + getProductImageUrl(product)"
+                      [src]="getProductImageUrl(product)"
                       [alt]="product.title"
                       class="w-full h-full object-cover"
                     />
@@ -192,7 +191,7 @@
             <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-700">
               @if (getProductImageUrl(pendingProduct()!)) {
                 <img
-                  [src]="imgBaseUrl + getProductImageUrl(pendingProduct()!)"
+                  [src]="getProductImageUrl(pendingProduct()!)"
                   [alt]="pendingProduct()!.title"
                   class="w-full h-full object-cover"
                 />
@@ -262,33 +261,33 @@
                   <div class="flex flex-wrap gap-2">
                     @for (
                       colorObj of getProductColorsWithImage(pendingProduct()!);
-                      track colorObj.colorName
+                      track colorObj.cn
                     ) {
                       <button
                         type="button"
-                        (click)="selectedColor.set(colorObj.colorName)"
+                        (click)="selectedColor.set(colorObj.cn)"
                         class="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all"
                         [class]="
-                          selectedColor() === colorObj.colorName
+                          selectedColor() === colorObj.cn
                             ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
                             : 'border-neutral-200 dark:border-neutral-600 hover:border-emerald-300'
                         "
                       >
-                        @if (colorObj.image) {
+                        @if (colorObj.resolvedUrl) {
                           <img
-                            [src]="imgBaseUrl + colorObj.image"
-                            [alt]="colorObj.colorName"
+                            [src]="colorObj.resolvedUrl"
+                            [alt]="colorObj.cn"
                             class="w-7 h-7 rounded-md object-cover"
                           />
                         }
                         <span
                           class="text-xs font-medium"
                           [class]="
-                            selectedColor() === colorObj.colorName
+                            selectedColor() === colorObj.cn
                               ? 'text-emerald-700 dark:text-emerald-400'
                               : 'text-neutral-600 dark:text-neutral-300'
                           "
-                          >{{ colorObj.colorName }}</span
+                          >{{ colorObj.cn }}</span
                         >
                       </button>
                     }
