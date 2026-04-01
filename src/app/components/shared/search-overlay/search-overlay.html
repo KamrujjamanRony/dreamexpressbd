@@ -57,7 +57,7 @@
               >
                 <div class="result-image-wrap">
                   <img
-                    [ngSrc]="imageBaseUrl + product.imageUrl"
+                    [ngSrc]="imageBaseUrl + (product.resolvedImageUrl || product.imageUrl)"
                     width="120"
                     height="120"
                     loading="lazy"
@@ -75,7 +75,7 @@
                 </div>
                 <div class="result-info">
                   <p class="result-title">{{ product.title }}</p>
-                  <p class="result-meta">{{ product.brand || product.itemName }}</p>
+                  <p class="result-meta">{{ product.brand || product.categoryName }}</p>
                   <div class="result-price">
                     @if (product.offerPrice && product.offerPrice < product.regularPrice) {
                       <span class="price-current">৳{{ product.offerPrice | number: '1.0-0' }}</span>
@@ -192,7 +192,7 @@
                       <i class="fas fa-tag"></i>
                     }
                   </div>
-                  <span class="category-name">{{ cat.itemName }}</span>
+                  <span class="category-name">{{ cat.categoryName }}</span>
                 </button>
               }
             </div>

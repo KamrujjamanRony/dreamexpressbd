@@ -14,7 +14,7 @@
     <div class="overflow-hidden bg-neutral-50 dark:bg-neutral-700">
       @if (isPriority()) {
         <img
-          [ngSrc]="imageBaseUrl + product()?.imageUrl"
+          [ngSrc]="imageBaseUrl + product()?.resolvedImageUrl"
           [alt]="product()?.title"
           width="300"
           height="400"
@@ -23,7 +23,7 @@
         />
       } @else {
         <img
-          [ngSrc]="imageBaseUrl + product()?.imageUrl"
+          [ngSrc]="imageBaseUrl + product()?.resolvedImageUrl"
           [alt]="product()?.title"
           width="300"
           height="400"
