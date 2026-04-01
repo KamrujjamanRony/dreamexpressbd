@@ -20,398 +20,151 @@
 
     <!-- Form -->
     @else {
-      <form
-        autocomplete="off"
-        (submit)="onSubmit($event)"
-        class="space-y-4"
-        enctype="multipart/form-data"
-      >
+      <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-6">
         <!-- Heading -->
-        <div>
-          @let heading = form.heading();
-          @let headingError = form.heading().invalid() && form.heading().touched();
-          <div class="relative pb-2">
-            <input
-              type="text"
-              [formField]="form.heading"
-              id="heading"
-              autocomplete="off"
-              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-              placeholder=" "
-              [class.bg-neutral-100]="!isEdit()"
-              [class.cursor-not-allowed]="!isEdit()"
-            />
-            <label
-              for="heading"
-              class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-              >Heading</label
-            >
+        <div class="relative pb-2">
+          <input
+            type="text"
+            [(ngModel)]="heading"
+            name="heading"
+            id="heading"
+            autocomplete="off"
+            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+            placeholder=" "
+            [class.bg-neutral-100]="!isEdit()"
+            [class.cursor-not-allowed]="!isEdit()"
+            [readOnly]="!isEdit()"
+          />
+          <label
+            for="heading"
+            class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+            >Heading</label
+          >
+        </div>
+
+        <!-- Main Image -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-heading">Main Image</label>
+          <div class="flex items-center gap-4">
+            @if (imageUrl && resolveGalleryUrl(imageUrl)) {
+              <img
+                [src]="resolveGalleryUrl(imageUrl)"
+                alt="About Main Image"
+                class="h-32 w-auto rounded border object-contain"
+              />
+            }
+            @if (isEdit()) {
+              <button
+                type="button"
+                (click)="openGalleryPicker('main')"
+                class="flex items-center gap-2 text-sm text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded px-4 py-2"
+              >
+                <fa-icon [icon]="faImage"></fa-icon>
+                Select from Gallery
+              </button>
+            }
           </div>
-          @if (headingError) {
-            <ul class="-mt-2 mb-2">
-              @for (error of heading.errors(); track error) {
-                <li class="text-sm text-red-600">{{ error.message }}</li>
-              }
-            </ul>
+          @if (imageUrl) {
+            <p class="text-xs text-neutral-500">{{ imageUrl }}</p>
           }
         </div>
 
-        <!-- Title & Description 1 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            @let title = form.title();
-            @let titleError = form.title().invalid() && form.title().touched();
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title"
-                id="title"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Title 1</label
+        <!-- Info Sections -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-heading">Info Sections</h2>
+            @if (isEdit()) {
+              <button
+                type="button"
+                (click)="addInfoItem()"
+                class="flex items-center gap-2 text-sm text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded px-4 py-2"
               >
-            </div>
-            @if (titleError) {
-              <ul class="-mt-2 mb-2">
-                @for (error of title.errors(); track error) {
-                  <li class="text-sm text-red-600">{{ error.message }}</li>
-                }
-              </ul>
+                <fa-icon [icon]="faPlus"></fa-icon>
+                Add Section
+              </button>
             }
           </div>
 
-          <div>
-            @let description = form.description();
-            @let descriptionError = form.description().invalid() && form.description().touched();
-            <div class="pb-2">
-              <label class="block text-sm font-medium text-body mb-1">Description 1</label>
-              <quill-editor
-                [(ngModel)]="editorDescription"
-                [ngModelOptions]="{ standalone: true }"
-                [modules]="quillModules"
-                [styles]="{ height: '120px' }"
-                placeholder="Description 1"
-              ></quill-editor>
-            </div>
-            @if (descriptionError) {
-              <ul class="mt-1 mb-2">
-                @for (error of description.errors(); track error) {
-                  <li class="text-sm text-red-600">{{ error.message }}</li>
+          @for (item of infoItems; track $index) {
+            <div class="border border-default-medium rounded-lg p-4 space-y-3 relative">
+              @if (isEdit()) {
+                <button
+                  type="button"
+                  (click)="removeInfoItem($index)"
+                  class="absolute top-3 right-3 text-red-500 hover:text-red-700 transition"
+                >
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              }
+
+              <div class="text-sm font-medium text-neutral-500">Section {{ $index + 1 }}</div>
+
+              <!-- Title -->
+              <div class="relative pb-2">
+                <input
+                  type="text"
+                  [(ngModel)]="item.title"
+                  [name]="'info_title_' + $index"
+                  [id]="'info_title_' + $index"
+                  autocomplete="off"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                  placeholder=" "
+                  [class.bg-neutral-100]="!isEdit()"
+                  [class.cursor-not-allowed]="!isEdit()"
+                  [readOnly]="!isEdit()"
+                />
+                <label
+                  [for]="'info_title_' + $index"
+                  class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                  >Title</label
+                >
+              </div>
+
+              <!-- Description (Quill) -->
+              <div class="pb-2">
+                <label class="block text-sm font-medium text-body mb-1">Description</label>
+                <quill-editor
+                  [(ngModel)]="item.desc"
+                  [ngModelOptions]="{ standalone: true }"
+                  [modules]="quillModules"
+                  [styles]="{ height: '120px' }"
+                  placeholder="Description"
+                ></quill-editor>
+              </div>
+
+              <!-- Image -->
+              <div class="space-y-1">
+                <label class="block text-sm font-medium text-body">Section Image</label>
+                <div class="flex items-center gap-3">
+                  @if (item.imgU && resolveGalleryUrl(item.imgU)) {
+                    <img
+                      [src]="resolveGalleryUrl(item.imgU)"
+                      alt="Section image"
+                      class="h-20 w-auto rounded border object-contain"
+                    />
+                  }
+                  @if (isEdit()) {
+                    <button
+                      type="button"
+                      (click)="openGalleryPicker($index)"
+                      class="flex items-center gap-2 text-xs text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded px-3 py-1.5"
+                    >
+                      <fa-icon [icon]="faImage"></fa-icon>
+                      Select Image
+                    </button>
+                  }
+                </div>
+                @if (item.imgU) {
+                  <p class="text-xs text-neutral-500">{{ item.imgU }}</p>
                 }
-              </ul>
-            }
-          </div>
-        </div>
+              </div>
+            </div>
+          }
 
-        <!-- Title & Description 2 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title2"
-                id="title2"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title2"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Title 2</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="pb-2">
-              <label class="block text-sm font-medium text-body mb-1">Description 2</label>
-              <quill-editor
-                [(ngModel)]="editorDescription2"
-                [ngModelOptions]="{ standalone: true }"
-                [modules]="quillModules"
-                [styles]="{ height: '120px' }"
-                placeholder="Description 2"
-              ></quill-editor>
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 3 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title3"
-                id="title3"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title3"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Title 3</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="pb-2">
-              <label class="block text-sm font-medium text-body mb-1">Description 3</label>
-              <quill-editor
-                [(ngModel)]="editorDescription3"
-                [ngModelOptions]="{ standalone: true }"
-                [modules]="quillModules"
-                [styles]="{ height: '120px' }"
-                placeholder="Description 3"
-              ></quill-editor>
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 4 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title4"
-                id="title4"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title4"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Title 4</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="pb-2">
-              <label class="block text-sm font-medium text-body mb-1">Description 4</label>
-              <quill-editor
-                [(ngModel)]="editorDescription4"
-                [ngModelOptions]="{ standalone: true }"
-                [modules]="quillModules"
-                [styles]="{ height: '120px' }"
-                placeholder="Description 4"
-              ></quill-editor>
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 5 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title5"
-                id="title6"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title6"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Left State Title</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.description5"
-                id="description6"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="description6"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Left State Value</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 6 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title6"
-                id="title6"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title6"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Left Middle State Title</label
-              >
-            </div>
-          </div>
-
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.description6"
-                id="description6"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="description6"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Left Middle State Value</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 7 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title7"
-                id="title7"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title7"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Right Middle State Title</label
-              >
-            </div>
-          </div>
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.description7"
-                id="description7"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="description7"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Right Middle State Value</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Title & Description 8 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.title8"
-                id="title8"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="title8"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Right State Title</label
-              >
-            </div>
-          </div>
-          <div>
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.description8"
-                id="description8"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-                [class.bg-neutral-100]="!isEdit()"
-                [class.cursor-not-allowed]="!isEdit()"
-              />
-              <label
-                for="description8"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Right State Value</label
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Image Upload -->
-        <div class="pb-2">
-          <label class="block text-sm font-medium text-heading" for="imageUrl">About Image</label>
-          <input
-            #fileInput
-            id="imageUrl"
-            type="file"
-            accept="image/*"
-            (change)="onFileSelect($event)"
-            class="cursor-pointer bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-          />
-          <p class="mt-1 text-sm text-neutral-500" id="file_input_help">
-            SVG, PNG, JPG or WEBP (MAX. 1280x720px).
-          </p>
-
-          <!-- Image Preview -->
-          @if (previewUrl()) {
-            <div class="mt-2">
-              <img
-                [src]="previewUrl()"
-                alt="Preview"
-                class="h-48 w-auto object-contain rounded border"
-              />
-            </div>
+          @if (infoItems.length === 0) {
+            <p class="text-sm text-neutral-500 text-center py-4">
+              No info sections yet. Click "Add Section" to start.
+            </p>
           }
         </div>
 
@@ -420,11 +173,11 @@
           <div class="flex gap-2 pt-4">
             <button
               type="submit"
-              [disabled]="form().invalid() || isSubmitted()"
+              [disabled]="isSubmitted()"
               class="flex items-center gap-2 text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center"
             >
               <fa-icon [icon]="faSave"></fa-icon>
-              {{ isSubmitted() ? 'Updating...' : 'Update About' }}
+              {{ isSubmitted() ? 'Saving...' : 'Save About' }}
             </button>
 
             <button
@@ -439,6 +192,68 @@
           </div>
         }
       </form>
+
+      <!-- Gallery Picker Modal -->
+      @if (showGalleryPicker()) {
+        <div
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60"
+          (click)="closeGalleryPicker()"
+        >
+          <div
+            class="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] mx-4 flex flex-col"
+            (click)="$event.stopPropagation()"
+          >
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-default-medium">
+              <h3 class="text-lg font-semibold text-heading">Select Gallery Image</h3>
+              <div class="flex items-center gap-3">
+                <select
+                  [(ngModel)]="galleryFilterType"
+                  [ngModelOptions]="{ standalone: true }"
+                  class="text-sm border border-default-medium rounded px-2 py-1 bg-transparent text-heading"
+                >
+                  <option value="">All Types</option>
+                  @for (type of galleryTypeOptions; track type) {
+                    <option [value]="type">{{ type }}</option>
+                  }
+                </select>
+                <button
+                  type="button"
+                  (click)="closeGalleryPicker()"
+                  class="text-neutral-500 hover:text-red-500 transition"
+                >
+                  <fa-icon [icon]="faXmark" class="text-xl"></fa-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Image Grid -->
+            <div class="p-4 overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              @for (img of getFilteredGalleryImages(); track img.id) {
+                <div
+                  (click)="selectGalleryImage(img)"
+                  class="cursor-pointer border-2 border-transparent hover:border-emerald-500 rounded-lg overflow-hidden transition"
+                >
+                  <img
+                    [src]="imgURL + img.imageUrl"
+                    [alt]="img.description"
+                    class="w-full h-24 object-cover"
+                    loading="lazy"
+                  />
+                  <p class="text-xs text-center text-neutral-500 p-1 truncate">
+                    {{ img.description || img.type }}
+                  </p>
+                </div>
+              }
+              @if (getFilteredGalleryImages().length === 0) {
+                <p class="col-span-full text-center text-neutral-500 py-8">
+                  No gallery images found.
+                </p>
+              }
+            </div>
+          </div>
+        </div>
+      }
     }
   </div>
 } @else {
