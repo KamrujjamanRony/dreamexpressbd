@@ -14,10 +14,10 @@
       <div class="footer-animate sm:col-span-2 lg:col-span-1">
         <div class="footer-brand-block">
           <h3 class="text-xl font-bold text-white mb-3 footer-glow-text">{{ companyName }}</h3>
-          @if (aboutData()?.description) {
+          @if (aboutData()?.info?.[0]?.desc) {
             <div
               class="text-slate-400 text-sm leading-relaxed line-clamp-4 wrap-break-word"
-              [innerHTML]="aboutData()?.description"
+              [innerHTML]="aboutData()?.info?.[0]?.desc"
             ></div>
           } @else {
             <p class="text-slate-400 text-sm leading-relaxed">
@@ -92,29 +92,15 @@
       <div class="footer-animate" style="transition-delay: 200ms">
         <h4 class="footer-heading">About</h4>
         <ul class="footer-info-list">
-          @if (aboutData()?.title2) {
-            <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-bullseye"></i></div>
-              <div>
-                <p class="text-white text-sm font-medium">{{ aboutData()?.title2 }}</p>
-              </div>
-            </li>
-          }
-          @if (aboutData()?.title3) {
-            <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-star"></i></div>
-              <div>
-                <p class="text-white text-sm font-medium">{{ aboutData()?.title3 }}</p>
-              </div>
-            </li>
-          }
-          @if (aboutData()?.title4) {
-            <li class="footer-info-item">
-              <div class="footer-info-icon"><i class="fas fa-heart"></i></div>
-              <div>
-                <p class="text-white text-sm font-medium">{{ aboutData()?.title4 }}</p>
-              </div>
-            </li>
+          @for (item of aboutData()?.info || []; track item.id ?? $index) {
+            @if (item.title) {
+              <li class="footer-info-item">
+                <div class="footer-info-icon"><i class="fas fa-circle-info"></i></div>
+                <div>
+                  <p class="text-white text-sm font-medium">{{ item.title }}</p>
+                </div>
+              </li>
+            }
           }
         </ul>
       </div>
