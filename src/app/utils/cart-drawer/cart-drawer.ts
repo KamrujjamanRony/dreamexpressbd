@@ -102,9 +102,18 @@ export class CartDrawer implements OnInit, OnDestroy {
         selectColor: ci.selectColor,
         productName: p?.title || 'Product',
         price,
-        image: p?.imageUrl ? this.imgBaseUrl + p.imageUrl : '',
+        image: this.resolveProductImage(p),
       };
     });
+  }
+
+  private resolveProductImage(product: any): string {
+    const value = product?.resolvedImageUrl || product?.imageUrl || '';
+    if (!value) return '';
+    if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+      return value;
+    }
+    return `${this.imgBaseUrl}${value}`;
   }
 
   private calcSubtotal() {
