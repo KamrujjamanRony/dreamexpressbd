@@ -83,7 +83,7 @@
                     <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                       {{ item?.slItem || '-' }}
                     </td>
-                    <td class="px-6 py-4">{{ item?.itemName || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.categoryName || '-' }}</td>
                     <td class="px-6 py-4">
                       @if (isEdit()) {
                         <button
@@ -113,11 +113,15 @@
   } @else {
     <div class="max-w-8xl mx-auto relative">
       <!-- Menu Registration Form -->
-      <div class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-gray-700">
+      <div
+        class="bg-white rounded-lg shadow-md border border-gray-200 transition-all dark:bg-gray-950 dark:border-gray-700"
+      >
         <!-- Form Header -->
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 transition-all dark:text-gray-50">Category Form</h2>
+            <h2 class="text-2xl font-bold text-gray-800 transition-all dark:text-gray-50">
+              Category Form
+            </h2>
             <button
               class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
               (click)="onToggleList()"
@@ -129,61 +133,62 @@
           <!-- Form Fields -->
           <form class="space-y-6" (submit)="onSubmit($event)">
             <div class="">
-          <!-- itemName -->
-          <div>
-            @let itemName = form.itemName();
-            @let itemNameError = form.itemName().invalid() && form.itemName().touched();
-            <div class="relative pb-2">
-              <input
-                id="itemName"
-                [formField]="form.itemName"
-                rows="4"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=""
-                autocomplete="off"
-              />
-              <label
-                for="itemName"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
-                >Category Name</label
-              >
-            </div>
-            @if (itemNameError) {
-              <ul class="-mt-2 mb-2">
-                @for (error of itemName.errors(); track error) {
-                  <li class="text-sm text-red-600">{{ error.message }}</li>
+              <!-- categoryName -->
+              <div>
+                @let categoryName = form.categoryName();
+                @let categoryNameError =
+                  form.categoryName().invalid() && form.categoryName().touched();
+                <div class="relative pb-2">
+                  <input
+                    id="categoryName"
+                    [formField]="form.categoryName"
+                    rows="4"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=""
+                    autocomplete="off"
+                  />
+                  <label
+                    for="categoryName"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1"
+                    >Category Name</label
+                  >
+                </div>
+                @if (categoryNameError) {
+                  <ul class="-mt-2 mb-2">
+                    @for (error of categoryName.errors(); track error) {
+                      <li class="text-sm text-red-600">{{ error.message }}</li>
+                    }
+                  </ul>
                 }
-              </ul>
-            }
-          </div>
+              </div>
 
-          <!-- SL Item -->
-          <div>
-            @let slItem = form.slItem();
-            @let slItemError = form.slItem().invalid() && form.slItem().touched();
-            <div class="relative pb-2">
-              <input
-                type="text"
-                [formField]="form.slItem"
-                id="slItem"
-                autocomplete="off"
-                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
-                placeholder=" "
-              />
-              <label
-                for="slItem"
-                class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1 capitalize"
-                >SL Number</label
-              >
-            </div>
-            @if (slItemError) {
-              <ul class="-mt-2 mb-2">
-                @for (error of slItem.errors(); track error) {
-                  <li class="text-sm text-red-600">{{ error.message }}</li>
+              <!-- SL Item -->
+              <div>
+                @let slItem = form.slItem();
+                @let slItemError = form.slItem().invalid() && form.slItem().touched();
+                <div class="relative pb-2">
+                  <input
+                    type="text"
+                    [formField]="form.slItem"
+                    id="slItem"
+                    autocomplete="off"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-heading bg-transparent rounded-base border border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
+                    placeholder=" "
+                  />
+                  <label
+                    for="slItem"
+                    class="absolute text-sm text-body duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-primary px-2 peer-focus:px-2 peer-focus:text-fg-brand peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto inset-s-1 capitalize"
+                    >SL Number</label
+                  >
+                </div>
+                @if (slItemError) {
+                  <ul class="-mt-2 mb-2">
+                    @for (error of slItem.errors(); track error) {
+                      <li class="text-sm text-red-600">{{ error.message }}</li>
+                    }
+                  </ul>
                 }
-              </ul>
-            }
-          </div>
+              </div>
 
               <div class="flex gap-2 lg:col-span-2 xl:col-span-3">
                 <!-- Save -->

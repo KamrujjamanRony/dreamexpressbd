@@ -41,7 +41,7 @@ export class CategoryList {
       .filter(item =>
         String(item.id ?? '').toLowerCase().includes(query) ||
         String(item.slItem ?? '').toLowerCase().includes(query) ||
-        item.itemName?.toLowerCase().includes(query)
+        item.categoryName?.toLowerCase().includes(query)
       )
       .sort((a, b) => (a.slItem! - b.slItem!));
   });
@@ -61,14 +61,14 @@ export class CategoryList {
 
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
-    itemName: '',
+    categoryName: '',
     slItem: '',
     companyID: environment.companyCode.toString(),
   });
 
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (schemaPath) => {
-    required(schemaPath.itemName, { message: 'itemName is required' });
+    required(schemaPath.categoryName, { message: 'categoryName is required' });
     validate(schemaPath.slItem, ({ value }) => {
       if (value() && !/^\d+$/.test(value())) {
         return {
@@ -79,7 +79,7 @@ export class CategoryList {
       return null;
     })
 
-    debounce(schemaPath.itemName, 300);
+    debounce(schemaPath.categoryName, 300);
   });
 
   /* ---------------- LIFECYCLE ---------------- */
@@ -132,7 +132,7 @@ export class CategoryList {
 
     const payload:CategoryM = {
       companyID: Number(formValue.companyID),
-      itemName: formValue.itemName,
+      categoryName: formValue.categoryName,
       slItem: formValue.slItem ? Number(formValue.slItem) : null,
     };
     
@@ -161,7 +161,7 @@ export class CategoryList {
     // Update form model
     this.model.update(current => ({
       ...current,
-      itemName: item.itemName ?? '',
+      categoryName: item.categoryName ?? '',
       slItem: item.slItem?.toString() ?? '',
       companyID: item.companyID.toString(),
     }));
@@ -197,7 +197,7 @@ export class CategoryList {
   /* ---------------- RESET ---------------- */
   formReset() {
     this.model.set({
-      itemName: '',
+      categoryName: '',
       slItem: '',
       companyID: environment.companyCode.toString(),
     });
