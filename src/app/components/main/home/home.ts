@@ -58,7 +58,7 @@ export class Home {
   categoryWiseProducts = computed(() => {
     const categoryMap: { [key: string]: ProductM[] } = {};
     for (const product of this.productWithDiscount()) {
-      const categoryName = product.itemName;
+      const categoryName = product.categoryName;
       if (!categoryMap[categoryName]) {
         categoryMap[categoryName] = [];
       }
