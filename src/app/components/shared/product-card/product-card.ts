@@ -56,7 +56,7 @@ export class ProductCard {
     const p = product();
     if (!p) return;
     this.wishListService.toggleWishlist(p.id?.toString(), '', '');
-    this.toast.success('Wishlist updated!', 'top-right', 2000);
+    this.toast.success('Wishlist updated!', 'bottom-left', 2000);
   }
 
   addToCart(product: any) {
@@ -88,8 +88,8 @@ export class ProductCard {
               userCart.products.push(cartProduct);
             }
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => { this.toast.success('Added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
-              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
+              next: () => { this.toast.success('Added to cart!', 'bottom-left', 2000); this.cartDrawer.open(); },
+              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
             });
           } else {
             const newCart: CartM = {
@@ -104,17 +104,17 @@ export class ProductCard {
               totalAmount: 0,
             };
             this.cartService.add(newCart).subscribe({
-              next: () => { this.toast.success('Added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
-              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
+              next: () => { this.toast.success('Added to cart!', 'bottom-left', 2000); this.cartDrawer.open(); },
+              error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
             });
           }
         },
-        error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'top-right', 3000),
+        error: (e) => this.toast.danger(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
       });
     } else {
       // Guest → store locally
       this.cartService.addLocalProduct(cartProduct);
-      this.toast.success('Added to cart!', 'top-right', 2000);
+      this.toast.success('Added to cart!', 'bottom-left', 2000);
       this.cartDrawer.open();
     }
   }

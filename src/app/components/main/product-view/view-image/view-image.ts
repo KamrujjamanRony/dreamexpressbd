@@ -202,8 +202,8 @@ export class ViewImage {
             }
 
             this.cartService.update(userCart.id!, userCart).subscribe({
-              next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
-              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
+              next: () => { this.toast.success('Product added to cart!', 'bottom-left', 2000); this.cartDrawer.open(); },
+              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
             });
           } else {
             const newCart: CartM = {
@@ -217,8 +217,8 @@ export class ViewImage {
               products: [cartProduct],
             };
             this.cartService.add(newCart).subscribe({
-              next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
-              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
+              next: () => { this.toast.success('Product added to cart!', 'bottom-left', 2000); this.cartDrawer.open(); },
+              error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
             });
           }
         },
@@ -234,15 +234,15 @@ export class ViewImage {
             products: [cartProduct],
           };
           this.cartService.add(newCart).subscribe({
-            next: () => { this.toast.success('Product added to cart!', 'top-right', 2000); this.cartDrawer.open(); },
-            error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'top-right', 3000),
+            next: () => { this.toast.success('Product added to cart!', 'bottom-left', 2000); this.cartDrawer.open(); },
+            error: (e) => this.toast.warning(e?.error || 'Failed to add to cart', 'bottom-left', 3000),
           });
         },
       });
     } else {
       // Guest → store locally
       this.cartService.addLocalProduct(cartProduct);
-      this.toast.success('Product added to cart!', 'top-right', 2000);
+      this.toast.success('Product added to cart!', 'bottom-left', 2000);
       this.cartDrawer.open();
     }
   }
@@ -254,7 +254,7 @@ export class ViewImage {
       this.viewSize || '',
       this.viewColor?.colorName || ''
     );
-    this.toast.success('Wishlist updated!', 'top-right', 2000);
+    this.toast.success('Wishlist updated!', 'bottom-left', 2000);
   }
 
 
