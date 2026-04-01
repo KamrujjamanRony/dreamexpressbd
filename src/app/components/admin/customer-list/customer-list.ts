@@ -10,6 +10,7 @@ import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { CustomerM } from '../../../models/Customer';
+import { SData } from '../../../services/s-data';
 
 @Component({
     selector: 'app-customer-list',
@@ -29,6 +30,7 @@ export class CustomerList {
     private permissionService = inject(SPermission);
     private toast = inject(SToast);
     private confirm = inject(SConfirm);
+    private dataService = inject(SData);
 
     @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
@@ -36,6 +38,15 @@ export class CustomerList {
     items = signal<CustomerM[]>([]);
     searchQuery = signal('');
     showPassword = signal(false);
+    regions = signal<any[]>([]);
+    shippingCities = signal<any[]>([]);
+    shippingAreas = signal<any[]>([]);
+
+    addressTypes = [
+        { label: 'Home', value: 'Home' },
+        { label: 'Work', value: 'Work' },
+        { label: 'Other', value: 'Other' }
+    ];
 
     toggleShowPassword() {
         this.showPassword.update(v => !v);
@@ -86,6 +97,15 @@ export class CustomerList {
         required(schemaPath.fullName, { message: 'Full name is required' });
         required(schemaPath.phone, { message: 'Phone number is required' });
         required(schemaPath.pass, { message: 'Password is required' });
+        required(schemaPath.shippingDistrict, { message: 'Division is required' });
+        required(schemaPath.shippingStreet, { message: 'Address is required' });
+
+        validate(schemaPath.fullName, ({ value }) => {
+            if (value() && value().length < 2) {
+                return { kind: 'minLength', message: 'Full name must be at least 2 characters' };
+            }
+            return null;
+        });
 
         validate(schemaPath.phone, ({ value }) => {
             if (value() && !/^\d{10,15}$/.test(value())) {
@@ -125,6 +145,42 @@ export class CustomerList {
     ngOnInit(): void {
         this.loadItems();
         this.loadPermissions();
+        this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
+    }
+
+    onShippingDistrictChange(division: string): void {
+        this.model.update(m => ({
+            ...m,
+            dist: division,
+            shippingDistrict: division,
+            shippingCity: '',
+            area: ''
+        }));
+        this.shippingCities.set([]);
+        this.shippingAreas.set([]);
+        if (division) {
+            this.dataService.getCitiesByRegion(division).subscribe(cities => this.shippingCities.set(cities));
+        }
+    }
+
+    onShippingCityChange(city: string): void {
+        this.model.update(m => ({ ...m, shippingCity: city, area: '' }));
+        this.shippingAreas.set([]);
+        if (city) {
+            this.dataService.getAreasByCity(city).subscribe(areas => this.shippingAreas.set(areas));
+        }
+    }
+
+    onShippingAreaChange(area: string): void {
+        this.model.update(m => ({ ...m, area }));
+    }
+
+    onShippingStreetChange(street: string): void {
+        this.model.update(m => ({ ...m, address: street, shippingStreet: street }));
+    }
+
+    onShippingTypeChange(type: string): void {
+        this.model.update(m => ({ ...m, shippingType: type }));
     }
 
     /* ---------------- LOADERS ---------------- */
@@ -168,18 +224,20 @@ export class CustomerList {
         this.isSubmitted.set(true);
 
         const formValue = this.form().value();
+        const district = formValue.shippingDistrict || formValue.dist;
+        const street = formValue.shippingStreet || formValue.address;
 
         const payload: CustomerM = {
             companyID: Number(formValue.companyID),
             fullName: formValue.fullName,
             phone: formValue.phone,
             pass: formValue.pass,
-            dist: formValue.dist,
-            address: formValue.address,
-            shippingDistrict: formValue.shippingDistrict,
+            dist: district,
+            address: street,
+            shippingDistrict: district,
             shippingCity: formValue.shippingCity,
-            shippingStreet: formValue.shippingStreet,
-            shippingContact: formValue.shippingContact,
+            shippingStreet: street,
+            shippingContact: formValue.phone,
             shippingType: formValue.shippingType,
             area: formValue.area,
         };
@@ -223,6 +281,19 @@ export class CustomerList {
         }));
 
         this.form().reset();
+
+        if (item.shippingDistrict) {
+            this.dataService.getCitiesByRegion(item.shippingDistrict).subscribe(cities => this.shippingCities.set(cities));
+        } else {
+            this.shippingCities.set([]);
+        }
+
+        if (item.shippingCity) {
+            this.dataService.getAreasByCity(item.shippingCity).subscribe(areas => this.shippingAreas.set(areas));
+        } else {
+            this.shippingAreas.set([]);
+        }
+
         this.showList.set(false);
     }
 
@@ -268,6 +339,8 @@ export class CustomerList {
 
         this.selected.set(null);
         this.isSubmitted.set(false);
+        this.shippingCities.set([]);
+        this.shippingAreas.set([]);
         this.form().reset();
     }
 
