@@ -170,7 +170,7 @@ export class Users {
         this.toast.success('Saved successfully!', 'bottom-right', 5000);
       },
       error: (err) => {
-        this.toast.danger(err?.error || 'Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger(err?.error || 'Saved unsuccessful!', 'top-left', 3000);
         console.error('Error submitting form:', err);
         this.isSubmitted.set(false);
       }
@@ -215,7 +215,7 @@ export class Users {
           this.toast.success('User deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-          this.toast.danger(error?.error || 'User deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger(error?.error || 'User deleted unsuccessful!', 'top-left', 3000);
           console.error('Error deleting User:', error);
         }
       });

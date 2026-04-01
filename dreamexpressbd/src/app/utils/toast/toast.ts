@@ -4,10 +4,10 @@ import { SToast } from './toast.service';
 import { ToastM, ToastPosition } from './toast.model';
 
 @Component({
-    selector: 'app-toast',
-    imports: [CommonModule],
-    templateUrl: './toast.html',
-    styleUrl: './toast.css',
+  selector: 'app-toast',
+  imports: [CommonModule],
+  templateUrl: './toast.html',
+  styleUrl: './toast.css',
 })
 export class Toast {
   public toastService = inject(SToast);
@@ -17,7 +17,7 @@ export class Toast {
     'top-right',
     'top-left',
     'bottom-right',
-    'bottom-left',
+    'top-left',
   ];
 
   iconBg(type: ToastM['type']) {
@@ -33,7 +33,7 @@ export class Toast {
       'top-right': 'top-4 right-4',
       'top-left': 'top-4 left-4',
       'bottom-right': 'bottom-4 right-4',
-      'bottom-left': 'bottom-4 left-4',
+      'top-left': 'bottom-4 left-4',
     }[pos];
   }
 

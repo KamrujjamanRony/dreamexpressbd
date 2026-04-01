@@ -229,7 +229,7 @@ export class GalleryList {
             error: (error) => {
                 this.isSubmitted.set(false);
                 console.error('Error:', error);
-                this.toast.danger(error?.error || 'Save unsuccessful!', 'bottom-left', 3000);
+                this.toast.danger(error?.error || 'Save unsuccessful!', 'top-left', 3000);
             },
         });
     }
@@ -268,7 +268,7 @@ export class GalleryList {
                     this.toast.success('Image deleted successfully!', 'bottom-right', 5000);
                 },
                 error: (error) => {
-                    this.toast.danger(error?.error || 'Delete unsuccessful!', 'bottom-left', 3000);
+                    this.toast.danger(error?.error || 'Delete unsuccessful!', 'top-left', 3000);
                     console.error('Error deleting image:', error);
                 },
             });

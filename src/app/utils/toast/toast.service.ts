@@ -20,7 +20,7 @@ export class SToast {
         'top-right': [],
         'top-left': [],
         'bottom-right': [],
-        'bottom-left': [],
+        'top-left': [],
         'bottom-center': [],
         'center': [],
       }

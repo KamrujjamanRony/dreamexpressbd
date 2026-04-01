@@ -182,7 +182,7 @@ export class OrderList {
       },
       error: (err) => {
         console.error('Error updating order status:', err);
-        this.toast.danger('Failed to update order status', 'bottom-left', 5000);
+        this.toast.danger('Failed to update order status', 'top-left', 5000);
       }
     });
   }
@@ -236,7 +236,7 @@ export class OrderList {
         console.error('Error saving order:', err);
         this.toast.danger(
           err.error?.message || 'Failed to save order',
-          'bottom-left',
+          'top-left',
           5000
         );
       }
@@ -259,7 +259,7 @@ export class OrderList {
         },
         error: (err) => {
           console.error('Error deleting order:', err);
-          this.toast.danger('Failed to delete order', 'bottom-left', 5000);
+          this.toast.danger('Failed to delete order', 'top-left', 5000);
         }
       });
     }

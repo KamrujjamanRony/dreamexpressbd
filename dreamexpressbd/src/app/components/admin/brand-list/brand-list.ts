@@ -21,13 +21,13 @@ export class BrandList {
   faPencil = faPencil;
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
-  
+
   /* ---------------- DI ---------------- */
   private brandService = inject(SBrand);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
-  
+
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   /* ---------------- SIGNAL STATE ---------------- */
@@ -133,7 +133,7 @@ export class BrandList {
       brandName: formValue.brandName,
       slBrand: formValue.slBrand ? Number(formValue.slBrand) : 0,
     };
-    
+
     const request$ = this.selected()
       ? this.brandService.update(this.selected()!.id!, payload)
       : this.brandService.add(payload);
@@ -147,7 +147,7 @@ export class BrandList {
       error: (error) => {
         this.isSubmitted.set(false);
         console.error(error?.message || error?.error?.message || 'An error occurred during submission.');
-        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger('Saved unsuccessful!', 'top-left', 3000);
       }
     });
   }
@@ -185,7 +185,7 @@ export class BrandList {
           this.toast.success('Brand deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-          this.toast.danger('Brand deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger('Brand deleted unsuccessful!', 'top-left', 3000);
           console.error('Error deleting brand:', error);
         }
       });

@@ -217,7 +217,7 @@ export class CarouselList {
         console.error('Error:', error);
         this.toast.danger(
           error?.error || 'Save unsuccessful!',
-          'bottom-left',
+          'top-left',
           3000
         );
       }
@@ -271,7 +271,7 @@ export class CarouselList {
         error: (error) => {
           this.toast.danger(
             error?.error || 'Delete unsuccessful!',
-            'bottom-left',
+            'top-left',
             3000
           );
           console.error('Error deleting Carousel:', error);

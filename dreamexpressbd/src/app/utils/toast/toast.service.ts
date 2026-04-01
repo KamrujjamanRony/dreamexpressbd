@@ -19,7 +19,7 @@ export class SToast {
         'top-right': [],
         'top-left': [],
         'bottom-right': [],
-        'bottom-left': [],
+        'top-left': [],
       }
     );
   });
@@ -73,11 +73,11 @@ export class SToast {
         list.map(x =>
           x.id === id
             ? {
-                ...x,
-                paused: true,
-                remaining:
-                  x.remaining - (Date.now() - x.startTime),
-              }
+              ...x,
+              paused: true,
+              remaining:
+                x.remaining - (Date.now() - x.startTime),
+            }
             : x
         )
       );

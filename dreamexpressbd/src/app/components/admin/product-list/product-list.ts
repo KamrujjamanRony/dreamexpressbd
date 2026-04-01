@@ -643,7 +643,7 @@ export class ProductList {
         console.error('Error:', error);
         this.toast.danger(
           error?.error?.message || 'Save unsuccessful!',
-          'bottom-left',
+          'top-left',
           3000
         );
       }
@@ -807,7 +807,7 @@ export class ProductList {
         error: (error) => {
           this.toast.danger(
             error?.error?.message || 'Delete unsuccessful!',
-            'bottom-left',
+            'top-left',
             3000
           );
           console.error('Error deleting Product:', error);

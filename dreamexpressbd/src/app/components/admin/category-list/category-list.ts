@@ -21,13 +21,13 @@ export class CategoryList {
   faPencil = faPencil;
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
-  
+
   /* ---------------- DI ---------------- */
   private categoryService = inject(SCategory);
   private permissionService = inject(SPermission);
-      private toast = inject(SToast);
-      private confirm = inject(SConfirm);
-  
+  private toast = inject(SToast);
+  private confirm = inject(SConfirm);
+
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   /* ---------------- SIGNAL STATE ---------------- */
@@ -130,12 +130,12 @@ export class CategoryList {
 
     const formValue = this.form().value();
 
-    const payload:CategoryM = {
+    const payload: CategoryM = {
       companyID: Number(formValue.companyID),
       categoryName: formValue.categoryName,
       slItem: formValue.slItem ? Number(formValue.slItem) : null,
     };
-    
+
     const request$ = this.selected()
       ? this.categoryService.update(this.selected()!.id!, payload)
       : this.categoryService.add(payload);
@@ -149,7 +149,7 @@ export class CategoryList {
       error: (error) => {
         this.isSubmitted.set(false);
         console.error(error?.message || error?.error?.message || 'An error occurred during submission.');
-        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger('Saved unsuccessful!', 'top-left', 3000);
       }
     });
   }
@@ -187,7 +187,7 @@ export class CategoryList {
           this.toast.success('item deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-          this.toast.danger('item deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger('item deleted unsuccessful!', 'top-left', 3000);
           console.error('Error deleting item:', error);
         }
       });

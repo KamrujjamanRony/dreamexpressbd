@@ -30,16 +30,16 @@ export class CarouselList {
   faXmark = faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
   faTrash = faTrash;
-  
+
   /* ---------------- DI ---------------- */
   private carouselService = inject(SCarousel);
   private permissionService = inject(SPermission);
   private toast = inject(SToast);
   private confirm = inject(SConfirm);
-  
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  
+
   imgURL = environment.ImageApi;
   emptyImg = environment.emptyImg;
 
@@ -89,7 +89,7 @@ export class CarouselList {
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (schemaPath) => {
     // required(schemaPath.title, { message: 'Title is required' });
-    
+
     // validate(schemaPath.description, ({ value }) => {
     //   if (!value()) {
     //     return {
@@ -144,7 +144,7 @@ export class CarouselList {
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       // Validate file type
       if (!file.type.startsWith('image/')) {
         this.toast.warning('Please select an image file', 'bottom-right', 5000);
@@ -224,8 +224,8 @@ export class CarouselList {
         this.isSubmitted.set(false);
         console.error('Error:', error);
         this.toast.danger(
-          error?.error?.message || 'Save unsuccessful!', 
-          'bottom-left', 
+          error?.error?.message || 'Save unsuccessful!',
+          'top-left',
           3000
         );
       }
@@ -244,7 +244,7 @@ export class CarouselList {
     }));
 
     this.form().reset();
-    
+
     // Set main image preview
     if (carousel.imageUrl) {
       this.previewUrl.set(
@@ -276,8 +276,8 @@ export class CarouselList {
         },
         error: (error) => {
           this.toast.danger(
-            error?.error?.message || 'Delete unsuccessful!', 
-            'bottom-left', 
+            error?.error?.message || 'Delete unsuccessful!',
+            'top-left',
             3000
           );
           console.error('Error deleting Carousel:', error);

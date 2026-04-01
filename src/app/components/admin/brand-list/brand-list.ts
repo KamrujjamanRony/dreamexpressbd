@@ -147,7 +147,7 @@ export class BrandList {
       error: (error) => {
         this.isSubmitted.set(false);
         console.error('Error:', error);
-        this.toast.danger(error?.error || 'Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger(error?.error || 'Saved unsuccessful!', 'top-left', 3000);
       }
     });
   }
@@ -185,7 +185,7 @@ export class BrandList {
           this.toast.success('Brand deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-          this.toast.danger(error?.error || 'Brand deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger(error?.error || 'Brand deleted unsuccessful!', 'top-left', 3000);
           console.error('Error deleting brand:', error);
         }
       });

@@ -182,7 +182,7 @@ export class Menus {
         this.toast.success('Saved successfully!', 'bottom-right', 5000);
       },
       error: (error) => {
-        this.toast.danger('Saved unsuccessful!', 'bottom-left', 3000);
+        this.toast.danger('Saved unsuccessful!', 'top-left', 3000);
         console.error('Error submitting form:', error);
         this.isSubmitted.set(false);
       }
@@ -235,7 +235,7 @@ export class Menus {
           this.toast.success('Menu deleted successfully!', 'bottom-right', 5000);
         },
         error: (error) => {
-        this.toast.danger('Menu deleted unsuccessful!', 'bottom-left', 3000);
+          this.toast.danger('Menu deleted unsuccessful!', 'top-left', 3000);
           console.error('Error deleting Menu:', error);
         }
       });
