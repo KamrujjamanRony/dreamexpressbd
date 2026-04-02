@@ -168,7 +168,7 @@ export const routes: Routes = [
         title: `Order List | ${companyName}`,
       },
       {
-        path: 'menu-list',
+        path: 'menu-3300',
         loadComponent: () => import('./components/admin/menus/menus').then(m => m.Menus),
         data: { breadcrumb: 'Menu List' },
         title: `Menu List | ${companyName}`,
