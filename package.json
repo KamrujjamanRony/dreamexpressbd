@@ -35,6 +35,8 @@
     "@types/crypto-js": "^4.2.2",
     "crypto-js": "^4.2.0",
     "flowbite": "^4.0.1",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
     "ngx-cookie-service": "^21.1.0",
     "ngx-quill": "^30.0.1",
     "qrcode": "^1.5.4",

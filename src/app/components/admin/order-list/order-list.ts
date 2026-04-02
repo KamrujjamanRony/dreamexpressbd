@@ -5,7 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEye, faPencil, faTrash, faSearch,
   faFilter, faDownload, faSync, faCheckCircle,
-  faTimesCircle, faTruck, faClock, faPrint
+  faTimesCircle, faTruck, faClock
 } from '@fortawesome/free-solid-svg-icons';
 import { DatePipe } from '@angular/common';
 import { OrderForm } from './order-form/order-form';
@@ -19,6 +19,8 @@ import { SPermission } from '../../../services/s-permission';
 import { OrderM } from '../../../models/OrderM';
 import { Router } from '@angular/router';
 import QRCode from 'qrcode';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-order-list',
@@ -39,7 +41,6 @@ export class OrderList implements OnInit {
   faTimesCircle = faTimesCircle;
   faTruck = faTruck;
   faClock = faClock;
-  faPrint = faPrint;
 
   private orderService = inject(SOrder);
   private toast = inject(SToast);
@@ -377,16 +378,16 @@ export class OrderList implements OnInit {
     return this.statusColors[status] || 'bg-neutral-100 text-neutral-800';
   }
 
-  printVoucher(order: OrderM) {
+ downloadVoucherPdf(order: OrderM) {
     const orderId = order.id;
     this.orderService.get(orderId).subscribe({
       next: async (data: any) => {
         const o = this.normalizeOrderForPrint(data);
         const qrDataUrl = await this.generateQrCode(orderId, o);
-        this.openPrintWindow(orderId, o, qrDataUrl);
+        this.generateVoucherPdf(orderId, o, qrDataUrl);
       },
       error: () => {
-        this.toast.warning('Failed to load order for printing', 'top-right', 3000);
+        this.toast.warning('Failed to load order for voucher download', 'top-right', 3000);
       }
     });
   }
@@ -442,120 +443,131 @@ export class OrderList implements OnInit {
     };
   }
 
-  private openPrintWindow(orderId: any, o: any, qrDataUrl: string): void {
+  private generateVoucherPdf(orderId: any, o: any, qrDataUrl: string): void {
     const statusMap: Record<string, string> = {
       '0': 'Pending', 'Pending': 'Pending', '1': 'Processing', 'Processing': 'Processing',
       '2': 'Shipped', 'Shipped': 'Shipped', '3': 'Delivered', 'Delivered': 'Delivered',
       '4': 'Cancelled', 'Cancelled': 'Cancelled',
     };
     const status = statusMap[String(o.orderStatus)] || String(o.orderStatus);
-    const date = new Date(o.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    const fmt = (n: number) => '৳ ' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const date = new Date(o.orderDate).toLocaleDateString();
+    const fmt = (n: number) => `BDT ${Number(n || 0).toFixed(2)}`;
     const totalQty = o.orderItems.reduce((s: number, i: any) => s + i.quantity, 0);
 
-    const itemRows = o.orderItems.map((item: any, i: number) => {
-      const variant = [item.size, item.color].filter(Boolean).map((v: string) => `<span style="font-size:10px;background:#f1f5f9;padding:1px 5px;border-radius:3px;color:#000">${v}</span>`).join(' ');
-      return `<tr style="border-bottom:1px solid #e2e8f0">
-        <td style="padding:10px 8px;text-align:center;color:#000;font-size:12px">${i + 1}</td>
-        <td style="padding:10px 8px"><span style="font-weight:600;color:#000">${item.productName}</span>${variant ? '<br>' + variant : ''}</td>
-        <td style="padding:10px 8px;text-align:center;color:#000">${item.quantity}</td>
-        <td style="padding:10px 8px;text-align:right;color:#000">${fmt(item.price)}</td>
-        <td style="padding:10px 8px;text-align:right;font-weight:600;color:#000">${fmt(item.price * item.quantity)}</td>
-      </tr>`;
-    }).join('');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const left = 40;
+    const right = doc.internal.pageSize.getWidth() - 40;
+    const websiteUrl = 'https://chinatradexntour.com.bd/';
 
-    const discountRow = o.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:13px;color:#000"><span>Discount${o.discountToken ? ' (' + o.discountToken + ')' : ''}</span><span>- ${fmt(o.discountAmount)}</span></div>` : '';
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text('Dream Express BD', left, 50);
 
-    const qrSection = qrDataUrl ? `<div style="display:flex;align-items:center;gap:12px">
-            <img src="${qrDataUrl}" alt="QR Code" style="width:100px;height:100px;border:1px solid #e2e8f0;border-radius:8px" />
-            <div><p style="font-size:11px;color:#000">Scan for order details</p><p style="font-size:13px;font-weight:700;color:#000;font-family:monospace;margin-top:4px">#${orderId}</p></div>
-          </div>` : '';
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text('Order Invoice', left, 68);
+    doc.setFontSize(9.5);
+    doc.text(websiteUrl, left, 82);
 
-    const html = `<!DOCTYPE html><html><head><title>Invoice #${orderId}</title>
-      <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#000; background:#fff; }
-        .invoice { max-width:700px; margin:0 auto; padding:32px; }
-        .header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
-        .meta-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#000; font-weight:700; }
-        .addr-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px; }
-        .addr-box { padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; }
-        .addr-title { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#000; font-weight:700; margin-bottom:6px; }
-        .addr-name { font-size:13px; font-weight:600; color:#000; }
-        .addr-detail { font-size:12px; color:#000; margin-top:2px; }
-        table { width:100%; border-collapse:collapse; font-size:13px; color:#000; }
-        th { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#000; font-weight:700; padding:10px 8px; border-bottom:2px solid #e2e8f0; text-align:left; }
-        .bottom-section { display:flex; justify-content:space-between; align-items:end; margin-top:24px; gap:16px; flex-wrap:wrap; }
-        .totals { width:260px; }
-        .total-row { display:flex; justify-content:space-between; padding:3px 0; font-size:13px; color:#000; }
-        .grand-total { display:flex; justify-content:space-between; align-items:center; padding-top:10px; margin-top:8px; border-top:2px solid #000; font-size:15px; font-weight:700; color:#000; }
-        .grand-amount { font-size:18px; font-weight:800; color:#000; }
-        .footer { text-align:center; margin-top:32px; padding-top:16px; border-top:1px solid #e2e8f0; }
-        .footer p { font-size:12px; color:#000; }
-        .footer .company { font-size:13px; font-weight:600; color:#000; margin-bottom:4px; }
-        .badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.3px; border:1px solid #000; color:#000; }
-        @media print { body { margin:0; } .invoice { padding:20px; } }
-      </style>
-    </head><body>
-      <div class="invoice">
-        <div class="header">
-          <div>
-            <h1 style="font-size:22px;font-weight:800;color:#000;letter-spacing:-0.3px">Dream Express BD</h1>
-            <p style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:600;margin-top:2px">Order Invoice</p>
-          </div>
-          <div style="text-align:right">
-            <div class="meta-label">Invoice No.</div>
-            <div style="font-size:14px;font-weight:700;color:#000;font-family:monospace">#${orderId}</div>
-            <div class="meta-label" style="margin-top:6px">Date</div>
-            <div style="font-size:14px;font-weight:700;color:#000">${date}</div>
-            <div class="badge" style="margin-top:8px">${status}</div>
-          </div>
-        </div>
-        <div class="addr-grid">
-          <div class="addr-box">
-            <div class="addr-title">Bill To</div>
-            <div class="addr-name">${o.userName || 'Customer'}</div>
-            ${o.userPhone ? `<div class="addr-detail">${o.userPhone}</div>` : ''}
-          </div>
-          <div class="addr-box">
-            <div class="addr-title">Ship To</div>
-            <div class="addr-name">${o.shippingAddress.street}</div>
-            <div class="addr-detail">${o.shippingAddress.city}${o.shippingAddress.district ? ', ' + o.shippingAddress.district : ''}</div>
-            ${o.shippingAddress.contact ? `<div class="addr-detail">Phone: ${o.shippingAddress.contact}</div>` : ''}
-          </div>
-          <div class="addr-box">
-            <div class="addr-title">Payment</div>
-            <div class="addr-name">${o.paymentMethod}</div>
-          </div>
-        </div>
-        <table>
-          <thead><tr>
-            <th style="text-align:center;width:40px">No</th><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Price</th><th style="text-align:right">Total</th>
-          </tr></thead>
-          <tbody>${itemRows}</tbody>
-        </table>
-        <div class="bottom-section">
-          ${qrSection}
-          <div class="totals">
-            <div class="total-row"><span>Subtotal (${totalQty} items)</span><span>${fmt(o.subtotal)}</span></div>
-            <div class="total-row"><span>Delivery Charge</span><span>${fmt(o.deliveryCharge)}</span></div>
-            ${discountRow}
-            <div class="grand-total"><span>Total Due</span><span class="grand-amount">${fmt(o.totalAmount)}</span></div>
-          </div>
-        </div>
-        <div class="footer">
-          <p class="company">Dream Express BD — Thank you for your order!</p>
-          <p>This is a computer-generated invoice and does not require a signature.</p>
-        </div>
-      </div>
-      <script>window.onload=function(){window.print();}<\/script>
-    </body></html>`;
+    doc.setTextColor(0);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(`Invoice: #${orderId}`, right, 50, { align: 'right' });
+    doc.text(`Date: ${date}`, right, 66, { align: 'right' });
+    doc.text(`Status: ${status}`, right, 82, { align: 'right' });
 
-    const printWin = window.open('', '_blank');
-    if (printWin) {
-      printWin.document.write(html);
-      printWin.document.close();
+    let y = 112;
+    doc.setFontSize(10);
+    doc.text('Bill To', left, y);
+    doc.text('Ship To', left + 185, y);
+    doc.text('Payment', left + 370, y);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    const billTo = [o.userName || 'Customer', o.userPhone || '', o.userEmail || ''].filter(Boolean).join('\n');
+    const shipTo = [
+      o.shippingAddress?.street || '',
+      [o.shippingAddress?.city || '', o.shippingAddress?.district || ''].filter(Boolean).join(', '),
+      o.shippingAddress?.contact ? `Phone: ${o.shippingAddress.contact}` : '',
+    ].filter(Boolean).join('\n');
+
+    doc.text(doc.splitTextToSize(billTo, 165), left, y + 14);
+    doc.text(doc.splitTextToSize(shipTo, 165), left + 185, y + 14);
+    doc.text(doc.splitTextToSize(o.paymentMethod || '', 165), left + 370, y + 14);
+
+    y = 180;
+    autoTable(doc, {
+      startY: y,
+      margin: { left, right: 40 },
+      head: [['No', 'Item', 'Qty', 'Price', 'Total']],
+      body: o.orderItems.map((item: any, index: number) => {
+        const variant = [item.size, item.color].filter(Boolean).join(' / ');
+        const itemLabel = variant ? `${item.productName} (${variant})` : item.productName;
+        return [
+          String(index + 1),
+          itemLabel,
+          String(item.quantity || 0),
+          fmt(item.price || 0),
+          fmt((item.price || 0) * (item.quantity || 0)),
+        ];
+      }),
+      styles: { fontSize: 9, cellPadding: 6 },
+      headStyles: { fillColor: [245, 245, 245], textColor: [45, 45, 45] },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 35 },
+        2: { halign: 'right', cellWidth: 50 },
+        3: { halign: 'right', cellWidth: 95 },
+        4: { halign: 'right', cellWidth: 95 },
+      },
+    });
+
+    const tableBottom = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? y;
+    const totalsX = right - 210;
+    let totalsY = tableBottom + 24;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(`Subtotal (${totalQty} items)`, totalsX, totalsY);
+    doc.text(fmt(o.subtotal || 0), right, totalsY, { align: 'right' });
+    totalsY += 16;
+
+    doc.text('Delivery Charge', totalsX, totalsY);
+    doc.text(fmt(o.deliveryCharge || 0), right, totalsY, { align: 'right' });
+    totalsY += 16;
+
+    if ((o.discountAmount || 0) > 0) {
+      const discountLabel = o.discountToken ? `Discount (${o.discountToken})` : 'Discount';
+      doc.text(discountLabel, totalsX, totalsY);
+      doc.text(`- ${fmt(o.discountAmount || 0)}`, right, totalsY, { align: 'right' });
+      totalsY += 16;
     }
+
+    doc.setDrawColor(210);
+    doc.line(totalsX, totalsY - 6, right, totalsY - 6);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Total Due', totalsX, totalsY + 8);
+    doc.text(fmt(o.totalAmount || 0), right, totalsY + 8, { align: 'right' });
+
+    if (qrDataUrl) {
+      try {
+        doc.addImage(qrDataUrl, 'PNG', left, tableBottom + 10, 78, 78);
+      } catch {
+        // Ignore QR rendering issues and continue with PDF download.
+      }
+    }
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(110);
+    doc.text(websiteUrl, left, doc.internal.pageSize.getHeight() - 56);
+    doc.text(
+      'This is a computer-generated invoice and does not require a signature.',
+      left,
+      doc.internal.pageSize.getHeight() - 40
+    );
+
+    doc.save(`voucher-${orderId}.pdf`);
   }
 
   // Export to CSV

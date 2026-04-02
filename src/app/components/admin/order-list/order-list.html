@@ -235,11 +235,11 @@
                   </button>
 
                   <button
-                    (click)="printVoucher(order)"
+                    (click)="downloadVoucherPdf(order)"
                     class="text-rose-600 hover:text-rose-900 dark:text-rose-400 dark:hover:text-rose-300"
-                    title="Print Voucher"
+                    title="Download Voucher PDF"
                   >
-                    <fa-icon [icon]="faPrint"></fa-icon>
+                    <fa-icon [icon]="faDownload"></fa-icon>
                   </button>
 
                   @if (isEdit()) {

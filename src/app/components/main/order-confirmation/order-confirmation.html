@@ -33,13 +33,13 @@
       </div>
     </div>
 
-    <!-- Action Buttons (screen only) -->
+   <!-- Action Buttons (screen only) -->
     <div class="max-w-3xl mx-auto mb-5 flex flex-wrap gap-3 justify-center fade-slide-in no-print" style="--delay: 1">
-      <button (click)="printVoucher()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]">
+      <button (click)="downloadVoucherPdf()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-8m0 8l-3-3m3 3l3-3M4 18h16" />
         </svg>
-        Print Voucher
+        Download Voucher PDF
       </button>
       <button (click)="continueShopping()" class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,17 +223,6 @@
           <p class="text-center text-[0.65rem] text-slate-400 mt-0.5">This is a computer-generated invoice and does not require a signature.</p>
         </div>
       </div>
-    </div>
-
-    <!-- Bottom actions (screen only) -->
-    <div class="max-w-3xl mx-auto mt-5 flex gap-3 justify-center fade-slide-in no-print" style="--delay: 3">
-      <button (click)="printVoucher()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-        </svg>
-        Print
-      </button>
-      <button (click)="continueShopping()" class="inline-flex items-center gap-1.25 py-2 px-4.5 rounded-lg text-[0.8rem] font-semibold transition-all duration-250 cursor-pointer bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700">Continue Shopping</button>
     </div>
   }
 </div>

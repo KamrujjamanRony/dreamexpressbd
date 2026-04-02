@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SOrder } from '../../../services/s-order';
 import { environment } from '../../../../environments/environment';
 import QRCode from 'qrcode';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -180,12 +182,137 @@ export class OrderConfirmation {
     return this.getOrderItems().reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
   }
 
-  printVoucher() {
-    document.body.classList.add('printing-voucher');
-    setTimeout(() => {
-      window.print();
-      document.body.classList.remove('printing-voucher');
-    }, 100);
+ downloadVoucherPdf() {
+    if (!this.orderDetails || !this.orderId) {
+      return;
+    }
+
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const left = 40;
+    const right = doc.internal.pageSize.getWidth() - 40;
+    const maxTextWidth = right - left;
+    const websiteUrl = 'https://chinatradexntour.com.bd/';
+    const orderItems = this.getOrderItems();
+    const order = this.orderDetails;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text(this.companyName, left, 50);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text('Order Invoice', left, 68);
+    doc.setFontSize(9.5);
+    doc.text(websiteUrl, left, 82);
+
+    doc.setTextColor(0);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(`Invoice: #${this.orderId}`, right, 50, { align: 'right' });
+    doc.text(`Date: ${new Date(order.orderDate).toLocaleDateString()}`, right, 66, { align: 'right' });
+    doc.text(`Status: ${this.getOrderStatusText(order.orderStatus)}`, right, 82, { align: 'right' });
+
+    let y = 112;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Bill To', left, y);
+    doc.text('Ship To', left + 185, y);
+    doc.text('Payment', left + 370, y);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    const billTo = [
+      order.userName || 'Customer',
+      order.userPhone || '',
+      order.userEmail || '',
+    ].filter(Boolean).join('\n');
+    const shipTo = [
+      order.shippingAddress?.street || '',
+      [order.shippingAddress?.city || '', order.shippingAddress?.district || ''].filter(Boolean).join(', '),
+      order.shippingAddress?.contact ? `Phone: ${order.shippingAddress.contact}` : '',
+    ].filter(Boolean).join('\n');
+
+    doc.text(doc.splitTextToSize(billTo, 165), left, y + 14);
+    doc.text(doc.splitTextToSize(shipTo, 165), left + 185, y + 14);
+    doc.text(doc.splitTextToSize(order.paymentMethod || '', 165), left + 370, y + 14);
+
+    y = 180;
+
+    autoTable(doc, {
+      startY: y,
+      margin: { left, right: 40 },
+      head: [['No', 'Item', 'Qty', 'Price', 'Total']],
+      body: orderItems.map((item: any, index: number) => {
+        const variant = [item.size, item.color].filter(Boolean).join(' / ');
+        const itemLabel = variant ? `${item.productName} (${variant})` : item.productName;
+        return [
+          String(index + 1),
+          itemLabel,
+          String(item.quantity || 0),
+          this.formatAmount(item.price || 0),
+          this.formatAmount((item.price || 0) * (item.quantity || 0)),
+        ];
+      }),
+      styles: { fontSize: 9, cellPadding: 6 },
+      headStyles: { fillColor: [245, 245, 245], textColor: [45, 45, 45] },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 35 },
+        2: { halign: 'right', cellWidth: 50 },
+        3: { halign: 'right', cellWidth: 95 },
+        4: { halign: 'right', cellWidth: 95 },
+      },
+    });
+
+    const tableBottom = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? y;
+    const totalsX = right - 210;
+    let totalsY = tableBottom + 24;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(`Subtotal (${this.getTotalQuantity()} items)`, totalsX, totalsY);
+    doc.text(this.formatAmount(order.subtotal || 0), right, totalsY, { align: 'right' });
+    totalsY += 16;
+
+    doc.text('Delivery Charge', totalsX, totalsY);
+    doc.text(this.formatAmount(order.deliveryCharge || 0), right, totalsY, { align: 'right' });
+    totalsY += 16;
+
+    if ((order.discountAmount || 0) > 0) {
+      const discountLabel = order.discountToken ? `Discount (${order.discountToken})` : 'Discount';
+      doc.text(discountLabel, totalsX, totalsY);
+      doc.text(`- ${this.formatAmount(order.discountAmount || 0)}`, right, totalsY, { align: 'right' });
+      totalsY += 16;
+    }
+
+    doc.setDrawColor(210);
+    doc.line(totalsX, totalsY - 6, right, totalsY - 6);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Total Due', totalsX, totalsY + 8);
+    doc.text(this.formatAmount(order.totalAmount || 0), right, totalsY + 8, { align: 'right' });
+
+    if (this.qrCodeUrl()) {
+      try {
+        doc.addImage(this.qrCodeUrl(), 'PNG', left, tableBottom + 10, 78, 78);
+      } catch {
+        // Ignore QR rendering issues and continue with PDF download.
+      }
+    }
+
+    const footerNote = 'This is a computer-generated invoice and does not require a signature.';
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(110);
+    doc.text(websiteUrl, left, doc.internal.pageSize.getHeight() - 56);
+    doc.text(doc.splitTextToSize(footerNote, maxTextWidth), left, doc.internal.pageSize.getHeight() - 40);
+
+    doc.save(`voucher-${this.orderId}.pdf`);
+  }
+
+  private formatAmount(value: number): string {
+    const amount = Number(value || 0);
+    return `BDT ${amount.toFixed(2)}`;
   }
 
   continueShopping() {
