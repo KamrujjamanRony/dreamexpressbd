@@ -238,11 +238,16 @@
 }
 
 .story-hero-image,
-.editorial-image,
 .related-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.editorial-image {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .story-fallback {
@@ -453,7 +458,6 @@
 .editorial-media {
   overflow: hidden;
   border-radius: 1.3rem;
-  aspect-ratio: 16 / 10;
   margin: 0;
   background: rgba(15, 23, 42, 0.05);
 }
@@ -541,7 +545,6 @@
   }
 
   .editorial-media {
-    aspect-ratio: 16 / 10;
     width: 100%;
   }
 
