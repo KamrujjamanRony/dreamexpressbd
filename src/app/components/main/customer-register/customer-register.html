@@ -74,15 +74,63 @@
             }
           </div>
 
-          <!-- Phone -->
+          <!-- Email -->
           <div>
-            @let phone = form.phone();
-            @let phoneError = form.phone().invalid() && form.phone().touched();
+            @let email = form.email();
+            @let emailError = form.email().invalid() && form.email().touched();
             <label
-              for="phone"
+              for="email"
               class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
             >
-              Phone Number
+              Email <span class="text-xs text-neutral-400 font-normal">(or phone required)</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg
+                  class="w-5 h-5 text-neutral-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
+              </div>
+              <input
+                type="email"
+                id="email"
+                [formField]="form.email"
+                class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                [class]="
+                  emailError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                "
+                placeholder="Enter your email"
+                autocomplete="off"
+              />
+            </div>
+            @if (emailError) {
+              <ul class="mt-1">
+                @for (error of email.errors(); track error) {
+                  <li class="text-sm text-red-500">{{ error.message }}</li>
+                }
+              </ul>
+            }
+          </div>
+
+          <!-- Phone -->
+          <div>
+            @let shippingContact = form.shippingContact();
+            @let shippingContactError =
+              form.shippingContact().invalid() && form.shippingContact().touched();
+            <label
+              for="shippingContact"
+              class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >
+              Phone <span class="text-xs text-neutral-400 font-normal">(or email required)</span>
             </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -102,19 +150,21 @@
               </div>
               <input
                 type="tel"
-                id="phone"
-                [formField]="form.phone"
+                id="shippingContact"
+                [formField]="form.shippingContact"
                 class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
                 [class]="
-                  phoneError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+                  shippingContactError
+                    ? 'border-red-400'
+                    : 'border-neutral-200 dark:border-neutral-600'
                 "
                 placeholder="Enter your phone number"
                 autocomplete="off"
               />
             </div>
-            @if (phoneError) {
+            @if (shippingContactError) {
               <ul class="mt-1">
-                @for (error of phone.errors(); track error) {
+                @for (error of shippingContact.errors(); track error) {
                   <li class="text-sm text-red-500">{{ error.message }}</li>
                 }
               </ul>
@@ -358,6 +408,87 @@
               Create Account
             }
           </button>
+
+          <!-- Divider -->
+          <div class="flex items-center gap-4 my-1">
+            <div class="flex-1 border-t border-neutral-200 dark:border-neutral-700"></div>
+            <span class="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wide"
+              >or</span
+            >
+            <div class="flex-1 border-t border-neutral-200 dark:border-neutral-700"></div>
+          </div>
+
+          <!-- Google Sign-In -->
+          <div class="flex flex-col items-center gap-2">
+            <div #googleBtn></div>
+            @if (googleLoading()) {
+              <span
+                class="text-sm text-neutral-500 dark:text-neutral-400 inline-flex items-center gap-2"
+              >
+                <svg
+                  class="animate-spin h-4 w-4 text-teal-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Signing in with Google...
+              </span>
+            }
+          </div>
+
+          <!-- Facebook Sign-In -->
+          <div class="flex flex-col items-center gap-2">
+            <button
+              type="button"
+              (click)="handleFacebookLogin()"
+              [disabled]="facebookLoading()"
+              class="flex items-center justify-center gap-3 w-full max-w-[250px] bg-[#1877F2] hover:bg-[#166FE5] text-white font-medium rounded-full px-6 py-2.5 text-sm transition-all duration-200 shadow-md cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <i class="fa-brands fa-facebook-f text-base"></i>
+              Continue with Facebook
+            </button>
+            @if (facebookLoading()) {
+              <span
+                class="text-sm text-neutral-500 dark:text-neutral-400 inline-flex items-center gap-2"
+              >
+                <svg
+                  class="animate-spin h-4 w-4 text-[#1877F2]"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Signing in with Facebook...
+              </span>
+            }
+          </div>
 
           <!-- Login Link -->
           <p class="text-sm text-center text-neutral-500 dark:text-neutral-400 mt-4">

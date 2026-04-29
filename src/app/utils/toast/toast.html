@@ -1,8 +1,8 @@
 @for (position of positions; track position) {
-  <div class="fixed z-[9999] flex flex-col gap-4" [class]="containerClass(position)">
+  <div class="fixed z-9999 flex flex-col gap-4" [class]="containerClass(position)">
     @for (toast of toastService.toastsByPosition()[position]; track toast.id) {
       <div
-        class="toast-item"
+        class="toast-item bg-white dark:bg-dark-card"
         [class]="typeClass(toast.type)"
         role="alert"
         (mouseenter)="toastService.pause(toast.id)"

@@ -20,14 +20,23 @@
       >
         <!-- User Info Header -->
         <div class="bg-linear-to-r from-teal-500 to-cyan-500 px-6 py-6 text-center">
-          <div
-            class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm"
-          >
-            <fa-icon [icon]="faUser" class="text-white text-2xl"></fa-icon>
-          </div>
+          @if (user?.profileImage) {
+            <img
+              [src]="user.profileImage"
+              [alt]="user.fullName"
+              class="w-16 h-16 rounded-full mx-auto mb-3 border-2 border-white/30 object-cover"
+              referrerpolicy="no-referrer"
+            />
+          } @else {
+            <div
+              class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm"
+            >
+              <fa-icon [icon]="faUser" class="text-white text-2xl"></fa-icon>
+            </div>
+          }
           @if (user) {
             <h3 class="text-white font-bold text-lg">{{ user.fullName }}</h3>
-            <p class="text-teal-100 text-sm mt-0.5">{{ user.phone }}</p>
+            <p class="text-teal-100 text-sm mt-0.5">{{ user.email }}</p>
           } @else {
             <h3 class="text-white font-bold text-lg">Guest</h3>
           }

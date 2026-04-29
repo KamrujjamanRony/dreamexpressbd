@@ -58,8 +58,8 @@ export class CustomerList {
         return this.items()
             .filter(item =>
                 item.fullName?.toLowerCase().includes(query) ||
-                item.phone?.toLowerCase().includes(query) ||
-                item.dist?.toLowerCase().includes(query)
+                item.email?.toLowerCase().includes(query) ||
+                item.shippingDistrict?.toLowerCase().includes(query)
             );
     });
 
@@ -79,9 +79,8 @@ export class CustomerList {
     /* ---------------- FORM MODEL ---------------- */
     model = signal({
         fullName: '',
-        phone: '',
+        email: '',
         pass: '',
-        dist: '',
         address: '',
         shippingDistrict: '',
         shippingCity: '',
@@ -89,13 +88,13 @@ export class CustomerList {
         shippingContact: '',
         shippingType: '',
         area: '',
+        loginProvider: '',
         companyID: environment.companyCode.toString(),
     });
 
     /* ---------------- SIGNAL FORM ---------------- */
     form = form(this.model, (schemaPath) => {
         required(schemaPath.fullName, { message: 'Full name is required' });
-        required(schemaPath.phone, { message: 'Phone number is required' });
         required(schemaPath.pass, { message: 'Password is required' });
         required(schemaPath.shippingDistrict, { message: 'Division is required' });
         required(schemaPath.shippingStreet, { message: 'Address is required' });
@@ -107,9 +106,16 @@ export class CustomerList {
             return null;
         });
 
-        validate(schemaPath.phone, ({ value }) => {
+        validate(schemaPath.email, ({ value }) => {
+            if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
+                return { kind: 'complexity', message: 'Enter a valid email address' };
+            }
+            return null;
+        });
+
+        validate(schemaPath.shippingContact, ({ value }) => {
             if (value() && !/^\d{10,15}$/.test(value())) {
-                return { kind: 'complexity', message: 'Phone must be 10-15 digits' };
+                return { kind: 'pattern', message: 'Phone must be 10-15 digits' };
             }
             return null;
         });
@@ -137,7 +143,7 @@ export class CustomerList {
         });
 
         debounce(schemaPath.fullName, 300);
-        debounce(schemaPath.phone, 300);
+        debounce(schemaPath.email, 300);
         debounce(schemaPath.pass, 300);
     });
 
@@ -151,7 +157,6 @@ export class CustomerList {
     onShippingDistrictChange(division: string): void {
         this.model.update(m => ({
             ...m,
-            dist: division,
             shippingDistrict: division,
             shippingCity: '',
             area: ''
@@ -221,25 +226,30 @@ export class CustomerList {
             return;
         }
 
+        const formValue = this.form().value();
+        if (!formValue.email?.trim() && !formValue.shippingContact?.trim()) {
+            this.toast.warning('Please provide either Email or Phone!', 'bottom-right', 5000);
+            return;
+        }
+
         this.isSubmitted.set(true);
 
-        const formValue = this.form().value();
-        const district = formValue.shippingDistrict || formValue.dist;
+        const district = formValue.shippingDistrict;
         const street = formValue.shippingStreet || formValue.address;
 
         const payload: CustomerM = {
             companyID: Number(formValue.companyID),
             fullName: formValue.fullName,
-            phone: formValue.phone,
+            email: formValue.email,
             pass: formValue.pass,
-            dist: district,
             address: street,
             shippingDistrict: district,
             shippingCity: formValue.shippingCity,
             shippingStreet: street,
-            shippingContact: formValue.phone,
+            shippingContact: formValue.shippingContact,
             shippingType: formValue.shippingType,
             area: formValue.area,
+            loginProvider: formValue.loginProvider,
         };
 
         const request$ = this.selected()
@@ -267,9 +277,8 @@ export class CustomerList {
         this.model.update(current => ({
             ...current,
             fullName: item.fullName ?? '',
-            phone: item.phone ?? '',
+            email: item.email ?? '',
             pass: item.pass ?? '',
-            dist: item.dist ?? '',
             address: item.address ?? '',
             shippingDistrict: item.shippingDistrict ?? '',
             shippingCity: item.shippingCity ?? '',
@@ -277,6 +286,7 @@ export class CustomerList {
             shippingContact: item.shippingContact ?? '',
             shippingType: item.shippingType ?? '',
             area: item.area ?? '',
+            loginProvider: item.loginProvider ?? '',
             companyID: item.companyID.toString(),
         }));
 
@@ -324,9 +334,8 @@ export class CustomerList {
     formReset() {
         this.model.set({
             fullName: '',
-            phone: '',
+            email: '',
             pass: '',
-            dist: '',
             address: '',
             shippingDistrict: '',
             shippingCity: '',
@@ -334,6 +343,7 @@ export class CustomerList {
             shippingContact: '',
             shippingType: '',
             area: '',
+            loginProvider: '',
             companyID: environment.companyCode.toString(),
         });
 

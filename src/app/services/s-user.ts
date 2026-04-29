@@ -16,7 +16,8 @@ export class SUser {
   }
 
   search(userName: string = '', postBy: string = ''): Observable<UsersM[]> {
-    const reqBody = {companyID: environment.companyCode, userName, postBy}
+    const reqBody = {
+      "companyID": environment.companyCode, userName, postBy}
     return this.http.post<UsersM[]>(`${this.apiUrl}/Search`, reqBody);
   }
 

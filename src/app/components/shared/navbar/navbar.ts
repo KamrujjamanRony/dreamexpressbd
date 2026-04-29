@@ -74,6 +74,13 @@ export class Navbar implements OnDestroy {
     this.refreshCartCount();
     this.refreshWishlistCount();
 
+    this.authCookie.userChanged$.subscribe(userData => {
+      this.user = userData;
+      this.refreshCartCount();
+      this.refreshWishlistCount();
+      this.cdr.detectChanges();
+    });
+
     this.cartService.cartUpdated$.subscribe(() => {
       this.refreshCartCount();
     });

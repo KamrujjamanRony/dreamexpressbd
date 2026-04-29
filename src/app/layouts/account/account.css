@@ -1,3 +1,5 @@
+@reference "../../../styles.css";
+
 .account-content {
   animation: fadeIn 0.3s ease-out;
 }

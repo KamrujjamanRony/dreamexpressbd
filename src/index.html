@@ -71,6 +71,8 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://accounts.google.com" />
+    <link rel="preconnect" href="https://connect.facebook.net" />
 
     <!-- Google Fonts — non-blocking preload -->
     <link
@@ -159,6 +161,15 @@
         "paymentAccepted": "Cash on Delivery, bKash, Nagad"
       }
     </script>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Facebook SDK -->
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
   </head>
   <body>
     <app-root>

@@ -21,7 +21,7 @@
                   type="text"
                   id="search"
                   class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-400"
-                  placeholder="Search by Name, Phone or District"
+                  placeholder="Search by Name, Email or District"
                 />
               </div>
             </div>
@@ -67,9 +67,10 @@
                 class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium"
               >
                 <tr>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Full Name</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Phone</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">District</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Email</th>
+                  <th scope="col" class="px-6 py-3 font-medium capitalize">Provider</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Address</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping District</th>
                   <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping City</th>
@@ -86,11 +87,27 @@
                     class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-neutral-950 dark:border-neutral-700 dark:hover:bg-neutral-800"
                     [class.bg-blue-300]="selected()?.id === item.id"
                   >
+                    <td class="px-6 py-4">
+                      @if (item?.profileImage) {
+                        <img
+                          [src]="item.profileImage"
+                          [alt]="item.fullName"
+                          class="w-8 h-8 rounded-full object-cover"
+                          referrerpolicy="no-referrer"
+                        />
+                      } @else {
+                        <div
+                          class="w-8 h-8 rounded-full bg-neutral-600 flex items-center justify-center text-neutral-300 text-xs"
+                        >
+                          <i class="fas fa-user"></i>
+                        </div>
+                      }
+                    </td>
                     <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                       {{ item?.fullName || '-' }}
                     </td>
-                    <td class="px-6 py-4">{{ item?.phone || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.dist || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.email || '-' }}</td>
+                    <td class="px-6 py-4">{{ item?.loginProvider || 'Manual' }}</td>
                     <td class="px-6 py-4">{{ item?.address || '-' }}</td>
                     <td class="px-6 py-4">{{ item?.shippingDistrict || '-' }}</td>
                     <td class="px-6 py-4">{{ item?.shippingCity || '-' }}</td>
@@ -186,10 +203,58 @@
               </div>
 
               <div>
-                @let phone = form.phone();
-                @let phoneError = form.phone().invalid() && form.phone().touched();
-                <label for="phone" class="block mb-2 text-sm font-semibold text-neutral-200">
-                  Phone Number
+                @let email = form.email();
+                @let emailError = form.email().invalid() && form.email().touched();
+                <label for="email" class="block mb-2 text-sm font-semibold text-neutral-200">
+                  Email
+                  <span class="text-xs font-normal text-neutral-400">(or phone required)</span>
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg
+                      class="w-5 h-5 text-neutral-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="email"
+                    id="email"
+                    [formField]="form.email"
+                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                    [class]="emailError ? 'border-red-400' : 'border-neutral-600'"
+                    placeholder="Enter email address"
+                    autocomplete="off"
+                  />
+                </div>
+                @if (emailError) {
+                  <ul class="mt-1">
+                    @for (error of email.errors(); track error) {
+                      <li class="text-sm text-red-500">{{ error.message }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+
+              <!-- Phone -->
+              <div>
+                @let phone = form.shippingContact();
+                @let phoneError =
+                  form.shippingContact().invalid() && form.shippingContact().touched();
+                <label
+                  for="shippingContact"
+                  class="block mb-2 text-sm font-semibold text-neutral-200"
+                >
+                  Phone
+                  <span class="text-xs font-normal text-neutral-400">(or email required)</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -209,11 +274,11 @@
                   </div>
                   <input
                     type="tel"
-                    id="phone"
-                    [formField]="form.phone"
+                    id="shippingContact"
+                    [formField]="form.shippingContact"
                     class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
                     [class]="phoneError ? 'border-red-400' : 'border-neutral-600'"
-                    placeholder="Enter your phone number"
+                    placeholder="Enter phone number"
                     autocomplete="off"
                   />
                 </div>
@@ -277,30 +342,31 @@
               <div class="md:col-span-2 border-t border-neutral-700 pt-4 mt-2">
                 <h3 class="text-sm font-semibold text-neutral-200 mb-3">Address</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
                   <div>
                     @let shippingDistrictError =
                       form.shippingDistrict().invalid() && form.shippingDistrict().touched();
-                    <label for="shippingDistrict" class="block mb-2 text-sm font-semibold text-neutral-200"
+                    <label
+                      for="shippingDistrict"
+                      class="block mb-2 text-sm font-semibold text-neutral-200"
                       >Division</label
                     >
-                  <select
-                    id="shippingDistrict"
-                    [value]="form.shippingDistrict().value()"
-                    (change)="onShippingDistrictChange($any($event.target).value)"
-                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
-                    [class]="shippingDistrictError ? 'border-red-400' : 'border-neutral-600'"
-                  >
-                    <option value="">Select Division</option>
-                    @for (region of regions(); track region.name) {
-                      <option
-                        [value]="region.name"
-                        [selected]="form.shippingDistrict().value() === region.name"
-                      >
-                        {{ region.name }}
-                      </option>
-                    }
-                  </select>
+                    <select
+                      id="shippingDistrict"
+                      [value]="form.shippingDistrict().value()"
+                      (change)="onShippingDistrictChange($any($event.target).value)"
+                      class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+                      [class]="shippingDistrictError ? 'border-red-400' : 'border-neutral-600'"
+                    >
+                      <option value="">Select Division</option>
+                      @for (region of regions(); track region.name) {
+                        <option
+                          [value]="region.name"
+                          [selected]="form.shippingDistrict().value() === region.name"
+                        >
+                          {{ region.name }}
+                        </option>
+                      }
+                    </select>
                     @if (shippingDistrictError) {
                       <ul class="mt-1">
                         @for (error of form.shippingDistrict().errors(); track error) {
@@ -311,7 +377,9 @@
                   </div>
 
                   <div>
-                    <label for="shippingCity" class="block mb-2 text-sm font-semibold text-neutral-200"
+                    <label
+                      for="shippingCity"
+                      class="block mb-2 text-sm font-semibold text-neutral-200"
                       >City</label
                     >
                     <select
@@ -356,7 +424,9 @@
                   <div>
                     @let shippingStreetError =
                       form.shippingStreet().invalid() && form.shippingStreet().touched();
-                    <label for="shippingStreet" class="block mb-2 text-sm font-semibold text-neutral-200"
+                    <label
+                      for="shippingStreet"
+                      class="block mb-2 text-sm font-semibold text-neutral-200"
                       >Street Address</label
                     >
                     <input
@@ -379,7 +449,9 @@
                   </div>
 
                   <div>
-                    <label for="shippingType" class="block mb-2 text-sm font-semibold text-neutral-200"
+                    <label
+                      for="shippingType"
+                      class="block mb-2 text-sm font-semibold text-neutral-200"
                       >Type</label
                     >
                     <select

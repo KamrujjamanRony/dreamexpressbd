@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <!-- Phone -->
+    <!-- Email -->
     <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
       <div
         class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/40 rounded-full flex items-center justify-center shrink-0"
@@ -48,10 +48,29 @@
         <p
           class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
         >
+          Email
+        </p>
+        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+          {{ model().email || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faPhone" class="text-blue-600 dark:text-blue-400"></fa-icon>
+      </div>
+      <div>
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
           Phone
         </p>
         <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
-          {{ model().phone || '—' }}
+          {{ model().shippingContact || '—' }}
         </p>
       </div>
     </div>
@@ -75,8 +94,8 @@
         <div
           class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-neutral-500 dark:text-neutral-400"
         >
-          @if (model().shippingDistrict || model().dist) {
-            <span>Division: {{ model().shippingDistrict || model().dist }}</span>
+          @if (model().shippingDistrict) {
+            <span>Division: {{ model().shippingDistrict }}</span>
           }
           @if (model().shippingCity) {
             <span>City: {{ model().shippingCity }}</span>
@@ -118,19 +137,57 @@
       }
     </div>
 
+    <!-- Email -->
+    <div>
+      @let emailError = form.email().invalid() && form.email().touched();
+      <label
+        for="email"
+        class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        >Email</label
+      >
+      @if (isSocialLogin()) {
+        <input
+          type="email"
+          id="email"
+          [value]="model().email"
+          disabled
+          class="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 text-sm rounded-xl block w-full p-3 cursor-not-allowed"
+        />
+        <p class="mt-1 text-xs text-neutral-400">
+          Email cannot be changed for social login accounts
+        </p>
+      } @else {
+        <input
+          type="email"
+          id="email"
+          [formField]="form.email"
+          class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+          [class]="emailError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+          placeholder="Enter your email"
+          autocomplete="off"
+        />
+        @if (emailError) {
+          <ul class="mt-1">
+            @for (error of form.email().errors(); track error) {
+              <li class="text-sm text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      }
+    </div>
+
     <!-- Phone -->
     <div>
-      @let phone = form.phone();
-      @let phoneError = form.phone().invalid() && form.phone().touched();
+      @let phoneError = form.shippingContact().invalid() && form.shippingContact().touched();
       <label
-        for="phone"
+        for="shippingContact"
         class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
-        >Phone Number</label
+        >Phone</label
       >
       <input
         type="tel"
-        id="phone"
-        [formField]="form.phone"
+        id="shippingContact"
+        [formField]="form.shippingContact"
         class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
         [class]="phoneError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
         placeholder="Enter your phone number"
@@ -138,7 +195,7 @@
       />
       @if (phoneError) {
         <ul class="mt-1">
-          @for (error of phone.errors(); track error) {
+          @for (error of form.shippingContact().errors(); track error) {
             <li class="text-sm text-red-500">{{ error.message }}</li>
           }
         </ul>

@@ -18,7 +18,7 @@ export class SGallery {
     search(id?: string, type?: string, description?: string, postBy?: string): Observable<GalleryM[]> {
         const reqBody = {
             id: id || '',
-            companyID: environment.companyCode,
+            "companyID": environment.companyCode,
             type: type || '',
             description: description || '',
             postBy: postBy || '',

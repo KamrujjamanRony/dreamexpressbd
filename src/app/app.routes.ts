@@ -79,6 +79,12 @@ export const routes: Routes = [
         title: `Customer Login | ${companyName}`
       },
       {
+        path: 'forgot-password',
+        loadComponent: () => import('./components/main/forgot-password/forgot-password').then(m => m.ForgotPassword),
+        data: { breadcrumb: 'Forgot Password', seo: { title: 'Forgot Password', description: `Reset your ${companyName} account password.`, noIndex: true } },
+        title: `Forgot Password | ${companyName}`
+      },
+      {
         path: 'cart',
         loadComponent: () => import('./components/account/shopping-cart/shopping-cart').then(m => m.ShoppingCart),
         data: { breadcrumb: 'Shopping Cart', seo: { noIndex: true } },

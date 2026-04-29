@@ -30,6 +30,7 @@ export class Profile {
 
     loading = signal(false);
     editMode = signal(false);
+    isSocialLogin = signal(false);
     customerId = signal<any>(null);
     regions = signal<any[]>([]);
     cities = signal<any[]>([]);
@@ -46,9 +47,8 @@ export class Profile {
     model = signal({
         companyID: String(environment.companyCode),
         fullName: '',
-        phone: '',
+        email: '',
         pass: '',
-        dist: '',
         address: '',
         shippingDistrict: '',
         shippingCity: '',
@@ -60,9 +60,7 @@ export class Profile {
 
     form = form(this.model, (schemaPath) => {
         required(schemaPath.fullName, { message: 'Full name is required' });
-        required(schemaPath.phone, { message: 'Phone number is required' });
         required(schemaPath.shippingDistrict, { message: 'Division is required' });
-        required(schemaPath.shippingStreet, { message: 'Address is required' });
 
         validate(schemaPath.fullName, ({ value }) => {
             if (value() && value().length < 2) {
@@ -71,15 +69,21 @@ export class Profile {
             return null;
         });
 
-        validate(schemaPath.phone, ({ value }) => {
+        validate(schemaPath.email, ({ value }) => {
+            if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
+                return { kind: 'complexity', message: 'Enter a valid email address' };
+            }
+            return null;
+        });
+
+        validate(schemaPath.shippingContact, ({ value }) => {
             if (value() && !/^\d{10,15}$/.test(value())) {
-                return { kind: 'complexity', message: 'Phone must be 10-15 digits' };
+                return { kind: 'pattern', message: 'Phone must be 10-15 digits' };
             }
             return null;
         });
 
         debounce(schemaPath.fullName, 300);
-        debounce(schemaPath.phone, 300);
     });
 
     ngOnInit(): void {
@@ -91,32 +95,38 @@ export class Profile {
         const userData = this.authCookie.getUserData();
         if (userData?.id) {
             this.customerId.set(userData.id);
-            this.model.set({
-                companyID: String(environment.companyCode),
-                fullName: userData.fullName || '',
-                phone: userData.phone || '',
-                pass: userData.pass || '',
-                dist: userData.dist || '',
-                address: userData.address || '',
-                shippingDistrict: userData.shippingDistrict || userData.dist || '',
-                shippingCity: userData.shippingCity || '',
-                shippingStreet: userData.shippingStreet || userData.address || '',
-                shippingContact: userData.shippingContact || userData.phone || '',
-                shippingType: userData.shippingType || '',
-                area: userData.area || '',
+            // Fetch fresh data from API
+            this.customerService.search(userData.id).subscribe({
+                next: (data) => {
+                    const profile = data?.[0];
+                    if (!profile) return;
+                    // Detect social login from API data
+                    this.isSocialLogin.set(!!(profile.loginProvider && profile.loginProvider !== 'Manual'));
+                    // Update cookie with fresh data
+                    this.authCookie.login({ ...userData, ...profile, id: userData.id });
+                    this.model.set({
+                        companyID: String(environment.companyCode),
+                        fullName: profile.fullName || '',
+                        email: profile.email || '',
+                        pass: profile.pass || '',
+                        address: profile.address || '',
+                        shippingDistrict: profile.shippingDistrict || '',
+                        shippingCity: profile.shippingCity || '',
+                        shippingStreet: profile.shippingStreet || profile.address || '',
+                        shippingContact: profile.shippingContact || '',
+                        shippingType: profile.shippingType || '',
+                        area: profile.area || '',
+                    });
+                    // Pre-load cities for the saved division
+                    const div = profile.shippingDistrict || '';
+                    if (div) {
+                        this.dataService.getCitiesByRegion(div).subscribe(cities => this.shippingCities.set(cities));
+                    }
+                    if (profile.shippingCity) {
+                        this.dataService.getAreasByCity(profile.shippingCity).subscribe(areas => this.shippingAreas.set(areas));
+                    }
+                },
             });
-            // Pre-load cities for the saved division
-            if (userData.dist) {
-                this.dataService.getCitiesByRegion(userData.dist).subscribe(cities => this.cities.set(cities));
-            }
-            // Pre-load shipping cities/areas
-            const shippingDiv = userData.shippingDistrict || userData.dist || '';
-            if (shippingDiv) {
-                this.dataService.getCitiesByRegion(shippingDiv).subscribe(cities => this.shippingCities.set(cities));
-            }
-            if (userData.shippingCity) {
-                this.dataService.getAreasByCity(userData.shippingCity).subscribe(areas => this.shippingAreas.set(areas));
-            }
         }
     }
 
@@ -125,7 +135,6 @@ export class Profile {
     }
 
     onDistrictChange(division: string): void {
-        this.model.update(m => ({ ...m, dist: division }));
         this.cities.set([]);
         this.areas.set([]);
         if (division) {
@@ -143,7 +152,6 @@ export class Profile {
     onShippingDistrictChange(division: string): void {
         this.model.update(m => ({
             ...m,
-            dist: division,
             shippingDistrict: division,
             shippingCity: '',
             area: ''
@@ -185,15 +193,18 @@ export class Profile {
 
         this.loading.set(true);
         const formData = this.form().value();
+        const userData = this.authCookie.getUserData();
 
         this.customerService.update(this.customerId(), {
             ...formData,
-            dist: formData.shippingDistrict || formData.dist,
             address: formData.shippingStreet || formData.address,
-            shippingDistrict: formData.shippingDistrict || formData.dist,
+            shippingDistrict: formData.shippingDistrict,
             shippingStreet: formData.shippingStreet || formData.address,
-            shippingContact: formData.phone,
+            shippingContact: formData.shippingContact,
             companyID: environment.companyCode,
+            loginProvider: userData?.loginProvider || '',
+            providerKey: userData?.providerKey || '',
+            profileImage: userData?.profileImage || '',
         }).subscribe({
             next: (response) => {
                 this.toast.success('Profile updated successfully!', 'top-right', 3000);
@@ -203,11 +214,13 @@ export class Profile {
                     ...formData,
                     id: this.customerId(),
                     companyID: environment.companyCode,
-                    dist: formData.shippingDistrict || formData.dist,
                     address: formData.shippingStreet || formData.address,
-                    shippingDistrict: formData.shippingDistrict || formData.dist,
+                    shippingDistrict: formData.shippingDistrict,
                     shippingStreet: formData.shippingStreet || formData.address,
-                    shippingContact: formData.phone,
+                    shippingContact: formData.shippingContact,
+                    loginProvider: userData?.loginProvider || '',
+                    providerKey: userData?.providerKey || '',
+                    profileImage: userData?.profileImage || '',
                 });
                 this.editMode.set(false);
                 this.loading.set(false);

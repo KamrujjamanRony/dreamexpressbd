@@ -2,9 +2,12 @@ export interface CustomerM {
     id?: any;
     companyID: number;
     fullName: string;
-    phone: string;
+    email: string;
     pass: string;
-    dist: string;
+    loginProvider?: string;
+    providerKey?: string;
+    profileImage?: string;
+    token?: string;
     address: string;
     shippingDistrict?: string;
     shippingCity?: string;
@@ -12,5 +15,4 @@ export interface CustomerM {
     shippingContact?: string;
     shippingType?: string;
     area?: string;
-    token?: string;
 }

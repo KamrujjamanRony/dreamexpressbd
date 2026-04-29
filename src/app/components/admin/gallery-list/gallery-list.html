@@ -1,230 +1,195 @@
 @if (isView()) {
   @if (showList()) {
-    <div class="max-w-8xl mx-auto relative mt-5 animate-fade-in">
-      <div class="w-full mb-10 px-3">
-        <div
-          class="relative bg-neutral-primary/80 backdrop-blur-sm shadow-lg rounded-2xl border border-default/50 dark:bg-neutral-950/80 dark:border-neutral-700/50"
-        >
-          <!-- Header -->
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-5">
-            <!-- Search -->
-            <div class="w-full md:max-w-xs">
-              <label for="search" class="sr-only">Search</label>
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-400"
-                >
-                  <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
-                </div>
-                <input
-                  autocomplete="off"
-                  (input)="onSearch($event)"
-                  type="text"
-                  id="search"
-                  class="block w-full ps-9 pe-3 bg-neutral-100/60 border border-neutral-200/80 text-heading text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 px-3 py-2.5 shadow-sm placeholder:text-neutral-400 transition-all dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-200"
-                  placeholder="Search images..."
-                />
-              </div>
-            </div>
-
-            <h1
-              class="text-xl md:text-3xl font-bold bg-linear-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent text-center w-full"
+    <div class="gallery-page animate-fade-in">
+      <!-- Top Bar -->
+      <div class="gallery-topbar">
+        <div class="topbar-left">
+          <h1 class="gallery-title">
+            <svg
+              class="w-6 h-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
             >
-              Image Gallery
-            </h1>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
+              />
+            </svg>
+            Gallery
+          </h1>
+          <span class="gallery-count">{{ filteredList().length }} images</span>
+        </div>
 
-            <div class="flex items-center gap-2 w-full md:justify-end">
-              <!-- Type Filter -->
-              <select
-                (change)="onFilterType($event)"
-                class="text-sm border border-neutral-200/80 rounded-xl px-3 py-2.5 bg-neutral-100/60 text-heading focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all dark:bg-neutral-800/60 dark:border-neutral-700 dark:text-neutral-200"
-              >
-                @for (type of typeOptions; track type) {
-                  <option [value]="type" [selected]="filterType() === type">{{ type }}</option>
-                }
-              </select>
-
-              @if (isInsert()) {
-                <button
-                  type="button"
-                  (click)="showList.set(false)"
-                  class="text-white bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 font-medium rounded-xl text-sm px-5 py-2.5 text-center leading-5 cursor-pointer whitespace-nowrap shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-[1.02]"
-                >
-                  + Add Image
-                </button>
-              }
-            </div>
+        <div class="topbar-right">
+          <!-- Search -->
+          <div class="search-box">
+            <fa-icon [icon]="faMagnifyingGlass" class="search-icon"></fa-icon>
+            <input
+              autocomplete="off"
+              (input)="onSearch($event)"
+              type="text"
+              id="search"
+              placeholder="Search..."
+            />
           </div>
 
-          <!-- Loading State -->
-          @if (isLoading()) {
-            <div class="flex flex-col items-center justify-center p-16 gap-3">
-              <div
-                class="w-10 h-10 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"
-              ></div>
-              <p class="text-sm text-neutral-400">Loading gallery...</p>
-            </div>
-          }
+          <!-- Type Filter -->
+          <select (change)="onFilterType($event)" class="filter-select">
+            @for (type of typeOptions; track type) {
+              <option [value]="type" [selected]="filterType() === type">{{ type }}</option>
+            }
+          </select>
 
-          <!-- Error State -->
-          @else if (hasError()) {
-            <div class="flex flex-col items-center justify-center p-16 gap-2">
+          @if (isInsert()) {
+            <button type="button" (click)="showList.set(false)" class="add-btn">
               <svg
-                class="w-12 h-12 text-red-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                class="w-4 h-4"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
-                />
-              </svg>
-              <p class="text-lg font-semibold text-red-500">Failed to load images</p>
-              <p class="text-sm text-neutral-400">Please try again later</p>
-            </div>
-          }
-
-          <!-- Empty State -->
-          @else if (filteredList().length === 0) {
-            <div class="flex flex-col items-center justify-center p-16 gap-2">
-              <svg
-                class="w-16 h-16 text-neutral-300 dark:text-neutral-600"
-                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
                 stroke="currentColor"
-                stroke-width="1"
+                stroke-width="2.5"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              <p class="text-lg font-semibold text-neutral-400">No images found</p>
-              <p class="text-sm text-neutral-400">Upload your first image to get started</p>
-            </div>
+              Add Image
+            </button>
           }
+        </div>
+      </div>
 
-          <!-- Image Grid (Masonry) -->
-          @else {
-            <div
-              class="masonry-grid columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-4 p-5"
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="gallery-state">
+          <div class="loader"></div>
+          <p class="state-text">Loading gallery...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @else if (hasError()) {
+        <div class="gallery-state">
+          <div class="state-icon state-icon--error">
+            <svg
+              class="w-7 h-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
             >
-              @for (item of filteredList(); track item?.id || $index) {
-                <div
-                  class="gallery-card group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 ease-out hover:-translate-y-1 mb-4 break-inside-avoid"
-                  [class.ring-2]="selected()?.id === item.id"
-                  [class.ring-emerald-500]="selected()?.id === item.id"
-                  [style.animation-delay]="$index * 60 + 'ms'"
-                >
-                  <!-- Image -->
-                  <div class="relative bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
-                    @if (item.imageUrl) {
-                      <img
-                        [src]="imgURL + item.imageUrl"
-                        alt="{{ item.type }} image"
-                        class="w-full h-auto block transition-transform duration-700 ease-out group-hover:scale-110"
-                        loading="lazy"
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+          </div>
+          <p class="state-title text-red-500">Failed to load images</p>
+          <p class="state-text">Please try again later</p>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @else if (filteredList().length === 0) {
+        <div class="gallery-state">
+          <div class="state-icon state-icon--empty">
+            <svg
+              class="w-10 h-10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
+              />
+            </svg>
+          </div>
+          <p class="state-title">No images found</p>
+          <p class="state-text">Upload your first image to get started</p>
+        </div>
+      }
+
+      <!-- Image Grid -->
+      @else {
+        <div class="gallery-grid">
+          @for (item of filteredList(); track item?.id || $index) {
+            <div class="gallery-item" [style.animation-delay]="$index * 50 + 'ms'">
+              <!-- Image Container -->
+              <div class="item-image-wrap">
+                @if (item.imageUrl) {
+                  <img
+                    [src]="imgURL + item.imageUrl"
+                    alt="{{ item.type }} image"
+                    class="item-image"
+                    loading="lazy"
+                  />
+                } @else {
+                  <div class="item-placeholder">
+                    <svg
+                      class="w-8 h-8"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
                       />
-                    } @else {
-                      <div class="w-full py-12 flex items-center justify-center">
-                        <svg
-                          class="w-8 h-8 text-neutral-300 dark:text-neutral-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
-                          />
-                        </svg>
-                      </div>
-                    }
-
-                    <!-- Gradient Overlay (always visible, subtle) -->
-                    <div
-                      class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    ></div>
-
-                    <!-- Hover Actions -->
-                    @if (isEdit() || isDelete()) {
-                      <div
-                        class="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-400"
-                      >
-                        @if (isEdit()) {
-                          <button
-                            type="button"
-                            class="w-9 h-9 rounded-xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-orange-500 hover:text-orange-600 flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-110 translate-y-3 group-hover:translate-y-0"
-                            (click)="onUpdate(item)"
-                          >
-                            <fa-icon [icon]="faPencil" class="text-sm"></fa-icon>
-                          </button>
-                        }
-                        @if (isDelete()) {
-                          <button
-                            type="button"
-                            class="w-9 h-9 rounded-xl bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-rose-500 hover:text-rose-600 flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-110 translate-y-3 group-hover:translate-y-0"
-                            style="transition-delay: 75ms"
-                            (click)="onDelete(item.id!)"
-                          >
-                            <fa-icon [icon]="faTrash" class="text-sm"></fa-icon>
-                          </button>
-                        }
-                      </div>
-                    }
+                    </svg>
                   </div>
+                }
 
-                  <!-- Info -->
-                  <div class="p-2.5 bg-white dark:bg-neutral-900">
-                    <div class="flex items-center gap-1.5">
-                      <span
-                        class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-emerald-500 to-teal-500 text-white tracking-wider"
-                      >
-                        {{ item.type }}
-                      </span>
-                    </div>
+                <!-- Overlay -->
+                <div class="item-overlay">
+                  <!-- Type Badge (top-left) -->
+                  <span class="item-badge">{{ item.type }}</span>
+
+                  <!-- Delete Button (top-right) -->
+                  @if (isDelete()) {
+                    <button
+                      type="button"
+                      class="item-delete-btn"
+                      (click)="onDelete(item.id!); $event.stopPropagation()"
+                    >
+                      <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                    </button>
+                  }
+
+                  <!-- Bottom Info -->
+                  <div class="item-info">
                     @if (item.description) {
-                      <p class="text-xs text-body mt-1.5 line-clamp-2 leading-relaxed">
-                        {{ item.description }}
-                      </p>
+                      <p class="item-desc">{{ item.description }}</p>
                     }
                     @if (item.postBy) {
-                      <p class="text-[10px] text-neutral-400 mt-1 flex items-center gap-1">
-                        <span
-                          class="w-3 h-3 rounded-full bg-linear-to-br from-emerald-400 to-teal-400 inline-flex items-center justify-center text-white text-[7px] font-bold"
-                          >{{ item.postBy.charAt(0).toUpperCase() }}</span
-                        >
+                      <p class="item-author">
+                        <span class="author-avatar">{{ item.postBy.charAt(0).toUpperCase() }}</span>
                         {{ item.postBy }}
                       </p>
                     }
                   </div>
                 </div>
-              }
+              </div>
             </div>
           }
         </div>
-      </div>
+      }
     </div>
   } @else {
-    <!-- Add / Edit Form -->
+    <!-- Add Form -->
     <div class="max-w-2xl mx-auto relative mt-5 px-3">
       <div
         class="bg-white rounded-lg shadow-md border border-neutral-200 transition-all dark:bg-neutral-950 dark:border-neutral-700"
       >
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-neutral-800 dark:text-neutral-50">
-              {{ selected() ? 'Edit Image' : 'Add Image' }}
-            </h2>
+            <h2 class="text-2xl font-bold text-neutral-800 dark:text-neutral-50">Add Image</h2>
             <button
               class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
               (click)="onToggleList()"
@@ -335,7 +300,7 @@
                 [disabled]="isSubmitted()"
                 class="flex-1 text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {{ isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save' }}
+                {{ isSubmitted() ? 'Submitting ...' : 'Save' }}
               </button>
               <button
                 type="button"

@@ -34,7 +34,7 @@ export class Users {
 
   /* ---------------- SIGNAL STATE ---------------- */
 
-  loginUser = signal(this.auth.getUser());
+  adminUser = signal(this.auth.getUser());
   users = signal<any[]>([]);
   searchQuery = signal('');
   userAccessTree = signal<MenuItem[]>([]);
@@ -153,7 +153,7 @@ export class Users {
     const payload: UserFormM = {
       username: formValue.username,
       password: formValue.password,
-      postBy: this.loginUser().username || '',
+      postBy: this.adminUser().username || '',
       companyID: formValue.companyID,
       isActive: formValue.isActive === 'true', // Convert string to boolean
       menuPermissions: this.userAccessTree(),

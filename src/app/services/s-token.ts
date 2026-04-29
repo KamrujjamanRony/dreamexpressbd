@@ -16,12 +16,13 @@ export class SToken {
     return this.http.post<TokenM>(this.apiUrl, model)
   }
 
-  get(id: any): Observable<TokenM> {
-    return this.http.get<TokenM>(`${this.apiUrl}/${id}`);
-  }
-
-  search(): Observable<TokenM[]> {
-    return this.http.get<TokenM[]>(`${this.apiUrl}`)
+  search(id=0, code='', isActive=true): Observable<TokenM[]> {
+    const params: any = {};
+    params.companyID = environment.companyCode;
+    if (id) params.id = id;
+    if (code) params.code = code;
+    if (isActive !== undefined) params.isActive = isActive;
+    return this.http.post<TokenM[]>(`${this.apiUrl}/Search`, params);
   }
 
   update(id: any, updateRequest: TokenM): Observable<TokenM> {

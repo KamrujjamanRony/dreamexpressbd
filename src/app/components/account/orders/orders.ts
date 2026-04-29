@@ -37,7 +37,7 @@ export class Orders {
 
   loadOrders(): void {
     const user = this.authCookie.getUserData();
-    if (!user?.phone) {
+    if (!user?.email) {
       this.error.set('Please login to view your orders');
       return;
     }
@@ -48,9 +48,10 @@ export class Orders {
     this.orderService.search('', '', '', user.id).subscribe({
       next: (response: any) => {
         const allOrders = response?.$values || response || [];
-        // Filter orders by the logged-in user's phone
+        // Filter orders by the logged-in user's email or shippingContact
         const userOrders = allOrders.filter(
-          (o: any) => o.userPhone === user.phone || o.UserPhone === user.phone
+          (o: any) => o.userPhone === user.email || o.UserPhone === user.email ||
+            o.userPhone === user.shippingContact || o.UserPhone === user.shippingContact
         );
         this.orders.set(userOrders);
         this.loading.set(false);

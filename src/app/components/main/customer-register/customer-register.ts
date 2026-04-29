@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, afterNextRender, viewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SCustomer } from '../../../services/s-customer';
@@ -9,6 +9,11 @@ import { CustomerM } from '../../../models/Customer';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { SGoogleAuth } from '../../../services/s-google-auth';
+import { SFacebookAuth, FacebookUser } from '../../../services/s-facebook-auth';
+import { SAuthCookie } from '../../../services/s-auth-cookie';
+import { SCart } from '../../../services/s-cart';
+import { SWishlist } from '../../../services/s-wishlist';
 
 @Component({
   selector: 'app-customer-register',
@@ -21,12 +26,20 @@ export class CustomerRegister {
   private dataService = inject(SData);
   private toast = inject(SToast);
   private router = inject(Router);
+  private googleAuth = inject(SGoogleAuth);
+  private facebookAuth = inject(SFacebookAuth);
+  private authCookie = inject(SAuthCookie);
+  private cartService = inject(SCart);
+  private wishlistService = inject(SWishlist);
 
   faEye = faEye;
   faEyeSlash = faEyeSlash;
 
   loading = signal(false);
   showPassword = signal(false);
+  googleLoading = signal(false);
+  facebookLoading = signal(false);
+  googleBtnEl = viewChild<ElementRef>('googleBtn');
   regions = signal<any[]>([]);
   cities = signal<any[]>([]);
   areas = signal<any[]>([]);
@@ -42,9 +55,8 @@ export class CustomerRegister {
   /* ---------------- FORM MODEL ---------------- */
   model = signal({
     fullName: '',
-    phone: '',
+    email: '',
     pass: '',
-    dist: '',
     address: '',
     shippingDistrict: '',
     shippingCity: '',
@@ -57,7 +69,6 @@ export class CustomerRegister {
   /* ---------------- SIGNAL FORM ---------------- */
   form = form(this.model, (schemaPath) => {
     required(schemaPath.fullName, { message: 'Full name is required' });
-    required(schemaPath.phone, { message: 'Phone number is required' });
     required(schemaPath.pass, { message: 'Password is required' });
     required(schemaPath.shippingDistrict, { message: 'Division is required' });
     required(schemaPath.shippingStreet, { message: 'Address is required' });
@@ -69,7 +80,14 @@ export class CustomerRegister {
       return null;
     });
 
-    validate(schemaPath.phone, ({ value }) => {
+    validate(schemaPath.email, ({ value }) => {
+      if (value() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value())) {
+        return { kind: 'complexity', message: 'Enter a valid email address' };
+      }
+      return null;
+    });
+
+    validate(schemaPath.shippingContact, ({ value }) => {
       if (value() && !/^\d{10,15}$/.test(value())) {
         return { kind: 'complexity', message: 'Phone must be 10-15 digits' };
       }
@@ -99,12 +117,27 @@ export class CustomerRegister {
     });
 
     debounce(schemaPath.fullName, 300);
-    debounce(schemaPath.phone, 300);
+    debounce(schemaPath.email, 300);
+    debounce(schemaPath.shippingContact, 300);
     debounce(schemaPath.pass, 300);
   });
 
   ngOnInit(): void {
     this.dataService.getRegions().subscribe(regions => this.regions.set(regions));
+  }
+
+  constructor() {
+    afterNextRender(() => {
+      this.googleAuth.initialize((credential) => {
+        this.handleGoogleLogin(credential);
+      }).then((ready) => {
+        if (ready) {
+          const el = this.googleBtnEl()?.nativeElement;
+          if (el) this.googleAuth.renderButton(el);
+        }
+      });
+      this.facebookAuth.initialize();
+    });
   }
 
   togglePassword(): void {
@@ -130,7 +163,6 @@ export class CustomerRegister {
   onShippingDistrictChange(division: string): void {
     this.model.update(m => ({
       ...m,
-      dist: division,
       shippingDistrict: division,
       shippingCity: '',
       area: ''
@@ -170,22 +202,28 @@ export class CustomerRegister {
       return;
     }
 
-    this.loading.set(true);
     const formValue = this.form().value();
-    const district = formValue.shippingDistrict || formValue.dist;
+
+    // At least one of email or phone is required
+    if (!formValue.email?.trim() && !formValue.shippingContact?.trim()) {
+      this.toast.warning('Please provide either email or phone number!', 'top-right', 3000);
+      return;
+    }
+
+    this.loading.set(true);
+    const district = formValue.shippingDistrict;
     const street = formValue.shippingStreet || formValue.address;
 
     const payload: CustomerM = {
       companyID: environment.companyCode,
       fullName: formValue.fullName,
-      phone: formValue.phone,
+      email: formValue.email,
       pass: formValue.pass,
-      dist: district,
       address: street,
       shippingDistrict: district,
       shippingCity: formValue.shippingCity,
       shippingStreet: street,
-      shippingContact: formValue.phone,
+      shippingContact: formValue.shippingContact,
       shippingType: formValue.shippingType,
       area: formValue.area,
     };
@@ -208,12 +246,134 @@ export class CustomerRegister {
     });
   }
 
+  handleGoogleLogin(credential: string): void {
+    const payload = this.decodeJwt(credential);
+    if (!payload?.email) {
+      this.toast.danger('Invalid Google credential!', 'top-right', 4000);
+      return;
+    }
+
+    const email = payload.email;
+    const pass = `G${payload.sub.slice(0, 6)}x1!a`;
+    const socialData = {
+      loginProvider: 'Google',
+      providerKey: payload.sub,
+      profileImage: payload.picture || '',
+    };
+    this.googleLoading.set(true);
+
+    // Try login by email first (user may already exist)
+    this.customerService.loginByEmail(email, pass).subscribe({
+      next: (response: any) => this.onSocialSuccess(response, socialData),
+      error: () => {
+        // User doesn't exist — auto-register then login
+        const registerPayload: CustomerM = {
+          companyID: environment.companyCode,
+          fullName: payload.name || email.split('@')[0],
+          pass,
+          email,
+          ...socialData,
+          address: '',
+        };
+        this.customerService.add(registerPayload).subscribe({
+          next: () => {
+            this.customerService.loginByEmail(email, pass).subscribe({
+              next: (response: any) => this.onSocialSuccess(response, socialData),
+              error: () => {
+                this.googleLoading.set(false);
+                this.toast.danger('Google sign-up failed!', 'top-right', 4000);
+              },
+            });
+          },
+          error: () => {
+            this.googleLoading.set(false);
+            this.toast.danger('Google sign-up failed!', 'top-right', 4000);
+          },
+        });
+      },
+    });
+  }
+
+  private onSocialSuccess(response: any, socialData: { loginProvider: string; providerKey: string; profileImage: string }): void {
+    const merged = { ...response, ...socialData };
+    this.authCookie.login(merged);
+    if (response?.id) {
+      this.customerService.update(response.id, {
+        ...response,
+        ...socialData,
+        companyID: environment.companyCode,
+      }).subscribe();
+      this.cartService.mergeGuestCart(response.id);
+      this.wishlistService.mergeGuestWishlist(response.id.toString());
+    }
+    this.toast.success('Login successful!', 'top-right', 3000);
+    this.googleLoading.set(false);
+    this.facebookLoading.set(false);
+    this.router.navigate(['/account/profile']);
+  }
+
+  handleFacebookLogin(): void {
+    this.facebookLoading.set(true);
+    this.facebookAuth.login((user: FacebookUser | null) => {
+      if (!user?.email) {
+        this.facebookLoading.set(false);
+        this.toast.danger('Facebook login failed! Email is required.', 'top-right', 4000);
+        return;
+      }
+
+      const email = user.email;
+      const pass = `F${user.id.slice(0, 6)}x1!a`;
+      const socialData = {
+        loginProvider: 'Facebook',
+        providerKey: user.id,
+        profileImage: user.picture?.data?.url || '',
+      };
+
+      this.customerService.loginByEmail(email, pass).subscribe({
+        next: (response: any) => this.onSocialSuccess(response, socialData),
+        error: () => {
+          const registerPayload: CustomerM = {
+            companyID: environment.companyCode,
+            fullName: user.name || email.split('@')[0],
+            pass,
+            email,
+            ...socialData,
+            address: '',
+          };
+          this.customerService.add(registerPayload).subscribe({
+            next: () => {
+              this.customerService.loginByEmail(email, pass).subscribe({
+                next: (response: any) => this.onSocialSuccess(response, socialData),
+                error: () => {
+                  this.facebookLoading.set(false);
+                  this.toast.danger('Facebook sign-up failed!', 'top-right', 4000);
+                },
+              });
+            },
+            error: () => {
+              this.facebookLoading.set(false);
+              this.toast.danger('Facebook sign-up failed!', 'top-right', 4000);
+            },
+          });
+        },
+      });
+    });
+  }
+
+  private decodeJwt(token: string): any {
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    } catch {
+      return null;
+    }
+  }
+
   formReset() {
     this.model.set({
       fullName: '',
-      phone: '',
+      email: '',
       pass: '',
-      dist: '',
       address: '',
       shippingDistrict: '',
       shippingCity: '',

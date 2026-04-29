@@ -17,7 +17,7 @@ export class SCustomer {
 
   search(id: any = null): Observable<CustomerM[]> {
     const body = {
-      companyID: environment.companyCode,
+      "companyID": environment.companyCode,
       ...(id && { id })
     }
     return this.http.post<any>(`${this.apiUrl}/Search`, body).pipe(
@@ -28,16 +28,21 @@ export class SCustomer {
     );
   }
 
-  update(id: any, updateRequest: CustomerM): Observable<CustomerM> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, updateRequest).pipe(map(this.unwrap));
+  update(id: any, updateRequest: Partial<CustomerM>): Observable<CustomerM> {
+    return this.http.patch<CustomerM>(`${this.apiUrl}/${id}`, updateRequest).pipe(map(this.unwrap));
   }
 
   delete(id: any): Observable<CustomerM> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(map(this.unwrap));
   }
 
-  login(phone: string, pass: string): Observable<CustomerM> {
-    const body = { companyID: environment.companyCode, phone, pass };
+  login(emailOrPhone: string, pass: string): Observable<CustomerM> {
+    const body = { companyID: environment.companyCode, emailOrPhone, pass };
+    return this.http.post<any>(`${this.apiUrl}/Auth`, body).pipe(map(this.unwrap));
+  }
+
+  loginByEmail(email: string, pass: string): Observable<CustomerM> {
+    const body = { companyID: environment.companyCode, emailOrPhone: email, pass };
     return this.http.post<any>(`${this.apiUrl}/Auth`, body).pipe(map(this.unwrap));
   }
 

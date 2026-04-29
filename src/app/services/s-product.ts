@@ -48,7 +48,7 @@ export class SProduct {
   ): Observable<ProductM[]> {
 
     const reqBody = {
-      companyID: environment.companyCode,
+      "companyID": environment.companyCode,
       ...(id && id > 0 ? { id } : {}),
       ...(categoryId && categoryId > 0 ? { categoryId } : {}),
       ...(isActive === 0 || isActive === 1 ? { isActive } : {}),

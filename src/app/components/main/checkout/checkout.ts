@@ -258,9 +258,9 @@ export class Checkout {
                 this.loading.set(false);
                 // Pre-fill address from user profile (prefer shipping address if available, fall back to main address)
                 if (this.userDetails) {
-                    const district = this.userDetails.shippingDistrict || this.userDetails.dist || '';
+                    const district = this.userDetails.shippingDistrict || '';
                     const street = this.userDetails.shippingStreet || this.userDetails.address || '';
-                    const contact = this.userDetails.shippingContact || this.userDetails.phone || '';
+                    const contact = this.userDetails.shippingContact || '';
                     const area = this.userDetails.area || '';
                     const city = this.userDetails.shippingCity || '';
 
@@ -325,7 +325,7 @@ export class Checkout {
                     return;
                 }
             } else {
-                if (!this.guestDistrict.trim() || !this.guestCity.trim() || !this.guestStreet.trim()) {
+                if (!this.guestPhone.trim() || !this.guestDistrict.trim() || !this.guestCity.trim() || !this.guestStreet.trim()) {
                     this.toast.warning('Please fill in all delivery details', 'top-right', 2000);
                     return;
                 }
@@ -340,6 +340,34 @@ export class Checkout {
                 type: 'Home',
             });
             this.calculateDeliveryCharge();
+
+            // Update customer address if logged in
+            if (!this.isGuest && this.user?.id && this.userDetails) {
+                const updatePayload: any = {
+                    ...this.userDetails,
+                    address: this.guestStreet.trim(),
+                    shippingDistrict: this.guestDistrict.trim(),
+                    shippingCity: this.guestCity.trim(),
+                    shippingStreet: this.guestStreet.trim(),
+                    shippingContact: this.guestPhone.trim() || this.userDetails.shippingContact,
+                    area: this.guestArea.trim(),
+                };
+                this.customerService.update(this.user.id, updatePayload).subscribe({
+                    next: () => {
+                        // Update cookie so profile page sees fresh address
+                        const currentUser = this.authCookie.getUserData();
+                        this.authCookie.login({
+                            ...currentUser,
+                            address: this.guestStreet.trim(),
+                            shippingDistrict: this.guestDistrict.trim(),
+                            shippingCity: this.guestCity.trim(),
+                            shippingStreet: this.guestStreet.trim(),
+                            shippingContact: this.guestPhone.trim() || currentUser?.shippingContact,
+                            area: this.guestArea.trim(),
+                        });
+                    },
+                });
+            }
         }
         this.activeStep.set(step);
     }
@@ -347,6 +375,11 @@ export class Checkout {
     placeOrder() {
         if (!this.deliveryAddress()) {
             this.error.set('Please provide a delivery address');
+            return;
+        }
+
+        if (!this.deliveryAddress()?.contact?.trim()) {
+            this.error.set('Please provide your contact number');
             return;
         }
 
@@ -377,7 +410,7 @@ export class Checkout {
             userId: this.isGuest ? (this.guestService.getGuestId() || 'guest') : (this.user.id || ''),
             userEmail: '',
             userName: this.isGuest ? this.guestName.trim() : (this.userDetails?.fullName || ''),
-            userPhone: this.deliveryAddress().contact || this.guestPhone.trim() || this.userDetails?.phone || '',
+            userPhone: this.deliveryAddress().contact || this.guestPhone.trim() || this.userDetails?.shippingContact || '',
             orderItems,
             subtotal: this.orderData.subtotal || 0,
             deliveryCharge: this.deliveryCharge() || 0,

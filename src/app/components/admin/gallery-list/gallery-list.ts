@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment.production';
 import { SPermission } from '../../../services/s-permission';
 import { SToast } from '../../../utils/toast/toast.service';
 import { SConfirm } from '../../../utils/confirm/confirm.service';
 import { SGallery } from '../../../services/s-gallery';
-import { SAuthUser } from '../../../services/s-auth-user';
 import { GalleryM } from '../../../models/Gallery';
+import { SAuth } from '../../../services/s-auth';
 
 @Component({
     selector: 'app-gallery-list',
@@ -18,7 +18,6 @@ import { GalleryM } from '../../../models/Gallery';
     styleUrl: './gallery-list.css',
 })
 export class GalleryList {
-    faPencil = faPencil;
     faXmark = faXmark;
     faMagnifyingGlass = faMagnifyingGlass;
     faTrash = faTrash;
@@ -26,7 +25,7 @@ export class GalleryList {
     /* ---------------- DI ---------------- */
     private galleryService = inject(SGallery);
     private permissionService = inject(SPermission);
-    private authUser = inject(SAuthUser);
+    private auth = inject(SAuth);
     private toast = inject(SToast);
     private confirm = inject(SConfirm);
 
@@ -67,7 +66,6 @@ export class GalleryList {
 
     isView = signal(false);
     isInsert = signal(false);
-    isEdit = signal(false);
     isDelete = signal(false);
 
     isSubmitted = signal(false);
@@ -88,7 +86,6 @@ export class GalleryList {
     loadPermissions() {
         this.isView.set(this.permissionService.hasPermission('ImageGallery', 'view'));
         this.isInsert.set(this.permissionService.hasPermission('ImageGallery', 'create'));
-        this.isEdit.set(this.permissionService.hasPermission('ImageGallery', 'edit'));
         this.isDelete.set(this.permissionService.hasPermission('ImageGallery', 'delete'));
     }
 
@@ -192,32 +189,24 @@ export class GalleryList {
             return;
         }
 
-        if (!this.selected() && !this.selectedFile()) {
+        if (!this.selectedFile()) {
             this.toast.warning('Please select an image!', 'bottom-right', 5000);
             return;
         }
 
         this.isSubmitted.set(true);
 
-        const user = this.authUser.getUserData();
+        const user = this.auth.getUser();
+        console.log(user);
         const formData = new FormData();
 
         formData.append('CompanyID', String(environment.companyCode));
         formData.append('Type', this.formType);
         formData.append('Description', this.formDescription || '');
-        formData.append('PostBy', user?.userName || '');
+        formData.append('PostBy', user?.username || '');
+        formData.append('ImageFile', this.selectedFile() as File);
 
-        if (this.selectedFile()) {
-            formData.append('ImageFile', this.selectedFile() as File);
-        }
-
-        if (this.selected()?.imageUrl) {
-            formData.append('ImageUrl', this.selected()!.imageUrl);
-        }
-
-        const request$ = this.selected()
-            ? this.galleryService.update(this.selected()!.id!, formData)
-            : this.galleryService.add(formData);
+        const request$ = this.galleryService.add(formData);
 
         request$.subscribe({
             next: () => {
@@ -232,24 +221,6 @@ export class GalleryList {
                 this.toast.danger(error?.error || 'Save unsuccessful!', 'top-left', 3000);
             },
         });
-    }
-
-    /* ---------------- UPDATE ---------------- */
-    onUpdate(item: GalleryM) {
-        this.selected.set(item);
-
-        this.formType = item.type || '';
-        this.formDescription = item.description || '';
-
-        if (item.imageUrl) {
-            this.previewUrl.set(`${this.imgURL}${item.imageUrl}`);
-        } else {
-            this.previewUrl.set(null);
-        }
-
-        this.selectedFile.set(null);
-        this.clearFileInput();
-        this.showList.set(false);
     }
 
     /* ---------------- DELETE ---------------- */

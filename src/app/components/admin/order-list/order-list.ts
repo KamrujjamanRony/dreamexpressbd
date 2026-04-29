@@ -378,7 +378,7 @@ export class OrderList implements OnInit {
     return this.statusColors[status] || 'bg-neutral-100 text-neutral-800';
   }
 
- downloadVoucherPdf(order: OrderM) {
+  downloadVoucherPdf(order: OrderM) {
     const orderId = order.id;
     this.orderService.get(orderId).subscribe({
       next: async (data: any) => {

@@ -23,7 +23,7 @@ export class SBlog {
 
     search(id: any = 0, sl: string = '', heading: string = '', title: string = '', desc: string = ''): Observable<BlogM[]> {
         const reqBody = {
-            companyID: environment.companyCode,
+      "companyID": environment.companyCode,
             ...(id && id > 0 ? { id: id } : {}),
             ...(sl ? { sl: sl.trim() } : {}),
             ...(heading ? { heading: heading.trim() } : {}),

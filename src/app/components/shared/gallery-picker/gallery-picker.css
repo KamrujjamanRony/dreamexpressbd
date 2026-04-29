@@ -1,3 +1,5 @@
+@reference "../../../../styles.css";
+
 .gallery-modal-shell {
   animation: gallery-backdrop-in 220ms ease-out;
 }

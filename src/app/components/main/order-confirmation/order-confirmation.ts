@@ -182,7 +182,7 @@ export class OrderConfirmation {
     return this.getOrderItems().reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
   }
 
- downloadVoucherPdf() {
+  downloadVoucherPdf() {
     if (!this.orderDetails || !this.orderId) {
       return;
     }

@@ -3,7 +3,7 @@
 swiper-container::part(button-prev),
 swiper-container::part(button-next) {
   @apply size-[28px] rounded-full text-neutral-900;
-  background: #facc15;
+  background: var(--color-accent-light);
   --swiper-navigation-size: 12px;
   box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 15%, transparent);
   transition: all 0.3s ease;
@@ -11,21 +11,21 @@ swiper-container::part(button-next) {
 
 swiper-container::part(button-prev):hover,
 swiper-container::part(button-next):hover {
-  background: #eab308;
+  background: var(--color-accent);
   box-shadow: 0 4px 12px color-mix(in srgb, var(--color-black) 20%, transparent);
 }
 
 :host-context(.dark) swiper-container::part(button-prev),
 :host-context(.dark) swiper-container::part(button-next) {
   @apply text-neutral-900;
-  background: #facc15;
+  background: var(--color-accent-light);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--color-black) 40%, transparent);
 }
 
 :host-context(.dark) swiper-container::part(button-prev):hover,
 :host-context(.dark) swiper-container::part(button-next):hover {
   @apply text-neutral-900;
-  background: #eab308;
+  background: var(--color-accent);
   box-shadow: 0 4px 12px color-mix(in srgb, var(--color-black) 50%, transparent);
 }
 

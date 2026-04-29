@@ -1,11 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SAuthCookie {
   cookieService = inject(CookieService);
+
+  private userChangedSource = new Subject<any>();
+  userChanged$ = this.userChangedSource.asObservable();
 
   login(userData: any) {
     // Normalize PascalCase token field from .NET API response
@@ -14,6 +18,7 @@ export class SAuthCookie {
       token: userData?.token || userData?.Token || null,
     };
     this.cookieService.set('userData', JSON.stringify(normalized), 7, '/');
+    this.userChangedSource.next(normalized);
   }
 
   getUserData() {
@@ -32,6 +37,7 @@ export class SAuthCookie {
   logout() {
     // Delete the user data cookie
     this.cookieService.delete('userData', '/');
+    this.userChangedSource.next(null);
   }
 
 }

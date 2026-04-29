@@ -104,7 +104,7 @@
     -webkit-text-fill-color: var(--color-black) !important;
   }
   .savings-strip {
-    background: #ecfdf5 !important;
+    background: color-mix(in srgb, var(--color-success) 8%, var(--color-white)) !important;
     color: var(--color-black) !important;
     -webkit-text-fill-color: var(--color-black) !important;
   }

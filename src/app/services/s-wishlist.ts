@@ -23,46 +23,47 @@ export class SWishlist {
   /* ─────────── Customer check ─────────── */
   isCustomer(): boolean {
     return !!this.authCookie.getUserData();
-  }
+  };
 
   getCustomerId(): string | null {
     return this.authCookie.getUserData()?.id?.toString() || null;
-  }
+  };
 
   /* ─────────── API methods (Customer) ─────────── */
   add(model: WishlistM): Observable<WishlistM> {
     return this.http.post<WishlistM>(this.apiUrl, model).pipe(
       tap(() => this.wishlistUpdated.next())
     );
-  }
+  };
 
   search(userId: string): Observable<WishlistM[]> {
-    const reqBody = { companyID: environment.companyCode, userId };
+    const reqBody = { 
+      "companyID": environment.companyCode, userId };
     return this.http.post<WishlistM[]>(`${this.apiUrl}/Search`, reqBody);
-  }
+  };
 
   update(id: any, updateRequest: WishlistM): Observable<WishlistM> {
     return this.http.put<WishlistM>(`${this.apiUrl}/${id}`, updateRequest).pipe(
       tap(() => this.wishlistUpdated.next())
     );
-  }
+  };
 
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.wishlistUpdated.next())
     );
-  }
+  };
 
   /* ─────────── Local wishlist (Guest) ─────────── */
   getLocalWishlist(): WishlistProductM[] {
     const data = localStorage.getItem(this.LOCAL_WISHLIST_KEY);
     return data ? JSON.parse(data) : [];
-  }
+  };
 
   private saveLocalWishlist(products: WishlistProductM[]): void {
     localStorage.setItem(this.LOCAL_WISHLIST_KEY, JSON.stringify(products));
     this.wishlistUpdated.next();
-  }
+  };
 
   addLocalProduct(product: WishlistProductM): void {
     const list = this.getLocalWishlist();
@@ -75,7 +76,7 @@ export class SWishlist {
       list.push(product);
       this.saveLocalWishlist(list);
     }
-  }
+  };
 
   removeLocalProduct(productId: string, selectSize?: string, selectColor?: string): void {
     let list = this.getLocalWishlist();
@@ -87,16 +88,16 @@ export class SWishlist {
       )
     );
     this.saveLocalWishlist(list);
-  }
+  };
 
   isInLocalWishlist(productId: string): boolean {
     return this.getLocalWishlist().some(p => p.productId === productId);
-  }
+  };
 
   clearLocalWishlist(): void {
     localStorage.removeItem(this.LOCAL_WISHLIST_KEY);
     this.wishlistUpdated.next();
-  }
+  };
 
   /* ─────────── Unified helpers ─────────── */
   refreshWishlistCount(): void {
@@ -114,7 +115,7 @@ export class SWishlist {
     } else {
       this.wishlistCount.set(this.getLocalWishlist().length);
     }
-  }
+  };
 
   /** Toggle wishlist item: add if not exists, remove if exists */
   toggleWishlist(productId: string, selectSize = '', selectColor = ''): void {
@@ -160,7 +161,7 @@ export class SWishlist {
         this.addLocalProduct(product);
       }
     }
-  }
+  };
 
   /** Merge local guest wishlist into customer's API wishlist on login */
   mergeGuestWishlist(customerId: string): void {
@@ -199,4 +200,4 @@ export class SWishlist {
       },
     });
   }
-}
+};

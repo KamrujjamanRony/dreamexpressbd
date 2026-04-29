@@ -39,7 +39,10 @@ export class SCart {
   }
 
   search(userId: any): Observable<CartM[]> {
-    const reqBody = { userId };
+    const reqBody = {
+      "companyID": environment.companyCode, 
+      "userId": userId
+    };
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
       map(data => this.normalizeCartList(data))
     );

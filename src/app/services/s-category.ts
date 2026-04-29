@@ -18,7 +18,9 @@ export class SCategory {
   }
 
   search(): Observable<CategoryM[]> {
-    const reqBody = { companyID: environment.companyCode };
+    const reqBody = {
+      "companyID": environment.companyCode,
+    };
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(
       switchMap((res) => {
         const list = Array.isArray(res) ? res : res?.data || res?.$values || [];

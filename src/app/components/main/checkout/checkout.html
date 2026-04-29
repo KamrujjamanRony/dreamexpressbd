@@ -160,9 +160,10 @@
             </p>
             <div class="space-y-4">
               @if (isGuest) {
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                    <label
+                      class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                       >Full Name *</label
                     >
                     <input
@@ -174,24 +175,25 @@
                       class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
                     />
                   </div>
-                  <div>
-                    <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
-                      >Phone Number *</label
-                    >
-                    <input
-                      type="tel"
-                      [(ngModel)]="guestPhone"
-                      name="guestPhone"
-                      placeholder="01XXXXXXXXX"
-                      autocomplete="tel"
-                      class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
-                    />
-                  </div>
                 </div>
               }
+              <div>
+                <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                  >Contact Number *</label
+                >
+                <input
+                  type="tel"
+                  [(ngModel)]="guestPhone"
+                  name="guestPhone"
+                  placeholder="01XXXXXXXXX"
+                  autocomplete="tel"
+                  class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
+                />
+              </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Division *</label
                   >
                   <select
@@ -207,7 +209,8 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >City *</label
                   >
                   <select
@@ -226,7 +229,8 @@
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Area</label
                   >
                   <select
@@ -242,7 +246,8 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
                     >Street Address *</label
                   >
                   <input
@@ -388,7 +393,9 @@
                     <span class="font-medium text-sm text-neutral-800 dark:text-white"
                       >Cash on Delivery</span
                     >
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Pay when you receive</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                      Pay when you receive
+                    </p>
                   </div>
                   <div
                     class="ml-auto w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
@@ -569,7 +576,9 @@
                   <div>
                     <p class="text-xs text-neutral-500 dark:text-neutral-400">Customer</p>
                     <p class="text-sm text-neutral-800 dark:text-white">{{ guestName }}</p>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{{ guestPhone }}</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                      {{ guestPhone }}
+                    </p>
                   </div>
                 </div>
               }

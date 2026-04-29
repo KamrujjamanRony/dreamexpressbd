@@ -4,7 +4,7 @@
       <div
         class="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-1000 before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto"
       >
-        <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 relative">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 relative dark:bg-neutral-800">
           <svg
             id="closeIcon"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@
                     Current Status
                   </label>
                   <div
-                    class="mt-1 px-3 py-2 bg-neutral-100 dark:bg-neutral-800 rounded-md text-neutral-900 dark:text-white"
+                    class="mt-1 px-3 py-2 bg-neutral-100 dark:bg-neutral-800 rounded-md text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600"
                   >
                     {{ currentStatus }}
                   </div>
@@ -45,7 +45,7 @@
                   </label>
                   <select autocomplete="off"
                     [(ngModel)]="newStatus"
-                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white"
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-neutral-600 dark:border-neutral-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white"
                   >
                     @for (option of statusOptions; track option.value) {
                       <option [value]="option.value" [selected]="option.value === currentStatus">

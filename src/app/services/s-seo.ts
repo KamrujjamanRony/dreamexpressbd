@@ -26,7 +26,7 @@ export class SSeo {
         siteName: environment.companyName,
         description: environment.siteDescription,
         keywords: environment.keywords.join(', '),
-        ogImage: `${environment.webUrl}/logo.webp`,
+        ogImage: `${environment.webUrl}/logo-full.webp`,
         webUrl: environment.webUrl,
     };
 

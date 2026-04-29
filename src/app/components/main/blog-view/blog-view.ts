@@ -72,18 +72,18 @@ export class BlogView {
             this.notFound.set(false);
 
             forkJoin({
-                blog: this.blogService.get(id),
+                blog: this.blogService.search(id),
                 gallery: this.galleryService.search('', 'Blog'),
             }).subscribe({
                 next: ({ blog, gallery }) => {
                     this.galleryMap.set(new Map(gallery.map((item) => [item.id || '', item.imageUrl || ''])));
-                    this.blog.set(blog);
-                    if (blog.heading) {
-                        this.breadcrumbService.appendCrumb(blog.heading);
-                        const heroImg = blog.imageUrl ? this.galleryMap().get(blog.imageUrl) || '' : '';
+                    this.blog.set(blog[0] || null);
+                    if (blog[0]?.heading) {
+                        this.breadcrumbService.appendCrumb(blog[0].heading);
+                        const heroImg = blog[0].imageUrl ? this.galleryMap().get(blog[0].imageUrl) || '' : '';
                         this.seo.updateBlogMeta({
-                            heading: blog.heading,
-                            description: blog.dtls?.[0]?.desc,
+                            heading: blog[0].heading,
+                            description: blog[0].dtls?.[0]?.desc,
                             image: heroImg || undefined,
                         });
                     }
