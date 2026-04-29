@@ -48,9 +48,9 @@
   --color-dark-scroll-thumb: #2a2a40;
   --color-dark-scroll-hover: #3a3a55;
 
-  /* ── Accent (secondary highlights) ── */
-  --color-accent: #ec4899;
-  --color-accent-light: #f472b6;
+  /* ── Accent (secondary highlights) — Green ── */
+  --color-accent: #10b981;
+  --color-accent-light: #34d399;
 
   /* ── Black & White ── */
   --color-black: #000000;
