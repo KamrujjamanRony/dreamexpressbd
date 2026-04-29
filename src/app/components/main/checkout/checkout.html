@@ -3,9 +3,9 @@
   <div class="max-w-6xl mx-auto mb-6 fade-slide-in" style="--delay: 0">
     <div class="flex items-center gap-3 mb-2">
       <div
-        class="w-11 h-11 flex items-center justify-center bg-linear-to-br from-rose-50 to-rose-100 dark:from-rose-500/15 dark:to-rose-500/8 rounded-xl animate-icon-pulse"
+        class="w-11 h-11 flex items-center justify-center bg-linear-to-br from-primary-50 to-primary-100 dark:from-primary-500/15 dark:to-primary-500/8 rounded-xl animate-icon-pulse"
       >
-        <svg class="w-7 h-7 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -36,7 +36,7 @@
               class="w-9 h-9 rounded-full flex items-center justify-center text-[0.8rem] font-semibold border-[2.5px] transition-all duration-400"
               [ngClass]="
                 activeStep() >= step.n
-                  ? 'bg-linear-to-br from-rose-500 to-rose-600 text-white border-rose-500 shadow-[0_0_0_4px_rgba(244,63,94,0.15)]'
+                  ? 'bg-linear-to-br from-primary-500 to-primary-600 text-white border-primary-500 shadow-[0_0_0_4px_color-mix(in srgb,var(--color-primary-500) 15%,transparent)]'
                   : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700'
               "
               [class.animate-step-bounce]="activeStep() === step.n"
@@ -46,7 +46,7 @@
               class="text-[0.6rem] md:text-[0.7rem] font-medium transition-colors duration-300"
               [ngClass]="
                 activeStep() >= step.n
-                  ? 'text-rose-500 dark:text-rose-400'
+                  ? 'text-primary-500 dark:text-primary-400'
                   : 'text-neutral-400 dark:text-neutral-500'
               "
               >{{ step.label }}</span
@@ -57,7 +57,7 @@
           class="absolute top-4.5 left-9 right-9 h-0.75 bg-neutral-200 dark:bg-neutral-700 rounded-sm z-0"
         >
           <div
-            class="h-full bg-linear-to-r from-rose-500 to-rose-400 rounded-sm transition-[width] duration-500 ease-in-out"
+            class="h-full bg-linear-to-r from-primary-500 to-primary-400 rounded-sm transition-[width] duration-500 ease-in-out"
             [style.width.%]="((activeStep() - 1) / 2) * 100"
           ></div>
         </div>
@@ -91,7 +91,7 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 1"
         [ngClass]="{
-          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-primary-200 dark:border-primary-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 1,
           'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 1,
@@ -108,7 +108,7 @@
               [ngClass]="
                 activeStep() > 1
                   ? 'bg-emerald-50 dark:bg-emerald-600/10 text-emerald-600 dark:text-emerald-400'
-                  : 'bg-red-50 dark:bg-rose-500/10 text-rose-500'
+                  : 'bg-red-50 dark:bg-primary-500/10 text-primary-500'
               "
             >
               @if (activeStep() > 1) {
@@ -147,7 +147,7 @@
             </div>
           </div>
           @if (activeStep() !== 1) {
-            <button class="text-rose-500 text-sm font-medium hover:text-rose-600 transition">
+            <button class="text-primary-500 text-sm font-medium hover:text-primary-600 transition">
               Change
             </button>
           }
@@ -172,7 +172,7 @@
                       name="guestName"
                       placeholder="Your full name"
                       autocomplete="name"
-                      class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
+                      class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)] placeholder:text-neutral-400"
                     />
                   </div>
                 </div>
@@ -187,7 +187,7 @@
                   name="guestPhone"
                   placeholder="01XXXXXXXXX"
                   autocomplete="tel"
-                  class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
+                  class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)] placeholder:text-neutral-400"
                 />
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -200,7 +200,7 @@
                     [ngModel]="guestDistrict"
                     (ngModelChange)="onDistrictChange($event)"
                     name="guestDistrict"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)]"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)]"
                   >
                     <option value="" disabled>Select Division</option>
                     @for (region of regions(); track region.name) {
@@ -218,7 +218,7 @@
                     (ngModelChange)="onCityChange($event)"
                     name="guestCity"
                     [disabled]="!guestDistrict"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="" disabled>Select City</option>
                     @for (city of cities(); track city.name) {
@@ -237,7 +237,7 @@
                     [(ngModel)]="guestArea"
                     name="guestArea"
                     [disabled]="!guestCity"
-                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="guest-select w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Select Area</option>
                     @for (area of areas(); track area.name) {
@@ -256,7 +256,7 @@
                     name="guestStreet"
                     placeholder="House no, Road, Area"
                     autocomplete="street-address"
-                    class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-rose-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.1)] placeholder:text-neutral-400"
+                    class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-primary-500 focus:shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)] placeholder:text-neutral-400"
                   />
                 </div>
               </div>
@@ -264,7 +264,7 @@
             <div class="flex justify-end mt-5">
               <button
                 (click)="goToStep(2)"
-                class="flex items-center gap-1.5 py-2.5 px-6 rounded-xl text-sm font-semibold bg-linear-to-br from-rose-500 to-rose-600 text-white transition-all duration-300 shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(244,63,94,0.35)]"
+                class="flex items-center gap-1.5 py-2.5 px-6 rounded-xl text-sm font-semibold bg-linear-to-br from-primary-500 to-primary-600 text-white transition-all duration-300 shadow-[0_2px_8px_color-mix(in srgb,var(--color-primary-500) 25%,transparent)] hover:-translate-y-px hover:shadow-[0_4px_16px_color-mix(in srgb,var(--color-primary-500) 35%,transparent)]"
               >
                 Continue to Payment
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -286,7 +286,7 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 2"
         [ngClass]="{
-          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-primary-200 dark:border-primary-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 2,
           'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 2,
@@ -304,7 +304,7 @@
               [ngClass]="
                 activeStep() > 2
                   ? 'bg-emerald-50 dark:bg-emerald-600/10 text-emerald-600 dark:text-emerald-400'
-                  : 'bg-red-50 dark:bg-rose-500/10 text-rose-500'
+                  : 'bg-red-50 dark:bg-primary-500/10 text-primary-500'
               "
             >
               @if (activeStep() > 2) {
@@ -340,7 +340,7 @@
             </div>
           </div>
           @if (activeStep() > 2) {
-            <button class="text-rose-500 text-sm font-medium hover:text-rose-600 transition">
+            <button class="text-primary-500 text-sm font-medium hover:text-primary-600 transition">
               Change
             </button>
           }
@@ -368,7 +368,7 @@
                   class="flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-300"
                   [ngClass]="
                     paymentMethod === 'Cash on Delivery'
-                      ? 'border-rose-500 bg-rose-50 dark:bg-rose-500/5 shadow-[0_0_0_3px_rgba(244,63,94,0.1)]'
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-500/5 shadow-[0_0_0_3px_color-mix(in srgb,var(--color-primary-500) 10%,transparent)]'
                       : 'border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800'
                   "
                 >
@@ -401,7 +401,7 @@
                     class="ml-auto w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
                     [ngClass]="
                       paymentMethod === 'Cash on Delivery'
-                        ? 'bg-rose-500 text-white animate-check-pop'
+                        ? 'bg-primary-500 text-white animate-check-pop'
                         : 'bg-transparent text-transparent'
                     "
                   >
@@ -435,7 +435,7 @@
               </button>
               <button
                 (click)="goToStep(3)"
-                class="flex items-center gap-1.5 py-2.5 px-6 rounded-xl text-sm font-semibold bg-linear-to-br from-rose-500 to-rose-600 text-white transition-all duration-300 shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(244,63,94,0.35)]"
+                class="flex items-center gap-1.5 py-2.5 px-6 rounded-xl text-sm font-semibold bg-linear-to-br from-primary-500 to-primary-600 text-white transition-all duration-300 shadow-[0_2px_8px_color-mix(in srgb,var(--color-primary-500) 25%,transparent)] hover:-translate-y-px hover:shadow-[0_4px_16px_color-mix(in srgb,var(--color-primary-500) 35%,transparent)]"
               >
                 Review Order
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -457,7 +457,7 @@
         class="rounded-2xl border overflow-hidden transition-all duration-400 fade-slide-in"
         style="--delay: 3"
         [ngClass]="{
-          'bg-white dark:bg-neutral-900 border-rose-200 dark:border-rose-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
+          'bg-white dark:bg-neutral-900 border-primary-200 dark:border-primary-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]':
             activeStep() === 3,
           'bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 shadow-sm':
             activeStep() !== 3,
@@ -471,7 +471,7 @@
         >
           <div class="flex items-center gap-3">
             <div
-              class="w-9 h-9 rounded-[10px] flex items-center justify-center bg-red-50 dark:bg-rose-500/10 text-rose-500 transition-all duration-300"
+              class="w-9 h-9 rounded-[10px] flex items-center justify-center bg-red-50 dark:bg-primary-500/10 text-primary-500 transition-all duration-300"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -624,7 +624,7 @@
               <button
                 (click)="placeOrder()"
                 [disabled]="placingOrder() || !deliveryAddress()"
-                class="place-order-btn flex items-center justify-center gap-2 py-3.5 px-8 rounded-[14px] text-[0.95rem] font-bold bg-linear-to-br from-rose-500 to-rose-600 text-white transition-all duration-300 shadow-[0_4px_16px_rgba(244,63,94,0.3)] relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(244,63,94,0.4)] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                class="place-order-btn flex items-center justify-center gap-2 py-3.5 px-8 rounded-[14px] text-[0.95rem] font-bold bg-linear-to-br from-primary-500 to-primary-600 text-white transition-all duration-300 shadow-[0_4px_16px_color-mix(in srgb,var(--color-primary-500) 30%,transparent)] relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_color-mix(in srgb,var(--color-primary-500) 40%,transparent)] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
               >
                 @if (placingOrder()) {
                   <div
@@ -658,7 +658,7 @@
         <div
           class="flex items-center gap-2.5 px-5 py-4 border-b border-neutral-100 dark:border-neutral-800"
         >
-          <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -741,7 +741,7 @@
           <div class="mb-3">
             @if (!tokenApplied()) {
               <div
-                class="flex items-center border-2 border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden transition-[border-color] duration-300 bg-neutral-50 dark:bg-neutral-800 focus-within:border-rose-500"
+                class="flex items-center border-2 border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden transition-[border-color] duration-300 bg-neutral-50 dark:bg-neutral-800 focus-within:border-primary-500"
               >
                 <div class="flex items-center justify-center pl-3 text-neutral-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -764,7 +764,7 @@
                 <button
                   (click)="applyToken()"
                   [disabled]="tokenLoading()"
-                  class="py-2 px-4 text-xs font-semibold bg-linear-to-br from-rose-500 to-rose-600 text-white border-none transition-all duration-300 flex items-center justify-center min-w-14 hover:from-rose-600 hover:to-rose-700 disabled:opacity-60"
+                  class="py-2 px-4 text-xs font-semibold bg-linear-to-br from-primary-500 to-primary-600 text-white border-none transition-all duration-300 flex items-center justify-center min-w-14 hover:from-primary-600 hover:to-primary-700 disabled:opacity-60"
                 >
                   @if (tokenLoading()) {
                     <div
@@ -848,7 +848,7 @@
           <div class="flex justify-between items-center py-1">
             <span class="text-neutral-800 dark:text-white font-bold text-lg">Total</span>
             <span
-              class="text-xl font-extrabold bg-linear-to-br from-rose-500 to-rose-600 bg-clip-text text-transparent"
+              class="text-xl font-extrabold bg-linear-to-br from-primary-500 to-primary-600 bg-clip-text text-transparent"
               [innerHTML]="orderTotal() | bdt"
             ></span>
           </div>
@@ -884,7 +884,7 @@
             <button
               (click)="placeOrder()"
               [disabled]="placingOrder() || !deliveryAddress()"
-              class="place-order-btn flex items-center justify-center gap-2 py-3.5 px-8 rounded-[14px] text-[0.95rem] font-bold bg-linear-to-br from-rose-500 to-rose-600 text-white transition-all duration-300 shadow-[0_4px_16px_rgba(244,63,94,0.3)] relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(244,63,94,0.4)] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none w-full"
+              class="place-order-btn flex items-center justify-center gap-2 py-3.5 px-8 rounded-[14px] text-[0.95rem] font-bold bg-linear-to-br from-primary-500 to-primary-600 text-white transition-all duration-300 shadow-[0_4px_16px_color-mix(in srgb,var(--color-primary-500) 30%,transparent)] relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_color-mix(in srgb,var(--color-primary-500) 40%,transparent)] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none w-full"
             >
               @if (placingOrder()) {
                 <div

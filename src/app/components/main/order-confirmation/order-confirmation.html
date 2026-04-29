@@ -49,7 +49,7 @@
     >
       <button
         (click)="downloadVoucherPdf()"
-        class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-rose-500 to-rose-600 text-white shadow-[0_2px_8px_rgba(244,63,94,0.25)] hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(244,63,94,0.35)]"
+        class="inline-flex items-center gap-1.5 py-2.5 px-5.5 rounded-[10px] text-[0.82rem] font-semibold transition-all duration-250 cursor-pointer bg-linear-to-br from-primary-500 to-primary-600 text-white shadow-[0_2px_8px_color-mix(in srgb,var(--color-primary-500) 25%,transparent)] hover:-translate-y-px hover:shadow-[0_4px_14px_color-mix(in srgb,var(--color-primary-500) 35%,transparent)]"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -390,7 +390,7 @@
             >
               <span>Total Due</span>
               <span
-                class="grand-total-amount text-lg font-extrabold text-rose-600 dark:text-rose-400"
+                class="grand-total-amount text-lg font-extrabold text-primary-600 dark:text-primary-400"
                 [innerHTML]="orderDetails.totalAmount | bdt"
               ></span>
             </div>
