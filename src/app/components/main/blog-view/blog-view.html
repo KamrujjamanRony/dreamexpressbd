@@ -89,7 +89,10 @@
                     <h3 class="editorial-title">{{ detail.title }}</h3>
                   }
                   @if (detail.desc) {
-                    <div class="editorial-desc whitespace-pre-line" [innerHTML]="detail.desc"></div>
+                    <div
+                      class="rte-content editorial-desc whitespace-pre-line"
+                      [innerHTML]="detail.desc"
+                    ></div>
                   }
                 </div>
 

@@ -1,77 +1,141 @@
-<div class="relative overflow-hidden rounded-2xl shadow-xl">
-  <!-- navigation="true" -->
-  <swiper-container
-    slides-per-view="1"
-    [loop]="carousels().length > 1"
-    autoplay-delay="4000"
-    autoplay-disable-on-interaction="false"
-    effect="fade"
-    fade-cross-fade="true"
-    speed="800"
-    pagination="true"
-    pagination-clickable="true"
-  >
-    @for (item of carousels(); track item.id) {
-      <swiper-slide>
-        <div
-          class="relative w-full min-h-75 md:min-h-110 lg:min-h-130 overflow-hidden cursor-pointer"
-          (click)="item?.bLink && navigate(item.bLink)"
-        >
-          <!-- Background Image with Ken Burns -->
-          <img
-            [src]="imageApi + item.imageUrl"
-            [alt]="item.title || 'Carousel banner'"
-            [attr.fetchpriority]="$first ? 'high' : 'auto'"
-            [attr.loading]="$first ? 'eager' : 'lazy'"
-            class="absolute inset-0 w-full h-full object-cover object-center carousel-bg"
-          />
-          <!-- Bottom gradient for text readability -->
-          <div
-            class="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/60 via-black/25 to-transparent pointer-events-none"
-          ></div>
-          <!-- Content -->
-          @if (item.title || item.description) {
+<!-- Fixed aspect-ratio wrapper prevents CLS regardless of inner content -->
+<div
+  class="relative overflow-hidden rounded-2xl shadow-xl aspect-21/9"
+  role="region"
+  aria-label="Image carousel"
+>
+  @if (swiperReady() && carousels().length > 1) {
+    <!-- Full Swiper carousel (replaces static slide after Swiper loads) -->
+    <swiper-container
+      class="absolute! inset-0! w-full! h-full!"
+      slides-per-view="1"
+      [loop]="carousels().length > 1"
+      autoplay-delay="4000"
+      autoplay-disable-on-interaction="false"
+      effect="fade"
+      fade-cross-fade="true"
+      speed="800"
+      pagination="true"
+      pagination-clickable="true"
+    >
+      @for (item of carousels(); track item.id) {
+        <swiper-slide>
+          <div class="relative w-full h-full overflow-hidden" (click)="navigate(item.bLink)">
+            <img
+              [src]="imageApi + item.imageUrl"
+              [alt]="item.title || 'Carousel banner'"
+              [attr.loading]="$first ? 'eager' : 'lazy'"
+              [attr.decoding]="$first ? 'auto' : 'async'"
+              sizes="100vw"
+              width="1200"
+              height="514"
+              class="absolute inset-0 w-full h-full object-cover object-center carousel-bg"
+            />
             <div
-              class="relative z-10 flex items-end h-full min-h-75 md:min-h-110 lg:min-h-130 px-8 md:px-14 lg:px-20 pb-14 md:pb-16 lg:pb-20"
-            >
-              <div class="max-w-xl">
-                <h2
-                  class="carousel-title text-2xl md:text-4xl lg:text-5xl font-extrabold text-primary-600 leading-tight drop-shadow-lg"
-                >
-                  {{ item.title }}
-                </h2>
-                @if (item.description) {
-                  <div
-                    class="carousel-desc text-sm md:text-base lg:text-lg text-primary-500 leading-relaxed mt-3 md:mt-5 drop-shadow-md"
-                    [innerHTML]="item.description"
-                  ></div>
-                }
-                @if (item.bLink) {
-                  <a
-                    (click)="navigate(item.bLink); $event.stopPropagation()"
-                    class="carousel-btn group inline-flex items-center gap-2 mt-5 md:mt-8 px-8 py-3.5 bg-primary-600 text-white font-bold rounded-full shadow-xl shadow-primary-500/30 hover:bg-primary-700 transition-all duration-400 hover:shadow-2xl hover:-translate-y-0.5 hover:gap-3 text-sm md:text-base cursor-pointer"
+              class="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/70 via-black/30 to-transparent pointer-events-none"
+            ></div>
+            @if (item.title || item.description) {
+              <div
+                class="relative z-10 flex items-end h-full px-6 md:px-14 lg:px-20 pb-10 md:pb-16 lg:pb-20"
+              >
+                <div class="max-w-xl">
+                  <h2
+                    class="carousel-title text-xl md:text-2xl lg:text-5xl font-extrabold text-white leading-tight drop-shadow-lg"
                   >
-                    Shop Now
-                    <svg
-                      class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    {{ item.title }}
+                  </h2>
+                  @if (item.description) {
+                    <div
+                      class="rte-content carousel-desc text-xs md:text-base lg:text-lg text-neutral-100 leading-relaxed mt-3 md:mt-5 drop-shadow-md"
+                      [innerHTML]="item.description"
+                    ></div>
+                  }
+                  @if (item.bLink) {
+                    <button
+                      type="button"
+                      (click)="navigate(item.bLink)"
+                      class="carousel-btn group inline-flex items-center gap-2 mt-2 md:mt-8 px-4 md:px-8 py-2 md:py-3.5 bg-primary-600 text-white font-bold rounded-full shadow-xl shadow-primary-500/30 hover:bg-primary-700 transition-all duration-400 hover:shadow-2xl hover:-translate-y-0.5 hover:gap-3 text-xs md:text-base cursor-pointer border-none"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </a>
-                }
+                      Shop Now
+                      <svg
+                        class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                    </button>
+                  }
+                </div>
               </div>
-            </div>
+            }
+          </div>
+        </swiper-slide>
+      }
+    </swiper-container>
+  } @else if (carousels().length > 0) {
+    <!-- Static first slide: immediate LCP without waiting for Swiper -->
+    <img
+      [src]="imageApi + carousels()[0].imageUrl"
+      [alt]="carousels()[0].title || 'Carousel banner'"
+      fetchpriority="high"
+      loading="eager"
+      sizes="100vw"
+      width="1200"
+      height="514"
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    />
+    <div
+      class="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-black/70 via-black/30 to-transparent pointer-events-none"
+    ></div>
+    @if (carousels()[0].title || carousels()[0].description) {
+      <div
+        class="relative z-10 flex items-end h-full px-6 md:px-14 lg:px-20 pb-10 md:pb-16 lg:pb-20"
+      >
+        <div class="max-w-xl">
+          <h2
+            class="text-xl md:text-2xl lg:text-5xl font-extrabold text-white leading-tight drop-shadow-lg"
+          >
+            {{ carousels()[0].title }}
+          </h2>
+          @if (carousels()[0].description) {
+            <div
+              class="rte-content text-xs md:text-base lg:text-lg text-neutral-100 leading-relaxed mt-3 md:mt-5 drop-shadow-md"
+              [innerHTML]="carousels()[0].description"
+            ></div>
+          }
+          @if (carousels()[0].bLink) {
+            <button
+              type="button"
+              (click)="navigate(carousels()[0].bLink)"
+              class="group inline-flex items-center gap-2 mt-2 md:mt-8 px-4 md:px-8 py-2 md:py-3.5 bg-primary-600 text-white font-bold rounded-full shadow-xl shadow-primary-500/30 hover:bg-primary-700 transition-all duration-400 hover:shadow-2xl hover:-translate-y-0.5 hover:gap-3 text-xs md:text-base cursor-pointer border-none"
+            >
+              Shop Now
+              <svg
+                class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </button>
           }
         </div>
-      </swiper-slide>
+      </div>
     }
-  </swiper-container>
+  }
 </div>

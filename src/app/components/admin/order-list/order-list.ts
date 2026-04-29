@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-order-list',
@@ -457,11 +458,11 @@ export class OrderList implements OnInit {
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const left = 40;
     const right = doc.internal.pageSize.getWidth() - 40;
-    const websiteUrl = 'https://chinatradexntour.com.bd/';
+    const websiteUrl = environment.webUrl;
 
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
-    doc.text('Dream Express BD', left, 50);
+    doc.text(environment.companyName, left, 50);
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
@@ -623,7 +624,7 @@ export class OrderList implements OnInit {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Orders Report</title>
+        <title>${environment.companyName} - Orders Report</title>
         <style>
           body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
           h1 { color: #059669; margin-bottom: 4px; }
@@ -636,7 +637,7 @@ export class OrderList implements OnInit {
         </style>
       </head>
       <body>
-        <h1>Dream Express BD - Orders Report</h1>
+        <h1>${environment.companyName} - Orders Report</h1>
         <p class="meta">Generated: ${new Date().toLocaleString()} | Total Orders: ${orders.length}</p>
         <table>
           <thead>

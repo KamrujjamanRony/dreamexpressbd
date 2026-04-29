@@ -201,12 +201,16 @@
           <form autocomplete="off" class="space-y-5" (submit)="onSubmit($event)">
             <!-- Type Select -->
             <div>
-              <label for="formType" class="block text-sm font-medium text-body mb-1">Type *</label>
+              <label
+                for="formType"
+                class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                >Type *</label
+              >
               <select
                 id="formType"
                 [(ngModel)]="formType"
                 name="formType"
-                class="block w-full px-3 py-2.5 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
+                class="block w-full px-3 py-2.5 text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 focus:outline-none focus:border-emerald-600 dark:bg-neutral-900"
               >
                 <option value="" disabled>Select Type</option>
                 @for (type of typeOptions; track type) {
@@ -217,7 +221,9 @@
 
             <!-- Description -->
             <div>
-              <label for="formDescription" class="block text-sm font-medium text-body mb-1"
+              <label
+                for="formDescription"
+                class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                 >Description</label
               >
               <input
@@ -226,19 +232,21 @@
                 [(ngModel)]="formDescription"
                 name="formDescription"
                 placeholder="Optional description"
-                class="block w-full px-3 py-2.5 text-sm text-heading bg-transparent rounded-base border border-default-medium focus:outline-none focus:border-brand dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200"
+                class="block w-full px-3 py-2.5 text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 focus:outline-none focus:border-emerald-600 dark:bg-neutral-900"
               />
             </div>
 
             <!-- Image Upload - Drag & Drop -->
             <div>
-              <label class="block text-sm font-medium text-body mb-1">Image *</label>
+              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                >Image *</label
+              >
               <div
-                class="relative border-2 border-dashed rounded-base p-6 text-center cursor-pointer transition-colors"
+                class="relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors"
                 [class]="
                   isDragging()
                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950'
-                    : 'border-default-medium hover:border-emerald-400'
+                    : 'border-neutral-300 dark:border-neutral-600 hover:border-emerald-400'
                 "
                 (dragover)="onDragOver($event)"
                 (dragleave)="onDragLeave($event)"
@@ -268,11 +276,16 @@
                       d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"
                     />
                   </svg>
-                  <p class="text-sm text-body">
+                  <p class="text-sm text-neutral-700 dark:text-neutral-300">
                     <span class="font-semibold text-emerald-600">Click to upload</span> or drag &
                     drop
                   </p>
                   <p class="text-xs text-neutral-400">PNG, JPG, WEBP (max 3MB)</p>
+                  @if (imageHint) {
+                    <p class="text-xs text-amber-500 dark:text-amber-400 font-medium">
+                      Required: {{ imageHint }}
+                    </p>
+                  }
                 </div>
               </div>
             </div>
@@ -280,7 +293,7 @@
             <!-- Image Preview -->
             @if (previewUrl()) {
               <div
-                class="relative inline-block max-w-xs rounded-base border border-default overflow-hidden"
+                class="relative inline-block max-w-xs rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden"
               >
                 <img [src]="previewUrl()" alt="Preview" class="block max-h-64 w-auto" />
                 <button
@@ -298,14 +311,14 @@
               <button
                 type="submit"
                 [disabled]="isSubmitted()"
-                class="flex-1 text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center disabled:cursor-not-allowed disabled:opacity-50"
+                class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {{ isSubmitted() ? 'Submitting ...' : 'Save' }}
               </button>
               <button
                 type="button"
                 (click)="onToggleList()"
-                class="text-neutral-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center"
+                class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
               >
                 Close
               </button>

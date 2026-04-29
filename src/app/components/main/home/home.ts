@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { SData } from '../../../services/s-data';
 import { SCategory } from '../../../services/s-category';
 import { SProduct } from '../../../services/s-product';
@@ -26,6 +27,7 @@ export class Home {
   private carouselService = inject(SCarousel);
 
   loading = signal(true);
+  carouselReady = signal(false);
   products = signal<ProductM[]>([]);
   categories = signal<any[]>([]);
   carousels = signal<any[]>([]);
@@ -77,35 +79,28 @@ export class Home {
   private loadData() {
     this.loading.set(true);
 
-    this.productService.search(0, 0, '', 1).subscribe({
-      next: (data) => {
-        this.products.set(data);
+    // Phase 1: Load carousel + permissions ASAP for fastest LCP
+    forkJoin({
+      carousels: this.carouselService.search(),
+      sections: this.dataService.loadSections(),
+    }).subscribe({
+      next: ({ carousels }) => {
+        this.carousels.set(carousels);
+        this.carouselReady.set(true);
+      },
+    });
+
+    // Phase 2: Load content data in parallel (doesn't block carousel)
+    forkJoin({
+      products: this.productService.search(0, 0, '', 1),
+      categories: this.categoryService.search(),
+    }).subscribe({
+      next: ({ products, categories }) => {
+        this.products.set(products);
+        this.categories.set(categories);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
-    });
-
-    this.carouselService.search().subscribe({
-      next: (data) => {
-        this.carousels.set(data);
-      },
-      error: (err) => console.error('Carousel load failed:', err),
-    });
-
-
-    // Load sections first
-    this.dataService.loadSections().subscribe({
-      next: () => {
-        // Now permissions will be updated
-        if (this.dataService.isPermitted("Categories") && this.categories().length === 0) {
-          this.categoryService.search().subscribe({
-            next: (data) => {
-              this.categories.set(data);
-            },
-            error: (err) => console.error('Category load failed:', err),
-          });
-        }
-      }
     });
   }
 

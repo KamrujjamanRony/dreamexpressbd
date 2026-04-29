@@ -1,4 +1,4 @@
-<section class="bg-neutral-50 text-neutral-950 dark:bg-dark-surface dark:text-neutral-100 relative">
+<div class="bg-neutral-50 text-neutral-950 dark:bg-dark-surface dark:text-neutral-100 relative">
   @if (routeLoading()) {
     <div class="route-overlay">
       <!-- Top progress bar -->
@@ -14,9 +14,13 @@
       </div>
     </div>
   }
-  <app-social-chat></app-social-chat>
-  <app-cart-drawer></app-cart-drawer>
+  @defer (on idle) {
+    <app-social-chat></app-social-chat>
+  }
+  @defer (on idle) {
+    <app-cart-drawer></app-cart-drawer>
+  }
   <router-outlet></router-outlet>
   <app-toast></app-toast>
   <app-confirm></app-confirm>
-</section>
+</div>

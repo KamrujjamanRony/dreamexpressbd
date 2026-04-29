@@ -9,10 +9,8 @@ import { Observable } from 'rxjs';
 export class SLogin {
 
   private readonly http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
-
   login(model: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/Authentication/Login`, model)
+    return this.http.post<any>(`${environment.apiUrl}/Authentication/Login`, { ...model, companyId: environment.companyCode });
   }
-  
+
 }

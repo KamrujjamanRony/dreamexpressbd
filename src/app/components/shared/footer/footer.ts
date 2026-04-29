@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, signal, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { SAbout } from '../../../services/s-about';
@@ -9,7 +8,7 @@ import { ContactM } from '../../../models/Contact';
 
 @Component({
     selector: 'app-footer',
-    imports: [CommonModule, RouterLink],
+    imports: [RouterLink],
     templateUrl: './footer.html',
     styleUrl: './footer.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

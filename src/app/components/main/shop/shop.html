@@ -1,6 +1,6 @@
 <section>
   <!-- shop wrapper -->
-  <div class="max-w-8xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 pt-4 pb-16 items-start">
     <!-- Desktop Sidebar (hidden on mobile) - Updated to match drawer design -->
     <div
       class="hidden md:block bg-white dark:bg-neutral-900 px-4 pb-6 shadow dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)] rounded overflow-hidden min-w-64"
@@ -581,7 +581,7 @@
       }
 
       <!-- product grid -->
-      @if (!products()) {
+      @if (products() === null || isFiltering()) {
         <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
           @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
             <app-product-skeleton></app-product-skeleton>

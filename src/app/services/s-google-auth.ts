@@ -8,9 +8,24 @@ export class SGoogleAuth {
   private ngZone = inject(NgZone);
   private callbackFn: ((credential: string) => void) | null = null;
   private initPromise: Promise<boolean> | null = null;
+  private scriptLoaded = false;
+
+  private loadScript(): void {
+    if (this.scriptLoaded || document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
+      this.scriptLoaded = true;
+      return;
+    }
+    this.scriptLoaded = true;
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
 
   initialize(callback: (credential: string) => void): Promise<boolean> {
     this.callbackFn = callback;
+    this.loadScript();
 
     if (!this.initPromise) {
       this.initPromise = new Promise<boolean>((resolve) => {

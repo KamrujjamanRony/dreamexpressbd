@@ -102,7 +102,7 @@
       <!-- Product Details Tab -->
       @if (activeTab === 'details' && product?.productDetails) {
         <div
-          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed wrap-break-word bg-accent"
           [innerHTML]="product.productDetails"
         ></div>
       }
@@ -110,7 +110,7 @@
       <!-- Additional Info Tab -->
       @if (activeTab === 'info' && product?.additionalInformation) {
         <div
-          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
           [innerHTML]="product.additionalInformation"
         ></div>
       }
@@ -118,7 +118,7 @@
       <!-- Special Feature Tab -->
       @if (activeTab === 'feature' && product?.specialFeature) {
         <div
-          class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
           [innerHTML]="product.specialFeature"
         ></div>
       }

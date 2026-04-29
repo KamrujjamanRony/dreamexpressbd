@@ -1,13 +1,13 @@
 <!-- Main Navbar -->
 <header
-  class="bg-white/95 dark:bg-dark-surface/95 backdrop-blur-[20px] border-b border-primary-500/10 dark:border-primary-500/15 sticky top-0 z-50 transition-all duration-300"
+  class="bg-white/95 dark:bg-dark-surface/95 lg:backdrop-blur-[20px] border-b border-primary-500/10 dark:border-primary-500/15 sticky top-0 z-50 transition-all duration-300"
   [ngClass]="
     isScrolled()
       ? 'shadow-[0_4px_20px_color-mix(in_srgb,var(--color-primary-600)_12%,transparent)]'
       : ''
   "
 >
-  <div class="max-w-8xl mx-auto px-4 sm:px-6 w-full">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <a
@@ -27,7 +27,7 @@
       </a>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex items-center gap-1">
+      <nav class="hidden lg:flex items-center gap-1" aria-label="Main navigation">
         <a
           routerLink="/"
           class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer no-underline hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15"
@@ -55,6 +55,8 @@
           <button
             class="nav-link flex items-center gap-1.5 py-2 px-3.5 text-sm font-semibold text-primary-900 dark:text-primary-100 rounded-lg relative transition-all duration-250 cursor-pointer hover:text-primary-600 dark:hover:text-primary-50 hover:bg-primary-500/6 dark:hover:bg-primary-500/15 bg-transparent border-none"
             (click)="toggleCategoryDropdown()"
+            [attr.aria-expanded]="showCategoryDropdown()"
+            aria-haspopup="true"
           >
             <i class="fas fa-th-large text-xs opacity-70 transition-all duration-250"></i>
             Categories
@@ -78,11 +80,11 @@
                     Browse Categories
                   </h3>
                   <span class="text-xs text-primary-400"
-                    >{{ categories.length }} categories available</span
+                    >{{ categories().length }} categories available</span
                   >
                 </div>
                 <div class="grid grid-cols-2 gap-1 p-3 max-h-90 overflow-y-auto">
-                  @for (item of categories; track item?.id) {
+                  @for (item of categories(); track item?.id) {
                     <a
                       [routerLink]="['/shop']"
                       [queryParams]="{ category: item.id }"
@@ -95,7 +97,7 @@
                         @if (item?.imageUrl) {
                           <img
                             [src]="imageBaseUrl + item.imageUrl"
-                            alt=""
+                            [alt]="item?.categoryName"
                             class="w-full h-full object-cover rounded"
                           />
                         } @else {
@@ -148,6 +150,7 @@
           class="hidden lg:flex items-center gap-2 bg-primary-50 dark:bg-primary-600/10 border-[1.5px] border-primary-500/15 dark:border-primary-500/20 rounded-xl py-2 px-4 min-w-55 transition-all duration-300 cursor-pointer hover:border-primary-500 hover:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] dark:hover:border-primary-500 group"
           (click)="openSearch()"
           type="button"
+          aria-label="Search products"
         >
           <i
             class="fas fa-search text-neutral-400 text-[13px] transition-colors duration-200 group-hover:text-primary-500"
@@ -165,7 +168,7 @@
         <a
           routerLink="/account/wishlist"
           class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6"
-          title="Wishlist"
+          aria-label="Wishlist"
         >
           <div
             class="relative text-lg text-primary-800 dark:text-primary-300 transition-all duration-250"
@@ -184,7 +187,7 @@
         <button
           (click)="openCartDrawer()"
           class="flex flex-col items-center gap-0.5 cursor-pointer no-underline py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6 bg-transparent border-none"
-          title="Cart"
+          aria-label="Shopping cart"
         >
           <div
             class="relative text-lg text-primary-800 dark:text-primary-300 transition-all duration-250"
@@ -204,7 +207,8 @@
           <div class="relative group">
             <button
               class="flex flex-col items-center gap-0.5 cursor-pointer py-1 px-2 rounded-[10px] transition-all duration-250 hover:bg-primary-500/6 bg-transparent border-none"
-              title="Account"
+              aria-label="Account menu"
+              [attr.aria-expanded]="true"
             >
               @if (user.profileImage) {
                 <img
@@ -293,6 +297,8 @@
           class="w-10 h-10 flex items-center justify-center bg-transparent border-none cursor-pointer p-0 lg:hidden"
           (click)="toggleMobileMenu()"
           type="button"
+          aria-label="Open menu"
+          [attr.aria-expanded]="isMobileMenuOpen()"
         >
           <span
             class="hamburger w-5.5 h-4 relative flex flex-col justify-between"
@@ -317,7 +323,7 @@
       : ''
   "
 >
-  <div class="max-w-8xl mx-auto px-6">
+  <div class="max-w-7xl mx-auto px-6">
     <div class="flex items-center gap-1 py-1 overflow-x-auto scrollbar-hide">
       <a
         routerLink="/shop"
@@ -326,7 +332,7 @@
         <i class="fas fa-fire text-2xs"></i>
         All
       </a>
-      @for (item of categories.slice(0, 10); track item?.id) {
+      @for (item of categories().slice(0, 10); track item?.id) {
         <a
           [routerLink]="['/shop']"
           [queryParams]="{ category: item.id }"
@@ -335,12 +341,13 @@
           {{ item?.categoryName }}
         </a>
       }
-      @if (categories.length > 10) {
+      @if (categories().length > 10) {
         <button
           class="flex items-center gap-1 py-1.25 px-3.5 text-xs font-semibold text-primary-600 rounded-full whitespace-nowrap transition-all duration-250 cursor-pointer bg-primary-500/8 border-none hover:bg-primary-500/15"
           (click)="toggleCategoryDropdown()"
+          aria-label="Show more categories"
         >
-          +{{ categories.length - 10 }} More
+          +{{ categories().length - 10 }} More
           <i class="fas fa-chevron-down text-2xs"></i>
         </button>
       }
@@ -357,6 +364,7 @@
       class="flex items-center gap-2.5 w-full bg-white dark:bg-[rgba(30,16,51,0.8)] border border-primary-500/15 dark:border-primary-500/20 rounded-xl py-2.5 px-3.5 transition-all duration-250 cursor-pointer hover:border-primary-500 hover:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary-600)_8%,transparent)] group"
       (click)="openSearch()"
       type="button"
+      aria-label="Search for products"
     >
       <i
         class="fas fa-search text-primary-400 text-sm transition-colors group-hover:text-primary-500"
@@ -391,7 +399,7 @@
           sizes="116px"
           loading="lazy"
           decoding="async"
-          alt="logo"
+          [alt]="companyName"
           class="h-10 w-auto"
         />
       </a>
@@ -399,8 +407,9 @@
         (click)="closeMobileMenu()"
         class="w-8 h-8 rounded-lg border-none bg-red-500/8 text-red-500 cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-red-500/15"
         type="button"
+        aria-label="Close menu"
       >
-        <i class="fas fa-times"></i>
+        <i class="fas fa-times" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -497,6 +506,7 @@
       <button
         class="flex items-center justify-between w-full p-3 bg-primary-500/4 dark:bg-primary-500/8 border-none rounded-[10px] cursor-pointer transition-all duration-200 text-neutral-700 dark:text-neutral-300 hover:bg-primary-500/8"
         (click)="toggleMobileCategories()"
+        [attr.aria-expanded]="showMobileCategories()"
       >
         <span class="flex items-center gap-2">
           <i class="fas fa-th-large text-primary-500"></i>
@@ -509,7 +519,7 @@
       </button>
       @if (showMobileCategories()) {
         <div class="grid grid-cols-2 gap-1.5 py-2">
-          @for (item of categories; track item?.id; let i = $index) {
+          @for (item of categories(); track item?.id; let i = $index) {
             <a
               [routerLink]="['/shop']"
               [queryParams]="{ category: item.id }"

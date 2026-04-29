@@ -19,7 +19,10 @@
         </div>
 
         @if (aboutData()?.info?.[0]?.desc) {
-          <div class="footer-brand-desc" [innerHTML]="aboutData()?.info?.[0]?.desc"></div>
+          <div
+            class="footer-brand-desc rte-content"
+            [innerHTML]="aboutData()?.info?.[0]?.desc"
+          ></div>
         } @else {
           <p class="footer-brand-desc">Your trusted online shopping destination in Bangladesh.</p>
         }

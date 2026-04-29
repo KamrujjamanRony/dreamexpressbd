@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root',
@@ -39,27 +38,41 @@ export class SAuth {
 
   private backupUser() {
     if (this.memoryCache) {
-      const encrypted = CryptoJS.AES.encrypt(
-        JSON.stringify(this.memoryCache),
-        this.encryptionKey
-      ).toString();
-      localStorage.setItem(this.storageKey, encrypted);
+      try {
+        const json = JSON.stringify(this.memoryCache);
+        const encoded = btoa(encodeURIComponent(json));
+        localStorage.setItem(this.storageKey, encoded);
+      } catch { }
     }
   }
 
   private restoreUser() {
-    const encrypted = localStorage.getItem(this.storageKey);
-    if (encrypted) {
+    const stored = localStorage.getItem(this.storageKey);
+    if (stored) {
+      // Try new format (base64)
       try {
-        const decrypted = CryptoJS.AES.decrypt(
-          encrypted,
-          this.encryptionKey
-        ).toString(CryptoJS.enc.Utf8);
-        this.memoryCache = JSON.parse(decrypted);
-      } catch (e) {
-        this.deleteUser(); // Clear corrupted data
-      }
+        const json = decodeURIComponent(atob(stored));
+        this.memoryCache = JSON.parse(json);
+        return;
+      } catch { }
+      // Legacy crypto-js format: load dynamically and migrate
+      this.restoreLegacy(stored);
     }
   }
-  
+
+  private async restoreLegacy(encrypted: string) {
+    try {
+      const CryptoJS = (await import('crypto-js')).default;
+      const decrypted = CryptoJS.AES.decrypt(
+        encrypted,
+        this.encryptionKey
+      ).toString(CryptoJS.enc.Utf8);
+      this.memoryCache = JSON.parse(decrypted);
+      // Re-save in new format so crypto-js is never needed again
+      this.backupUser();
+    } catch (e) {
+      this.deleteUser(); // Clear corrupted data
+    }
+  }
+
 }

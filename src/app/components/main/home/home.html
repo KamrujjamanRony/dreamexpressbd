@@ -1,11 +1,17 @@
-@if (loading() || categories().length < 1 || !products() || !categoryWiseProducts()) {
-  <!-- Skeleton Loading -->
-  <section class="max-w-8xl mx-auto w-full px-4 py-6 space-y-8">
-    <!-- Carousel Skeleton -->
-    <div class="animate-pulse">
-      <div class="h-75 md:h-110 bg-neutral-300 dark:bg-neutral-700 rounded-2xl w-full"></div>
-    </div>
+<!-- Carousel: renders as soon as carousel data arrives (independent of other content) -->
+<section class="max-w-7xl mx-auto w-full px-4 pt-6 space-y-2">
+  @if (carouselReady() && isBannerPermitted()) {
+    <app-carousel [carousels]="carousels()" />
+  } @else if (!carouselReady()) {
+    <div
+      class="aspect-16/9 md:aspect-21/9 bg-neutral-300 dark:bg-neutral-700 rounded-2xl w-full"
+    ></div>
+  }
+</section>
 
+<!-- Rest of content: waits for products + categories -->
+@if (loading() || categories().length < 1 || !products() || !categoryWiseProducts()) {
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-8">
     <!-- Features Skeleton -->
     <div class="animate-pulse grid grid-cols-1 md:grid-cols-3 gap-4">
       @for (_ of [1, 2, 3]; track _) {
@@ -34,11 +40,7 @@
     </div>
   </section>
 } @else {
-  <section class="max-w-8xl mx-auto w-full px-4 py-6 space-y-2">
-    @if (isBannerPermitted()) {
-      <app-carousel [carousels]="carousels()" />
-    }
-
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-2">
     @if (isFeaturedPermitted()) {
       <app-feature-product />
     }

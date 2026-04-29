@@ -1,92 +1,129 @@
 @if (isView()) {
   @if (showList()) {
-    <div class="max-w-8xl mx-auto relative mt-5">
-      <div class="w-full mb-10 px-3">
-        <div
-          class="relative overflow-x-auto bg-neutral-primary shadow-xs rounded-base border border-default dark:bg-neutral-950 dark:border-neutral-700"
-        >
-          <div class="flex justify-between p-4">
-            <div class="w-full">
-              <label for="search" class="sr-only">Search</label>
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 start-x-0 flex items-center ps-3 pointer-events-none text-neutral-600 dark:text-neutral-400"
-                >
-                  <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
-                </div>
-                <input
-                  #searchInput
-                  autocomplete="off"
-                  (input)="onSearch($event)"
-                  type="text"
-                  id="search"
-                  class="block w-full max-w-xl ps-9 pe-3 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-400"
-                  placeholder="Search by Name, Email or District"
-                />
-              </div>
-            </div>
-            <h1
-              class="text-xl md:text-3xl font-bold text-emerald-500 underline text-center mb-1 w-full"
-            >
-              Customer List
-            </h1>
-            @if (isInsert()) {
-              <div class="w-full flex justify-end">
-                <button
-                  type="button"
-                  (click)="showList.set(false)"
-                  class="text-white bg-linear-to-r from-green-400 via-green-500 to-green-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5 cursor-pointer"
-                >
-                  Add Customer
-                </button>
-              </div>
-            }
-          </div>
+    <div class="p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Customer Management</h1>
+        @if (isInsert()) {
+          <button
+            type="button"
+            (click)="showList.set(false)"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            + Add Customer
+          </button>
+        }
+      </div>
 
-          <!-- Loading State -->
-          @if (isLoading()) {
-            <p class="text-3xl font-bold text-center p-10 text-emerald-600">Loading ...</p>
-          }
+      <!-- Search -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow mb-6 p-4">
+        <div class="relative max-w-md">
+          <fa-icon
+            [icon]="faMagnifyingGlass"
+            class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+          ></fa-icon>
+          <input
+            #searchInput
+            autocomplete="off"
+            (input)="onSearch($event)"
+            type="text"
+            id="search"
+            placeholder="Search by Name, Email or District"
+            class="w-full pl-10 pr-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+          />
+        </div>
+      </div>
 
-          <!-- Error State -->
-          @else if (hasError()) {
-            <p class="text-3xl font-bold text-center p-10 text-red-600">
-              There was an error loading data.
-            </p>
-          }
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="text-center py-12">
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"
+          ></div>
+          <p class="mt-4 text-neutral-600 dark:text-neutral-400">Loading customers...</p>
+        </div>
+      }
 
-          <!-- Empty State -->
-          @else if (filteredList().length === 0) {
-            <p class="text-3xl font-bold text-center p-10 text-orange-600">No Customers found.</p>
-          }
+      <!-- Error State -->
+      @else if (hasError()) {
+        <div class="text-center py-12">
+          <p class="text-red-600 dark:text-red-400">Failed to load customers. Please try again.</p>
+        </div>
+      }
 
-          <!-- Table -->
-          @else {
-            <table class="w-full text-sm text-left rtl:text-right text-body overflow-scroll">
-              <thead
-                class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium"
-              >
+      <!-- Empty State -->
+      @else if (filteredList().length === 0) {
+        <div class="text-center py-12">
+          <p class="text-neutral-500 dark:text-neutral-400">No customers found.</p>
+        </div>
+      }
+
+      <!-- Table -->
+      @else {
+        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+              <thead class="bg-neutral-50 dark:bg-neutral-900">
                 <tr>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Image</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Full Name</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Email</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Provider</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Address</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping District</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping City</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping Street</th>
-                  <th scope="col" class="px-6 py-3 font-medium capitalize">Shipping Contact</th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Image
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Full Name
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Email
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Provider
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Address
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    District
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    City
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Street
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Contact
+                  </th>
                   @if (isEdit() || isDelete()) {
-                    <th scope="col" class="px-6 py-3 font-medium capitalize">Actions</th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
                   }
                 </tr>
               </thead>
-              <tbody>
+              <tbody
+                class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700"
+              >
                 @for (item of filteredList(); track item?.id || $index) {
-                  <tr
-                    class="bg-neutral-primary border-b border-default hover:bg-yellow-100 odd:bg-neutral-primary even:bg-neutral-secondary-soft dark:bg-neutral-950 dark:border-neutral-700 dark:hover:bg-neutral-800"
-                    [class.bg-blue-300]="selected()?.id === item.id"
-                  >
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
                     <td class="px-6 py-4">
                       @if (item?.profileImage) {
                         <img
@@ -103,29 +140,47 @@
                         </div>
                       }
                     </td>
-                    <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                    <td
+                      class="px-6 py-4 text-sm font-medium text-neutral-900 dark:text-white whitespace-nowrap"
+                    >
                       {{ item?.fullName || '-' }}
                     </td>
-                    <td class="px-6 py-4">{{ item?.email || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.loginProvider || 'Manual' }}</td>
-                    <td class="px-6 py-4">{{ item?.address || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.shippingDistrict || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.shippingCity || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.shippingStreet || '-' }}</td>
-                    <td class="px-6 py-4">{{ item?.shippingContact || '-' }}</td>
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.email || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.loginProvider || 'Manual' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.address || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.shippingDistrict || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.shippingCity || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.shippingStreet || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item?.shippingContact || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium space-x-2">
                       @if (isEdit()) {
                         <button
-                          class="text-orange-50 bg-orange-400 hover:bg-orange-500 px-1 py-0.5 rounded cursor-pointer mr-1 dark:bg-orange-600 dark:hover:bg-orange-700"
+                          class="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
                           (click)="onUpdate(item)"
+                          title="Edit"
                         >
                           <fa-icon [icon]="faPencil"></fa-icon>
                         </button>
                       }
                       @if (isDelete()) {
                         <button
-                          class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
+                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                           (click)="onDelete(item?.id)"
+                          title="Delete"
                         >
                           <fa-icon [icon]="faXmark"></fa-icon>
                         </button>
@@ -135,26 +190,23 @@
                 }
               </tbody>
             </table>
-          }
+          </div>
         </div>
-      </div>
+      }
     </div>
   } @else {
-    <div class="max-w-8xl mx-auto relative">
+    <div class="p-6">
       <!-- Customer Form -->
-      <div
-        class="bg-white rounded-lg shadow-md border border-neutral-200 transition-all dark:bg-neutral-950 dark:border-neutral-700"
-      >
+      <div class="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl mx-auto">
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-neutral-800 transition-all dark:text-neutral-50">
-              Customer Form
-            </h2>
+            <h2 class="text-xl font-bold text-emerald-600 dark:text-emerald-400">Customer Form</h2>
             <button
-              class="text-rose-50 bg-rose-600 hover:bg-rose-700 px-1 py-0.5 rounded cursor-pointer"
+              class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 text-2xl leading-none"
               (click)="onToggleList()"
+              title="Close"
             >
-              <fa-icon [icon]="faXmark"></fa-icon>
+              &times;
             </button>
           </div>
 
@@ -164,7 +216,10 @@
               <div>
                 @let fullName = form.fullName();
                 @let fullNameError = form.fullName().invalid() && form.fullName().touched();
-                <label for="fullName" class="block mb-2 text-sm font-semibold text-neutral-200">
+                <label
+                  for="fullName"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                >
                   Full Name
                 </label>
                 <div class="relative">
@@ -187,7 +242,7 @@
                     type="text"
                     id="fullName"
                     [formField]="form.fullName"
-                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                    class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full pl-10 p-3 transition-all duration-200"
                     [class]="fullNameError ? 'border-red-400' : 'border-neutral-600'"
                     placeholder="Enter your full name"
                     autocomplete="off"
@@ -205,7 +260,10 @@
               <div>
                 @let email = form.email();
                 @let emailError = form.email().invalid() && form.email().touched();
-                <label for="email" class="block mb-2 text-sm font-semibold text-neutral-200">
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                >
                   Email
                   <span class="text-xs font-normal text-neutral-400">(or phone required)</span>
                 </label>
@@ -229,7 +287,7 @@
                     type="email"
                     id="email"
                     [formField]="form.email"
-                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                    class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full pl-10 p-3 transition-all duration-200"
                     [class]="emailError ? 'border-red-400' : 'border-neutral-600'"
                     placeholder="Enter email address"
                     autocomplete="off"
@@ -251,7 +309,7 @@
                   form.shippingContact().invalid() && form.shippingContact().touched();
                 <label
                   for="shippingContact"
-                  class="block mb-2 text-sm font-semibold text-neutral-200"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                 >
                   Phone
                   <span class="text-xs font-normal text-neutral-400">(or email required)</span>
@@ -276,7 +334,7 @@
                     type="tel"
                     id="shippingContact"
                     [formField]="form.shippingContact"
-                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all duration-200"
+                    class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full pl-10 p-3 transition-all duration-200"
                     [class]="phoneError ? 'border-red-400' : 'border-neutral-600'"
                     placeholder="Enter phone number"
                     autocomplete="off"
@@ -294,7 +352,10 @@
               <div class="md:col-span-2">
                 @let pass = form.pass();
                 @let passError = form.pass().invalid() && form.pass().touched();
-                <label for="pass" class="block mb-2 text-sm font-semibold text-neutral-200">
+                <label
+                  for="pass"
+                  class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                >
                   Password
                 </label>
                 <div class="relative">
@@ -317,7 +378,7 @@
                     [type]="showPassword() ? 'text' : 'password'"
                     id="pass"
                     [formField]="form.pass"
-                    class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 pr-12 p-3 transition-all duration-200"
+                    class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full pl-10 pr-12 p-3 transition-all duration-200"
                     [class]="passError ? 'border-red-400' : 'border-neutral-600'"
                     placeholder="Create a password"
                     autocomplete="off"
@@ -339,22 +400,26 @@
                 }
               </div>
 
-              <div class="md:col-span-2 border-t border-neutral-700 pt-4 mt-2">
-                <h3 class="text-sm font-semibold text-neutral-200 mb-3">Address</h3>
+              <div
+                class="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2"
+              >
+                <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-3">
+                  Address
+                </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     @let shippingDistrictError =
                       form.shippingDistrict().invalid() && form.shippingDistrict().touched();
                     <label
                       for="shippingDistrict"
-                      class="block mb-2 text-sm font-semibold text-neutral-200"
+                      class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                       >Division</label
                     >
                     <select
                       id="shippingDistrict"
                       [value]="form.shippingDistrict().value()"
                       (change)="onShippingDistrictChange($any($event.target).value)"
-                      class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+                      class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
                       [class]="shippingDistrictError ? 'border-red-400' : 'border-neutral-600'"
                     >
                       <option value="">Select Division</option>
@@ -379,7 +444,7 @@
                   <div>
                     <label
                       for="shippingCity"
-                      class="block mb-2 text-sm font-semibold text-neutral-200"
+                      class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                       >City</label
                     >
                     <select
@@ -387,7 +452,7 @@
                       [value]="form.shippingCity().value()"
                       (change)="onShippingCityChange($any($event.target).value)"
                       [disabled]="!form.shippingDistrict().value()"
-                      class="bg-neutral-700/70 border border-neutral-600 text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="bg-transparent border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="">Select City</option>
                       @for (city of shippingCities(); track city.name) {
@@ -402,7 +467,9 @@
                   </div>
 
                   <div>
-                    <label for="regArea" class="block mb-2 text-sm font-semibold text-neutral-200"
+                    <label
+                      for="regArea"
+                      class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                       >Area</label
                     >
                     <select
@@ -410,7 +477,7 @@
                       [value]="form.area().value()"
                       (change)="onShippingAreaChange($any($event.target).value)"
                       [disabled]="!form.shippingCity().value()"
-                      class="bg-neutral-700/70 border border-neutral-600 text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="bg-transparent border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="">Select Area</option>
                       @for (item of shippingAreas(); track item.name) {
@@ -426,7 +493,7 @@
                       form.shippingStreet().invalid() && form.shippingStreet().touched();
                     <label
                       for="shippingStreet"
-                      class="block mb-2 text-sm font-semibold text-neutral-200"
+                      class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                       >Street Address</label
                     >
                     <input
@@ -434,7 +501,7 @@
                       id="shippingStreet"
                       [formField]="form.shippingStreet"
                       (input)="onShippingStreetChange($any($event.target).value)"
-                      class="bg-neutral-700/70 border text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+                      class="bg-transparent border text-neutral-900 dark:text-white text-sm rounded-lg border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full p-3 transition-all duration-200"
                       [class]="shippingStreetError ? 'border-red-400' : 'border-neutral-600'"
                       placeholder="House no, Road, Area"
                       autocomplete="off"
@@ -451,14 +518,14 @@
                   <div>
                     <label
                       for="shippingType"
-                      class="block mb-2 text-sm font-semibold text-neutral-200"
+                      class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                       >Type</label
                     >
                     <select
                       id="shippingType"
                       [value]="form.shippingType().value()"
                       (change)="onShippingTypeChange($any($event.target).value)"
-                      class="bg-neutral-700/70 border border-neutral-600 text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+                      class="bg-transparent border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-emerald-600 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
                     >
                       <option value="">Select Type</option>
                       @for (type of addressTypes; track type.value) {
@@ -480,13 +547,13 @@
                   type="submit"
                   [value]="isSubmitted() ? 'Submitting ...' : selected() ? 'Update' : 'Save'"
                   [disabled]="form().invalid() || isSubmitted()"
-                  class="text-neutral-50 bg-linear-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-emerald-300 shadow-lg shadow-emerald-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50"
+                  class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors me-2 mb-2 h-10 w-full disabled:cursor-not-allowed disabled:opacity-50"
                 />
 
                 <button
                   type="button"
                   (click)="onToggleList()"
-                  class="text-neutral-50 bg-linear-to-r from-red-400 via-red-500 to-red-600 hover:bg-linear-to-br focus:ring-1 focus:outline-none focus:ring-red-300 shadow-lg shadow-red-500/50 font-medium rounded text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+                  class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors me-2 mb-2 h-10"
                 >
                   Close
                 </button>

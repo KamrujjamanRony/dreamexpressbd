@@ -12,13 +12,17 @@
   <section
     class="min-h-[60vh] relative overflow-hidden bg-[linear-gradient(180deg,#fffaf0_0%,#ffffff_34%,#f7fbff_100%)] dark:bg-[linear-gradient(180deg,#08101c_0%,#0d1627_42%,#101a2f_100%)]"
   >
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 lg:py-10 relative z-10">
-
       @if (!filteredBlogs().length) {
         <section class="empty-state reveal mt-10 text-center py-12 px-6 rounded-[1.75rem]">
-          <div class="empty-state-icon inline-flex items-center justify-center size-16 rounded-[1.25rem] text-primary-600 text-[1.4rem]"><i class="fas fa-feather-pointed"></i></div>
-          <h2 class="text-[1.65rem] font-extrabold mt-4 text-neutral-950 dark:text-white">No stories matched your search</h2>
+          <div
+            class="empty-state-icon inline-flex items-center justify-center size-16 rounded-[1.25rem] text-primary-600 text-[1.4rem]"
+          >
+            <i class="fas fa-feather-pointed"></i>
+          </div>
+          <h2 class="text-[1.65rem] font-extrabold mt-4 text-neutral-950 dark:text-white">
+            No stories matched your search
+          </h2>
           <p class="max-w-[40ch] mx-auto mt-3 text-neutral-600 dark:text-neutral-300">
             Try a broader keyword or clear the current filter to explore all published blog content.
           </p>
@@ -27,14 +31,24 @@
         <section class="">
           <div class="flex items-end justify-between gap-4 mb-6 reveal">
             <div>
-              <span class="section-kicker inline-flex items-center gap-2 rounded-full font-bold uppercase py-[0.45rem] px-[0.9rem] text-[0.72rem] tracking-[0.22em] text-primary-700 dark:text-primary-200">Browse the archive</span>
-              <h2 class="mt-2 text-[clamp(1.5rem,2.6vw,2.35rem)] leading-[1.05] font-black text-neutral-950 dark:text-white">All Blog Posts</h2>
+              <span
+                class="section-kicker inline-flex items-center gap-2 rounded-full font-bold uppercase py-[0.45rem] px-[0.9rem] text-[0.72rem] tracking-[0.22em] text-primary-700 dark:text-primary-200"
+                >Browse the archive</span
+              >
+              <h2
+                class="mt-2 text-[clamp(1.5rem,2.6vw,2.35rem)] leading-[1.05] font-black text-neutral-950 dark:text-white"
+              >
+                All Blog Posts
+              </h2>
             </div>
           </div>
 
           <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
             @for (blog of filteredBlogs(); track blog.id; let index = $index) {
-              <article class="blog-card reveal rounded-3xl overflow-hidden transition-[transform,border-color,box-shadow] duration-[350ms] ease-out hover:-translate-y-1.5" [style.transition-delay]="(index % 6) * 70 + 'ms'">
+              <article
+                class="blog-card reveal rounded-3xl overflow-hidden transition-[transform,border-color,box-shadow] duration-[350ms] ease-out hover:-translate-y-1.5"
+                [style.transition-delay]="(index % 6) * 70 + 'ms'"
+              >
                 <a [routerLink]="['/blogs', blog.id]" class="block no-underline">
                   <div class="blog-card-media relative overflow-hidden aspect-[16/10]">
                     @if (blog.heroImageUrl) {
@@ -50,22 +64,43 @@
                         class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                       />
                     } @else {
-                      <div class="blog-card-placeholder flex min-h-full items-center justify-center text-primary-500">
+                      <div
+                        class="blog-card-placeholder flex min-h-full items-center justify-center text-primary-500"
+                      >
                         <i class="fas fa-book-open"></i>
                       </div>
                     }
                   </div>
 
                   <div class="flex flex-col gap-2 p-[1.35rem] group">
-                    <div class="blog-card-meta flex flex-wrap gap-[0.65rem] text-[0.82rem] text-neutral-500 dark:text-neutral-300">
-                      <span class="py-[0.38rem] px-[0.7rem] rounded-full">{{ readingTime(blog) }}</span>
-                      <span class="py-[0.38rem] px-[0.7rem] rounded-full">{{ blog.dtls.length }} sections</span>
+                    <div
+                      class="blog-card-meta flex flex-wrap gap-[0.65rem] text-[0.82rem] text-neutral-500 dark:text-neutral-300"
+                    >
+                      <span class="py-[0.38rem] px-[0.7rem] rounded-full">{{
+                        readingTime(blog)
+                      }}</span>
+                      <span class="py-[0.38rem] px-[0.7rem] rounded-full"
+                        >{{ blog.dtls.length }} sections</span
+                      >
                     </div>
-                    <h3 class="text-[1.28rem] leading-[1.12] font-extrabold text-neutral-950 dark:text-white">{{ blog.heading }}</h3>
-                    <p class="text-[0.84rem] uppercase tracking-[0.14em] font-bold text-primary-600 dark:text-primary-300">{{ blog.primaryTitle }}</p>
-                    <p class="leading-[1.7] text-neutral-600 dark:text-neutral-300 overflow-hidden" [innerHTML]="excerpt(blog.primaryDesc, 125)"></p>
+                    <h3
+                      class="text-[1.28rem] leading-[1.12] font-extrabold text-neutral-950 dark:text-white"
+                    >
+                      {{ blog.heading }}
+                    </h3>
+                    <p
+                      class="text-[0.84rem] uppercase tracking-[0.14em] font-bold text-primary-600 dark:text-primary-300"
+                    >
+                      {{ blog.primaryTitle }}
+                    </p>
+                    <p
+                      class="rte-content leading-[1.7] text-neutral-600 dark:text-neutral-300 overflow-hidden"
+                      [innerHTML]="excerpt(blog.primaryDesc, 125)"
+                    ></p>
 
-                    <div class="inline-flex items-center gap-[0.6rem] font-bold justify-between mt-auto pt-3 text-primary-700">
+                    <div
+                      class="inline-flex items-center gap-[0.6rem] font-bold justify-between mt-auto pt-3 text-primary-700"
+                    >
                       <span>Open article</span>
                       <i class="fas fa-arrow-up-right-from-square text-xs"></i>
                     </div>

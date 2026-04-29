@@ -1,4 +1,4 @@
-import { Component, inject, Renderer2, signal, computed, effect } from '@angular/core';
+import { Component, inject, Renderer2, signal, computed, effect, untracked } from '@angular/core';
 import { ProductSkeleton } from '../../shared/product-skeleton/product-skeleton';
 import { ProductCard } from '../../shared/product-card/product-card';
 import { CommonModule } from '@angular/common';
@@ -51,6 +51,10 @@ export class Shop {
 
   // Drawer state
   isDrawerOpen = signal<boolean>(false);
+
+  // Filter loading state
+  isFiltering = signal(false);
+  private _filterTimeout: any;
 
   // Computed filtered values
   filteredCategories = computed(() => {
@@ -143,6 +147,19 @@ export class Shop {
   });
 
   constructor() {
+    // Show skeleton briefly when any filter signal changes
+    effect(() => {
+      this.categoryNames(); this.brandNames(); this.sizeName();
+      this.colorName(); this.sortValue(); this.minRangeValue(); this.maxRangeValue();
+      untracked(() => {
+        if (this.products() !== null) {
+          this.isFiltering.set(true);
+          clearTimeout(this._filterTimeout);
+          this._filterTimeout = setTimeout(() => this.isFiltering.set(false), 400);
+        }
+      });
+    }, { allowSignalWrites: true });
+
     // Effect to handle body overflow when drawer opens/closes
     effect(() => {
       if (this.isDrawerOpen() && window.innerWidth < 768) {
@@ -160,25 +177,27 @@ export class Shop {
       const category = queryParams.get('category');
       const search = queryParams.get('search') || '';
 
+      // Reset products so skeleton shows immediately on every filter/route change
+      this.products.set(null);
+      this.categoryNames.set([]);
+
       if (category && !isNaN(+category)) {
-        // Numeric category ID — resolve name from API
+        // Numeric category ID — resolve name from API then load products
         this.categoryService.search().subscribe(categories => {
           const match = categories.find(c => c.id === +category);
           if (match) {
             this.categoryNames.set([match.categoryName]);
             this.breadcrumbService.appendCrumb(match.categoryName);
-          } else {
-            this.categoryNames.set([]);
           }
+          this.loadProducts(search);
         });
-      } else if (category) {
-        this.categoryNames.set([category]);
-        this.breadcrumbService.appendCrumb(category);
       } else {
-        this.categoryNames.set([]);
+        if (category) {
+          this.categoryNames.set([category]);
+          this.breadcrumbService.appendCrumb(category);
+        }
+        this.loadProducts(search);
       }
-
-      this.loadProducts(search);
     });
   }
 

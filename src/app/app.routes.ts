@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
-import { accountGuard } from './guards/account-guard';
-import { environment } from '../environments/environment.production';
 import { authGuard } from './guards/auth-guard';
+import { environment } from '../environments/environment.production';
 
 const companyName = environment.companyName;
 
@@ -140,6 +139,7 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () => import('./layouts/admin/admin').then(m => m.Admin),
     canActivate: [authGuard],
+
     data: { breadcrumb: '', seo: { noIndex: true } },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

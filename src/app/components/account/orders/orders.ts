@@ -7,6 +7,7 @@ import { SOrder } from '../../../services/s-order';
 import { SAuthCookie } from '../../../services/s-auth-cookie';
 import { Router } from '@angular/router';
 import QRCode from 'qrcode';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-orders',
@@ -221,7 +222,7 @@ export class Orders {
       <div class="invoice">
         <div class="header">
           <div>
-            <h1 style="font-size:22px;font-weight:800;color:#000;letter-spacing:-0.3px">Dream Express BD</h1>
+            <h1 style="font-size:22px;font-weight:800;color:#000;letter-spacing:-0.3px">${environment.companyName}</h1>
             <p style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:600;margin-top:2px">Order Invoice</p>
           </div>
           <div style="text-align:right">
@@ -265,7 +266,7 @@ export class Orders {
           </div>
         </div>
         <div class="footer">
-          <p class="company">Dream Express BD — Thank you for your order!</p>
+          <p class="company">${environment.companyName} — Thank you for your order!</p>
           <p>This is a computer-generated invoice and does not require a signature.</p>
         </div>
       </div>

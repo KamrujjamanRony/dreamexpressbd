@@ -14,8 +14,25 @@ export interface FacebookUser {
 export class SFacebookAuth {
     private ngZone = inject(NgZone);
     private initPromise: Promise<boolean> | null = null;
+    private scriptLoaded = false;
+
+    private loadScript(): void {
+        if (this.scriptLoaded || document.querySelector('script[src*="connect.facebook.net"]')) {
+            this.scriptLoaded = true;
+            return;
+        }
+        this.scriptLoaded = true;
+        const script = document.createElement('script');
+        script.src = 'https://connect.facebook.net/en_US/sdk.js';
+        script.async = true;
+        script.defer = true;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+    }
 
     initialize(): Promise<boolean> {
+        this.loadScript();
+
         if (!this.initPromise) {
             this.initPromise = new Promise<boolean>((resolve) => {
                 const check = setInterval(() => {

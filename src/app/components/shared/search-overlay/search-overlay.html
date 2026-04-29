@@ -20,10 +20,16 @@
           (keydown.escape)="close()"
           placeholder="Search for products, brands, categories..."
           class="search-input"
+          aria-label="Search for products, brands, categories"
         />
         @if (searchValue()) {
-          <button class="search-clear" (click)="clearSearch()" type="button">
-            <i class="fas fa-times"></i>
+          <button
+            class="search-clear"
+            (click)="clearSearch()"
+            type="button"
+            aria-label="Clear search"
+          >
+            <i class="fas fa-times" aria-hidden="true"></i>
           </button>
         }
         <button class="search-close" (click)="close()" type="button">Cancel</button>
@@ -62,7 +68,7 @@
                     height="120"
                     loading="lazy"
                     decoding="async"
-                    alt=""
+                    [alt]="product.title"
                     class="result-image"
                   />
                   @if (product.offerPrice && product.offerPrice < product.regularPrice) {
@@ -185,7 +191,7 @@
                     @if (cat.imageUrl) {
                       <img
                         [src]="imageBaseUrl + cat.imageUrl"
-                        alt=""
+                        [alt]="cat.categoryName"
                         class="w-full h-full object-cover rounded-lg"
                       />
                     } @else {

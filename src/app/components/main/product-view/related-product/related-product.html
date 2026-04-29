@@ -7,25 +7,11 @@
         Related Products
       </h2>
     </div>
-    <swiper-container
-      slides-per-view="2"
-      mousewheel-force-to-axis="true"
-      loop="true"
-      navigation="true"
-      autoplay-delay="3000"
-      autoplay-disable-on-interaction="false"
-      [spaceBetween]="16"
-      [breakpoints]="breakpoints"
-      speed="600"
-    >
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       @for (product of relatedProduct(); track product.id) {
-        <swiper-slide>
-          <div class="h-full pb-2">
-            <app-product-card [product]="product"></app-product-card>
-          </div>
-        </swiper-slide>
+        <app-product-card [product]="product" />
       }
-    </swiper-container>
+    </div>
   </div>
 }
 <!-- Related Products end -->

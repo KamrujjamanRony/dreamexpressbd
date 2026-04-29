@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { Subject, map, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CartM, CartProductM } from '../models/Cart';
 import { SAuthCookie } from './s-auth-cookie';
@@ -10,7 +10,7 @@ import { SGuest } from './s-guest';
   providedIn: 'root',
 })
 export class SCart {
-  private cartUpdated = new BehaviorSubject<void>(undefined);
+  private cartUpdated = new Subject<void>();
   cartUpdated$ = this.cartUpdated.asObservable();
 
   http = inject(HttpClient);
@@ -40,7 +40,7 @@ export class SCart {
 
   search(userId: any): Observable<CartM[]> {
     const reqBody = {
-      "companyID": environment.companyCode, 
+      "companyID": environment.companyCode,
       "userId": userId
     };
     return this.http.post<any>(`${this.apiUrl}/Search`, reqBody).pipe(

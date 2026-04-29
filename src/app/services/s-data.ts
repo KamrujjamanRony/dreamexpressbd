@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
@@ -41,13 +41,7 @@ export class SData {
   // Method to fetch categories from JSON data
   // This method retrieves the categories from the JSON file and returns them as an observable array.
   getCategories(): Observable<any[]> {
-    return this.http.get<any>(this.jsonUrl, {
-      headers: new HttpHeaders({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      })
-    }).pipe(
+    return this.http.get<any>(this.jsonUrl).pipe(
       map(data => {
         const categories = data.categories || [];
         return categories;
@@ -57,13 +51,7 @@ export class SData {
   // Method to fetch brands from JSON data
   // This method retrieves the brands from the JSON file and returns them as an observable array.
   getBrands(): Observable<any[]> {
-    return this.http.get<any>(this.jsonUrl, {
-      headers: new HttpHeaders({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      })
-    }).pipe(
+    return this.http.get<any>(this.jsonUrl).pipe(
       map(data => {
         const brands = data.brands || [];
         return brands;
@@ -73,7 +61,7 @@ export class SData {
   // Method to fetch section permissions from is permitted or not
   // In your data service
   private publishSections = signal<any[]>([]);
-  
+
   // Computed signal for permission checks
   isPermittedSignal(sectionName: string) {
     return () => this.publishSections().some(
@@ -83,13 +71,7 @@ export class SData {
 
   // Load sections once and cache them
   loadSections(): Observable<any[]> {
-    return this.http.get<any>(this.jsonUrl, {
-      headers: new HttpHeaders({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      })
-    }).pipe(
+    return this.http.get<any>(this.jsonUrl).pipe(
       tap((data: any) => {
         this.publishSections.set(data.publishSections || []);
       })
@@ -104,18 +86,12 @@ export class SData {
   }
 
   getDeliveryCharges(): Observable<any[]> {
-    return this.http.get<any>(this.jsonUrl, {
-      headers: new HttpHeaders({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      })
-    }).pipe(
+    return this.http.get<any>(this.jsonUrl).pipe(
       map(data => {
         const deliveryCharges = data.DeliveryCharges || [];
         return deliveryCharges;
       })
     );
   }
-  
+
 }

@@ -13,16 +13,35 @@
 
 :host {
   @apply block;
+  contain: layout style;
 }
 
-app-carousel,
-app-feature-product,
-app-categories,
-app-product-wrapper,
-app-add-section,
-app-recommend-product {
+app-carousel {
   @apply block;
-  animation: fadeInUp 0.6s ease-out both;
+  contain: layout style;
+}
+
+/* Disable animations on mobile to reduce TBT */
+@media (max-width: 767px) {
+  app-feature-product,
+  app-categories,
+  app-product-wrapper,
+  app-add-section,
+  app-recommend-product {
+    @apply block;
+    animation: none;
+  }
+}
+
+@media (min-width: 768px) {
+  app-feature-product,
+  app-categories,
+  app-product-wrapper,
+  app-add-section,
+  app-recommend-product {
+    @apply block;
+    animation: fadeInUp 0.6s ease-out both;
+  }
 }
 
 app-feature-product {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { Router, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../environments/environment';
@@ -12,7 +12,8 @@ import { SSeo } from './services/s-seo';
   selector: 'app-root',
   imports: [RouterOutlet, Toast, Confirm, SocialChat, CartDrawer],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App implements OnInit {
   private seo = inject(SSeo);

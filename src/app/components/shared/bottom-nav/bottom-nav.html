@@ -1,8 +1,8 @@
 <!-- Mobile Bottom Navigation Bar -->
-<nav class="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+<nav class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Mobile navigation">
   <!-- Glassmorphism bar -->
   <div
-    class="bg-white/90 dark:bg-dark-surface/90 backdrop-blur-xl border-t border-neutral-200/60 dark:border-primary-500/15 shadow-[0_-4px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.3)]"
+    class="bg-white dark:bg-dark-surface border-t border-neutral-200/60 dark:border-primary-500/15 shadow-[0_-4px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.3)]"
   >
     <div class="flex items-center justify-around px-2 py-1 max-w-lg mx-auto">
       <!-- Shop -->
@@ -17,9 +17,9 @@
       </a>
 
       <!-- Search -->
-      <button class="btm-tab group" (click)="openSearch()" type="button">
+      <button class="btm-tab group" (click)="openSearch()" type="button" aria-label="Search">
         <div class="btm-icon-wrap">
-          <i class="fas fa-search"></i>
+          <i class="fas fa-search" aria-hidden="true"></i>
         </div>
         <span class="btm-label">Search</span>
       </button>
@@ -44,6 +44,7 @@
         (click)="openCartDrawer()"
         class="btm-tab group bg-transparent border-none cursor-pointer"
         [class.btm-active]="activeTab() === 'cart'"
+        aria-label="Shopping cart"
       >
         <div class="btm-icon-wrap relative">
           <i class="fas fa-shopping-bag"></i>

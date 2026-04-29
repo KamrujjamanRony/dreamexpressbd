@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Subject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { WishlistM, WishlistProductM } from '../models/Wishlist';
 import { SAuthCookie } from './s-auth-cookie';
@@ -9,7 +9,7 @@ import { SAuthCookie } from './s-auth-cookie';
   providedIn: 'root',
 })
 export class SWishlist {
-  private wishlistUpdated = new BehaviorSubject<void>(undefined);
+  private wishlistUpdated = new Subject<void>();
   wishlistUpdated$ = this.wishlistUpdated.asObservable();
 
   private http = inject(HttpClient);
@@ -37,8 +37,9 @@ export class SWishlist {
   };
 
   search(userId: string): Observable<WishlistM[]> {
-    const reqBody = { 
-      "companyID": environment.companyCode, userId };
+    const reqBody = {
+      "companyID": environment.companyCode, userId
+    };
     return this.http.post<WishlistM[]>(`${this.apiUrl}/Search`, reqBody);
   };
 

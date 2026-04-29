@@ -191,7 +191,7 @@ export class OrderConfirmation {
     const left = 40;
     const right = doc.internal.pageSize.getWidth() - 40;
     const maxTextWidth = right - left;
-    const websiteUrl = 'https://chinatradexntour.com.bd/';
+    const websiteUrl = environment.webUrl;
     const orderItems = this.getOrderItems();
     const order = this.orderDetails;
 
