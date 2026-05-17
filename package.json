@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-hashing=all --configuration production",
+    "deploy:iis": "powershell -ExecutionPolicy Bypass -File .\\scripts\\deploy-iis.ps1",
+    "deploy:verify-live": "powershell -ExecutionPolicy Bypass -File .\\scripts\\verify-live-deploy.ps1",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
