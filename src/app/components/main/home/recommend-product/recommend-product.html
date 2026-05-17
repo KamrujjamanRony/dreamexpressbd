@@ -1,0 +1,52 @@
+<!-- recommend -->
+<div class="py-6 lg:py-10">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-8 bg-primary-600 rounded-full"></div>
+      <h2
+        class="text-xl md:text-2xl lg:text-3xl font-bold text-neutral-800 dark:text-neutral-100 uppercase"
+      >
+        Recommended for You
+      </h2>
+    </div>
+
+    @if (products().length > 4) {
+      <a
+        routerLink="/shop"
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors group/link"
+      >
+        View All
+        <svg
+          class="w-4 h-4 transition-transform group-hover/link:translate-x-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    }
+  </div>
+  <!-- product grid -->
+  <swiper-container
+    mousewheel-force-to-axis="true"
+    slides-per-view="2"
+    [loop]="products().length > 4"
+    navigation="true"
+    autoplay-delay="3000"
+    autoplay-disable-on-interaction="false"
+    [spaceBetween]="16"
+    [breakpoints]="breakpoints"
+    speed="600"
+  >
+    @for (product of products(); track product.id; let i = $index) {
+      <swiper-slide>
+        <div class="h-full pb-2">
+          <app-product-card [product]="product" [isPriority]="i < 4"></app-product-card>
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+  <!-- product grid end -->
+</div>
+<!-- recommend end -->

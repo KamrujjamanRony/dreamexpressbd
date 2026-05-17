@@ -1,0 +1,184 @@
+<!-- Wishlist -->
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1
+      class="text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-100 flex items-center gap-3"
+    >
+      <fa-icon [icon]="faHeart" class="text-red-500"></fa-icon>
+      My Wishlist
+    </h1>
+    <a
+      routerLink="/shop"
+      class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 transition font-medium"
+    >
+      <fa-icon [icon]="faArrowLeft" class="text-xs"></fa-icon>
+      Continue Shopping
+    </a>
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="animate-pulse space-y-4">
+      @for (_ of [1, 2, 3]; track _) {
+        <div class="flex gap-4 bg-white dark:bg-neutral-800 rounded-xl p-4 shadow-sm">
+          <div class="w-24 h-24 bg-neutral-200 dark:bg-neutral-700 rounded-lg shrink-0"></div>
+          <div class="flex-1 space-y-3">
+            <div class="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/4"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (items().length === 0) {
+    <!-- Empty Wishlist -->
+    <div class="text-center py-16">
+      <div
+        class="w-24 h-24 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
+        <fa-icon [icon]="faHeart" class="text-4xl text-red-300 dark:text-red-600"></fa-icon>
+      </div>
+      <h2 class="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+        Your wishlist is empty
+      </h2>
+      <p class="text-neutral-500 dark:text-neutral-400 mb-6">
+        Save items you love by clicking the heart icon on products.
+      </p>
+      <a
+        routerLink="/shop"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all"
+      >
+        <fa-icon [icon]="faShoppingBag"></fa-icon>
+        Browse Products
+      </a>
+    </div>
+  } @else {
+    <!-- Wishlist Items -->
+    <div class="space-y-3">
+      @for (
+        item of items();
+        track item.productId + (item.selectSize || '') + (item.selectColor || '')
+      ) {
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-md transition-shadow overflow-hidden"
+        >
+          <div class="flex items-center gap-4 p-4">
+            <!-- Product Image -->
+            <a
+              [routerLink]="getViewLink(item.productId)"
+              class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-neutral-50 dark:bg-neutral-700 shrink-0"
+            >
+              <img
+                [ngSrc]="item.image"
+                [alt]="item.productName"
+                width="96"
+                height="96"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover hover:scale-105 transition-transform"
+              />
+            </a>
+
+            <!-- Product Details -->
+            <div class="flex-1 min-w-0">
+              <a
+                [routerLink]="getViewLink(item.productId)"
+                class="font-semibold text-neutral-800 dark:text-neutral-100 hover:text-primary-600 dark:hover:text-primary-400 transition truncate block"
+              >
+                {{ item.productName }}
+              </a>
+              <div
+                class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-neutral-500 dark:text-neutral-400"
+              >
+                @if (item.brand) {
+                  <span
+                    >Brand:
+                    <span class="text-neutral-700 dark:text-neutral-300">{{ item.brand }}</span></span
+                  >
+                }
+                @if (item.selectColor) {
+                  <span
+                    >Color:
+                    <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
+                      item.selectColor
+                    }}</span></span
+                  >
+                }
+                @if (item.selectSize) {
+                  <span
+                    >Size:
+                    <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
+                      item.selectSize
+                    }}</span></span
+                  >
+                }
+              </div>
+              <!-- Price -->
+              <div
+                class="mt-1 text-sm text-primary-600 font-semibold"
+                [innerHTML]="item.price | bdt"
+              ></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                (click)="addToCartAndRemove(item)"
+                class="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
+                <fa-icon [icon]="faCartShopping" class="text-xs"></fa-icon>
+                <span class="hidden sm:inline">Add to Cart</span>
+              </button>
+              <button
+                type="button"
+                (click)="removeItem(item)"
+                class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition cursor-pointer"
+                title="Remove from wishlist"
+              >
+                <fa-icon [icon]="faTrash" class="text-sm"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile: actions row -->
+          <div
+            class="sm:hidden flex items-center justify-between border-t border-neutral-100 dark:border-neutral-700 px-4 py-2 bg-neutral-50/50 dark:bg-neutral-800/80"
+          >
+            <button
+              type="button"
+              (click)="addToCartAndRemove(item)"
+              class="flex items-center gap-2 px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-medium rounded-lg transition cursor-pointer"
+            >
+              <fa-icon [icon]="faCartShopping" class="text-xs"></fa-icon>
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              (click)="removeItem(item)"
+              class="text-xs text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1"
+            >
+              <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+              Remove
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Move All to Cart -->
+    @if (items().length > 1) {
+      <div class="mt-6 flex justify-center">
+        <button
+          type="button"
+          (click)="moveAllToCart()"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer"
+        >
+          <fa-icon [icon]="faCartShopping"></fa-icon>
+          Move All to Cart
+        </button>
+      </div>
+    }
+  }
+</section>

@@ -1,0 +1,384 @@
+<!-- Profile Header -->
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-xl font-bold text-neutral-800 dark:text-white">My Profile</h2>
+  <button
+    (click)="toggleEdit()"
+    class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer"
+    [class]="
+      editMode()
+        ? 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+        : 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50'
+    "
+  >
+    <fa-icon [icon]="faPencil"></fa-icon>
+    {{ editMode() ? 'Cancel' : 'Edit Profile' }}
+  </button>
+</div>
+
+@if (!editMode()) {
+  <!-- Profile View Mode -->
+  <div class="space-y-4">
+    <!-- Full Name -->
+    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-teal-100 dark:bg-teal-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faUser" class="text-teal-600 dark:text-teal-400"></fa-icon>
+      </div>
+      <div>
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
+          Full Name
+        </p>
+        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+          {{ model().fullName || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faPhone" class="text-cyan-600 dark:text-cyan-400"></fa-icon>
+      </div>
+      <div>
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
+          Email
+        </p>
+        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+          {{ model().email || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faPhone" class="text-blue-600 dark:text-blue-400"></fa-icon>
+      </div>
+      <div>
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
+          Phone
+        </p>
+        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+          {{ model().shippingContact || '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="flex items-start gap-4 p-4 bg-neutral-50 dark:bg-neutral-700/50 rounded-xl">
+      <div
+        class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-full flex items-center justify-center shrink-0"
+      >
+        <fa-icon [icon]="faTruck" class="text-emerald-600 dark:text-emerald-400"></fa-icon>
+      </div>
+      <div class="flex-1">
+        <p
+          class="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium"
+        >
+          Address
+        </p>
+        <p class="text-neutral-800 dark:text-neutral-100 font-semibold mt-0.5">
+          {{ model().shippingStreet || model().address || '—' }}
+        </p>
+        <div
+          class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-neutral-500 dark:text-neutral-400"
+        >
+          @if (model().shippingDistrict) {
+            <span>Division: {{ model().shippingDistrict }}</span>
+          }
+          @if (model().shippingCity) {
+            <span>City: {{ model().shippingCity }}</span>
+          }
+          @if (model().area) {
+            <span>Area: {{ model().area }}</span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- Profile Edit Mode -->
+  <form autocomplete="off" class="space-y-5" (submit)="onSubmit($event)">
+    <!-- Full Name -->
+    <div>
+      @let fullName = form.fullName();
+      @let fullNameError = form.fullName().invalid() && form.fullName().touched();
+      <label
+        for="fullName"
+        class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        >Full Name</label
+      >
+      <input
+        type="text"
+        id="fullName"
+        [formField]="form.fullName"
+        class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+        [class]="fullNameError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+        placeholder="Enter your full name"
+        autocomplete="off"
+      />
+      @if (fullNameError) {
+        <ul class="mt-1">
+          @for (error of fullName.errors(); track error) {
+            <li class="text-sm text-red-500">{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <!-- Email -->
+    <div>
+      @let emailError = form.email().invalid() && form.email().touched();
+      <label
+        for="email"
+        class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        >Email</label
+      >
+      @if (isSocialLogin()) {
+        <input
+          type="email"
+          id="email"
+          [value]="model().email"
+          disabled
+          class="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 text-sm rounded-xl block w-full p-3 cursor-not-allowed"
+        />
+        <p class="mt-1 text-xs text-neutral-400">
+          Email cannot be changed for social login accounts
+        </p>
+      } @else {
+        <input
+          type="email"
+          id="email"
+          [formField]="form.email"
+          class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+          [class]="emailError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+          placeholder="Enter your email"
+          autocomplete="off"
+        />
+        @if (emailError) {
+          <ul class="mt-1">
+            @for (error of form.email().errors(); track error) {
+              <li class="text-sm text-red-500">{{ error.message }}</li>
+            }
+          </ul>
+        }
+      }
+    </div>
+
+    <!-- Phone -->
+    <div>
+      @let phoneError = form.shippingContact().invalid() && form.shippingContact().touched();
+      <label
+        for="shippingContact"
+        class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+        >Phone</label
+      >
+      <input
+        type="tel"
+        id="shippingContact"
+        [formField]="form.shippingContact"
+        class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+        [class]="phoneError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'"
+        placeholder="Enter your phone number"
+        autocomplete="off"
+      />
+      @if (phoneError) {
+        <ul class="mt-1">
+          @for (error of form.shippingContact().errors(); track error) {
+            <li class="text-sm text-red-500">{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <!-- Address -->
+    <div class="border-t border-neutral-200 dark:border-neutral-600 pt-5">
+      <h3
+        class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-4 flex items-center gap-2"
+      >
+        <fa-icon [icon]="faTruck" class="text-emerald-500"></fa-icon>
+        Address
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Shipping Division -->
+        <div>
+          <label
+            for="shippingDistrict"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Division</label
+          >
+          @let shippingDistrictError =
+            form.shippingDistrict().invalid() && form.shippingDistrict().touched();
+          <select
+            id="shippingDistrict"
+            [value]="form.shippingDistrict().value()"
+            (change)="onShippingDistrictChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+            [class]="
+              shippingDistrictError
+                ? 'border-red-400'
+                : 'border-neutral-200 dark:border-neutral-600'
+            "
+          >
+            <option value="">Select Division</option>
+            @for (region of regions(); track region.name) {
+              <option
+                [value]="region.name"
+                [selected]="form.shippingDistrict().value() === region.name"
+              >
+                {{ region.name }}
+              </option>
+            }
+          </select>
+          @if (shippingDistrictError) {
+            <ul class="mt-1">
+              @for (error of form.shippingDistrict().errors(); track error) {
+                <li class="text-sm text-red-500">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+        <!-- Shipping City -->
+        <div>
+          <label
+            for="shippingCity"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >City</label
+          >
+          <select
+            id="shippingCity"
+            [value]="form.shippingCity().value()"
+            (change)="onShippingCityChange($any($event.target).value)"
+            [disabled]="!form.shippingDistrict().value()"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select City</option>
+            @for (city of shippingCities(); track city.name) {
+              <option [value]="city.name" [selected]="form.shippingCity().value() === city.name">
+                {{ city.name }}
+              </option>
+            }
+          </select>
+        </div>
+        <!-- Shipping Area -->
+        <div>
+          <label
+            for="profileArea"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Area</label
+          >
+          <select
+            id="profileArea"
+            [value]="form.area().value()"
+            (change)="onShippingAreaChange($any($event.target).value)"
+            [disabled]="!form.shippingCity().value()"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select Area</option>
+            @for (area of shippingAreas(); track area.name) {
+              <option [value]="area.name" [selected]="form.area().value() === area.name">
+                {{ area.name }}
+              </option>
+            }
+          </select>
+        </div>
+        <!-- Shipping Street -->
+        <div>
+          <label
+            for="shippingStreet"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Street Address</label
+          >
+          @let shippingStreetError =
+            form.shippingStreet().invalid() && form.shippingStreet().touched();
+          <input
+            type="text"
+            id="shippingStreet"
+            [formField]="form.shippingStreet"
+            (input)="onShippingStreetChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200"
+            [class]="
+              shippingStreetError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-600'
+            "
+            placeholder="House no, Road, Area"
+            autocomplete="off"
+          />
+          @if (shippingStreetError) {
+            <ul class="mt-1">
+              @for (error of form.shippingStreet().errors(); track error) {
+                <li class="text-sm text-red-500">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+        <!-- Shipping Type -->
+        <div>
+          <label
+            for="shippingType"
+            class="block mb-2 text-sm font-semibold text-neutral-700 dark:text-neutral-200"
+            >Type</label
+          >
+          <select
+            id="shippingType"
+            [value]="form.shippingType().value()"
+            (change)="onShippingTypeChange($any($event.target).value)"
+            class="bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-sm rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-3 transition-all duration-200 appearance-none cursor-pointer"
+          >
+            <option value="">Select Type</option>
+            @for (type of addressTypes; track type.value) {
+              <option [value]="type.value" [selected]="form.shippingType().value() === type.value">
+                {{ type.label }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="loading() || form().invalid()"
+      class="w-full sm:w-auto text-white bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 focus:ring-4 focus:outline-none focus:ring-teal-300 font-semibold rounded-xl text-sm px-8 py-3 text-center transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-teal-500/25 cursor-pointer"
+    >
+      @if (loading()) {
+        <span class="inline-flex items-center gap-2">
+          <svg
+            class="animate-spin h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Saving...
+        </span>
+      } @else {
+        Save Changes
+      }
+    </button>
+  </form>
+}

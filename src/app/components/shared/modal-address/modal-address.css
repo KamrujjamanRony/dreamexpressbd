@@ -1,0 +1,27 @@
+@reference "../../../../styles.css";
+
+/* Custom dialog header style */
+.p-dialog .p-dialog-header {
+  @apply border-b border-neutral-200;
+  padding: 0.1rem;
+}
+
+/* Close button style */
+.p-dialog-header-icon {
+  @apply text-neutral-500;
+  transition: color 0.2s;
+}
+
+.p-dialog-header-icon:hover {
+  @apply text-neutral-800;
+}
+
+/* Form field spacing */
+.field {
+  margin-bottom: 0.1rem;
+}
+
+/* Input field styling */
+.p-inputtext {
+  @apply w-full p-2;
+}
