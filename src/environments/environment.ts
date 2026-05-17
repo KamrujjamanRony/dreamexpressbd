@@ -10,9 +10,9 @@ export const environment = {
   googleClientId: '',
   metaPixelId: '',
   metaCapiProxyUrl: '',
-  siteDescription: 'Dream Express BD - Your trusted online destination for quality medical machinery and equipment. Best prices, fast delivery, and reliable service across Bangladesh.',
+  siteDescription: 'Dream Express BD - Your trusted online destination for quality products. Best prices, fast delivery, and reliable service across Bangladesh.',
   emptyImg: 'https://www.mykite.in/kb/NoImageFound.jpg.png',
-  keywords: ['medical machinery', 'dreamexpressbd', 'Dream Express BD', 'CBC machine', 'ultrasound machine', 'x-ray machine', 'hospital equipment', 'affordable medical devices', 'medical equipment', 'medical supplies Bangladesh', 'medical machinery Bangladesh', 'medical equipment Bangladesh', 'medical machinery import Bangladesh', 'medical equipment import Bangladesh', 'medical machinery online Bangladesh', 'medical equipment online Bangladesh', 'medical machinery supplier Bangladesh', 'medical equipment supplier Bangladesh', 'medical machinery price Bangladesh', 'medical equipment price Bangladesh', 'medical machinery for sale Bangladesh', 'medical equipment for sale Bangladesh', 'medical machinery company Bangladesh', 'medical equipment company Bangladesh', 'medical machinery manufacturer Bangladesh', 'medical equipment manufacturer Bangladesh', 'medical machinery distributor Bangladesh', 'medical equipment distributor Bangladesh', 'medical machinery exporter Bangladesh', 'medical equipment exporter Bangladesh', 'medical machinery importer Bangladesh', 'medical equipment importer Bangladesh', 'medical machinery wholesale Bangladesh', 'medical equipment wholesale Bangladesh', 'medical machinery retail Bangladesh', 'medical equipment retail Bangladesh', 'medical machinery online shopping Bangladesh', 'medical equipment online shopping Bangladesh', 'medical machinery e-commerce Bangladesh', 'medical equipment e-commerce Bangladesh'],
+  keywords: ['medical machinery', 'dreamexpressbd', 'Dream Express BD'],
   socialLinks: {
     facebook: 'https://www.facebook.com/DreamExpressBD22',
     instagram: 'https://www.instagram.com/dreamexpressbd',
