@@ -1,9 +1,0 @@
-@reference "../../../../styles.css";
-
-.invalid {
-  @apply border-danger!;
-}
-
-.highlighted {
-  @apply bg-info! text-white;
-}

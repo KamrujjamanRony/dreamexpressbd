@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 /* Google Fonts loaded via <link> in index.html for non-blocking preload */
+@import 'flowbite/src/themes/default';
 @import 'tailwindcss';
-@import 'quill/dist/quill.snow.css';
-@import './app/components/shared/search-overlay/search-overlay.css';
+@source "../node_modules/flowbite";
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ══════════════════════════════════════════════════════════
@@ -68,7 +68,7 @@
 }
 
 body {
-  font-family: 'Inter', 'Noto Sans Bengali', 'Hind Siliguri', 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -112,65 +112,5 @@ body {
   body.printing-voucher app-order-confirmation {
     display: block;
     width: 100%;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════
-   Rich Text Editor (RTE) Content — Mobile-safe wrapping
-   Apply `.rte-content` to any [innerHTML] container that
-   renders WYSIWYG/rich-text editor output.
-   ══════════════════════════════════════════════════════════ */
-.rte-content {
-  /* Contain content within parent on small screens */
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
-  overflow-x: auto;
-}
-.rte-content,
-.rte-content * {
-  white-space: normal !important;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.rte-content img,
-.rte-content video,
-.rte-content iframe {
-  max-width: 100% !important;
-  height: auto;
-  display: inline-block;
-}
-.rte-content table {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  border-collapse: collapse;
-}
-.rte-content pre,
-.rte-content code {
-  white-space: pre-wrap !important;
-  word-break: break-word;
-}
-.rte-content p,
-.rte-content li,
-.rte-content span,
-.rte-content div,
-.rte-content h1,
-.rte-content h2,
-.rte-content h3,
-.rte-content h4,
-.rte-content h5,
-.rte-content h6 {
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-@media (max-width: 640px) {
-  .rte-content {
-    font-size: 0.95rem;
-  }
-  .rte-content table {
-    font-size: 0.85rem;
   }
 }
