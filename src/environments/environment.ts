@@ -7,6 +7,8 @@ export const environment = {
     apiUrl: 'http://localhost:1005/p',
     ImageApi: 'http://localhost:1005/uploads/',
     webUrl: 'http://localhost:4200',
+    metaPixelId: '',
+    metaCapiProxyUrl: '',
     siteDescription: 'dreamexpressbd - Your trusted online destination for quality products imported from China. Best prices, fast delivery, and reliable service across Bangladesh.',
     emptyImg: 'https://www.mykite.in/kb/NoImageFound.jpg.png',
     keywords: ['china products', 'import from china', 'wholesale products', 'china trade', 'online shopping Bangladesh', 'chinese products Bangladesh', 'dreamexpressbd', 'electronics', 'gadgets', 'affordable products'],

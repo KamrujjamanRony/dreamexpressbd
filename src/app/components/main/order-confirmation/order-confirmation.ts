@@ -62,7 +62,7 @@ export class OrderConfirmation {
     });
   }
 
-  private generateQrCode() {
+  private async generateQrCode() {
     const o = this.orderDetails;
     const items = this.getOrderItems()
       .map((i: any) => `${i.productName} x${i.quantity} @${i.price}`)
@@ -84,7 +84,7 @@ export class OrderConfirmation {
 
     try {
       this.qrCodeUrl.set(
-        createQrDataUrl({
+        await createQrDataUrl({
           text: qrText,
           size: 120,
           fill: '#111827',

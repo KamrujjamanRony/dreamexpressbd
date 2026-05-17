@@ -453,7 +453,7 @@ export class OrderList implements OnInit {
       `Payment: ${o.paymentMethod}`,
     ].filter(Boolean).join('\n');
     try {
-      return createQrDataUrl({
+      return await createQrDataUrl({
         text: qrText,
         size: 120,
         fill: '#000000',
