@@ -1,0 +1,74 @@
+<!-- Carousel: renders as soon as carousel data arrives (independent of other content) -->
+<section class="max-w-7xl mx-auto w-full px-4 pt-6 space-y-2">
+  @if (carouselReady()) {
+    <app-carousel [carousels]="carousels()" />
+  } @else if (!carouselReady()) {
+    <div
+      class="aspect-16/9 md:aspect-21/9 bg-neutral-300 dark:bg-neutral-700 rounded-2xl w-full"
+    ></div>
+  }
+</section>
+
+<!-- Rest of content: waits for products + categories -->
+@if (loading()) {
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-8">
+    <!-- Features Skeleton -->
+    <div class="animate-pulse grid grid-cols-1 md:grid-cols-3 gap-4">
+      @for (_ of [1, 2, 3]; track _) {
+        <div class="h-20 bg-neutral-300 dark:bg-neutral-700 rounded-xl"></div>
+      }
+    </div>
+
+    <!-- Category Skeleton -->
+    <div class="animate-pulse">
+      <div class="h-8 bg-neutral-300 dark:bg-neutral-700 rounded w-48 mb-4"></div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        @for (_ of [1, 2, 3, 4]; track _) {
+          <div class="aspect-4/3 bg-neutral-300 dark:bg-neutral-700 rounded-xl"></div>
+        }
+      </div>
+    </div>
+
+    <!-- Products Skeleton -->
+    <div class="animate-pulse">
+      <div class="h-8 bg-neutral-300 dark:bg-neutral-700 rounded w-48 mb-4"></div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+          <app-product-skeleton></app-product-skeleton>
+        }
+      </div>
+    </div>
+  </section>
+} @else {
+  <section class="max-w-7xl mx-auto w-full px-4 py-6 space-y-2">
+    @if (loadFailed()) {
+      <div
+        class="rounded-xl border border-amber-300 bg-amber-50 text-amber-800 px-4 py-3 text-sm mb-4"
+      >
+        We could not load fresh content. Please check your connection and try again.
+        <button
+          type="button"
+          class="ml-2 underline font-semibold text-amber-900 hover:text-amber-700 border-none bg-transparent cursor-pointer"
+          (click)="retryLoad()"
+        >
+          Retry
+        </button>
+      </div>
+    }
+
+    @if (categories().length > 0) {
+      <app-categories [categories]="categories()" />
+    }
+
+    @if (categories().length > 0 && categoryWiseProducts()) {
+      @defer (on viewport) {
+        <app-product-wrapper
+          [categoryWiseProducts]="categoryWiseProducts()"
+          [categories]="categories()"
+        />
+      } @placeholder {
+        <div class="h-96"></div>
+      }
+    }
+  </section>
+}

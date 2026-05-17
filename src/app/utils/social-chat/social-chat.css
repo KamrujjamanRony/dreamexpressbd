@@ -1,0 +1,66 @@
+@reference "../../../styles.css";
+
+/* Widget tray visibility */
+.widget-tray {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+.widget-tray--hidden {
+  @apply opacity-0 pointer-events-none;
+  transform: scale(0.5);
+}
+
+/* Social buttons container collapse */
+.social-chat-buttons {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.social-chat-buttons--open {
+  max-height: 300px;
+}
+
+/* Social button reveal animation */
+.social-btn {
+  @apply opacity-0 pointer-events-none;
+  transform: translateY(16px) scale(0.6);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.2s ease;
+}
+.social-chat-buttons--open .social-btn {
+  @apply opacity-100 pointer-events-auto;
+  transform: translateY(0) scale(1);
+}
+.social-btn:hover {
+  transform: translateY(0) scale(1.12);
+}
+
+/* FAB icon transitions */
+.fab__icon {
+  @apply absolute opacity-100;
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s ease;
+  transform: scale(1);
+}
+.fab__icon--hidden {
+  @apply opacity-0 pointer-events-none;
+  transform: scale(0.5);
+}
+
+/* Reopen arrow */
+.reopen-arrow {
+  @apply opacity-0 pointer-events-none;
+  transform: translateX(100%);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    background-color 0.2s ease;
+}
+.reopen-arrow--visible {
+  @apply opacity-100 pointer-events-auto;
+  transform: translateX(0);
+}

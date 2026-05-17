@@ -1,0 +1,87 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply block;
+}
+
+.section-kicker {
+  background: color-mix(in srgb, var(--color-primary-600) 10%, var(--color-white));
+}
+
+:host-context(.dark) .section-kicker {
+  background: color-mix(in srgb, var(--color-primary-500) 16%, transparent);
+}
+
+.blog-card {
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+  background: color-mix(in srgb, var(--color-white) 90%, transparent);
+  box-shadow: 0 16px 46px color-mix(in srgb, var(--color-neutral-900) 8%, transparent);
+}
+
+.blog-card:hover {
+  border-color: color-mix(in srgb, var(--color-primary-600) 22%, transparent);
+  box-shadow: 0 24px 58px color-mix(in srgb, var(--color-neutral-900) 14%, transparent);
+}
+
+:host-context(.dark) .blog-card {
+  background: color-mix(in srgb, var(--color-dark-surface) 92%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-500) 14%, transparent);
+  box-shadow: 0 16px 46px color-mix(in srgb, var(--color-black) 28%, transparent);
+}
+
+.blog-card-media {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-info) 12%, transparent),
+    color-mix(in srgb, var(--color-accent) 12%, transparent)
+  );
+}
+
+.blog-card-placeholder {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in srgb, var(--color-info) 20%, transparent),
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-white) 70%, transparent),
+      color-mix(in srgb, var(--color-neutral-100) 70%, transparent)
+    );
+}
+
+.blog-card-meta span {
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+
+.empty-state {
+  border: 1px dashed color-mix(in srgb, var(--color-primary-600) 24%, transparent);
+  background: color-mix(in srgb, var(--color-white) 70%, transparent);
+}
+
+:host-context(.dark) .empty-state {
+  background: color-mix(in srgb, var(--color-dark-surface) 72%, transparent);
+}
+
+.empty-state-icon {
+  background: color-mix(in srgb, var(--color-primary-600) 10%, var(--color-white));
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}

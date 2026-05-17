@@ -1,0 +1,41 @@
+<h2 class="text-xl font-bold text-teal-500 mb-4">
+  {{ modalTitle }}
+</h2>
+
+<form
+  autocomplete="off"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit($event)"
+  class="min-w-100 mx-auto px-2"
+>
+  <!-- name -->
+  <Field label="Category Name">
+    <input
+      autocomplete="off"
+      #inputRef
+      type="text"
+      [formControl]="getControl('name')"
+      class="block py-2.5 px-0 w-full text-sm text-neutral-950 bg-transparent border-0 border-b-2 border-neutral-300 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="(getControl('name').invalid && getControl('name').touched) || isSubmitted"
+      placeholder=""
+      required
+    />
+  </Field>
+
+  <div class="flex gap-2 justify-end">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="text-neutral-700 dark:text-neutral-300 bg-neutral-200 dark:bg-neutral-700 transition-colors font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="text-white bg-emerald-600 hover:bg-emerald-700 transition-colors font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {{ selectedBrand ? 'Update' : 'Save' }}
+    </button>
+  </div>
+</form>

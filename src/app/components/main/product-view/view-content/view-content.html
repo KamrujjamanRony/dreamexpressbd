@@ -1,0 +1,127 @@
+@if (
+  product?.specifications?.length > 0 ||
+  product?.productDetails ||
+  product?.additionalInformation ||
+  product?.specialFeature
+) {
+  <div class="mt-10 border-t border-neutral-200 dark:border-neutral-700">
+    <!-- Tabs -->
+    <div class="flex border-b border-neutral-200 dark:border-neutral-700 -mt-px">
+      @if (product?.specifications?.length > 0) {
+        <button
+          type="button"
+          (click)="activeTab = 'specs'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'specs'
+              ? 'border-b-2 border-primary-600 text-primary-600'
+              : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
+          "
+        >
+          Specifications
+        </button>
+      }
+      @if (product?.productDetails) {
+        <button
+          type="button"
+          (click)="activeTab = 'details'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'details'
+              ? 'border-b-2 border-primary-600 text-primary-600'
+              : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
+          "
+        >
+          Product Details
+        </button>
+      }
+      @if (product?.additionalInformation) {
+        <button
+          type="button"
+          (click)="activeTab = 'info'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'info'
+              ? 'border-b-2 border-primary-600 text-primary-600'
+              : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
+          "
+        >
+          Additional Info
+        </button>
+      }
+      @if (product?.specialFeature) {
+        <button
+          type="button"
+          (click)="activeTab = 'feature'"
+          class="px-6 py-3.5 text-sm font-semibold transition-colors cursor-pointer"
+          [class]="
+            activeTab === 'feature'
+              ? 'border-b-2 border-primary-600 text-primary-600'
+              : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400'
+          "
+        >
+          Special Feature
+        </button>
+      }
+    </div>
+
+    <!-- Tab Content -->
+    <div class="py-6">
+      <!-- Specifications Tab -->
+      @if (activeTab === 'specs' && product?.specifications?.length > 0) {
+        <div class="overflow-x-auto">
+          @for (specification of product.specifications; track specification) {
+            <table class="w-full text-sm text-left mb-6">
+              <thead>
+                <tr class="bg-neutral-100 dark:bg-neutral-700">
+                  <th
+                    colspan="2"
+                    class="py-3 px-5 font-semibold text-neutral-800 dark:text-neutral-200 text-base"
+                  >
+                    {{ specification?.title }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-100 dark:divide-neutral-700">
+                @for (item of specification.content; track $index) {
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                    <td class="py-3 px-5 font-medium text-neutral-700 dark:text-neutral-300 w-1/3">
+                      {{ item?.item }}
+                    </td>
+                    <td class="py-3 px-5 text-neutral-600 dark:text-neutral-400">
+                      {{ item?.value }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      }
+
+      <!-- Product Details Tab -->
+      @if (activeTab === 'details' && product?.productDetails) {
+        <div
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed wrap-break-word bg-accent"
+          [innerHTML]="product.productDetails"
+        ></div>
+      }
+
+      <!-- Additional Info Tab -->
+      @if (activeTab === 'info' && product?.additionalInformation) {
+        <div
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product.additionalInformation"
+        ></div>
+      }
+
+      <!-- Special Feature Tab -->
+      @if (activeTab === 'feature' && product?.specialFeature) {
+        <div
+          class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product.specialFeature"
+        ></div>
+      }
+    </div>
+  </div>
+}

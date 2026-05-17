@@ -1,0 +1,234 @@
+<div class="checkout-page min-h-screen py-10 px-4">
+  <div class="max-w-2xl mx-auto">
+    @if (loading()) {
+      <div class="text-sm text-neutral-500 dark:text-neutral-400 mt-10">Loading your items...</div>
+    } @else {
+      @if (!orderItems().length) {
+        <div
+          class="rounded-xl border border-amber-200 bg-amber-50 text-amber-800 px-4 py-3 text-sm"
+        >
+          No items found for checkout. Please choose a product first.
+        </div>
+        <a
+          href="/shop"
+          class="mt-5 inline-flex items-center justify-center rounded-xl bg-primary-600 text-white px-5 py-2.5 text-sm font-semibold no-underline hover:bg-primary-700 transition"
+        >
+          Continue Shopping
+        </a>
+      } @else {
+        <!-- Order Items -->
+        <div
+          class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-sm p-5 mb-4"
+        >
+          <h2 class="text-base font-semibold text-neutral-800 dark:text-neutral-100 mb-3">
+            Order Summary
+          </h2>
+          <div class="space-y-2">
+            @for (item of orderItems(); track $index) {
+              <div
+                class="flex items-center justify-between gap-4 py-2 border-b border-neutral-100 dark:border-neutral-800 last:border-0"
+              >
+                <div>
+                  <p class="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                    {{
+                      item.productName || item.title || 'Product #' + (item.productId || item.id)
+                    }}
+                  </p>
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                    Qty: {{ item.quantity || 1 }}
+                  </p>
+                </div>
+                <p
+                  class="text-sm font-semibold text-primary-700 dark:text-primary-400 shrink-0"
+                  [innerHTML]="item.totalPrice || (item.price || 0) * (item.quantity || 1) | bdt"
+                ></p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Address Form -->
+        <div
+          class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-sm p-5 mb-4"
+        >
+          <h2 class="text-base font-semibold text-neutral-800 dark:text-neutral-100 mb-4">
+            Delivery Address
+          </h2>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <!-- Name -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                Full Name <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="name"
+                name="name"
+                placeholder="Your full name"
+                class="w-full rounded-xl border dark:border-neutral-600 px-3.5 py-2.5 text-sm bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 outline-none transition focus:ring-2 focus:ring-primary-500"
+                [class.border-red-400]="formTouched() && !name.trim()"
+                [class.border-neutral-300]="!(formTouched() && !name.trim())"
+              />
+              @if (formTouched() && !name.trim()) {
+                <p class="mt-1 text-xs text-red-500">Name is required</p>
+              }
+            </div>
+
+            <!-- Phone -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                Phone Number <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                [(ngModel)]="phone"
+                name="phone"
+                placeholder="01XXXXXXXXX"
+                class="w-full rounded-xl border dark:border-neutral-600 px-3.5 py-2.5 text-sm bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 outline-none transition focus:ring-2 focus:ring-primary-500"
+                [class.border-red-400]="formTouched() && !phone.trim()"
+                [class.border-neutral-300]="!(formTouched() && !phone.trim())"
+              />
+              @if (formTouched() && !phone.trim()) {
+                <p class="mt-1 text-xs text-red-500">Phone number is required</p>
+              }
+            </div>
+
+            <!-- City / Delivery Zone -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                City <span class="text-red-500">*</span>
+              </label>
+              <select
+                [(ngModel)]="city"
+                name="city"
+                (ngModelChange)="onCityChange($event)"
+                class="w-full rounded-xl border dark:border-neutral-600 px-3.5 py-2.5 text-sm bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 outline-none transition focus:ring-2 focus:ring-primary-500"
+                [class.border-red-400]="formTouched() && !city"
+                [class.border-neutral-300]="!(formTouched() && !city)"
+              >
+                <option value="">Select City</option>
+                <option value="Inside Dhaka">Inside Dhaka</option>
+                <option value="Outside Dhaka">Outside Dhaka</option>
+              </select>
+              @if (formTouched() && !city) {
+                <p class="mt-1 text-xs text-red-500">City is required</p>
+              }
+            </div>
+
+            <!-- Street Address -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                Street Address <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="street"
+                name="street"
+                placeholder="House no, road, locality..."
+                class="w-full rounded-xl border dark:border-neutral-600 px-3.5 py-2.5 text-sm bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 outline-none transition focus:ring-2 focus:ring-primary-500"
+                [class.border-red-400]="formTouched() && !street.trim()"
+                [class.border-neutral-300]="!(formTouched() && !street.trim())"
+              />
+              @if (formTouched() && !street.trim()) {
+                <p class="mt-1 text-xs text-red-500">Street address is required</p>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div
+          class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-sm p-5 mb-4"
+        >
+          <h2 class="text-base font-semibold text-neutral-800 dark:text-neutral-100 mb-3">
+            Payment Method
+          </h2>
+          <div
+            class="flex items-center gap-3 rounded-xl border-2 border-primary-500 bg-primary-50 dark:bg-primary-950/30 px-4 py-3"
+          >
+            <div
+              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900"
+            >
+              <svg
+                class="h-5 w-5 text-primary-600 dark:text-primary-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17 9V7a5 5 0 00-10 0v2M5 9h14l1 11H4L5 9z"
+                />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-primary-700 dark:text-primary-300">
+                Cash on Delivery (COD)
+              </p>
+              <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                Pay when your order arrives at your door
+              </p>
+            </div>
+            <div
+              class="h-4 w-4 rounded-full border-2 border-primary-500 bg-primary-500 shrink-0"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Price Summary -->
+        <div
+          class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-sm p-5 mb-4"
+        >
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-neutral-600 dark:text-neutral-400">Subtotal</span>
+              <span
+                class="font-semibold text-neutral-800 dark:text-neutral-100"
+                [innerHTML]="subtotal() | bdt"
+              ></span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-neutral-600 dark:text-neutral-400">
+                Delivery
+                @if (city) {
+                  <span class="ml-1 text-xs text-neutral-400">({{ city }})</span>
+                }
+              </span>
+              <span
+                class="font-semibold text-neutral-800 dark:text-neutral-100"
+                [innerHTML]="deliveryCharge() | bdt"
+              ></span>
+            </div>
+            <div class="h-px bg-neutral-200 dark:bg-neutral-700 my-1"></div>
+            <div class="flex items-center justify-between text-base">
+              <span class="font-bold text-neutral-900 dark:text-neutral-100">Total</span>
+              <span
+                class="font-bold text-primary-700 dark:text-primary-400"
+                [innerHTML]="totalAmount() | bdt"
+              ></span>
+            </div>
+          </div>
+        </div>
+
+        @if (error()) {
+          <div
+            class="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm"
+          >
+            {{ error() }}
+          </div>
+        }
+
+        <button
+          type="button"
+          class="w-full rounded-xl bg-primary-600 text-white px-5 py-3.5 text-sm font-semibold border-none cursor-pointer hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          (click)="placeOrder()"
+          [disabled]="placingOrder()"
+        >
+          {{ placingOrder() ? 'Confirming...' : 'Confirm Order' }}
+        </button>
+      }
+    }
+  </div>
+</div>

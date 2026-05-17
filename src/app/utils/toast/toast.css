@@ -1,0 +1,269 @@
+@reference "../../../styles.css";
+
+/* ──────────────────────────────────────────
+   Toast Item
+   ────────────────────────────────────────── */
+.toast-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 380px;
+  max-width: 92vw;
+  padding: 28px 24px 18px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: toast-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 20px 60px color-mix(in srgb, var(--color-black) 15%, transparent),
+    0 2px 8px color-mix(in srgb, var(--color-black) 10%, transparent);
+}
+
+/* Type accent – top border glow */
+.toast-success {
+  border-top: 4px solid var(--color-success);
+}
+.toast-danger {
+  border-top: 4px solid var(--color-danger);
+}
+.toast-warning {
+  border-top: 4px solid var(--color-warning);
+}
+
+/* ──────────────────────────────────────────
+   Entry / Exit Animations
+   ────────────────────────────────────────── */
+@keyframes toast-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(6px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ──────────────────────────────────────────
+   Icon Area
+   ────────────────────────────────────────── */
+.toast-icon-wrapper {
+  margin-bottom: 14px;
+}
+
+.toast-icon-circle {
+  width: 64px;
+  height: 64px;
+}
+
+/* ── SUCCESS checkmark ── */
+.toast-checkmark {
+  width: 64px;
+  height: 64px;
+}
+.toast-checkmark-circle {
+  stroke: var(--color-success);
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: toast-circle-draw 0.5s 0.1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.toast-checkmark-check {
+  stroke: var(--color-success);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: toast-check-draw 0.35s 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+@keyframes toast-circle-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes toast-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── DANGER xmark ── */
+.toast-xmark {
+  width: 64px;
+  height: 64px;
+}
+.toast-xmark-circle {
+  stroke: var(--color-danger);
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: toast-circle-draw 0.5s 0.1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.toast-xmark-x {
+  stroke: var(--color-danger);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 29;
+  stroke-dashoffset: 29;
+  animation: toast-x-draw 0.3s 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.toast-xmark-x2 {
+  animation-delay: 0.65s;
+}
+@keyframes toast-x-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── WARNING exclamation ── */
+.toast-warning-icon {
+  width: 64px;
+  height: 64px;
+}
+.toast-warning-circle {
+  stroke: var(--color-warning);
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: toast-circle-draw 0.5s 0.1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.toast-warning-line {
+  stroke: var(--color-warning);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  animation: toast-warn-line 0.3s 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.toast-warning-dot {
+  fill: var(--color-warning);
+  opacity: 0;
+  animation: toast-warn-dot 0.25s 0.75s ease forwards;
+}
+@keyframes toast-warn-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes toast-warn-dot {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ──────────────────────────────────────────
+   Message
+   ────────────────────────────────────────── */
+.toast-message {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  padding: 0 8px;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+/* ──────────────────────────────────────────
+   Progress Bar
+   ────────────────────────────────────────── */
+.toast-progress-track {
+  width: 100%;
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.toast-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  animation: toast-shrink linear forwards;
+}
+.toast-progress-bar.paused {
+  animation-play-state: paused;
+}
+.toast-progress-success {
+  background: var(--color-success);
+}
+.toast-progress-danger {
+  background: var(--color-danger);
+}
+.toast-progress-warning {
+  background: var(--color-warning);
+}
+
+@keyframes toast-shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* ──────────────────────────────────────────
+   Close Button
+   ────────────────────────────────────────── */
+.toast-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: none;
+  background: #ef4444;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.toast-close:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ──────────────────────────────────────────
+   Dark mode
+   ────────────────────────────────────────── */
+:host-context(.dark) .toast-item {
+  background: var(--color-dark-card);
+  box-shadow:
+    0 20px 60px color-mix(in srgb, var(--color-black) 40%, transparent),
+    0 2px 8px color-mix(in srgb, var(--color-black) 20%, transparent);
+}
+:host-context(.dark) .toast-message {
+  color: var(--color-neutral-200);
+}
+:host-context(.dark) .toast-progress-track {
+  background: var(--color-neutral-700);
+}
+:host-context(.dark) .toast-close {
+  background: var(--color-danger-dark);
+  color: var(--color-white);
+}
+:host-context(.dark) .toast-close:hover {
+  background: var(--color-primary-700);
+  color: var(--color-white);
+}

@@ -1,0 +1,77 @@
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Mobile navigation">
+  <!-- Glassmorphism bar -->
+  <div
+    class="bg-white dark:bg-dark-surface border-t border-neutral-200/60 dark:border-primary-500/15 shadow-[0_-4px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.3)]"
+  >
+    <div class="flex items-center justify-around px-2 py-1 max-w-lg mx-auto">
+      <!-- Shop -->
+      <a routerLink="/shop" class="btm-tab group" [class.btm-active]="activeTab() === 'shop'">
+        <div class="btm-icon-wrap">
+          <i class="fas fa-store"></i>
+          @if (activeTab() === 'shop') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Shop</span>
+      </a>
+
+      <!-- Search -->
+      <button class="btm-tab group" (click)="openSearch()" type="button" aria-label="Search">
+        <div class="btm-icon-wrap">
+          <i class="fas fa-search" aria-hidden="true"></i>
+        </div>
+        <span class="btm-label">Search</span>
+      </button>
+
+      <!-- Search Overlay -->
+      <app-search-overlay #searchOverlay></app-search-overlay>
+
+      <!-- Home (center, elevated) -->
+      <a
+        routerLink="/"
+        class="btm-tab btm-center group"
+        [class.btm-active]="activeTab() === ''"
+      >
+        <div class="btm-center-btn" [class.btm-center-active]="activeTab() === ''">
+          <i class="fas fa-home text-lg"></i>
+        </div>
+        <span class="btm-label mt-1">Home</span>
+      </a>
+
+      <!-- Cart -->
+      <button
+        (click)="openCartDrawer()"
+        class="btm-tab group bg-transparent border-none cursor-pointer"
+        [class.btm-active]="activeTab() === 'cart'"
+        aria-label="Shopping cart"
+      >
+        <div class="btm-icon-wrap relative">
+          <i class="fas fa-shopping-bag"></i>
+          @if (totalCarts() > 0) {
+            <span class="btm-badge">{{ totalCarts() }}</span>
+          }
+          @if (activeTab() === 'cart') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Cart</span>
+      </button>
+
+      <!-- Checkout -->
+      <a
+        routerLink="/checkout"
+        class="btm-tab group"
+        [class.btm-active]="activeTab() === 'checkout'"
+      >
+        <div class="btm-icon-wrap">
+          <i class="fas fa-bolt"></i>
+          @if (activeTab() === 'checkout') {
+            <span class="btm-dot"></span>
+          }
+        </div>
+        <span class="btm-label">Order</span>
+      </a>
+    </div>
+  </div>
+</nav>

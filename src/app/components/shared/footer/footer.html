@@ -1,0 +1,131 @@
+<!-- footer -->
+<footer class="footer-wrapper">
+  <!-- Subtle Decorative Elements -->
+  <div class="footer-deco">
+    <div class="footer-deco-orb footer-deco-orb--1"></div>
+    <div class="footer-deco-orb footer-deco-orb--2"></div>
+  </div>
+
+  <!-- Top Accent Line -->
+  <div class="footer-accent-line"></div>
+
+  <div class="footer-container">
+    <!-- Main Footer Grid -->
+    <div class="footer-grid">
+      <!-- Brand Column -->
+      <div class="footer-animate footer-brand">
+        <div class="footer-logo-group">
+          <img src="logo-full.webp" alt="{{ companyName }} Logo" class="footer-logo-image" />
+        </div>
+
+        @if (aboutData()?.info?.[0]?.desc) {
+          <div
+            class="footer-brand-desc rte-content"
+            [innerHTML]="aboutData()?.info?.[0]?.desc | safeHtml"
+          ></div>
+        } @else {
+          <p class="footer-brand-desc">Your trusted online shopping destination in Bangladesh.</p>
+        }
+
+        <!-- Social Links -->
+        <div class="footer-socials">
+          @if (contactData()?.facebookLink) {
+            <a
+              [href]="contactData()?.facebookLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Facebook"
+            >
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          }
+          @if (contactData()?.iLink) {
+            <a
+              [href]="contactData()?.iLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Instagram"
+            >
+              <i class="fab fa-instagram"></i>
+            </a>
+          }
+          @if (contactData()?.yLink) {
+            <a
+              [href]="contactData()?.yLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="YouTube"
+            >
+              <i class="fab fa-youtube"></i>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-animate" style="transition-delay: 100ms">
+        <h4 class="footer-heading">Quick Links</h4>
+        <ul class="footer-nav">
+          <li><a routerLink="/" class="footer-nav-link">Home</a></li>
+          <li><a routerLink="/shop" class="footer-nav-link">Shop</a></li>
+          <li><a routerLink="/about-us" class="footer-nav-link">About Us</a></li>
+          <li><a routerLink="/contact-us" class="footer-nav-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- About Info -->
+      <div class="footer-animate" style="transition-delay: 200ms">
+        <h4 class="footer-heading">About</h4>
+        <ul class="footer-info">
+          @for (item of aboutData()?.info || []; track item.id ?? $index) {
+            @if (item.title) {
+              <li class="footer-info-item">
+                <div class="footer-info-icon">
+                  <i class="fas fa-circle-info"></i>
+                </div>
+                <span class="footer-info-text">{{ item.title }}</span>
+              </li>
+            }
+          }
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-animate" style="transition-delay: 300ms">
+        <h4 class="footer-heading">Contact Us</h4>
+        <ul class="footer-info">
+          @for (card of contactData()?.contactCards; track card.id ?? $index) {
+            <li class="footer-info-item">
+              <div class="footer-info-icon">
+                <i [class]="getCardIcon(card.type)"></i>
+              </div>
+              <div>
+                <span class="footer-info-label">{{ card.title }}</span>
+                <span class="footer-info-text">{{ card.value }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="footer-divider"></div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p class="footer-copyright">
+        &copy; {{ currentYear }} {{ companyName }}. All rights reserved.
+      </p>
+      <div class="footer-bottom-links">
+        <a routerLink="/about-us" class="footer-bottom-link">About</a>
+        <span class="footer-bottom-sep"></span>
+        <a routerLink="/contact-us" class="footer-bottom-link">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- footer end -->

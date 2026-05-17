@@ -1,0 +1,630 @@
+/* ═══════════════════════════════════════════
+   Search Overlay — Full-screen interactive
+   ═══════════════════════════════════════════ */
+
+/* ── Backdrop ── */
+.search-backdrop {
+  @apply fixed inset-0;
+  z-index: 9990;
+  background: color-mix(in srgb, var(--color-black) 50%, transparent);
+  backdrop-filter: blur(8px);
+  animation: overlayFadeIn 0.25s ease-out;
+}
+.search-backdrop.closing {
+  animation: overlayFadeOut 0.25s ease-in forwards;
+}
+
+/* ── Panel ── */
+.search-panel {
+  @apply fixed inset-0 flex flex-col bg-white;
+  z-index: 9991;
+  animation: panelSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.search-panel.closing {
+  animation: panelSlideDown 0.25s ease-in forwards;
+}
+.dark .search-panel {
+  @apply bg-dark-surface;
+}
+
+/* Desktop: centered modal style */
+@media (min-width: 1024px) {
+  .search-panel {
+    inset: 5vh 15vw;
+    border-radius: 20px;
+    box-shadow:
+      0 25px 80px color-mix(in srgb, var(--color-black) 20%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+    animation: panelScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .search-panel.closing {
+    animation: panelScaleOut 0.2s ease-in forwards;
+  }
+  .dark .search-panel {
+    box-shadow:
+      0 25px 80px color-mix(in srgb, var(--color-black) 60%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+  }
+}
+
+/* Tablet: slight inset */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .search-panel {
+    inset: 0 5vw;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 20px 60px color-mix(in srgb, var(--color-black) 15%, transparent);
+  }
+}
+
+/* ── Header ── */
+.search-header {
+  @apply px-4 py-3 shrink-0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+.dark .search-header {
+  border-bottom-color: color-mix(in srgb, var(--color-primary-600) 15%, transparent);
+}
+@media (min-width: 768px) {
+  .search-header {
+    @apply px-6 py-4;
+  }
+}
+
+.search-input-wrap {
+  @apply flex items-center gap-2.5 bg-primary-50 rounded-[14px] px-3 py-2;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+.search-input-wrap:focus-within {
+  @apply border-primary-700 bg-primary-50;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+}
+.dark .search-input-wrap {
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+.dark .search-input-wrap:focus-within {
+  @apply border-primary-500;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary-500) 15%, transparent);
+  background: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+}
+
+@media (min-width: 768px) {
+  .search-input-wrap {
+    @apply px-4 py-2.5 gap-3;
+  }
+}
+
+.search-icon-box {
+  @apply size-[36px] rounded-[10px] text-white flex items-center justify-center text-sm shrink-0;
+  background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-700));
+  animation: iconPulse 2s ease-in-out infinite;
+}
+.dark .search-icon-box {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+}
+
+.search-input {
+  @apply flex-1 border-none outline-none bg-transparent text-[15px] font-medium text-neutral-800 min-w-0;
+}
+.search-input::placeholder {
+  @apply text-neutral-400 font-normal;
+}
+.dark .search-input {
+  @apply text-neutral-100;
+}
+.dark .search-input::placeholder {
+  @apply text-neutral-500;
+}
+@media (min-width: 768px) {
+  .search-input {
+    @apply text-base;
+  }
+}
+
+.search-clear {
+  @apply size-[28px] border-none rounded-full cursor-pointer flex items-center justify-center text-[11px] shrink-0;
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  color: var(--color-danger);
+  transition: all 0.2s ease;
+}
+.search-clear:hover {
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  transform: scale(1.1);
+}
+
+.search-close {
+  @apply border-none bg-transparent text-primary-700 text-[13px] font-semibold cursor-pointer px-2 py-1 rounded-lg shrink-0;
+  transition: all 0.2s ease;
+}
+.search-close:hover {
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+.dark .search-close {
+  @apply text-primary-400;
+}
+
+/* ── Loading Bar ── */
+.search-loading-bar {
+  height: 2px;
+  background: color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.search-loading-fill {
+  @apply h-full w-[30%] rounded-sm;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-700),
+    var(--color-primary-500),
+    var(--color-accent)
+  );
+  animation: loadingSlide 1.2s ease-in-out infinite;
+}
+
+/* ── Content ── */
+.search-content {
+  @apply flex-1 overflow-y-auto px-4 py-3;
+  overscroll-behavior: contain;
+}
+@media (min-width: 768px) {
+  .search-content {
+    @apply px-6 py-4;
+  }
+}
+
+/* ── Sections ── */
+.search-section {
+  @apply mb-5;
+}
+.search-section-header {
+  @apply flex items-center justify-between mb-3;
+}
+.search-section-title {
+  @apply text-[12px] font-bold uppercase text-neutral-500;
+  letter-spacing: 0.8px;
+}
+.dark .search-section-title {
+  @apply text-neutral-400;
+}
+.search-section-count {
+  @apply text-[11px] text-neutral-400 rounded-[10px];
+  background: color-mix(in srgb, var(--color-primary-600) 6%, transparent);
+  padding: 2px 8px;
+}
+.dark .search-section-count {
+  @apply text-primary-400;
+  background: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+}
+
+/* ── Results Grid ── */
+.search-results-grid {
+  @apply flex flex-col gap-0.5;
+}
+
+.search-result-card {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer;
+  transition: all 0.25s ease;
+  animation: resultSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.search-result-card:hover {
+  background: color-mix(in srgb, var(--color-primary-600) 4%, transparent);
+  transform: translateX(4px);
+}
+.dark .search-result-card:hover {
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+.search-result-card:active {
+  transform: scale(0.98);
+}
+
+.result-image-wrap {
+  @apply relative size-[52px] shrink-0 rounded-[10px] overflow-hidden bg-neutral-100;
+}
+.dark .result-image-wrap {
+  @apply bg-dark-card;
+}
+@media (min-width: 768px) {
+  .result-image-wrap {
+    @apply size-[60px];
+  }
+}
+
+.result-image {
+  @apply w-full h-full object-cover;
+  transition: transform 0.3s ease;
+}
+.search-result-card:hover .result-image {
+  transform: scale(1.08);
+}
+
+.result-discount {
+  @apply absolute text-[9px] font-bold text-white rounded-md;
+  top: 2px;
+  left: 2px;
+  background: linear-gradient(135deg, var(--color-danger), var(--color-danger-dark));
+  padding: 1px 5px;
+  line-height: 1.4;
+}
+
+.result-info {
+  @apply flex-1 min-w-0;
+}
+
+.result-title {
+  @apply text-[13px] font-semibold text-neutral-800 m-0 overflow-hidden text-ellipsis whitespace-nowrap;
+}
+.dark .result-title {
+  @apply text-neutral-100;
+}
+
+.result-meta {
+  @apply text-[11px] text-neutral-400;
+  margin: 2px 0 0;
+}
+
+.result-price {
+  @apply flex items-center gap-1.5;
+  margin-top: 3px;
+}
+.price-current {
+  @apply text-[13px] font-bold text-primary-700;
+}
+.dark .price-current {
+  @apply text-primary-400;
+}
+.price-original {
+  @apply text-[11px] text-neutral-300 line-through;
+}
+
+.result-arrow {
+  @apply text-[10px] text-neutral-300 shrink-0 opacity-0;
+  transition: all 0.2s ease;
+  transform: translateX(-4px);
+}
+.search-result-card:hover .result-arrow {
+  @apply opacity-100;
+  transform: translateX(0);
+}
+
+/* ── View All Button ── */
+.search-view-all {
+  @apply flex items-center justify-center w-full bg-transparent text-primary-700 text-[13px] font-semibold cursor-pointer rounded-xl;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1.5px dashed color-mix(in srgb, var(--color-primary-600) 20%, transparent);
+  transition: all 0.25s ease;
+}
+.search-view-all:hover {
+  background: color-mix(in srgb, var(--color-primary-600) 4%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-600) 40%, transparent);
+  transform: translateY(-1px);
+}
+.dark .search-view-all {
+  @apply text-primary-400;
+  border-color: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
+}
+
+/* ── Skeleton Loading ── */
+.skeleton-grid {
+  @apply flex flex-col gap-0.5;
+}
+.skeleton-card {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-xl;
+}
+.skeleton-image {
+  @apply size-[52px] rounded-[10px] shrink-0;
+}
+.skeleton-lines {
+  @apply flex-1 flex flex-col gap-1.5;
+}
+.skeleton-line {
+  @apply h-2.5 rounded-[5px];
+}
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+.dark .skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    var(--color-dark-card) 25%,
+    var(--color-dark-muted) 50%,
+    var(--color-dark-card) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* ── Empty State ── */
+.search-empty {
+  @apply flex flex-col items-center justify-center;
+  padding: 40px 20px;
+  animation: emptyFadeIn 0.4s ease;
+}
+.empty-icon {
+  @apply size-[64px] rounded-full flex items-center justify-center text-2xl text-neutral-300 mb-4;
+  background: color-mix(in srgb, var(--color-primary-600) 6%, transparent);
+}
+.dark .empty-icon {
+  @apply text-neutral-600;
+  background: color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+}
+.empty-title {
+  @apply text-base font-semibold text-neutral-600 m-0 mb-1;
+}
+.dark .empty-title {
+  @apply text-neutral-400;
+}
+.empty-sub {
+  @apply text-[13px] text-neutral-400 m-0;
+}
+
+/* ── Recent Searches ── */
+.recent-list {
+  @apply flex flex-wrap gap-2;
+}
+.recent-chip {
+  @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[20px] font-medium cursor-pointer;
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+  background: color-mix(in srgb, var(--color-primary-600) 4%, transparent);
+  color: var(--color-neutral-500);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: chipPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.recent-chip:hover {
+  @apply text-primary-700;
+  background: color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-600) 25%, transparent);
+  transform: translateY(-1px);
+}
+.dark .recent-chip {
+  @apply text-neutral-400;
+  border-color: color-mix(in srgb, var(--color-primary-500) 15%, transparent);
+  background: color-mix(in srgb, var(--color-primary-500) 6%, transparent);
+}
+.dark .recent-chip:hover {
+  @apply text-primary-400;
+  background: color-mix(in srgb, var(--color-primary-500) 12%, transparent);
+}
+.recent-remove {
+  @apply text-[9px] opacity-0;
+  color: var(--color-danger);
+  transition: all 0.2s ease;
+  padding: 2px;
+}
+.recent-chip:hover .recent-remove {
+  opacity: 0.7;
+}
+.recent-remove:hover {
+  opacity: 1 !important;
+}
+
+.section-clear-btn {
+  @apply text-[11px] bg-transparent border-none cursor-pointer font-medium rounded-md;
+  color: var(--color-danger);
+  padding: 2px 8px;
+  transition: all 0.2s ease;
+}
+.section-clear-btn:hover {
+  background: color-mix(in srgb, var(--color-danger) 6%, transparent);
+}
+
+/* ── Category Grid ── */
+.category-grid {
+  @apply grid grid-cols-2 gap-2;
+}
+@media (min-width: 768px) {
+  .category-grid {
+    @apply grid-cols-4;
+  }
+}
+
+.category-card {
+  @apply flex flex-col items-center gap-2 bg-transparent cursor-pointer rounded-[14px];
+  padding: 14px 8px;
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: categoryPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.category-card:hover {
+  background: color-mix(in srgb, var(--color-primary-600) 4%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-600) 20%, transparent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-primary-600) 8%, transparent);
+}
+.dark .category-card {
+  border-color: color-mix(in srgb, var(--color-primary-500) 10%, transparent);
+}
+.dark .category-card:hover {
+  background: color-mix(in srgb, var(--color-primary-500) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-500) 25%, transparent);
+}
+
+.category-icon {
+  @apply size-[40px] rounded-xl flex items-center justify-center text-primary-700 text-sm overflow-hidden;
+  background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200));
+  transition: all 0.3s ease;
+}
+.category-card:hover .category-icon {
+  @apply text-white;
+  background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-700));
+  transform: scale(1.1);
+}
+.dark .category-icon {
+  @apply text-primary-400;
+  background: color-mix(in srgb, var(--color-primary-600) 12%, transparent);
+}
+.dark .category-card:hover .category-icon {
+  @apply text-white;
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+}
+
+.category-name {
+  @apply text-[11px] font-semibold text-neutral-600 text-center leading-tight;
+}
+.dark .category-name {
+  @apply text-neutral-300;
+}
+
+/* ── Search Tips ── */
+.search-tips {
+  @apply flex flex-col gap-2 p-3 rounded-xl;
+  background: color-mix(in srgb, var(--color-primary-600) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary-600) 6%, transparent);
+}
+.dark .search-tips {
+  background: color-mix(in srgb, var(--color-primary-600) 5%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-600) 10%, transparent);
+}
+.tip-item {
+  @apply flex items-center gap-2.5 text-[12px] text-neutral-500;
+}
+.dark .tip-item {
+  @apply text-neutral-400;
+}
+.tip-item kbd {
+  @apply inline-block text-[10px] font-semibold bg-white rounded;
+  padding: 1px 6px;
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-black) 5%, transparent);
+  font-family: inherit;
+}
+.dark .tip-item kbd {
+  @apply bg-dark-card;
+  border-color: var(--color-neutral-700);
+}
+
+/* ═══════════════════════
+   KEYFRAMES
+   ═══════════════════════ */
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes panelSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes panelSlideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+@keyframes panelScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes panelScaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+}
+@keyframes iconPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary-600) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-primary-600) 0%, transparent);
+  }
+}
+@keyframes loadingSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+@keyframes resultSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes chipPop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes categoryPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@keyframes emptyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

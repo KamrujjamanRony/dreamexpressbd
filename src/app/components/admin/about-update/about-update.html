@@ -1,0 +1,277 @@
+@if (isView()) {
+  <div class="p-6">
+    <div class="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl mx-auto">
+      <div class="p-6">
+        <h1 class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mb-6">
+          Update About Information
+        </h1>
+
+        <!-- Loading State -->
+        @if (isLoading()) {
+          <div class="text-center py-12">
+            <div
+              class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"
+            ></div>
+            <p class="mt-4 text-neutral-600 dark:text-neutral-400">Loading about information...</p>
+          </div>
+        }
+
+        <!-- Error State -->
+        @else if (hasError()) {
+          <div class="text-center py-12">
+            <p class="text-red-600 dark:text-red-400">Error loading about information.</p>
+          </div>
+        }
+
+        <!-- Form -->
+        @else {
+          <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-6">
+            <!-- Heading -->
+            <div class="relative pb-2">
+              <input
+                type="text"
+                [(ngModel)]="heading"
+                name="heading"
+                id="heading"
+                autocomplete="off"
+                class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                placeholder=" "
+                [class.bg-neutral-100]="!isEdit()"
+                [class.cursor-not-allowed]="!isEdit()"
+                [readOnly]="!isEdit()"
+              />
+              <label
+                for="heading"
+                class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                >Heading</label
+              >
+            </div>
+
+            <!-- Main Image -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-neutral-900 dark:text-white"
+                >Main Image</label
+              >
+              <div class="flex items-center gap-4">
+                @if (imageUrl && resolveGalleryUrl(imageUrl)) {
+                  <img
+                    [src]="resolveGalleryUrl(imageUrl)"
+                    alt="About Main Image"
+                    class="h-32 w-auto rounded border object-contain"
+                  />
+                }
+                @if (isEdit()) {
+                  <button
+                    type="button"
+                    (click)="openGalleryPicker('main')"
+                    class="flex items-center gap-2 text-sm flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                  >
+                    <fa-icon [icon]="faImage"></fa-icon>
+                    Select from Gallery
+                  </button>
+                }
+              </div>
+              @if (imageUrl) {
+                <p class="text-xs text-neutral-500">{{ imageUrl }}</p>
+              }
+            </div>
+
+            <!-- Info Sections -->
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-neutral-900 dark:text-white">
+                  Info Sections
+                </h2>
+                @if (isEdit()) {
+                  <button
+                    type="button"
+                    (click)="addInfoItem()"
+                    class="flex items-center gap-2 text-sm flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors max-w-36"
+                  >
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                    Add Section
+                  </button>
+                }
+              </div>
+
+              @for (item of infoItems; track $index) {
+                <div
+                  class="border border-neutral-300 dark:border-neutral-600 rounded-lg p-4 space-y-3 relative"
+                >
+                  @if (isEdit()) {
+                    <button
+                      type="button"
+                      (click)="removeInfoItem($index)"
+                      class="absolute top-3 right-3 text-red-500 hover:text-red-700 transition"
+                    >
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  }
+
+                  <div class="text-sm font-medium text-neutral-500">Section {{ $index + 1 }}</div>
+
+                  <!-- Title -->
+                  <div class="relative pb-2">
+                    <input
+                      type="text"
+                      [(ngModel)]="item.title"
+                      [name]="'info_title_' + $index"
+                      [id]="'info_title_' + $index"
+                      autocomplete="off"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                      [class.bg-neutral-100]="!isEdit()"
+                      [class.cursor-not-allowed]="!isEdit()"
+                      [readOnly]="!isEdit()"
+                    />
+                    <label
+                      [for]="'info_title_' + $index"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Title</label
+                    >
+                  </div>
+
+                  <!-- Description (Quill) -->
+                  <div class="pb-2">
+                    <label
+                      class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                      >Description</label
+                    >
+                    <quill-editor
+                      [(ngModel)]="item.desc"
+                      [ngModelOptions]="{ standalone: true }"
+                      [modules]="quillModules"
+                      [styles]="{ height: '120px' }"
+                      placeholder="Description"
+                    ></quill-editor>
+                  </div>
+
+                  <!-- Image -->
+                  <div class="space-y-1">
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                      >Section Image</label
+                    >
+                    <div class="flex items-center gap-3">
+                      @if (item.imgU && resolveGalleryUrl(item.imgU)) {
+                        <img
+                          [src]="resolveGalleryUrl(item.imgU)"
+                          alt="Section image"
+                          class="h-20 w-auto rounded border object-contain"
+                        />
+                      }
+                      @if (isEdit()) {
+                        <button
+                          type="button"
+                          (click)="openGalleryPicker($index)"
+                          class="flex items-center gap-2 text-xs flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                        >
+                          <fa-icon [icon]="faImage"></fa-icon>
+                          Select Image
+                        </button>
+                      }
+                    </div>
+                    @if (item.imgU) {
+                      <p class="text-xs text-neutral-500">{{ item.imgU }}</p>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (infoItems.length === 0) {
+                <p class="text-sm text-neutral-500 text-center py-4">
+                  No info sections yet. Click "Add Section" to start.
+                </p>
+              }
+            </div>
+
+            <!-- Action Buttons -->
+            @if (isEdit()) {
+              <div class="flex gap-2 pt-4">
+                <button
+                  type="submit"
+                  [disabled]="isSubmitted()"
+                  class="flex items-center gap-2 flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  <fa-icon [icon]="faSave"></fa-icon>
+                  {{ isSubmitted() ? 'Saving...' : 'Save About' }}
+                </button>
+
+                <button
+                  type="button"
+                  (click)="formReset()"
+                  [disabled]="isSubmitted()"
+                  class="flex items-center gap-2 px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                >
+                  <fa-icon [icon]="faTimes"></fa-icon>
+                  Reset
+                </button>
+              </div>
+            }
+          </form>
+
+          <!-- Gallery Picker Modal -->
+          @if (showGalleryPicker()) {
+            <div
+              class="fixed inset-0 z-100 flex items-center justify-center bg-black/60"
+              (click)="closeGalleryPicker()"
+            >
+              <div
+                class="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] mx-4 flex flex-col"
+                (click)="$event.stopPropagation()"
+              >
+                <!-- Header -->
+                <div
+                  class="flex items-center justify-between p-4 border-b border-neutral-300 dark:border-neutral-600"
+                >
+                  <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">
+                    Select Gallery Image
+                  </h3>
+                  <div class="flex items-center gap-3">
+                    <button
+                      type="button"
+                      (click)="closeGalleryPicker()"
+                      class="text-neutral-500 hover:text-red-500 transition"
+                    >
+                      <fa-icon [icon]="faXmark" class="text-xl"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Image Grid -->
+                <div
+                  class="p-4 overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
+                >
+                  @for (img of galleryImages(); track img.id) {
+                    <div
+                      (click)="selectGalleryImage(img)"
+                      class="cursor-pointer border-2 border-transparent hover:border-emerald-500 rounded-lg overflow-hidden transition"
+                    >
+                      <img
+                        [src]="imgURL + img.imageUrl"
+                        [alt]="img.description"
+                        class="w-full h-24 object-cover"
+                        loading="lazy"
+                      />
+                      <p class="text-xs text-center text-neutral-500 p-1 truncate">
+                        {{ img.description || img.type }}
+                      </p>
+                    </div>
+                  }
+                  @if (galleryImages().length === 0) {
+                    <p class="col-span-full text-center text-neutral-500 py-8">
+                      No About gallery images found.
+                    </p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+} @else {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
+}

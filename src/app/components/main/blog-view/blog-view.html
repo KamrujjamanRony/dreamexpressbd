@@ -1,0 +1,115 @@
+@if (loading()) {
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 animate-pulse">
+    <div class="h-12 w-32 rounded-full bg-neutral-200 dark:bg-neutral-800 mb-5"></div>
+    <div class="h-16 w-4/5 rounded-2xl bg-neutral-200 dark:bg-neutral-800 mb-4"></div>
+    <div class="h-6 w-2/3 rounded-xl bg-neutral-200 dark:bg-neutral-800 mb-8"></div>
+    <div class="rounded-[2rem] min-h-[24rem] bg-neutral-200 dark:bg-neutral-800 mb-8"></div>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="h-56 rounded-[1.5rem] bg-neutral-200 dark:bg-neutral-800"></div>
+      <div class="h-56 rounded-[1.5rem] bg-neutral-200 dark:bg-neutral-800"></div>
+    </div>
+  </section>
+} @else if (notFound() || !blog()) {
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
+    <div
+      class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-600 text-2xl"
+    >
+      <i class="fas fa-file-circle-question"></i>
+    </div>
+    <h1 class="mt-6 text-3xl font-extrabold text-neutral-900 dark:text-white">Blog not found</h1>
+    <p class="mt-3 text-neutral-600 dark:text-neutral-300 max-w-xl mx-auto">
+      The story you requested is unavailable or no longer published. You can return to the main
+      blogs page and continue exploring.
+    </p>
+    <a routerLink="/blogs" class="back-link mt-8 inline-flex">Back to blogs</a>
+  </section>
+} @else {
+  <section class="blog-view-shell relative overflow-hidden">
+    <div class="blog-view-noise"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-6 relative z-10">
+      <a routerLink="/blogs" class="back-link reveal" [class.ready]="ready()">
+        <i class="fas fa-arrow-left"></i>
+        Back to articles
+      </a>
+
+      <article class="story-hero reveal" [class.ready]="ready()">
+        <div class="story-hero-copy">
+          <h1 class="story-title">{{ blog()?.heading }}</h1>
+
+          @if (embeddedVideo()) {
+            <div class="story-inline-video-wrap">
+              <iframe
+                [src]="embeddedVideo()"
+                title="Blog video"
+                loading="lazy"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                  web-share;
+                "
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+                class="story-inline-video"
+              ></iframe>
+            </div>
+          }
+        </div>
+
+        <div class="story-hero-media story-hero-media--top">
+          @if (heroImageUrl()) {
+            <img
+              [src]="imgBase + heroImageUrl()"
+              [alt]="blog()?.heading || 'Blog image'"
+              class="story-hero-image"
+            />
+          } @else {
+            <div class="story-fallback">
+              <i class="fas fa-book-open-reader text-5xl"></i>
+            </div>
+          }
+        </div>
+      </article>
+
+      <section class="story-main mt-10 sm:mt-14" id="article-body">
+        <section class="content-rail mt-8 sm:mt-10">
+          @for (detail of blog()?.dtls || []; track $index; let index = $index) {
+            <section
+              class="editorial-section reveal"
+              [attr.id]="sectionId(index)"
+              [style.transition-delay]="(index % 6) * 80 + 'ms'"
+            >
+              <div class="editorial-body" [class.editorial-body--reverse]="index % 2 === 1">
+                <div class="editorial-copy">
+                  @if (detail.title) {
+                    <h3 class="editorial-title">{{ detail.title }}</h3>
+                  }
+                  @if (detail.desc) {
+                    <div
+                      class="rte-content editorial-desc whitespace-pre-line"
+                      [innerHTML]="detail.desc"
+                    ></div>
+                  }
+                </div>
+
+                @if (imageFor(detail.iUrl)) {
+                  <figure class="editorial-media">
+                    <img
+                      [src]="imgBase + imageFor(detail.iUrl)"
+                      [alt]="detail.title || 'Blog section image'"
+                      class="editorial-image"
+                    />
+                  </figure>
+                }
+              </div>
+            </section>
+          }
+        </section>
+      </section>
+    </div>
+  </section>
+}

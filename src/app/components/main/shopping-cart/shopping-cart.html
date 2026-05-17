@@ -1,0 +1,242 @@
+<!-- Shopping Cart -->
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1
+      class="text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-100 flex items-center gap-3"
+    >
+      <fa-icon [icon]="faCartShopping" class="text-primary-600"></fa-icon>
+      Shopping Cart
+    </h1>
+    <a
+      routerLink="/shop"
+      class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 transition font-medium"
+    >
+      <fa-icon [icon]="faArrowLeft" class="text-xs"></fa-icon>
+      Continue Shopping
+    </a>
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="animate-pulse space-y-4">
+      @for (_ of [1, 2, 3]; track _) {
+        <div class="flex gap-4 bg-white dark:bg-neutral-800 rounded-xl p-4 shadow-sm">
+          <div class="w-24 h-24 bg-neutral-200 dark:bg-neutral-700 rounded-lg shrink-0"></div>
+          <div class="flex-1 space-y-3">
+            <div class="h-5 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2"></div>
+            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/4"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (carts().length === 0) {
+    <!-- Empty Cart -->
+    <div class="text-center py-16">
+      <div
+        class="w-24 h-24 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
+        <fa-icon
+          [icon]="faCartShopping"
+          class="text-4xl text-primary-300 dark:text-primary-600"
+        ></fa-icon>
+      </div>
+      <h2 class="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+        Your cart is empty
+      </h2>
+      <p class="text-neutral-500 dark:text-neutral-400 mb-6">
+        Looks like you haven't added any items yet.
+      </p>
+      <a
+        routerLink="/shop"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all"
+      >
+        <fa-icon [icon]="faShoppingBag"></fa-icon>
+        Start Shopping
+      </a>
+    </div>
+  } @else {
+    <!-- Cart Content -->
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Cart Items -->
+      <div class="flex-1 space-y-3">
+        @for (
+          item of carts();
+          track item.productId + (item.selectSize || '') + (item.selectColor || '')
+        ) {
+          <div
+            class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-md transition-shadow overflow-hidden"
+          >
+            <div class="flex items-center gap-4 p-4">
+              <!-- Product Image -->
+              <a
+                [routerLink]="getViewLink(item.productId)"
+                class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-neutral-50 dark:bg-neutral-700 shrink-0 relative"
+              >
+                @if (item.image) {
+                  <img
+                    [ngSrc]="item.image"
+                    [alt]="item.productName"
+                    fill
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                }
+              </a>
+
+              <!-- Product Details -->
+              <div class="flex-1 min-w-0">
+                <a
+                  [routerLink]="getViewLink(item.productId)"
+                  class="font-semibold text-neutral-800 dark:text-neutral-100 hover:text-primary-600 dark:hover:text-primary-400 transition truncate block"
+                >
+                  {{ item.productName }}
+                </a>
+                <div
+                  class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-neutral-500 dark:text-neutral-400"
+                >
+                  @if (item.brand) {
+                    <span
+                      >Brand:
+                      <span class="text-neutral-700 dark:text-neutral-300">{{ item.brand }}</span></span
+                    >
+                  }
+                  @if (item.selectColor) {
+                    <span
+                      >Color:
+                      <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
+                        item.selectColor
+                      }}</span></span
+                    >
+                  }
+                  @if (item.selectSize) {
+                    <span
+                      >Size:
+                      <span class="text-neutral-700 dark:text-neutral-300 uppercase">{{
+                        item.selectSize
+                      }}</span></span
+                    >
+                  }
+                </div>
+                <!-- Unit Price -->
+                <div
+                  class="mt-1 text-sm text-primary-600 font-semibold"
+                  [innerHTML]="item.price | bdt"
+                ></div>
+              </div>
+
+              <!-- Quantity Controls -->
+              <div class="flex items-center gap-1">
+                <div
+                  class="inline-flex items-center border border-neutral-200 dark:border-neutral-600 rounded-lg overflow-hidden"
+                >
+                  <button
+                    type="button"
+                    class="w-9 h-9 flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                    [disabled]="item.quantity <= 1"
+                    (click)="decrease(item)"
+                  >
+                    <fa-icon [icon]="faMinus" class="text-xs"></fa-icon>
+                  </button>
+                  <div
+                    class="w-10 h-9 flex items-center justify-center text-sm font-semibold text-neutral-800 dark:text-neutral-100 border-x border-neutral-200 dark:border-neutral-600"
+                  >
+                    {{ item.quantity }}
+                  </div>
+                  <button
+                    type="button"
+                    class="w-9 h-9 flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer"
+                    (click)="increase(item)"
+                  >
+                    <fa-icon [icon]="faPlus" class="text-xs"></fa-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Subtotal & Remove -->
+              <div class="text-right shrink-0 hidden sm:block">
+                <div
+                  class="font-bold text-neutral-800 dark:text-neutral-100"
+                  [innerHTML]="item.price * item.quantity | bdt"
+                ></div>
+                <button
+                  type="button"
+                  (click)="removeItem(item)"
+                  class="mt-1 text-xs text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1 ml-auto"
+                >
+                  <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile: subtotal & remove row -->
+            <div
+              class="sm:hidden flex items-center justify-between border-t border-neutral-100 dark:border-neutral-700 px-4 py-2 bg-neutral-50/50 dark:bg-neutral-800/80"
+            >
+              <span
+                class="font-bold text-neutral-800 dark:text-neutral-100"
+                [innerHTML]="item.price * item.quantity | bdt"
+              ></span>
+              <button
+                type="button"
+                (click)="removeItem(item)"
+                class="text-xs text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1"
+              >
+                <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="lg:w-80 shrink-0">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-700 p-6 sticky top-24"
+        >
+          <h2 class="text-lg font-bold text-neutral-800 dark:text-neutral-100 mb-4">Order Summary</h2>
+
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between text-neutral-600 dark:text-neutral-400">
+              <span>Items ({{ totalQuantity() }})</span>
+              <span [innerHTML]="totalPrice() | bdt"></span>
+            </div>
+            <div class="flex justify-between text-neutral-600 dark:text-neutral-400">
+              <span>Shipping</span>
+              <span class="font-medium" [innerHTML]="shippingCharge() | bdt"></span>
+            </div>
+            <p class="text-xs text-neutral-400 dark:text-neutral-500 -mt-1">Default: Outside Dhaka</p>
+          </div>
+
+          <div class="border-t border-neutral-200 dark:border-neutral-700 mt-4 pt-4">
+            <div class="flex justify-between font-bold text-lg text-neutral-800 dark:text-neutral-100">
+              <span>Total</span>
+              <span class="text-primary-600" [innerHTML]="totalPrice() + shippingCharge() | bdt"></span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="proceedToCheckout()"
+            class="w-full mt-5 flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer text-base"
+          >
+            <fa-icon [icon]="faShoppingBag"></fa-icon>
+            BUY NOW
+          </button>
+
+          @if (!isCustomer) {
+            <p class="text-xs text-center text-neutral-500 dark:text-neutral-400 mt-3">
+              You need to
+              <a routerLink="/login" class="text-primary-600 hover:underline font-medium">login</a>
+              to checkout
+            </p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</section>

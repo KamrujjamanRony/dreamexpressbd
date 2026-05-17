@@ -1,0 +1,228 @@
+@if (isOpen()) {
+  <!-- Backdrop -->
+  <div class="search-backdrop" [class.closing]="isClosing()" (click)="close()"></div>
+
+  <!-- Search Panel -->
+  <div class="search-panel" [class.closing]="isClosing()">
+    <!-- Header -->
+    <div class="search-header">
+      <div class="search-input-wrap">
+        <div class="search-icon-box">
+          <i class="fas fa-search"></i>
+        </div>
+        <input
+          #searchInput
+          autocomplete="off"
+          type="text"
+          [value]="searchValue()"
+          (input)="onInput($event)"
+          (keydown.enter)="performSearch()"
+          (keydown.escape)="close()"
+          placeholder="Search for products, brands, categories..."
+          class="search-input"
+          aria-label="Search for products, brands, categories"
+        />
+        @if (searchValue()) {
+          <button
+            class="search-clear"
+            (click)="clearSearch()"
+            type="button"
+            aria-label="Clear search"
+          >
+            <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+        }
+        <button class="search-close" (click)="close()" type="button">Cancel</button>
+      </div>
+      <!-- Loading bar -->
+      @if (isLoading()) {
+        <div class="search-loading-bar">
+          <div class="search-loading-fill"></div>
+        </div>
+      }
+    </div>
+
+    <!-- Content -->
+    <div class="search-content">
+      <!-- Results -->
+      @if (searchResults().length > 0) {
+        <div class="search-section">
+          <div class="search-section-header">
+            <span class="search-section-title">
+              <i class="fas fa-box-open mr-1.5 text-primary-500"></i>
+              Products
+            </span>
+            <span class="search-section-count">{{ searchResults().length }} found</span>
+          </div>
+          <div class="search-results-grid">
+            @for (product of searchResults().slice(0, 12); track product.id; let i = $index) {
+              <div
+                class="search-result-card"
+                [style.animation-delay]="i * 40 + 'ms'"
+                (click)="navigateToProduct(product.id)"
+              >
+                <div class="result-image-wrap">
+                  <img
+                    [ngSrc]="imageBaseUrl + (product.resolvedImageUrl || product.imageUrl)"
+                    width="120"
+                    height="120"
+                    loading="lazy"
+                    decoding="async"
+                    [alt]="product.title"
+                    class="result-image"
+                  />
+                  @if (product.offerPrice && product.offerPrice < product.regularPrice) {
+                    <span class="result-discount">
+                      -{{
+                        (1 - product.offerPrice / product.regularPrice) * 100 | number: '1.0-0'
+                      }}%
+                    </span>
+                  }
+                </div>
+                <div class="result-info">
+                  <p class="result-title">{{ product.title }}</p>
+                  <p class="result-meta">{{ product.brand || product.categoryName }}</p>
+                  <div class="result-price">
+                    @if (product.offerPrice && product.offerPrice < product.regularPrice) {
+                      <span class="price-current">৳{{ product.offerPrice | number: '1.0-0' }}</span>
+                      <span class="price-original"
+                        >৳{{ product.regularPrice | number: '1.0-0' }}</span
+                      >
+                    } @else {
+                      <span class="price-current"
+                        >৳{{ product.regularPrice | number: '1.0-0' }}</span
+                      >
+                    }
+                  </div>
+                </div>
+                <i class="fas fa-chevron-right result-arrow"></i>
+              </div>
+            }
+          </div>
+          @if (searchResults().length > 0) {
+            <button class="search-view-all" (click)="performSearch()">
+              View all results for "{{ searchValue() }}"
+              <i class="fas fa-arrow-right ml-1.5"></i>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Loading Skeletons -->
+      @if (isLoading() && searchResults().length === 0) {
+        <div class="search-section">
+          <div class="search-section-header">
+            <span class="search-section-title">
+              <i class="fas fa-spinner fa-spin mr-1.5 text-primary-500"></i>
+              Searching...
+            </span>
+          </div>
+          <div class="skeleton-grid">
+            @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+              <div class="skeleton-card">
+                <div class="skeleton-image skeleton-pulse"></div>
+                <div class="skeleton-lines">
+                  <div class="skeleton-line skeleton-pulse" style="width: 80%"></div>
+                  <div class="skeleton-line skeleton-pulse" style="width: 50%"></div>
+                  <div class="skeleton-line skeleton-pulse" style="width: 35%"></div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!isLoading() && searchValue().length >= 2 && searchResults().length === 0) {
+        <div class="search-empty">
+          <div class="empty-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <p class="empty-title">No products found</p>
+          <p class="empty-sub">Try different keywords or browse categories below</p>
+        </div>
+      }
+
+      <!-- Default State (no search query) -->
+      @if (!searchValue() || searchValue().length < 2) {
+        <!-- Recent Searches -->
+        @if (recentSearches().length > 0) {
+          <div class="search-section">
+            <div class="search-section-header">
+              <span class="search-section-title">
+                <i class="fas fa-clock mr-1.5 text-primary-400"></i>
+                Recent Searches
+              </span>
+              <button class="section-clear-btn" (click)="clearAllRecent()">Clear all</button>
+            </div>
+            <div class="recent-list">
+              @for (term of recentSearches(); track term; let i = $index) {
+                <button
+                  class="recent-chip"
+                  [style.animation-delay]="i * 50 + 'ms'"
+                  (click)="searchByRecent(term)"
+                >
+                  <i class="fas fa-history text-[10px] opacity-50"></i>
+                  <span>{{ term }}</span>
+                  <i class="fas fa-times recent-remove" (click)="removeRecent(term, $event)"></i>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Browse Categories -->
+        @if (categories().length > 0) {
+          <div class="search-section">
+            <div class="search-section-header">
+              <span class="search-section-title">
+                <i class="fas fa-th-large mr-1.5 text-primary-500"></i>
+                Browse Categories
+              </span>
+            </div>
+            <div class="category-grid">
+              @for (cat of categories(); track cat.id; let i = $index) {
+                <button
+                  class="category-card"
+                  [style.animation-delay]="i * 60 + 'ms'"
+                  (click)="navigateToCategory(cat.id)"
+                >
+                  <div class="category-icon">
+                    @if (cat.imageUrl) {
+                      <img
+                        [src]="imageBaseUrl + cat.imageUrl"
+                        [alt]="cat.categoryName"
+                        class="w-full h-full object-cover rounded-lg"
+                      />
+                    } @else {
+                      <i class="fas fa-tag"></i>
+                    }
+                  </div>
+                  <span class="category-name">{{ cat.categoryName }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Search Tips -->
+        <div class="search-section">
+          <div class="search-tips">
+            <div class="tip-item">
+              <i class="fas fa-lightbulb text-amber-400"></i>
+              <span>Type at least 2 characters to start searching</span>
+            </div>
+            <div class="tip-item">
+              <i class="fas fa-keyboard text-primary-400"></i>
+              <span>Press <kbd>Enter</kbd> to see all results</span>
+            </div>
+            <div class="tip-item">
+              <i class="fas fa-times-circle text-neutral-400"></i>
+              <span>Press <kbd>Esc</kbd> to close search</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

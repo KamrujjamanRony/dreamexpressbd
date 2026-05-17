@@ -1,0 +1,576 @@
+<!-- order-form.html -->
+<div class="space-y-4">
+  <h2 class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">
+    {{ modalTitle }}
+  </h2>
+
+  <form autocomplete="off" (submit)="onSubmit($event)" class="space-y-6">
+    <!-- Customer Information -->
+    <div class="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+      <h3 class="text-lg font-medium text-neutral-900 dark:text-white mb-3">
+        Customer Information
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- User Name -->
+        <div>
+          @let userName = form.userName();
+          @let userNameError = form.userName().invalid() && form.userName().touched();
+          <div class="relative pb-1">
+            <input
+              type="text"
+              [formField]="form.userName"
+              id="userName"
+              autocomplete="off"
+              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+              placeholder=" "
+            />
+            <label
+              for="userName"
+              class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              >Full Name *</label
+            >
+          </div>
+          @if (userNameError) {
+            <ul class="-mt-1 mb-1">
+              @for (error of userName.errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <!-- User Email -->
+        <div>
+          @let userEmail = form.userEmail();
+          @let userEmailError = form.userEmail().invalid() && form.userEmail().touched();
+          <div class="relative pb-1">
+            <input
+              type="email"
+              [formField]="form.userEmail"
+              id="userEmail"
+              autocomplete="off"
+              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+              placeholder=" "
+            />
+            <label
+              for="userEmail"
+              class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              >Email</label
+            >
+          </div>
+          @if (userEmailError) {
+            <ul class="-mt-1 mb-1">
+              @for (error of userEmail.errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+      <!-- Product Search -->
+      <div class="relative mb-4">
+        <div class="relative">
+          <svg
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            [value]="productSearch()"
+            (input)="onProductSearch($event)"
+            (focus)="showProductDropdown.set(true)"
+            placeholder="Search products to add..."
+            autocomplete="off"
+            class="w-full pl-10 pr-3 py-2.5 text-sm border border-neutral-300 dark:border-neutral-600 rounded-xl bg-transparent text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+          />
+        </div>
+        @if (showProductDropdown() && filteredProducts().length > 0) {
+          <div
+            class="absolute z-20 w-full mt-1 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-xl shadow-xl max-h-60 overflow-y-auto"
+          >
+            @for (product of filteredProducts(); track product.id) {
+              <button
+                type="button"
+                (click)="addProduct(product)"
+                class="w-full text-left px-3 py-2.5 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-sm flex items-center gap-3 transition-colors border-b border-neutral-100 dark:border-neutral-700 last:border-0"
+              >
+                <div
+                  class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-700"
+                >
+                  @if (getProductImageUrl(product)) {
+                    <img
+                      [src]="getProductImageUrl(product)"
+                      [alt]="product.title"
+                      class="w-full h-full object-cover"
+                    />
+                  } @else {
+                    <div class="w-full h-full flex items-center justify-center text-neutral-400">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                  }
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-neutral-900 dark:text-white truncate font-medium">
+                    {{ product.title }}
+                  </p>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    @if (product.sizes) {
+                      <span class="text-[0.65rem] text-neutral-400">Sizes available</span>
+                    }
+                    @if (getProductColors(product).length > 0) {
+                      <span class="text-[0.65rem] text-neutral-400">Colors available</span>
+                    }
+                  </div>
+                </div>
+                <span
+                  class="text-emerald-600 dark:text-emerald-400 font-semibold text-sm whitespace-nowrap"
+                  [innerHTML]="product.offerPrice || product.regularPrice || 0 | bdt"
+                ></span>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Size/Color Picker -->
+      @if (pendingProduct()) {
+        <div
+          class="mb-4 rounded-xl border-2 border-emerald-200 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10 overflow-hidden"
+        >
+          <div
+            class="flex items-center gap-3 p-4 bg-white dark:bg-neutral-800 border-b border-emerald-100 dark:border-emerald-800"
+          >
+            <div
+              class="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-700"
+            >
+              @if (getProductImageUrl(pendingProduct()!)) {
+                <img
+                  [src]="getProductImageUrl(pendingProduct()!)"
+                  [alt]="pendingProduct()!.title"
+                  class="w-full h-full object-cover"
+                />
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-neutral-800 dark:text-white truncate">
+                {{ pendingProduct()!.title }}
+              </p>
+              <p
+                class="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
+                [innerHTML]="
+                  pendingProduct()!.offerPrice || pendingProduct()!.regularPrice || 0 | bdt
+                "
+              ></p>
+            </div>
+            <button
+              type="button"
+              (click)="cancelAddProduct()"
+              class="w-7 h-7 rounded-full flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <p
+              class="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-3 uppercase tracking-wider"
+            >
+              Select Variant
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              @if (getProductSizes(pendingProduct()!).length > 0) {
+                <div>
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1.5"
+                    >Size</label
+                  >
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (size of getProductSizes(pendingProduct()!); track size) {
+                      <button
+                        type="button"
+                        (click)="selectedSize.set(size)"
+                        class="px-3 py-1.5 text-xs font-medium rounded-lg border-2 transition-all"
+                        [class]="
+                          selectedSize() === size
+                            ? 'border-emerald-500 bg-emerald-500 text-white'
+                            : 'border-neutral-200 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:border-emerald-300'
+                        "
+                      >
+                        {{ size }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+              @if (getProductColors(pendingProduct()!).length > 0) {
+                <div>
+                  <label
+                    class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1.5"
+                    >Color</label
+                  >
+                  <div class="flex flex-wrap gap-2">
+                    @for (
+                      colorObj of getProductColorsWithImage(pendingProduct()!);
+                      track colorObj.cn
+                    ) {
+                      <button
+                        type="button"
+                        (click)="selectedColor.set(colorObj.cn)"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all"
+                        [class]="
+                          selectedColor() === colorObj.cn
+                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                            : 'border-neutral-200 dark:border-neutral-600 hover:border-emerald-300'
+                        "
+                      >
+                        @if (colorObj.resolvedUrl) {
+                          <img
+                            [src]="colorObj.resolvedUrl"
+                            [alt]="colorObj.cn"
+                            class="w-7 h-7 rounded-md object-cover"
+                          />
+                        }
+                        <span
+                          class="text-xs font-medium"
+                          [class]="
+                            selectedColor() === colorObj.cn
+                              ? 'text-emerald-700 dark:text-emerald-400'
+                              : 'text-neutral-600 dark:text-neutral-300'
+                          "
+                          >{{ colorObj.cn }}</span
+                        >
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+            <div class="flex justify-end mt-4">
+              <button
+                type="button"
+                (click)="confirmAddProduct()"
+                class="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add to Order
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Selected Items - Product Cards -->
+      @if (orderItems().length > 0) {
+        <div class="space-y-2.5 mb-4">
+          @for (
+            item of orderItems();
+            track item.productId + (item.size || '') + (item.color || '')
+          ) {
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors shadow-sm"
+            >
+              <!-- Product Image -->
+              <div
+                class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-neutral-100 dark:bg-neutral-700"
+              >
+                @if (item.displayImage) {
+                  <img
+                    [src]="item.displayImage"
+                    [alt]="item.productName"
+                    class="w-full h-full object-cover"
+                  />
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center text-neutral-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                }
+              </div>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-neutral-800 dark:text-white truncate">
+                  {{ item.productName }}
+                </p>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                  @if (item.size) {
+                    <span
+                      class="text-[0.65rem] font-medium py-0.5 px-2 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                      >{{ item.size }}</span
+                    >
+                  }
+                  @if (item.color) {
+                    <span
+                      class="text-[0.65rem] font-medium py-0.5 px-2 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                      >{{ item.color }}</span
+                    >
+                  }
+                  <span class="text-xs text-neutral-400" [innerHTML]="item.price | bdt"></span>
+                </div>
+              </div>
+              <!-- Quantity Controls -->
+              <div
+                class="flex items-center gap-0.5 bg-neutral-100 dark:bg-neutral-700 rounded-lg p-0.5"
+              >
+                <button
+                  type="button"
+                  (click)="
+                    updateItemQuantity(item.productId, item.quantity - 1, item.size, item.color)
+                  "
+                  class="w-7 h-7 rounded-md flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-600 transition-colors text-sm font-medium"
+                >
+                  −
+                </button>
+                <span
+                  class="w-8 text-center text-sm font-semibold text-neutral-800 dark:text-white"
+                  >{{ item.quantity }}</span
+                >
+                <button
+                  type="button"
+                  (click)="
+                    updateItemQuantity(item.productId, item.quantity + 1, item.size, item.color)
+                  "
+                  class="w-7 h-7 rounded-md flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-600 transition-colors text-sm font-medium"
+                >
+                  +
+                </button>
+              </div>
+              <!-- Total -->
+              <div class="text-right min-w-16">
+                <span
+                  class="text-sm font-bold text-neutral-800 dark:text-white"
+                  [innerHTML]="item.price * item.quantity | bdt"
+                ></span>
+              </div>
+              <!-- Remove -->
+              <button
+                type="button"
+                (click)="removeItem(item.productId, item.size, item.color)"
+                class="w-7 h-7 rounded-full flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all shrink-0"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+        <div
+          class="flex justify-between items-center px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800"
+        >
+          <span class="text-sm font-medium text-neutral-600 dark:text-neutral-300"
+            >Subtotal ({{ orderItems().length }} items)</span
+          >
+          <span
+            class="text-sm font-bold text-emerald-600 dark:text-emerald-400"
+            [innerHTML]="calculatedSubtotal() | bdt"
+          ></span>
+        </div>
+      } @else {
+        <p class="text-sm text-neutral-500 dark:text-neutral-400 text-center py-4">
+          No items added yet. Search and select products above.
+        </p>
+      }
+
+      <!-- Payment Method -->
+      <div class="mt-4">
+        <div>
+          @let paymentMethod = form.paymentMethod();
+          @let paymentMethodError =
+            form.paymentMethod().invalid() && form.paymentMethod().touched();
+          <div class="relative pb-1">
+            <select
+              autocomplete="off"
+              [formField]="form.paymentMethod"
+              id="paymentMethod"
+              class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+            >
+              @for (method of paymentMethods; track method.value) {
+                <option [value]="method.value" class="dark:bg-neutral-900">
+                  {{ method.label }}
+                </option>
+              }
+            </select>
+            <label
+              for="paymentMethod"
+              class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              >Payment Method *</label
+            >
+          </div>
+          @if (paymentMethodError) {
+            <ul class="-mt-1 mb-1">
+              @for (error of paymentMethod.errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+
+      <!-- Total Amount Summary -->
+      <div class="mt-4 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+            >Delivery Charge:</span
+          >
+          <span
+            class="text-sm text-neutral-600 dark:text-neutral-400"
+            [innerHTML]="model().deliveryCharge | bdt"
+          ></span>
+        </div>
+        <div
+          class="flex justify-between items-center mt-2 pt-2 border-t border-neutral-200 dark:border-neutral-700"
+        >
+          <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+            >Total Amount:</span
+          >
+          <span
+            class="text-lg font-bold text-emerald-600 dark:text-emerald-400"
+            [innerHTML]="totalAmount() | bdt"
+          >
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <div class="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+      <h3 class="text-lg font-medium text-neutral-900 dark:text-white mb-3">Delivery Address</h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+            >Contact Number *</label
+          >
+          <input
+            type="tel"
+            [formField]="form.shippingAddress.contact"
+            placeholder="01XXXXXXXXX"
+            autocomplete="tel"
+            class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] placeholder:text-neutral-400"
+          />
+          @if (
+            form.shippingAddress.contact().invalid() && form.shippingAddress.contact().touched()
+          ) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.contact().errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+            >City *</label
+          >
+          <select
+            [ngModel]="model().shippingAddress.city"
+            (ngModelChange)="onCityChange($event)"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full py-2.5 px-3.5 pr-9 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none cursor-pointer focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)]"
+          >
+            <option value="">Select City</option>
+            @for (city of cityOptions; track city) {
+              <option [value]="city">{{ city }}</option>
+            }
+          </select>
+          @if (form.shippingAddress.city().invalid() && form.shippingAddress.city().touched()) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.city().errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+            >Street Address *</label
+          >
+          <input
+            type="text"
+            [formField]="form.shippingAddress.street"
+            placeholder="House no, Road, Area"
+            autocomplete="street-address"
+            class="w-full py-2.5 px-3.5 text-sm border-2 border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 outline-none transition-[border-color,box-shadow] duration-300 appearance-none focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.1)] placeholder:text-neutral-400"
+          />
+          @if (form.shippingAddress.street().invalid() && form.shippingAddress.street().touched()) {
+            <ul class="mt-1">
+              @for (error of form.shippingAddress.street().errors(); track error) {
+                <li class="text-xs text-red-600 dark:text-red-400">{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex gap-3 justify-end">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-white rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        [disabled]="form().invalid() || isSubmitted"
+        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        @if (isSubmitted) {
+          <span>Processing...</span>
+        } @else {
+          <span>{{ selectedOrder ? 'Update Order' : 'Create Order' }}</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

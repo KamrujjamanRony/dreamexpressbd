@@ -1,0 +1,336 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+  <!-- ========== LEFT: Image Gallery ========== -->
+  <div class="w-full">
+    <!-- Main Image -->
+    <div
+      class="image-container relative w-full overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700"
+      (mousemove)="onMouseMove($event)"
+      (mouseleave)="onMouseLeave()"
+    >
+      @if (discountPercent > 0) {
+        <span
+          class="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow"
+        >
+          -{{ discountPercent }}%
+        </span>
+      }
+      <img
+        [src]="mainImage"
+        alt="product"
+        class="w-full aspect-square object-cover object-top transition-opacity duration-300"
+      />
+      <div class="zoom w-full h-full" [ngStyle]="zoomStyle"></div>
+    </div>
+
+    <!-- Thumbnail Gallery -->
+    <div class="flex gap-2.5 mt-4 overflow-x-auto pb-1">
+      @for (img of galleryImages; track img) {
+        <button
+          type="button"
+          (click)="onViewImageClick(img)"
+          class="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer"
+          [ngClass]="
+            mainImage === img
+              ? 'border-primary-600 shadow-md'
+              : 'border-neutral-200 dark:border-neutral-600 hover:border-neutral-400'
+          "
+        >
+          <img [src]="img" alt="thumbnail" class="w-full h-full object-cover" loading="lazy" />
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ========== RIGHT: Product Details ========== -->
+  <div class="flex flex-col">
+    <!-- Title -->
+    @if (product()?.title || product()?.name) {
+      <h1
+        class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-50 leading-tight"
+      >
+        {{ product()?.title || product()?.name }}
+      </h1>
+    }
+
+    <!-- Brand & SKU -->
+    <div
+      class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-500 dark:text-neutral-400"
+    >
+      @if (product()?.brand) {
+        <span
+          >Brand:
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
+            product()?.brand
+          }}</span></span
+        >
+      }
+      @if (product()?.sku) {
+        <span
+          >SKU:
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
+            product()?.sku
+          }}</span></span
+        >
+      }
+      @if (product()?.categoryName) {
+        <span
+          >Category:
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">{{
+            product()?.categoryName
+          }}</span></span
+        >
+      }
+    </div>
+
+    <!-- Short Description -->
+    @if (product()?.shortDescription) {
+      <div
+        class="rte-content mt-3 text-sm text-neutral-600 dark:text-neutral-300"
+        [innerHTML]="product()?.shortDescription"
+      ></div>
+    }
+
+    <!-- Price Section -->
+    <div class="mt-5 flex items-end gap-3 flex-wrap">
+      @if (product()?.offerPrice && product()?.offerPrice < product()?.regularPrice) {
+        <span
+          class="text-3xl md:text-4xl font-bold text-primary-600"
+          [innerHTML]="product()?.offerPrice | bdt"
+        ></span>
+        <span
+          class="text-lg text-neutral-400 line-through"
+          [innerHTML]="product()?.regularPrice | bdt"
+        ></span>
+        @if (discountPercent > 0) {
+          <span
+            class="text-sm font-semibold text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-full"
+          >
+            Save {{ discountPercent }}%
+          </span>
+        }
+      } @else {
+        <span
+          class="text-3xl md:text-4xl font-bold text-primary-600"
+          [innerHTML]="product()?.regularPrice | bdt"
+        ></span>
+      }
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-neutral-200 dark:border-neutral-700 my-5"></div>
+
+    <!-- Color Variants -->
+    @if (colorOptions.length > 0) {
+      <div class="mb-5">
+        <h3
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
+        >
+          Color
+          @if (viewColor) {
+            <span class="ml-2 font-normal normal-case text-neutral-500">— {{ viewColor.cn }}</span>
+          }
+        </h3>
+        <div class="flex flex-wrap gap-3">
+          @for (color of colorOptions; track color.cn) {
+            <button
+              type="button"
+              (click)="onViewColorClick(color)"
+              class="relative rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer hover:shadow-md"
+              [ngClass]="
+                viewColor?.cn === color.cn
+                  ? 'border-primary-600 ring-2 ring-primary-200 dark:ring-primary-800 shadow-md'
+                  : 'border-neutral-200 dark:border-neutral-600'
+              "
+            >
+              <img
+                [src]="getColorDisplayUrl(color)"
+                [alt]="color.cn"
+                class="w-14 h-14 md:w-16 md:h-16 object-cover"
+                loading="lazy"
+              />
+              <div
+                class="absolute inset-x-0 bottom-0 bg-black/50 text-white text-2xs text-center py-0.5 font-medium"
+              >
+                {{ color.cn }}
+              </div>
+              @if (viewColor?.cn === color.cn) {
+                <div
+                  class="absolute top-1 right-1 w-4 h-4 bg-primary-600 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    class="w-2.5 h-2.5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              }
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Size Selection -->
+    @if (sizeOptions.length > 0) {
+      <div class="mb-5">
+        <h3
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
+        >
+          Size
+          @if (viewSize) {
+            <span class="ml-2 font-normal normal-case text-neutral-500">— {{ viewSize }}</span>
+          }
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          @for (size of sizeOptions; track size) {
+            <button
+              type="button"
+              (click)="onViewSizeClick(size)"
+              class="min-w-11 h-11 px-4 rounded-lg border-2 text-sm font-semibold uppercase transition-all duration-200 cursor-pointer"
+              [ngClass]="
+                viewSize === size
+                  ? 'border-primary-600 bg-primary-600 text-white shadow-md'
+                  : 'border-neutral-200 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:border-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+              "
+            >
+              {{ size }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Quantity -->
+    <div class="mb-6">
+      <h3
+        class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-3"
+      >
+        Quantity
+      </h3>
+      <div
+        class="inline-flex items-center border border-neutral-300 dark:border-neutral-600 rounded-lg overflow-hidden"
+      >
+        <button
+          type="button"
+          class="w-11 h-11 flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          [disabled]="count <= 1"
+          (click)="decrease()"
+        >
+          <fa-icon [icon]="faMinus" class="text-xs"></fa-icon>
+        </button>
+        <div
+          class="w-14 h-11 flex items-center justify-center text-base font-semibold text-neutral-800 dark:text-neutral-100 border-x border-neutral-300 dark:border-neutral-600"
+        >
+          {{ count }}
+        </div>
+        <button
+          type="button"
+          class="w-11 h-11 flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition cursor-pointer"
+          (click)="increase()"
+        >
+          <fa-icon [icon]="faPlus" class="text-xs"></fa-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button
+        type="button"
+        (click)="addToCart(product())"
+        class="flex-1 flex items-center justify-center gap-2.5 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer text-base"
+      >
+        <fa-icon [icon]="faShoppingBag"></fa-icon>
+        Add to Cart
+      </button>
+      <button
+        type="button"
+        (click)="buyNow(product())"
+        class="flex-1 flex items-center justify-center gap-2.5 px-6 py-3.5 border-2 border-primary-600 text-primary-600 dark:text-primary-300 hover:bg-primary-600 hover:text-white dark:hover:text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer text-base"
+      >
+        Buy Now
+      </button>
+    </div>
+
+    @if (catalogLink) {
+      <a
+        [href]="catalogLink"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-3 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-primary-600 text-primary-600 dark:text-primary-300 hover:bg-primary-600 hover:text-white dark:hover:text-white font-semibold transition-all duration-200"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 16V4m0 12-4-4m4 4 4-4M4 20h16"
+          />
+        </svg>
+        Download Catalog
+      </a>
+    }
+
+    <!-- Description -->
+    @if (product()?.description) {
+      <div class="mt-6 pt-5 border-t border-neutral-200 dark:border-neutral-700">
+        <h3
+          class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide mb-2"
+        >
+          Description
+        </h3>
+        <div
+          class="rte-content text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed"
+          [innerHTML]="product()?.description"
+        ></div>
+      </div>
+    }
+
+    <!-- Social Share -->
+    @if (product()?.facebookPost || product()?.youtubeLink) {
+      <div class="mt-5 pt-5 border-t border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center gap-3">
+          <span class="text-sm text-neutral-500 dark:text-neutral-400">
+            <fa-icon [icon]="faShareAlt" class="mr-1"></fa-icon> Share:
+          </span>
+          @if (product()?.facebookPost) {
+            <a
+              [href]="product()?.facebookPost"
+              target="_blank"
+              rel="noopener"
+              class="w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-500 hover:bg-blue-500 hover:text-white transition-all duration-200"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
+                />
+              </svg>
+            </a>
+          }
+          @if (product()?.youtubeLink) {
+            <a
+              [href]="product()?.youtubeLink"
+              target="_blank"
+              rel="noopener"
+              class="w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center text-neutral-500 hover:bg-red-500 hover:text-white transition-all duration-200"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+                />
+              </svg>
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

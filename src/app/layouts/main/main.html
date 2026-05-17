@@ -1,0 +1,13 @@
+<div class="relative">
+  <app-navbar />
+  <app-breadcrumb />
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  @defer (on viewport) {
+    <app-footer />
+  } @placeholder {
+    <div class="h-96"></div>
+  }
+  <app-bottom-nav />
+</div>

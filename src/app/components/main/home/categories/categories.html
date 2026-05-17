@@ -1,0 +1,60 @@
+<!-- categories -->
+<div class="py-4 mb-4">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-1 h-8 bg-primary-600 rounded-full"></div>
+    <h2
+      class="text-xl md:text-2xl lg:text-3xl font-bold text-neutral-800 dark:text-neutral-100 uppercase"
+    >
+      Shop by Category
+    </h2>
+  </div>
+  <swiper-container
+    mousewheel-force-to-axis="true"
+    slides-per-view="2"
+    [loop]="categories().length > 4"
+    navigation="true"
+    autoplay-delay="3000"
+    autoplay-disable-on-interaction="false"
+    space-between="16"
+    [breakpoints]="breakpoints"
+    speed="600"
+  >
+    @for (category of categories(); track $index) {
+      <swiper-slide>
+        <a
+          [routerLink]="['/shop']"
+          [queryParams]="{ category: category.id }"
+          class="relative block rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
+        >
+          <div class="overflow-hidden">
+            @if (category?.imageUrl) {
+              <img
+                [src]="imgURL + category.imageUrl"
+                class="w-full aspect-4/3 object-cover transition-transform duration-500 group-hover:scale-110"
+                [alt]="category?.categoryName"
+              />
+            } @else {
+              <img
+                [ngSrc]="'images/category/category-' + ($index + 1) + '.jpg'"
+                width="300"
+                height="300"
+                loading="lazy"
+                decoding="async"
+                class="w-full aspect-4/3 object-cover transition-transform duration-500 group-hover:scale-110"
+                alt="category-{{ $index + 1 }}"
+              />
+            }
+          </div>
+          <div
+            class="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent flex items-end p-4"
+          >
+            <span class="text-white text-base md:text-lg font-semibold drop-shadow-md">
+              {{ category?.categoryName }}
+            </span>
+          </div>
+        </a>
+      </swiper-slide>
+    }
+  </swiper-container>
+</div>
+<!-- categories end -->

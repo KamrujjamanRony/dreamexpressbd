@@ -1,0 +1,176 @@
+/* You can add global styles to this file, and also import other style files */
+/* Google Fonts loaded via <link> in index.html for non-blocking preload */
+@import 'tailwindcss';
+@import 'quill/dist/quill.snow.css';
+@import './app/components/shared/search-overlay/search-overlay.css';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ══════════════════════════════════════════════════════════
+   COLOR SYSTEM — Change these to rebrand the entire site
+   ══════════════════════════════════════════════════════════ */
+@theme {
+  /* ── Primary (buttons, links, CTAs, active states) — Crimson Red ── */
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #7f1d1d;
+  --color-primary-950: #450a0a;
+
+  /* ── Neutral (text, backgrounds, borders) — Warm Gray ── */
+  --color-neutral-50: #fafaf9;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-300: #d6d3d1;
+  --color-neutral-400: #a8a29e;
+  --color-neutral-500: #78716c;
+  --color-neutral-600: #57534e;
+  --color-neutral-700: #44403c;
+  --color-neutral-800: #292524;
+  --color-neutral-900: #1c1917;
+  --color-neutral-950: #0c0a09;
+
+  /* ── Dark Surfaces (dark mode backgrounds) — Deep Red-Black ── */
+  --color-dark-surface: #110a0a;
+  --color-dark-page: #140c0c;
+  --color-dark-panel: #1f1212;
+  --color-dark-card: #2a1a1a;
+  --color-dark-muted: #3d2828;
+  --color-dark-hover: #261515;
+  --color-dark-deep: #0f0808;
+  --color-dark-elevated: #2e1414;
+  --color-dark-scroll-track: #110a0a;
+  --color-dark-scroll-thumb: #3d2020;
+  --color-dark-scroll-hover: #4d2e2e;
+
+  /* ── Accent (secondary highlights) — Gold ── */
+  --color-accent: #d97706;
+  --color-accent-light: #f59e0b;
+
+  /* ── Black & White ── */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* ── Semantic Colors ── */
+  --color-brand: #7f1d1d;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-surface: #fffbeb;
+  --color-border: #e7e5e4;
+  --color-info: #0ea5e9;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans Bengali', 'Hind Siliguri', 'Segoe UI', sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* ── Dark Mode Scrollbar ── */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-dark-scroll-track);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-dark-scroll-thumb);
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark-scroll-hover);
+}
+
+/* ── Dark Mode Selection ── */
+.dark ::selection {
+  background: color-mix(in srgb, var(--color-primary-600) 35%, transparent);
+  color: var(--color-neutral-50);
+}
+
+/* ── Global Print Styles ── */
+@media print {
+  body.printing-voucher app-navbar,
+  body.printing-voucher app-breadcrumb,
+  body.printing-voucher app-footer,
+  body.printing-voucher app-bottom-nav,
+  body.printing-voucher app-social-chat,
+  body.printing-voucher .no-print {
+    display: none !important;
+  }
+  body.printing-voucher {
+    background: var(--color-white) !important;
+  }
+  body.printing-voucher app-order-confirmation {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Rich Text Editor (RTE) Content — Mobile-safe wrapping
+   Apply `.rte-content` to any [innerHTML] container that
+   renders WYSIWYG/rich-text editor output.
+   ══════════════════════════════════════════════════════════ */
+.rte-content {
+  /* Contain content within parent on small screens */
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-x: auto;
+}
+.rte-content,
+.rte-content * {
+  white-space: normal !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.rte-content img,
+.rte-content video,
+.rte-content iframe {
+  max-width: 100% !important;
+  height: auto;
+  display: inline-block;
+}
+.rte-content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.rte-content pre,
+.rte-content code {
+  white-space: pre-wrap !important;
+  word-break: break-word;
+}
+.rte-content p,
+.rte-content li,
+.rte-content span,
+.rte-content div,
+.rte-content h1,
+.rte-content h2,
+.rte-content h3,
+.rte-content h4,
+.rte-content h5,
+.rte-content h6 {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+@media (max-width: 640px) {
+  .rte-content {
+    font-size: 0.95rem;
+  }
+  .rte-content table {
+    font-size: 0.85rem;
+  }
+}

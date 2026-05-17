@@ -1,0 +1,59 @@
+<div class="space-y-10 md:space-y-14">
+  @if (categoryWiseProducts()) {
+    @for (category of categories(); track category) {
+      @if (categoryWiseProducts()[category.categoryName]) {
+        <div>
+          <!-- Section Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-8 bg-primary-600 rounded-full"></div>
+              <h2
+                class="text-xl md:text-2xl lg:text-3xl font-bold text-neutral-800 dark:text-neutral-100"
+              >
+                {{ category.categoryName }}
+              </h2>
+            </div>
+
+            @if (categoryWiseProducts()[category.categoryName]?.length > 4) {
+              <a
+                [routerLink]="['/shop']"
+                [queryParams]="{ category: category.categoryName }"
+                class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors group/link"
+              >
+                View All
+                <svg
+                  class="w-4 h-4 transition-transform group-hover/link:translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+            }
+          </div>
+          <!-- Product Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+            @for (
+              product of categoryWiseProducts()[category.categoryName].slice(0, 4);
+              track $index
+            ) {
+              <app-product-card [product]="product"></app-product-card>
+            }
+          </div>
+        </div>
+      }
+    }
+  } @else {
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+        <app-product-skeleton></app-product-skeleton>
+      }
+    </div>
+  }
+</div>

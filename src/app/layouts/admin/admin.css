@@ -1,0 +1,78 @@
+@reference "../../../styles.css";
+
+/* ── Quill Rich Text Editor ── */
+quill-editor {
+  @apply block w-full;
+}
+
+.ql-container,
+.ql-toolbar {
+  width: 100% !important;
+}
+
+.ql-container {
+  resize: none !important;
+}
+
+.ql-editor {
+  resize: none !important;
+  @apply overflow-y-auto;
+}
+
+/* Quill Dark Mode */
+.dark .ql-toolbar {
+  border-color: var(--color-neutral-700) !important;
+  background-color: var(--color-dark-panel);
+}
+
+.dark .ql-container {
+  border-color: var(--color-neutral-700) !important;
+  background-color: var(--color-dark-deep);
+}
+
+.dark .ql-editor {
+  color: var(--color-neutral-200);
+}
+
+.dark .ql-editor.ql-blank::before {
+  color: var(--color-neutral-500);
+}
+
+.dark .ql-toolbar .ql-stroke {
+  stroke: var(--color-neutral-400) !important;
+}
+
+.dark .ql-toolbar .ql-fill {
+  fill: var(--color-neutral-400) !important;
+}
+
+.dark .ql-toolbar .ql-picker-label {
+  color: var(--color-neutral-400) !important;
+}
+
+.dark .ql-toolbar .ql-picker-options {
+  background-color: var(--color-dark-card) !important;
+  border-color: var(--color-neutral-700) !important;
+}
+
+.dark .ql-toolbar .ql-picker-item {
+  color: var(--color-neutral-300) !important;
+}
+
+.dark .ql-toolbar button:hover .ql-stroke,
+.dark .ql-toolbar .ql-picker-label:hover .ql-stroke {
+  stroke: var(--color-success) !important;
+}
+
+.dark .ql-toolbar button:hover .ql-fill,
+.dark .ql-toolbar .ql-picker-label:hover .ql-fill {
+  fill: var(--color-success) !important;
+}
+
+.dark .ql-toolbar button.ql-active .ql-stroke {
+  stroke: var(--color-success) !important;
+}
+
+.dark .ql-toolbar button.ql-active .ql-fill {
+  fill: var(--color-success) !important;
+}

@@ -1,0 +1,383 @@
+<!-- blog-list.html -->
+@if (isView()) {
+  @if (showList()) {
+    <div class="p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Blog Management</h1>
+        @if (isInsert()) {
+          <button
+            type="button"
+            (click)="showList.set(false)"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            + Add Blog
+          </button>
+        }
+      </div>
+
+      <!-- Search -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow mb-6 p-4">
+        <div class="relative max-w-md">
+          <fa-icon
+            [icon]="faMagnifyingGlass"
+            class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+          ></fa-icon>
+          <input
+            #searchInput
+            autocomplete="off"
+            (input)="onSearch($event)"
+            type="text"
+            id="search"
+            placeholder="Search by Heading or SL"
+            class="w-full pl-10 pr-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+          />
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="text-center py-12">
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"
+          ></div>
+          <p class="mt-4 text-neutral-600 dark:text-neutral-400">Loading blogs...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @else if (hasError()) {
+        <div class="text-center py-12">
+          <p class="text-red-600 dark:text-red-400">Failed to load blogs. Please try again.</p>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @else if (filteredList().length === 0) {
+        <div class="text-center py-12">
+          <p class="text-neutral-500 dark:text-neutral-400">No blogs found.</p>
+        </div>
+      }
+
+      <!-- Table -->
+      @else {
+        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+              <thead class="bg-neutral-50 dark:bg-neutral-900">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Image
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    SL
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Heading
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Video Link
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Details
+                  </th>
+                  @if (isEdit() || isDelete()) {
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  }
+                </tr>
+              </thead>
+              <tbody
+                class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700"
+              >
+                @for (item of filteredList(); track item?.id || $index) {
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="relative">
+                        @if (getImageUrl(item.imageUrl)) {
+                          <img
+                            [src]="imgURL + getImageUrl(item.imageUrl)"
+                            alt="Blog Image"
+                            class="max-w-20 max-h-16 object-contain rounded"
+                          />
+                        } @else {
+                          <div
+                            class="w-16 h-16 bg-neutral-200 dark:bg-neutral-700 rounded flex items-center justify-center"
+                          >
+                            <span class="text-neutral-400 dark:text-neutral-500 text-xs"
+                              >No image</span
+                            >
+                          </div>
+                        }
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium">{{ item?.sl || '-' }}</td>
+                    <td class="px-6 py-4 font-medium max-w-xs truncate">{{ item?.heading }}</td>
+                    <td class="px-6 py-4 max-w-xs truncate">{{ item?.vLink || '-' }}</td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                      >
+                        {{ item?.dtls?.length || 0 }} items
+                      </span>
+                    </td>
+                    <td class="px-6 py-4">
+                      @if (isEdit()) {
+                        <button
+                          class="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
+                          (click)="onUpdate(item)"
+                          title="Edit"
+                        >
+                          <fa-icon [icon]="faPencil"></fa-icon>
+                        </button>
+                      }
+                      @if (isDelete()) {
+                        <button
+                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          (click)="onDelete(item?.id)"
+                          title="Delete"
+                        >
+                          <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="p-6">
+      <div class="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl mx-auto">
+        <div class="p-6">
+          <!-- Form Header -->
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+              {{ selected() ? 'Edit' : 'Add' }} Blog
+            </h2>
+            <button
+              class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 text-2xl leading-none"
+              (click)="onToggleList()"
+              title="Close"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- Form Fields -->
+          <form autocomplete="off" class="space-y-6" (submit)="onSubmit($event)">
+            <!-- SL & Heading row -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <!-- SL -->
+              <div>
+                <div class="relative pb-2">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    [ngModel]="sl()"
+                    (ngModelChange)="sl.set($event)"
+                    [ngModelOptions]="{ standalone: true }"
+                    id="sl"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    for="sl"
+                    class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                    >SL</label
+                  >
+                </div>
+              </div>
+
+              <!-- Heading -->
+              <div class="md:col-span-3">
+                <div class="relative pb-2">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    [ngModel]="heading()"
+                    (ngModelChange)="heading.set($event)"
+                    [ngModelOptions]="{ standalone: true }"
+                    id="heading"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    for="heading"
+                    class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                    >Heading *</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Link -->
+            <div>
+              <div class="relative pb-2">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  [ngModel]="vLink()"
+                  (ngModelChange)="vLink.set($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                  id="vLink"
+                  class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                  placeholder=" "
+                />
+                <label
+                  for="vLink"
+                  class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                  >YouTube Video Link</label
+                >
+              </div>
+            </div>
+
+            <!-- Gallery Image Picker (Main Image) -->
+            <app-gallery-picker
+              type="Blog"
+              label="Main Image"
+              [required]="!selected()"
+              [selectedId]="selectedGalleryId()"
+              [selectedUrl]="selectedGalleryUrl()"
+              (imagePicked)="onGalleryPicked($event)"
+              (imageCleared)="clearGalleryImage()"
+            />
+
+            <!-- Detail Rows Section -->
+            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-100">
+                  Detail Sections
+                </h3>
+                <button
+                  type="button"
+                  (click)="addDetailRow()"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
+                >
+                  <fa-icon [icon]="faPlus" class="text-xs"></fa-icon>
+                  Add Section
+                </button>
+              </div>
+
+              @if (dtls().length === 0) {
+                <p class="text-sm text-neutral-400 dark:text-neutral-500 italic">
+                  No detail sections added yet. Click "Add Section" to add one.
+                </p>
+              }
+
+              @for (dtl of dtls(); track $index) {
+                <div
+                  class="relative border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 mb-4 bg-neutral-50 dark:bg-neutral-900/50"
+                >
+                  <!-- Remove button -->
+                  <button
+                    type="button"
+                    (click)="removeDetailRow($index)"
+                    class="absolute top-2 right-2 text-rose-50 bg-rose-500 hover:bg-rose-600 w-7 h-7 flex items-center justify-center rounded cursor-pointer transition-colors"
+                    title="Remove section"
+                  >
+                    <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                  </button>
+
+                  <p class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-3">
+                    Section {{ $index + 1 }}
+                  </p>
+
+                  <div class="space-y-4">
+                    <!-- Title -->
+                    <div class="relative pb-2">
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        [ngModel]="dtl.title"
+                        (ngModelChange)="updateDtlTitle($index, $event)"
+                        [ngModelOptions]="{ standalone: true }"
+                        [id]="'dtl-title-' + $index"
+                        class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                        placeholder=" "
+                      />
+                      <label
+                        [for]="'dtl-title-' + $index"
+                        class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-neutral-50 dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto left-1"
+                        >Title</label
+                      >
+                    </div>
+
+                    <!-- Description (Quill) -->
+                    <div class="pb-2">
+                      <label
+                        class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                        >Description</label
+                      >
+                      <quill-editor
+                        [(ngModel)]="dtl.desc"
+                        [ngModelOptions]="{ standalone: true }"
+                        [modules]="quillModules"
+                        [styles]="{ height: '120px' }"
+                        placeholder="Description"
+                      ></quill-editor>
+                    </div>
+
+                    <!-- Detail Image Gallery Picker -->
+                    <app-gallery-picker
+                      type="Blog"
+                      label="Section Image"
+                      [selectedId]="dtl.iUrl"
+                      [selectedUrl]="getImageUrl(dtl.iUrl)"
+                      (imagePicked)="onDtlGalleryPicked($index, $event)"
+                      (imageCleared)="clearDtlGalleryImage($index)"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="flex gap-2 pt-4">
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                [disabled]="isSubmitted()"
+                class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                @if (isSubmitted()) {
+                  <span>Submitting...</span>
+                } @else {
+                  <span>{{ selected() ? 'Update' : 'Save' }}</span>
+                }
+              </button>
+
+              <!-- Close Button -->
+              <button
+                type="button"
+                (click)="onToggleList()"
+                class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+} @else {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
+}

@@ -1,0 +1,152 @@
+<section
+  class="admin-login-bg relative flex min-h-screen items-center justify-center overflow-hidden"
+>
+  <!-- Animated background shapes -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      class="absolute -top-[100px] -right-[80px] size-[400px] rounded-full bg-primary-400/10 blur-[1px] animate-pulse"
+    ></div>
+    <div
+      class="absolute -bottom-[60px] -left-[60px] size-[300px] rounded-full bg-primary-700/10 blur-[1px] animate-pulse [animation-delay:200ms]"
+    ></div>
+    <div
+      class="absolute top-1/2 left-[10%] size-[200px] rounded-full bg-primary-400/10 blur-[1px] animate-pulse [animation-delay:400ms]"
+    ></div>
+    <div
+      class="absolute top-[20%] right-[15%] size-[150px] rounded-full bg-primary-600/10 blur-[1px] animate-pulse [animation-delay:600ms]"
+    ></div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="relative z-10 mx-4 w-full max-w-md">
+    <div
+      class="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-neutral-700/30 overflow-hidden"
+    >
+      <!-- Header -->
+      <div
+        class="bg-linear-to-r from-primary-600 via-primary-600 to-primary-700 px-8 py-8 text-center"
+      >
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 rotate-3 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm animate-pulse"
+        >
+          <fa-icon [icon]="faShieldHalved" class="text-white text-3xl"></fa-icon>
+        </div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
+        <p class="mt-1 text-sm text-primary-200">Sign in to access the dashboard</p>
+      </div>
+
+      <!-- Form -->
+      <div class="px-8 py-8">
+        <form autocomplete="off" class="space-y-5" (submit)="onSubmit()">
+          <!-- Username -->
+          <div>
+            @let userNameField = form.userName();
+            @let userNameError = form.userName().invalid() && form.userName().touched();
+            <label
+              for="userName"
+              class="block mb-1.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+            >
+              Username
+            </label>
+            <div class="relative">
+              <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400">
+                <fa-icon [icon]="faUser" class="text-sm"></fa-icon>
+              </div>
+              <input
+                type="text"
+                id="userName"
+                [formField]="form.userName"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-sm text-neutral-800 placeholder-neutral-400 transition-all duration-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40 focus:outline-none dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100"
+                [class.border-red-400]="userNameError"
+                placeholder="Enter your username"
+                autocomplete="off"
+              />
+            </div>
+            @if (userNameError) {
+              <ul class="mt-1">
+                @for (error of userNameField.errors(); track error) {
+                  <li class="text-xs text-red-500">{{ error.message }}</li>
+                }
+              </ul>
+            }
+          </div>
+
+          <!-- Password -->
+          <div>
+            @let passwordField = form.password();
+            @let passwordError = form.password().invalid() && form.password().touched();
+            <label
+              for="password"
+              class="block mb-1.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+            >
+              Password
+            </label>
+            <div class="relative">
+              <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400">
+                <fa-icon [icon]="faLock" class="text-sm"></fa-icon>
+              </div>
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                id="password"
+                [formField]="form.password"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pr-11 pl-10 text-sm text-neutral-800 placeholder-neutral-400 transition-all duration-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40 focus:outline-none dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100"
+                [class.border-red-400]="passwordError"
+                placeholder="Enter your password"
+                autocomplete="off"
+              />
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer text-neutral-400 transition hover:text-primary-500"
+              >
+                <fa-icon [icon]="showPassword() ? faEyeSlash : faEye" class="text-sm"></fa-icon>
+              </button>
+            </div>
+            @if (passwordError) {
+              <ul class="mt-1">
+                @for (error of passwordField.errors(); track error) {
+                  <li class="text-xs text-red-500">{{ error.message }}</li>
+                }
+              </ul>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            [disabled]="loading()"
+            class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-primary-600 to-primary-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 transition-all duration-300 hover:-translate-y-px hover:from-primary-700 hover:to-primary-700 hover:shadow-primary-500/40 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            @if (loading()) {
+              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  fill="none"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>Signing in...</span>
+            } @else {
+              <fa-icon [icon]="faRightToBracket"></fa-icon>
+              <span>Sign In</span>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-neutral-500 dark:text-neutral-400 mt-6">
+      &copy; {{ currentYear }} Admin Panel &middot; Secured Access
+    </p>
+  </div>
+</section>

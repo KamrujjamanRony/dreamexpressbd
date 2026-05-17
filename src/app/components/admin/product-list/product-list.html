@@ -1,0 +1,917 @@
+<!-- product-list.html -->
+@if (isView()) {
+  @if (showList()) {
+    <div class="p-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">Product Management</h1>
+        @if (isInsert()) {
+          <button
+            type="button"
+            (click)="showList.set(false)"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            + Add Product
+          </button>
+        }
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="bg-white dark:bg-neutral-800 rounded-lg shadow mb-6 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="relative">
+            <fa-icon
+              [icon]="faMagnifyingGlass"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+            ></fa-icon>
+            <input
+              #searchInput
+              autocomplete="off"
+              (input)="onSearch($event)"
+              type="text"
+              id="search"
+              placeholder="Search by Title, Brand or Model"
+              class="w-full pl-10 pr-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+            />
+          </div>
+
+          <select
+            autocomplete="off"
+            #categoryFilter
+            (change)="onFilterByCategory($event)"
+            class="px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+          >
+            <option value="">All Categories</option>
+            @for (category of categories(); track category.id) {
+              <option [value]="category.id">{{ category.categoryName }}</option>
+            }
+          </select>
+
+          <select
+            autocomplete="off"
+            #brandFilter
+            (change)="onFilterByBrand($event)"
+            class="px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+          >
+            <option value="">All Brands</option>
+            @for (brand of brands(); track brand.id) {
+              <option [value]="brand.brandName">{{ brand.brandName }}</option>
+            }
+          </select>
+
+          <select
+            autocomplete="off"
+            #statusFilter
+            (change)="onFilterByStatus($event)"
+            class="px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:text-white"
+          >
+            <option value="">All Status</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button
+            (click)="resetFilters()"
+            class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+          >
+            Reset Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="text-center py-12">
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"
+          ></div>
+          <p class="mt-4 text-neutral-600 dark:text-neutral-400">Loading products...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @else if (hasError()) {
+        <div class="text-center py-12">
+          <p class="text-red-600 dark:text-red-400">Failed to load products. Please try again.</p>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @else if (filteredList().length === 0) {
+        <div class="text-center py-12">
+          <p class="text-neutral-500 dark:text-neutral-400">No products found.</p>
+        </div>
+      }
+
+      <!-- Table -->
+      @else {
+        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+              <thead class="bg-neutral-50 dark:bg-neutral-900">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Image
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Title
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Category
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Brand
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Model
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Price
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                  >
+                    Post By
+                  </th>
+                  @if (isEdit() || isDelete()) {
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  }
+                </tr>
+              </thead>
+              <tbody
+                class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700"
+              >
+                @for (item of filteredList(); track item.id) {
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="w-12 h-12">
+                        @if (item.imageUrl) {
+                          <img
+                            [src]="
+                              item.resolvedImageUrl ? imgURL + item.resolvedImageUrl : emptyImg
+                            "
+                            alt="Product Image"
+                            class="w-full h-full object-cover rounded"
+                          />
+                        } @else {
+                          <div
+                            class="w-12 h-12 bg-neutral-100 dark:bg-neutral-700 rounded flex items-center justify-center"
+                          >
+                            <span class="text-neutral-400 text-xs">No img</span>
+                          </div>
+                        }
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-sm font-medium text-neutral-900 dark:text-white max-w-xs"
+                    >
+                      <div class="truncate" [title]="item.title">{{ item.title }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ getCategoryName(item.categoryId) }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item.brand || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item.model || '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                        ৳{{ item.offerPrice || item.regularPrice }}
+                      </div>
+                      @if (item.regularPrice && item.offerPrice) {
+                        <div class="text-xs text-neutral-500 line-through">
+                          ৳{{ item.regularPrice }}
+                        </div>
+                      }
+                    </td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="px-2 py-1 text-xs rounded-full"
+                        [class.bg-green-100]="item.isActive"
+                        [class.text-green-800]="item.isActive"
+                        [class.bg-red-100]="!item.isActive"
+                        [class.text-red-800]="!item.isActive"
+                      >
+                        {{ item.isActive ? 'Active' : 'Inactive' }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                      {{ item.postBy || '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium space-x-2">
+                      @if (isEdit()) {
+                        <button
+                          class="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
+                          (click)="onUpdate(item)"
+                          title="Edit"
+                        >
+                          <fa-icon [icon]="faPencil"></fa-icon>
+                        </button>
+                      }
+                      @if (isDelete()) {
+                        <button
+                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          (click)="onDelete(item.id)"
+                          title="Delete"
+                        >
+                          <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="p-6">
+      <div class="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl mx-auto">
+        <div class="p-6">
+          <!-- Form Header -->
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+              {{ selected() ? 'Edit' : 'Add' }} Product
+            </h2>
+            <button
+              class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 text-2xl leading-none"
+              (click)="onToggleList()"
+              title="Close"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="border-b border-neutral-200 dark:border-neutral-700 mb-6">
+            <nav class="-mb-px flex space-x-8">
+              <button
+                type="button"
+                (click)="activeTab.set('basic')"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                [class.border-emerald-500]="activeTab() === 'basic'"
+                [class.text-emerald-600]="activeTab() === 'basic'"
+                [class.border-transparent]="activeTab() !== 'basic'"
+                [class.text-neutral-500]="activeTab() !== 'basic'"
+              >
+                Basic Info
+              </button>
+              <button
+                type="button"
+                (click)="activeTab.set('images')"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                [class.border-emerald-500]="activeTab() === 'images'"
+                [class.text-emerald-600]="activeTab() === 'images'"
+                [class.border-transparent]="activeTab() !== 'images'"
+                [class.text-neutral-500]="activeTab() !== 'images'"
+              >
+                Images
+              </button>
+              <button
+                type="button"
+                (click)="activeTab.set('related')"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                [class.border-emerald-500]="activeTab() === 'related'"
+                [class.text-emerald-600]="activeTab() === 'related'"
+                [class.border-transparent]="activeTab() !== 'related'"
+                [class.text-neutral-500]="activeTab() !== 'related'"
+              >
+                Related Products
+              </button>
+              <button
+                type="button"
+                (click)="activeTab.set('colors')"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                [class.border-emerald-500]="activeTab() === 'colors'"
+                [class.text-emerald-600]="activeTab() === 'colors'"
+                [class.border-transparent]="activeTab() !== 'colors'"
+                [class.text-neutral-500]="activeTab() !== 'colors'"
+              >
+                Colors
+              </button>
+            </nav>
+          </div>
+
+          <form autocomplete="off" (submit)="onSubmit($event)">
+            <!-- Tab 1: Basic Info -->
+            @if (activeTab() === 'basic') {
+              <div class="space-y-6">
+                <!-- Title -->
+                <div>
+                  @let title = form.title();
+                  @let titleError = form.title().invalid() && form.title().touched();
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="text"
+                      [formField]="form.title"
+                      id="title"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="title"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Title *</label
+                    >
+                  </div>
+                  @if (titleError) {
+                    <ul class="-mt-2 mb-2">
+                      @for (error of title.errors(); track error) {
+                        <li class="text-sm text-red-600">{{ error.message }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+
+                <!-- Category and Brand Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Category (categoryId) -->
+                  <div>
+                    <div class="relative pb-2">
+                      <select
+                        autocomplete="off"
+                        [formField]="form.categoryId"
+                        id="categoryId"
+                        class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      >
+                        <option value="" disabled selected class="dark:bg-neutral-900">
+                          Select a category
+                        </option>
+                        @for (cat of categories(); track cat.id) {
+                          <option [value]="cat.id" class="dark:bg-neutral-900">
+                            {{ cat.categoryName }}
+                          </option>
+                        }
+                      </select>
+                      <label
+                        for="categoryId"
+                        class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                        >Category *</label
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Brand -->
+                  <div>
+                    <!-- @let brandField = form.brand(); -->
+                    <div class="relative pb-2">
+                      <select
+                        autocomplete="off"
+                        [formField]="form.brand"
+                        id="brand"
+                        class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      >
+                        <option value="" disabled selected class="dark:bg-neutral-900">
+                          Select a brand
+                        </option>
+                        @for (brand of brands(); track brand.id) {
+                          <option [value]="brand.brandName" class="dark:bg-neutral-900">
+                            {{ brand.brandName }}
+                          </option>
+                        }
+                      </select>
+                      <label
+                        for="brand"
+                        class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                        >Brand *</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Model and Origin Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="text"
+                      [formField]="form.model"
+                      id="model"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="model"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Model</label
+                    >
+                  </div>
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="text"
+                      [formField]="form.origin"
+                      id="origin"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="origin"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Origin</label
+                    >
+                  </div>
+                </div>
+
+                <!-- sl, SKU and Sizes Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="number"
+                      [formField]="form.sl"
+                      id="sl"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="sl"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Serial</label
+                    >
+                  </div>
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="text"
+                      [formField]="form.sku"
+                      id="sku"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="sku"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >SKU</label
+                    >
+                  </div>
+                </div>
+
+                <!-- Price Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="number"
+                      [formField]="form.regularPrice"
+                      id="regularPrice"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="regularPrice"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Regular Price *</label
+                    >
+                  </div>
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="number"
+                      [formField]="form.offerPrice"
+                      id="offerPrice"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="offerPrice"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Offer Price</label
+                    >
+                  </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="url"
+                      [formField]="form.youtubeLink"
+                      id="youtubeLink"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="youtubeLink"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >YouTube Link</label
+                    >
+                  </div>
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="url"
+                      [formField]="form.facebookPost"
+                      id="facebookPost"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="facebookPost"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Facebook Post</label
+                    >
+                  </div>
+                </div>
+
+                <!-- sizes -->
+                <div class="pb-2">
+                  <div class="relative pb-2">
+                    <input
+                      autocomplete="off"
+                      type="text"
+                      [formField]="form.sizes"
+                      id="sizes"
+                      class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                      placeholder=" "
+                    />
+                    <label
+                      for="sizes"
+                      class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                      >Sizes (comma separated)</label
+                    >
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="pb-2">
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                    >Description</label
+                  >
+                  <quill-editor
+                    [(ngModel)]="editorDescription"
+                    [ngModelOptions]="{ standalone: true }"
+                    [modules]="quillModules"
+                    [styles]="{ height: '120px' }"
+                    placeholder="Description"
+                  ></quill-editor>
+                </div>
+
+                <!-- Special Feature -->
+                <div class="pb-2">
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                    >Special Feature</label
+                  >
+                  <quill-editor
+                    [(ngModel)]="editorSpecialFeature"
+                    [ngModelOptions]="{ standalone: true }"
+                    [modules]="quillModules"
+                    [styles]="{ height: '120px' }"
+                    placeholder="Special Feature"
+                  ></quill-editor>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="pb-2">
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                    >Additional Information</label
+                  >
+                  <quill-editor
+                    [(ngModel)]="editorAdditionalInfo"
+                    [ngModelOptions]="{ standalone: true }"
+                    [modules]="quillModules"
+                    [styles]="{ height: '120px' }"
+                    placeholder="Additional Information"
+                  ></quill-editor>
+                </div>
+
+                <!-- Active Status -->
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    [formField]="form.isActive"
+                    id="isActive"
+                    class="w-4 h-4 text-emerald-600 bg-neutral-100 border-neutral-300 rounded focus:ring-emerald-500"
+                  />
+                  <label for="isActive" class="ml-2 text-sm font-medium"> Active Product </label>
+                </div>
+              </div>
+            }
+
+            <!-- Tab 2: Images -->
+            @if (activeTab() === 'images') {
+              <div class="space-y-6">
+                <!-- Main Image via Gallery Picker -->
+                <app-gallery-picker
+                  type="Product"
+                  label="Main Image"
+                  [required]="!selected()"
+                  [selectedId]="selectedGalleryId()"
+                  [selectedUrl]="selectedGalleryUrl()"
+                  (imagePicked)="onMainImagePicked($event)"
+                  (imageCleared)="clearMainImage()"
+                />
+
+                <!-- Additional Images -->
+                <div class="pb-2">
+                  <label class="block text-sm font-medium text-neutral-900 dark:text-white mb-3"
+                    >Additional Images</label
+                  >
+
+                  @if (productImages().length > 0) {
+                    <div class="flex flex-wrap gap-3 mb-4">
+                      @for (img of productImages(); track $index; let i = $index) {
+                        <div class="relative">
+                          <img
+                            [src]="imgURL + img.url"
+                            alt="Image {{ i + 1 }}"
+                            class="h-24 w-24 object-contain rounded border bg-neutral-100 dark:bg-neutral-800"
+                          />
+                          <button
+                            type="button"
+                            (click)="removeProductImage(i)"
+                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                            title="Remove"
+                          >
+                            <fa-icon [icon]="faTrash" class="text-xs"></fa-icon>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+
+                  <app-gallery-picker
+                    type="Product"
+                    label="Add Another Image"
+                    [selectedId]="addImageGalleryId()"
+                    [selectedUrl]="addImageGalleryUrl()"
+                    (imagePicked)="onAddProductImage($event)"
+                    (imageCleared)="clearAddImagePicker()"
+                  />
+                </div>
+
+                <!-- Catalog URL -->
+                <div class="relative pb-2">
+                  <input
+                    autocomplete="off"
+                    type="url"
+                    [formField]="form.catalogURL"
+                    id="catalogURL"
+                    class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-neutral-900 dark:text-white bg-transparent rounded-lg border border-neutral-300 dark:border-neutral-600 appearance-none focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    for="catalogURL"
+                    class="absolute text-sm text-neutral-500 dark:text-neutral-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-left bg-white dark:bg-neutral-900 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+                    >Catalog URL</label
+                  >
+                </div>
+              </div>
+            }
+
+            <!-- Tab 3: Colors -->
+            @if (activeTab() === 'colors') {
+              <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-lg font-medium">Product Colors</h3>
+                  <button
+                    type="button"
+                    (click)="addColor()"
+                    class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-1"
+                  >
+                    <fa-icon [icon]="faPlus"></fa-icon> Add Color
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  @for (color of colorsList(); track $index; let i = $index) {
+                    <div class="border rounded-lg p-4 bg-neutral-50 dark:bg-neutral-800">
+                      <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-medium">Color #{{ i + 1 }}</h4>
+                        <button
+                          type="button"
+                          (click)="removeColor(i)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <fa-icon [icon]="faTrash"></fa-icon>
+                        </button>
+                      </div>
+
+                      <div class="space-y-3">
+                        <div>
+                          <label class="block text-sm font-medium mb-1">Color Name</label>
+                          <input
+                            autocomplete="off"
+                            type="text"
+                            [(ngModel)]="color.cn"
+                            [ngModelOptions]="{ standalone: true }"
+                            class="w-full px-3 py-2 border border-neutral-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 dark:bg-neutral-700 dark:border-neutral-600"
+                            placeholder="e.g., Red, Blue, Black"
+                          />
+                        </div>
+
+                        <app-gallery-picker
+                          type="Product"
+                          label="Color Swatch Image"
+                          [selectedId]="color.id"
+                          [selectedUrl]="color.resolvedUrl || ''"
+                          (imagePicked)="onColorImagePicked(i, $event)"
+                          (imageCleared)="clearColorImage(i)"
+                        />
+                      </div>
+                    </div>
+                  }
+
+                  @if (colorsList().length === 0) {
+                    <p class="text-center text-neutral-500 py-4 col-span-2">
+                      No colors added yet. Click "Add Color" to start.
+                    </p>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Tab 4: Related Products -->
+            @if (activeTab() === 'related') {
+              <div class="space-y-6">
+                <h3 class="text-lg font-medium">Related Products</h3>
+
+                <!-- Search Input -->
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <fa-icon [icon]="faMagnifyingGlass" class="text-neutral-400"></fa-icon>
+                  </div>
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    [(ngModel)]="relatedSearchQuery"
+                    [ngModelOptions]="{ standalone: true }"
+                    (input)="filterRelatedProducts()"
+                    placeholder="Search products by title, brand, or model..."
+                    class="w-full pl-10 pr-4 py-2 border border-neutral-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                </div>
+
+                <!-- Product Selection -->
+                <div>
+                  <label class="block text-sm font-medium mb-2"> Select Related Products </label>
+
+                  <!-- Loading State -->
+                  @if (isFilteringRelated()) {
+                    <div class="text-center py-4">
+                      <span class="text-neutral-500">Searching...</span>
+                    </div>
+                  } @else {
+                    <!-- Products List -->
+                    <div class="border rounded-lg p-4 max-h-80 overflow-y-auto">
+                      @if (filteredRelatedProducts().length === 0) {
+                        <p class="text-center text-neutral-500 py-4">
+                          No products found matching your search.
+                        </p>
+                      } @else {
+                        @for (product of filteredRelatedProducts(); track product.id) {
+                          @if (product.id !== selected()?.id) {
+                            <div
+                              class="flex items-center mb-3 p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded"
+                            >
+                              <input
+                                type="checkbox"
+                                [id]="'related_' + product.id"
+                                [value]="product.id"
+                                (change)="toggleRelatedProduct(product.id, $event)"
+                                [checked]="isProductRelated(product.id)"
+                                class="w-4 h-4 text-emerald-600 bg-neutral-100 border-neutral-300 rounded focus:ring-emerald-500"
+                              />
+                              <label
+                                [for]="'related_' + product.id"
+                                class="ml-2 flex-1 flex items-center cursor-pointer"
+                              >
+                                <!-- Product Image -->
+                                <div class="w-10 h-10 mr-3 shrink-0">
+                                  @if (product.resolvedImageUrl) {
+                                    <img
+                                      [src]="imgURL + product.resolvedImageUrl"
+                                      [alt]="product.title"
+                                      class="w-10 h-10 object-cover rounded"
+                                      loading="lazy"
+                                    />
+                                  } @else {
+                                    <div
+                                      class="w-10 h-10 bg-neutral-200 rounded flex items-center justify-center"
+                                    >
+                                      <span class="text-xs text-neutral-400">No img</span>
+                                    </div>
+                                  }
+                                </div>
+
+                                <!-- Product Info -->
+                                <div class="flex-1 min-w-0">
+                                  <div class="text-sm font-medium truncate">
+                                    {{ product.title }}
+                                  </div>
+                                  <div class="text-xs text-neutral-500">
+                                    @if (product.brand) {
+                                      <span class="mr-2">{{ product.brand }}</span>
+                                    }
+                                    @if (product.model) {
+                                      <span>| {{ product.model }}</span>
+                                    }
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                          }
+                        }
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Selected Related Products Summary -->
+                @if (relatedProductsList().length > 0) {
+                  <div>
+                    <h4 class="text-sm font-medium mb-2">
+                      Selected Products ({{ relatedProductsList().length }})
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      @for (id of relatedProductsList(); track id) {
+                        <span
+                          class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-sm flex items-center"
+                        >
+                          {{ getProductTitle(id) }}
+                          <button
+                            type="button"
+                            (click)="removeRelatedProduct(id)"
+                            class="ml-1 text-emerald-600 hover:text-emerald-800 font-bold"
+                            title="Remove"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- Quick Selection Help -->
+                <div class="text-xs text-neutral-500 border-t pt-4">
+                  <p>
+                    Total available products: {{ availableProducts().length }} | Selected:
+                    {{ relatedProductsList().length }}
+                  </p>
+                </div>
+              </div>
+            }
+
+            <!-- Submit Buttons -->
+            <div class="flex gap-2 pt-4">
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                [disabled]="form().invalid() || isSubmitted()"
+                class="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                @if (isSubmitted()) {
+                  <span>Submitting...</span>
+                } @else {
+                  <span>{{ selected() ? 'Update' : 'Save' }}</span>
+                }
+              </button>
+
+              <!-- Close Button -->
+              <button
+                type="button"
+                (click)="onToggleList()"
+                class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+} @else {
+  <p class="text-3xl font-bold text-center p-10 text-red-600">
+    You don't have permission to view this page.
+  </p>
+}

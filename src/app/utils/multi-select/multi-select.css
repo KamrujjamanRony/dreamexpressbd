@@ -1,0 +1,19 @@
+@reference "../../../styles.css";
+
+/* Scrollbar styling */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-300) var(--color-surface);
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  @apply w-1.5;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-surface rounded-[3px];
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 rounded-[3px];
+}

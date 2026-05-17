@@ -1,0 +1,71 @@
+@for (position of positions; track position) {
+  <div class="fixed z-9999 flex flex-col gap-4" [class]="containerClass(position)">
+    @for (toast of toastService.toastsByPosition()[position]; track toast.id) {
+      <div
+        class="toast-item bg-white dark:bg-dark-card"
+        [class]="typeClass(toast.type)"
+        role="alert"
+        (mouseenter)="toastService.pause(toast.id)"
+        (mouseleave)="toastService.resume(toast.id)"
+      >
+        <!-- Animated Icon -->
+        <div class="toast-icon-wrapper">
+          @switch (toast.type) {
+            @case ('success') {
+              <div class="toast-icon-circle toast-icon-success">
+                <svg class="toast-checkmark" viewBox="0 0 52 52">
+                  <circle class="toast-checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                  <path
+                    class="toast-checkmark-check"
+                    fill="none"
+                    d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                  />
+                </svg>
+              </div>
+            }
+            @case ('danger') {
+              <div class="toast-icon-circle toast-icon-danger">
+                <svg class="toast-xmark" viewBox="0 0 52 52">
+                  <circle class="toast-xmark-circle" cx="26" cy="26" r="25" fill="none" />
+                  <path class="toast-xmark-x" fill="none" d="M16 16 36 36" />
+                  <path class="toast-xmark-x toast-xmark-x2" fill="none" d="M36 16 16 36" />
+                </svg>
+              </div>
+            }
+            @case ('warning') {
+              <div class="toast-icon-circle toast-icon-warning">
+                <svg class="toast-warning-icon" viewBox="0 0 52 52">
+                  <circle class="toast-warning-circle" cx="26" cy="26" r="25" fill="none" />
+                  <line class="toast-warning-line" x1="26" y1="15" x2="26" y2="31" />
+                  <circle class="toast-warning-dot" cx="26" cy="37" r="2" />
+                </svg>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Message -->
+        <p class="toast-message">{{ toast.message }}</p>
+
+        <!-- Progress Bar -->
+        <div class="toast-progress-track">
+          <div
+            class="toast-progress-bar"
+            [class]="'toast-progress-' + toast.type"
+            [style.animationDuration.ms]="toast.duration"
+            [class.paused]="toast.paused"
+          ></div>
+        </div>
+
+        <!-- Close -->
+        <button class="toast-close" (click)="toastService.remove(toast.id)" aria-label="Close">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+            <path
+              d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+            />
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,56 @@
+@reference "../../../../styles.css";
+
+/* Hero entrance animations */
+.about-hero .hero-badge,
+.about-hero .hero-title,
+.about-hero .hero-subtitle {
+  @apply opacity-0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.about-hero.ready .hero-badge {
+  @apply opacity-100;
+  transform: none;
+}
+.about-hero.ready .hero-title {
+  @apply opacity-100;
+  transform: none;
+  transition-delay: 0.15s;
+}
+.about-hero.ready .hero-subtitle {
+  @apply opacity-100;
+  transform: none;
+  transition-delay: 0.3s;
+}
+
+/* Scroll animations */
+.animate-on-scroll {
+  @apply opacity-0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.animate-on-scroll.in-view {
+  @apply opacity-100;
+  transform: none;
+}
+
+/* CTA background pattern (pseudo-element) */
+.cta-section::before {
+  @apply absolute inset-0;
+  content: '';
+  background-image: radial-gradient(
+    circle at 30% 50%,
+    color-mix(in srgb, var(--color-white) 8%, transparent) 0%,
+    transparent 50%
+  );
+}
+
+/* Value card icon hover (parent-child) */
+.value-card:hover .value-icon {
+  @apply text-white;
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
+}

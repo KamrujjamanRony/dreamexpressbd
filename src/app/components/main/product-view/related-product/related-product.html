@@ -1,0 +1,17 @@
+<!-- Related Products -->
+@if (relatedProduct().length > 0) {
+  <div class="mt-10 pt-8 border-t border-neutral-200 dark:border-neutral-700">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-1 h-8 bg-primary-600 rounded-full"></div>
+      <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-neutral-800 dark:text-neutral-100">
+        Related Products
+      </h2>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      @for (product of relatedProduct(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  </div>
+}
+<!-- Related Products end -->
