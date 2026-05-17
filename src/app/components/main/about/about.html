@@ -9,7 +9,7 @@
 } @else {
   <!-- Hero Section -->
   <section
-    class="about-hero relative overflow-hidden bg-[linear-gradient(135deg,#f5f3ff_0%,#fdf2f8_50%,#f0e7ff_100%)] dark:bg-[linear-gradient(135deg,#0f0a1e_0%,#1a0e2e_50%,#0d0820_100%)]"
+    class="about-hero relative overflow-hidden bg-linear-to-t from-(--color-primary-200) to-(--color-primary-500) dark:from-(--color-primary-600) dark:to-(--color-primary-800)"
     [class.ready]="ready()"
   >
     <div
@@ -26,13 +26,13 @@
       >
         Welcome to
         <span
-          class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-[var(--color-accent)]"
+          class="text-transparent bg-clip-text bg-linear-to-r from-(--color-accent) via-(--color-warning) to-(--color-brand)"
           >{{ companyName }}</span
         >
       </h1>
       @if (aboutData()?.heading) {
         <p
-          class="hero-subtitle text-neutral-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto"
+          class="hero-subtitle text-neutral-700 dark:text-slate-200 text-base sm:text-lg max-w-2xl mx-auto"
         >
           {{ aboutData()?.heading }}
         </p>

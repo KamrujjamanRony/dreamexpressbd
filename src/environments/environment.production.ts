@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
   companyName: 'Dream Express BD',
-  companyCode: 2,
+  companyCode: 1,
   whatsappNumber: '1818545586',
   messengerUsername: 'dreamexpressbd',
-  apiUrl: 'https://api.dreamexpressbd.com.bd/p',
-  ImageApi: 'http://localhost:1005/uploads/',          // https://api.dreamexpressbd.com.bd/uploads/
+  apiUrl: 'https://api.chinatradexntour.com.bd/p',
+  ImageApi: 'https://api.chinatradexntour.com.bd/uploads/', 
   webUrl: 'https://dreamexpressbd.com.bd',
   metaPixelId: '',
   metaCapiProxyUrl: '',

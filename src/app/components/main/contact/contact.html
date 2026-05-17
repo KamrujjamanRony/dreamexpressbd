@@ -1,14 +1,14 @@
 <!-- Hero Section -->
 <section
-  class="contact-hero relative overflow-hidden bg-[linear-gradient(135deg,#f5f3ff_0%,#fdf2f8_50%,#f0e7ff_100%)] dark:bg-[linear-gradient(135deg,#0f0a1e_0%,#1a0e2e_50%,#0d0820_100%)]"
+  class="contact-hero relative overflow-hidden bg-linear-to-t from-(--color-primary-200) to-(--color-primary-500) dark:from-(--color-primary-600) dark:to-(--color-primary-800)"
   [class.ready]="ready()"
 >
   <div
-    class="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_8%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,color-mix(in_srgb,var(--color-accent)_8%,transparent)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_50%,color-mix(in_srgb,var(--color-primary-600)_15%,transparent)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,color-mix(in_srgb,var(--color-accent)_12%,transparent)_0%,transparent_50%)]"
+    class="absolute inset-0"
   ></div>
   <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 text-center py-20 sm:py-28">
     <span
-      class="hero-badge inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-semibold tracking-wider uppercase mb-4"
+      class="hero-badge inline-block px-4 py-1.5 rounded-full bg-(--color-primary-100) dark:bg-(--color-primary-400)/50 text-(--color-primary-700) dark:text-(--color-primary-100) text-xs font-semibold tracking-wider uppercase mb-4"
     >
       Get In Touch
     </span>
@@ -17,12 +17,12 @@
     >
       Contact
       <span
-        class="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-[var(--color-accent)]"
+        class="text-transparent bg-clip-text bg-linear-to-r from-(--color-brand) to-(--color-accent)"
         >Us</span
       >
     </h1>
     <p
-      class="hero-subtitle text-neutral-500 dark:text-slate-400 text-base sm:text-lg max-w-2xl mx-auto"
+      class="hero-subtitle text-neutral-700 dark:text-slate-200 text-base sm:text-lg max-w-2xl mx-auto"
     >
       Have a question or feedback? We'd love to hear from you. Reach out and we'll respond as soon
       as we can.
@@ -160,12 +160,12 @@
         </div>
       </div>
 
-      <!-- Info Side -->
+      <!-- Our Services -->
       <div class="lg:col-span-2 animate-on-scroll" style="transition-delay: 150ms">
         <div
           class="p-7 rounded-[20px] bg-white dark:bg-neutral-900 shadow-[0_4px_24px_color-mix(in_srgb,var(--color-primary-600)_6%,transparent)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] border border-primary-500/6 dark:border-primary-500/10"
         >
-          <h3 class="text-lg font-bold text-neutral-900 dark:text-slate-100 mb-4">Quick Info</h3>
+          <h3 class="text-lg font-bold text-neutral-900 dark:text-slate-100 mb-4">Our Services</h3>
 
           @for (info of contactInfo()?.quickInfo; track info.id ?? $index; let last = $last) {
             <div
@@ -175,7 +175,10 @@
               <div
                 class="w-9.5 h-9.5 min-w-9.5 flex items-center justify-center rounded-[10px] bg-primary-500/6 dark:bg-primary-500/12 text-sm"
               >
-                <i [class]="info.icon + ' text-primary-600'"></i>
+                <i
+                  class="fas fa-check text-primary-600 dark:text-primary-400"
+                ></i>
+
               </div>
               <div>
                 <p class="text-sm font-semibold text-neutral-900 dark:text-slate-100">
