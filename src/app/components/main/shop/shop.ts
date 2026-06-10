@@ -1,7 +1,6 @@
-import { Component, inject, Renderer2, signal, computed, effect, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Renderer2, signal, computed, effect, untracked } from '@angular/core';
 import { ProductSkeleton } from '../../shared/product-skeleton/product-skeleton';
 import { ProductCard } from '../../shared/product-card/product-card';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SProduct } from '../../../services/s-product';
 import { SCategory } from '../../../services/s-category';
@@ -10,9 +9,10 @@ import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service'
 
 @Component({
   selector: 'app-shop',
-  imports: [ProductSkeleton, ProductCard, CommonModule, FormsModule, RouterLink],
+  imports: [ProductSkeleton, ProductCard, FormsModule, RouterLink],
   templateUrl: './shop.html',
   styleUrl: './shop.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Shop {
   private productService = inject(SProduct);

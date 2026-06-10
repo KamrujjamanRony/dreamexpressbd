@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -20,7 +19,7 @@ import { BreadcrumbService } from '../../../utils/breadcrumb/breadcrumb.service'
 
 @Component({
     selector: 'app-blog-view',
-    imports: [CommonModule, RouterLink],
+    imports: [RouterLink],
     templateUrl: './blog-view.html',
     styleUrl: './blog-view.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

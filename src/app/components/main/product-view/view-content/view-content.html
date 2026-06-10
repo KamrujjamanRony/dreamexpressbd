@@ -1,13 +1,13 @@
 @if (
-  product?.specifications?.length > 0 ||
-  product?.productDetails ||
-  product?.additionalInformation ||
-  product?.specialFeature
+  product()?.specifications?.length > 0 ||
+  product()?.productDetails ||
+  product()?.additionalInformation ||
+  product()?.specialFeature
 ) {
   <div class="mt-10 border-t border-neutral-200 dark:border-neutral-700">
     <!-- Tabs -->
     <div class="flex border-b border-neutral-200 dark:border-neutral-700 -mt-px">
-      @if (product?.specifications?.length > 0) {
+      @if (product()?.specifications?.length > 0) {
         <button
           type="button"
           (click)="activeTab = 'specs'"
@@ -21,7 +21,7 @@
           Specifications
         </button>
       }
-      @if (product?.productDetails) {
+      @if (product()?.productDetails) {
         <button
           type="button"
           (click)="activeTab = 'details'"
@@ -35,7 +35,7 @@
           Product Details
         </button>
       }
-      @if (product?.additionalInformation) {
+      @if (product()?.additionalInformation) {
         <button
           type="button"
           (click)="activeTab = 'info'"
@@ -49,7 +49,7 @@
           Additional Info
         </button>
       }
-      @if (product?.specialFeature) {
+      @if (product()?.specialFeature) {
         <button
           type="button"
           (click)="activeTab = 'feature'"
@@ -68,9 +68,9 @@
     <!-- Tab Content -->
     <div class="py-6">
       <!-- Specifications Tab -->
-      @if (activeTab === 'specs' && product?.specifications?.length > 0) {
+      @if (activeTab === 'specs' && product()?.specifications?.length > 0) {
         <div class="overflow-x-auto">
-          @for (specification of product.specifications; track specification) {
+          @for (specification of product().specifications; track specification) {
             <table class="w-full text-sm text-left mb-6">
               <thead>
                 <tr class="bg-neutral-100 dark:bg-neutral-700">
@@ -100,26 +100,26 @@
       }
 
       <!-- Product Details Tab -->
-      @if (activeTab === 'details' && product?.productDetails) {
+      @if (activeTab === 'details' && product()?.productDetails) {
         <div
           class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed wrap-break-word bg-accent"
-          [innerHTML]="product.productDetails"
+          [innerHTML]="product().productDetails"
         ></div>
       }
 
       <!-- Additional Info Tab -->
-      @if (activeTab === 'info' && product?.additionalInformation) {
+      @if (activeTab === 'info' && product()?.additionalInformation) {
         <div
           class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
-          [innerHTML]="product.additionalInformation"
+          [innerHTML]="product().additionalInformation"
         ></div>
       }
 
       <!-- Special Feature Tab -->
-      @if (activeTab === 'feature' && product?.specialFeature) {
+      @if (activeTab === 'feature' && product()?.specialFeature) {
         <div
           class="rte-content prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-400 leading-relaxed"
-          [innerHTML]="product.specialFeature"
+          [innerHTML]="product().specialFeature"
         ></div>
       }
     </div>

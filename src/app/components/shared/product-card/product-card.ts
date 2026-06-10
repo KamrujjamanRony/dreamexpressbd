@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BdtPipe } from "../../../pipes/bdt.pipe";
@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule, RouterLink, BdtPipe, NgOptimizedImage],
+  imports: [RouterLink, BdtPipe, NgOptimizedImage],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

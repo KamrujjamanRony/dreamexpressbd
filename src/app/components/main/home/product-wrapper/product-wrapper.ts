@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ProductCard } from '../../../shared/product-card/product-card';
 import { ProductSkeleton } from "../../../shared/product-skeleton/product-skeleton";
 import { RouterLink } from '@angular/router';
@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
   imports: [ProductCard, ProductSkeleton, RouterLink],
   templateUrl: './product-wrapper.html',
   styleUrl: './product-wrapper.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductWrapper {
   categoryWiseProducts = input<any>(null);

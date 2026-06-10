@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -23,7 +22,7 @@ type BlogCard = BlogM & {
 
 @Component({
     selector: 'app-blogs',
-    imports: [CommonModule, RouterLink],
+    imports: [RouterLink],
     templateUrl: './blogs.html',
     styleUrl: './blogs.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

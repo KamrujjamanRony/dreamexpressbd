@@ -1,5 +1,5 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SOrder } from '../../../services/s-order';
@@ -12,9 +12,10 @@ import { createQrDataUrl } from '../../../utils/qr-code';
 
 @Component({
   selector: 'app-order-confirmation',
-  imports: [CommonModule, BdtPipe, NgOptimizedImage],
+  imports: [DatePipe, NgClass, BdtPipe, NgOptimizedImage],
   templateUrl: './order-confirmation.html',
   styleUrl: './order-confirmation.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderConfirmation {
   private route = inject(ActivatedRoute);

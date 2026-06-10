@@ -1,5 +1,4 @@
-import { Component, computed, ElementRef, inject, signal, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, AfterViewInit, OnDestroy } from '@angular/core';
 import { SAbout } from '../../../services/s-about';
 import { SContact } from '../../../services/s-contact';
 import { SGallery } from '../../../services/s-gallery';
@@ -19,10 +18,10 @@ import {
 
 @Component({
   selector: 'app-about',
-  standalone: true,
-  imports: [CommonModule, FontAwesomeModule, SafeHtmlPipe],
+  imports: [FontAwesomeModule, SafeHtmlPipe],
   templateUrl: './about.html',
   styleUrl: './about.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class About implements AfterViewInit, OnDestroy {
   private aboutService = inject(SAbout);

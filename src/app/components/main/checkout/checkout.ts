@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
@@ -15,6 +15,7 @@ import { environment } from '../../../../environments/environment';
   imports: [BdtPipe, FormsModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Checkout {
   private router = inject(Router);

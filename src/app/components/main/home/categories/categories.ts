@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 
@@ -8,7 +8,8 @@ import { environment } from '../../../../../environments/environment';
   imports: [RouterLink, NgOptimizedImage],
   templateUrl: './categories.html',
   styleUrl: './categories.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Categories {
   categories = input<any[]>([]);

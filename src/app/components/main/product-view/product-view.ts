@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ViewImage } from './view-image/view-image';
 import { ViewContent } from './view-content/view-content';
 import { RelatedProduct } from './related-product/related-product';
@@ -14,6 +14,7 @@ import { SSeo } from '../../../services/s-seo';
   imports: [ViewContent, ViewImage, RelatedProduct, ProductSkeleton],
   templateUrl: './product-view.html',
   styleUrl: './product-view.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductView {
 

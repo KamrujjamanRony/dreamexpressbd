@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, input, Renderer2, SimpleChanges } from '@angular/core';
+import { NgClass, NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, input, Renderer2, SimpleChanges } from '@angular/core';
 import { BdtPipe } from '../../../../pipes/bdt.pipe';
 import { Router } from '@angular/router';
 import { SCart } from '../../../../services/s-cart';
@@ -12,9 +12,10 @@ import { faShoppingBag, faMinus, faPlus, faShareAlt } from '@fortawesome/free-so
 
 @Component({
   selector: 'app-view-image',
-  imports: [CommonModule, BdtPipe, FontAwesomeModule],
+  imports: [NgClass, NgStyle, BdtPipe, FontAwesomeModule],
   templateUrl: './view-image.html',
   styleUrl: './view-image.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewImage {
   product = input<any>(null);

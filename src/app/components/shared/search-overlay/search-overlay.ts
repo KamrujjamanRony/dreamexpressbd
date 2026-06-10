@@ -1,4 +1,4 @@
-import { Component, inject, signal, DestroyRef, ElementRef, ViewChild, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, DestroyRef, ElementRef, ViewChild, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
@@ -11,6 +11,7 @@ import { environment } from '../../../../environments/environment';
     selector: 'app-search-overlay',
     imports: [NgOptimizedImage, DecimalPipe],
     templateUrl: './search-overlay.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchOverlay implements OnInit {
     private productService = inject(SProduct);

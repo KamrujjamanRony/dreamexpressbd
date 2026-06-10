@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, computed, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, computed, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
@@ -12,6 +12,7 @@ import { environment } from '../../../../environments/environment';
   imports: [FormsModule, SafeHtmlPipe],
   templateUrl: './contact.html',
   styleUrl: './contact.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Contact implements AfterViewInit, OnDestroy {
   private contactService = inject(SContact);

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { BdtPipe } from '../../../pipes/bdt.pipe';
 import { SCart } from '../../../services/s-cart';
 import { SProduct } from '../../../services/s-product';
@@ -23,6 +23,7 @@ import {
   imports: [BdtPipe, NgOptimizedImage, FontAwesomeModule, RouterLink],
   templateUrl: './shopping-cart.html',
   styleUrl: './shopping-cart.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCart {
   private cartService = inject(SCart);
