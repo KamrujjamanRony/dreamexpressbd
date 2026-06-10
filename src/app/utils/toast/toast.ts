@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SToast } from './toast.service';
 import { ToastM, ToastPosition } from './toast.model';
 
@@ -6,6 +6,7 @@ import { ToastM, ToastPosition } from './toast.model';
   selector: 'app-toast',
   imports: [],
   templateUrl: './toast.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toast.css',
 })
 export class Toast {

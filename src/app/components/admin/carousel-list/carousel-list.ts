@@ -1,6 +1,6 @@
 // carousel-list.ts
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField } from '@angular/forms/signals';
@@ -18,6 +18,7 @@ import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
   selector: 'app-carousel-list',
   imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent, GalleryPicker],
   templateUrl: './carousel-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './carousel-list.css',
 })
 export class CarouselList {

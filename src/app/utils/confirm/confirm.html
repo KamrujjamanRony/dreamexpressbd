@@ -17,7 +17,7 @@
           <!-- ICON -->
           <svg
             class="mx-auto mb-4 w-12 h-12"
-            [class]="iconClass(confirm.options()?.variant)"
+            [class]="iconClass($safeNavigationMigration(confirm.options()?.variant))"
             viewBox="0 0 24 24"
             fill="none"
           >
@@ -40,7 +40,7 @@
             <button
               type="button"
               class="text-white px-4 py-2.5 rounded-base shadow-xs font-medium focus:ring-4 cursor-pointer"
-              [class]="buttonClass(confirm.options()?.variant)"
+              [class]="buttonClass($safeNavigationMigration(confirm.options()?.variant))"
               (click)="confirm.accept()"
             >
               {{ confirm.options()?.confirmText }}

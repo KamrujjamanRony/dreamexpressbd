@@ -1,6 +1,6 @@
 // blog-list.ts
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { QuillEditorComponent } from 'ngx-quill';
     selector: 'app-blog-list',
     imports: [CommonModule, FontAwesomeModule, FormsModule, GalleryPicker, QuillEditorComponent],
     templateUrl: './blog-list.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './blog-list.css',
 })
 export class BlogList {

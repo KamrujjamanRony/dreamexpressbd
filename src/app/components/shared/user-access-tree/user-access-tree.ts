@@ -1,10 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-access-tree',
   imports: [FormsModule],
   templateUrl: './user-access-tree.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user-access-tree.css',
 })
 export class UserAccessTree {

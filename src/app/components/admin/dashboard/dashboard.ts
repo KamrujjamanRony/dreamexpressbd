@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,6 +16,7 @@ import { BdtPipe } from '../../../pipes/bdt.pipe';
     selector: 'app-dashboard',
     imports: [CommonModule, RouterLink, FontAwesomeModule, DatePipe, BdtPipe],
     templateUrl: './dashboard.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {

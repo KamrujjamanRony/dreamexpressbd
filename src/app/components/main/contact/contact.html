@@ -199,7 +199,7 @@
             <div class="flex items-center gap-3 flex-wrap">
               @if (contactInfo()?.facebookLink) {
                 <a
-                  [href]="contactInfo()?.facebookLink"
+                  [href]="$safeNavigationMigration(contactInfo()?.facebookLink)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
@@ -210,7 +210,7 @@
               }
               @if (contactInfo()?.iLink) {
                 <a
-                  [href]="contactInfo()?.iLink"
+                  [href]="$safeNavigationMigration(contactInfo()?.iLink)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
@@ -221,7 +221,7 @@
               }
               @if (contactInfo()?.yLink) {
                 <a
-                  [href]="contactInfo()?.yLink"
+                  [href]="$safeNavigationMigration(contactInfo()?.yLink)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
@@ -232,7 +232,7 @@
               }
               @if (contactInfo()?.wNum) {
                 <a
-                  [href]="'https://wa.me/' + contactInfo()?.wNum"
+                  [href]="'https://wa.me/' + $safeNavigationMigration(contactInfo()?.wNum)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
@@ -243,7 +243,7 @@
               }
               @if (contactInfo()?.othersLink1) {
                 <a
-                  [href]="contactInfo()?.othersLink1"
+                  [href]="$safeNavigationMigration(contactInfo()?.othersLink1)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"
@@ -254,7 +254,7 @@
               }
               @if (contactInfo()?.othersLink2) {
                 <a
-                  [href]="contactInfo()?.othersLink2"
+                  [href]="$safeNavigationMigration(contactInfo()?.othersLink2)"
                   target="_blank"
                   rel="noopener"
                   class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-500/6 dark:bg-primary-500/12 text-primary-600 dark:text-primary-400 text-base no-underline transition-all duration-300 hover:bg-[linear-gradient(135deg,var(--color-primary-700),var(--color-primary-600))] hover:text-white hover:-translate-y-0.5"

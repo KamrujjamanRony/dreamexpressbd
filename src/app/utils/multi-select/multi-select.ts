@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, FormsModule } from '@angular/forms';
 
 interface Option {
@@ -11,6 +11,7 @@ interface Option {
   imports: [FormsModule],
   templateUrl: './multi-select.html',
   styleUrl: './multi-select.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

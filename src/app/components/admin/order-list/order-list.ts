@@ -1,5 +1,5 @@
 // order-list.component.ts
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -25,6 +25,7 @@ import { createQrDataUrl } from '../../../utils/qr-code';
   standalone: true,
   imports: [CommonModule, FontAwesomeModule, OrderForm, OrderStatusUpdate, BdtPipe, DatePipe],
   templateUrl: './order-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./order-list.css']
 })
 export class OrderList implements OnInit {

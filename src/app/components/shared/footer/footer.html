@@ -21,7 +21,7 @@
         @if (aboutData()?.info?.[0]?.desc) {
           <div
             class="footer-brand-desc rte-content"
-            [innerHTML]="aboutData()?.info?.[0]?.desc | safeHtml"
+            [innerHTML]="$safeNavigationMigration(aboutData()?.info?.[0]?.desc) | safeHtml"
           ></div>
         } @else {
           <p class="footer-brand-desc">Your trusted online shopping destination in Bangladesh.</p>
@@ -31,7 +31,7 @@
         <div class="footer-socials">
           @if (contactData()?.facebookLink) {
             <a
-              [href]="contactData()?.facebookLink"
+              [href]="$safeNavigationMigration(contactData()?.facebookLink)"
               target="_blank"
               rel="noopener noreferrer"
               class="social-btn"
@@ -42,7 +42,7 @@
           }
           @if (contactData()?.iLink) {
             <a
-              [href]="contactData()?.iLink"
+              [href]="$safeNavigationMigration(contactData()?.iLink)"
               target="_blank"
               rel="noopener noreferrer"
               class="social-btn"
@@ -53,7 +53,7 @@
           }
           @if (contactData()?.yLink) {
             <a
-              [href]="contactData()?.yLink"
+              [href]="$safeNavigationMigration(contactData()?.yLink)"
               target="_blank"
               rel="noopener noreferrer"
               class="social-btn"

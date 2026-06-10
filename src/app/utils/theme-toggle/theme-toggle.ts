@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { STheme } from './s-theme';
 
 @Component({
   selector: 'app-theme-toggle',
   imports: [],
   templateUrl: './theme-toggle.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './theme-toggle.css',
 })
 export class ThemeToggle implements OnInit, AfterViewInit {

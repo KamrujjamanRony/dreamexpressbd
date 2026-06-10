@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import { SAuth } from '../../../services/s-auth';
   selector: 'app-gallery-list',
   imports: [CommonModule, FontAwesomeModule, FormsModule],
   templateUrl: './gallery-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gallery-list.css',
 })
 export class GalleryList {

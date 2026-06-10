@@ -1,5 +1,5 @@
 // order-list-filter.component.ts
-import { Component, computed, EventEmitter, inject, input, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { STheme } from '../../../../utils/theme-toggle/s-theme';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-order-list-filter',
   imports: [FormsModule],
   templateUrl: './order-list-filter.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './order-list-filter.css',
 })
 export class OrderListFilter {

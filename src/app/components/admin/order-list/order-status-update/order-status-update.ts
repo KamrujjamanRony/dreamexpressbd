@@ -1,5 +1,5 @@
 // order-status-update.component.ts
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OrderM } from '../../../../models/OrderM';
 
@@ -7,6 +7,7 @@ import { OrderM } from '../../../../models/OrderM';
   selector: 'app-order-status-update',
   imports: [FormsModule],
   templateUrl: './order-status-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './order-status-update.css',
 })
 export class OrderStatusUpdate {

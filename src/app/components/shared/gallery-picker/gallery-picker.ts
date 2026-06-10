@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, output, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,6 +12,7 @@ import { GalleryM } from '../../../models/Gallery';
     standalone: true,
     imports: [CommonModule, FormsModule, FontAwesomeModule],
     templateUrl: './gallery-picker.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './gallery-picker.css',
 })
 export class GalleryPicker implements OnInit {

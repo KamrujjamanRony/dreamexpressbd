@@ -1,6 +1,6 @@
 // product-list.ts
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faXmark, faMagnifyingGlass, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { form, FormField } from '@angular/forms/signals';
@@ -24,6 +24,7 @@ import { GalleryPicker } from '../../shared/gallery-picker/gallery-picker';
   selector: 'app-product-list',
   imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent, GalleryPicker],
   templateUrl: './product-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./product-list.css'],
 })
 export class ProductList {

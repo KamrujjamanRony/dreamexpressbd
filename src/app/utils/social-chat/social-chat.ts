@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { SContact } from '../../services/s-contact';
 import { STheme } from '../theme-toggle/s-theme';
@@ -7,6 +7,7 @@ import { STheme } from '../theme-toggle/s-theme';
   selector: 'app-social-chat',
   imports: [],
   templateUrl: './social-chat.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './social-chat.css',
 })
 export class SocialChat implements OnInit {

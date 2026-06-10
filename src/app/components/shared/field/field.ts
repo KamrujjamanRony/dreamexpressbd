@@ -1,9 +1,10 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'Field',
   imports: [],
   templateUrl: './field.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './field.css',
 })
 export class Field {

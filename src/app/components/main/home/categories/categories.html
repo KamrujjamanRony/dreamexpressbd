@@ -31,7 +31,7 @@
               <img
                 [src]="imgURL + category.imageUrl"
                 class="w-full aspect-4/3 object-cover transition-transform duration-500 group-hover:scale-110"
-                [alt]="category?.categoryName"
+                [alt]="$safeNavigationMigration(category?.categoryName)"
               />
             } @else {
               <img

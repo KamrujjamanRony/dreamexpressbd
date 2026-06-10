@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,6 +16,7 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-about-update',
   imports: [CommonModule, FontAwesomeModule, FormsModule, QuillEditorComponent],
   templateUrl: './about-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './about-update.css',
 })
 export class AboutUpdate {

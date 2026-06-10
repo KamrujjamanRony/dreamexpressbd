@@ -97,7 +97,7 @@
                         @if (item?.imageUrl) {
                           <img
                             [src]="imageBaseUrl + item.imageUrl"
-                            [alt]="item?.categoryName"
+                            [alt]="$safeNavigationMigration(item?.categoryName)"
                             class="w-full h-full object-cover rounded"
                           />
                         } @else {

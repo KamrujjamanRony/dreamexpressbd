@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, OnDestroy, Renderer2, effect } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, Renderer2, effect, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
   selector: 'app-cart-drawer',
   imports: [RouterLink, NgOptimizedImage, BdtPipe],
   templateUrl: './cart-drawer.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cart-drawer.css',
 })
 export class CartDrawer implements OnInit, OnDestroy {

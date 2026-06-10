@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SConfirm } from './confirm.service';
 
 @Component({
   selector: 'app-confirm',
   imports: [],
   templateUrl: './confirm.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm.css',
 })
 export class Confirm {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { UserAccessTree } from '../../shared/user-access-tree/user-access-tree';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,6 +16,7 @@ import { SPermission } from '../../../services/s-permission';
   selector: 'app-users',
   imports: [UserAccessTree, CommonModule, FontAwesomeModule, FormField],
   templateUrl: './users.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './users.css',
 })
 export class Users {

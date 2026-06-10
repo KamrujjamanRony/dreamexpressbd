@@ -112,7 +112,7 @@
                       @if (isDelete()) {
                         <button
                           class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                          (click)="onDelete(item?.id)"
+                          (click)="onDelete($safeNavigationMigration(item?.id))"
                           title="Delete"
                         >
                           <fa-icon [icon]="faXmark"></fa-icon>

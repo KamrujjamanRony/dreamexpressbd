@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { FormField, form } from '@angular/forms/signals';
@@ -15,6 +15,7 @@ import { QuillEditorComponent } from 'ngx-quill';
   selector: 'app-contact-update',
   imports: [CommonModule, FontAwesomeModule, FormField, FormsModule, QuillEditorComponent],
   templateUrl: './contact-update.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contact-update.css',
 })
 export class ContactUpdate {

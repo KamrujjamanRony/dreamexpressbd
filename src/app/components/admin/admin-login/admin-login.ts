@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required, validate, debounce } from '@angular/forms/signals';
 import { SAuth } from '../../../services/s-auth';
@@ -20,6 +20,7 @@ import {
   selector: 'app-admin-login',
   imports: [FormsModule, FormField, FontAwesomeModule],
   templateUrl: './admin-login.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './admin-login.css',
 })
 export class AdminLogin {

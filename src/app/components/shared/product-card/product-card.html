@@ -1,7 +1,7 @@
 <div
   class="group h-full flex flex-col bg-white dark:bg-neutral-900 border border-black/6 dark:border-primary-500/8 dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] dark:hover:border-primary-500/20 transition-all duration-300 hover:-translate-y-1 relative"
 >
-  <a [routerLink]="getViewLink(product()?.id)" class="block relative">
+  <a [routerLink]="getViewLink($safeNavigationMigration(product()?.id))" class="block relative">
     <!-- Discount Badge -->
     @if (product()?.discount > 0) {
       <span
@@ -14,8 +14,8 @@
     <div class="overflow-hidden bg-neutral-50 dark:bg-neutral-700">
       @if (isPriority()) {
         <img
-          [ngSrc]="imageBaseUrl + product()?.resolvedImageUrl"
-          [alt]="product()?.title"
+          [ngSrc]="imageBaseUrl + $safeNavigationMigration(product()?.resolvedImageUrl)"
+          [alt]="$safeNavigationMigration(product()?.title)"
           width="300"
           height="300"
           priority
@@ -23,8 +23,8 @@
         />
       } @else {
         <img
-          [ngSrc]="imageBaseUrl + product()?.resolvedImageUrl"
-          [alt]="product()?.title"
+          [ngSrc]="imageBaseUrl + $safeNavigationMigration(product()?.resolvedImageUrl)"
+          [alt]="$safeNavigationMigration(product()?.title)"
           width="300"
           height="300"
           loading="lazy"
@@ -36,7 +36,7 @@
 
   <!-- Product Info -->
   <div class="flex flex-col flex-1 p-3 md:p-4">
-    <a [routerLink]="getViewLink(product()?.id)" class="block">
+    <a [routerLink]="getViewLink($safeNavigationMigration(product()?.id))" class="block">
       <h6
         class="text-sm md:text-base font-semibold text-neutral-800 dark:text-neutral-100 line-clamp-2 leading-snug hover:text-primary-600 transition-colors"
       >
@@ -48,12 +48,12 @@
     <div class="mt-2 md:mt-3 flex items-baseline gap-2 flex-wrap">
       <span
         class="text-base md:text-lg font-bold text-primary-600"
-        [innerHTML]="product()?.offerPrice | bdt"
+        [innerHTML]="$safeNavigationMigration(product()?.offerPrice) | bdt"
       ></span>
       @if (product()?.regularPrice > product()?.offerPrice) {
         <span
           class="text-xs md:text-sm text-neutral-400 line-through"
-          [innerHTML]="product()?.regularPrice | bdt"
+          [innerHTML]="$safeNavigationMigration(product()?.regularPrice) | bdt"
         ></span>
       }
     </div>

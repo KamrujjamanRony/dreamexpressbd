@@ -1,5 +1,5 @@
 // order-form.component.ts
-import { Component, EventEmitter, inject, Input, Output, signal, computed, effect, OnChanges, SimpleChanges, untracked } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, computed, effect, OnChanges, SimpleChanges, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormField, form, required, validate, debounce } from '@angular/forms/signals';
@@ -36,6 +36,7 @@ interface OrderFormModel {
   selector: 'app-order-form',
   imports: [CommonModule, FormsModule, FormField, BdtPipe],
   templateUrl: './order-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './order-form.css',
 })
 export class OrderForm implements OnChanges {

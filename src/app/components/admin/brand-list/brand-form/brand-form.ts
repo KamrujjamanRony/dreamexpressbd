@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Field } from '../../../shared/field/field';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -6,6 +6,7 @@ import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } 
   selector: 'app-brand-form',
   imports: [Field, ReactiveFormsModule],
   templateUrl: './brand-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './brand-form.css',
 })
 export class BrandForm {

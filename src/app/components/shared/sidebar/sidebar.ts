@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHome, faBagShopping, faLayerGroup, faBasketShopping, faRightFromBracket, faUsers, faGauge, faImages, faTag, faCircleInfo, faEnvelope, faPhotoFilm, faNewspaper } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import { SAuth } from '../../../services/s-auth';
   selector: 'app-sidebar',
   imports: [RouterLink, FontAwesomeModule],
   templateUrl: './sidebar.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
